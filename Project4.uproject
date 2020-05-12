@@ -1,0 +1,19 @@
+{
+	"FileVersion": 3,
+	"EngineAssociation": "{DA43FF91-4B83-3BB8-589E-05A86BDED410}",
+	"Category": "",
+	"Description": "",
+	"Modules": [
+		{
+			"Name": "Project4",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	],
+	"Plugins": [
+		{
+			"Name": "GameLiftServerSDK",
+			"Enabled":  true
+		}
+	]
+}
