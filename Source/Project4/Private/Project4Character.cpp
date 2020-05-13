@@ -1,6 +1,10 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
+// define a print message function to print to screen
+#define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::Green,text)
+#define printFString(text, fstring) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Magenta, FString::Printf(TEXT(text), fstring))
 
 #include "Project4Character.h"
+#include "Project4.h"
 #include "HeadMountedDisplayFunctionLibrary.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -21,13 +25,21 @@ AProject4Character::AProject4Character()
 	BaseTurnRate = 45.f;
 	BaseLookUpRate = 45.f;
 
+	CameraZoomGranularity = 50.f;
+	CameraZoomMin = 150.f;
+	CameraZoomMax = 2000.f;
+	CameraSensitivity = 5.f;
+
+	doInputRotateCamera = false;
+	doRotatePlayerAndCamera = false;
+
 	// Don't rotate when the controller rotates. Let that just affect the camera.
 	bUseControllerRotationPitch = false;
-	bUseControllerRotationYaw = false;
+	bUseControllerRotationYaw = true;
 	bUseControllerRotationRoll = false;
 
 	// Configure character movement
-	GetCharacterMovement()->bOrientRotationToMovement = true; // Character moves in the direction of input...	
+	GetCharacterMovement()->bOrientRotationToMovement = false; // Character moves in the direction of input...	
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 540.0f, 0.0f); // ...at this rotation rate
 	GetCharacterMovement()->JumpZVelocity = 600.f;
 	GetCharacterMovement()->AirControl = 0.2f;
@@ -35,8 +47,8 @@ AProject4Character::AProject4Character()
 	// Create a camera boom (pulls in towards the player if there is a collision)
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
-	CameraBoom->TargetArmLength = 300.0f; // The camera follows at this distance behind the character	
-	CameraBoom->bUsePawnControlRotation = true; // Rotate the arm based on the controller
+	CameraBoom->TargetArmLength = 100.f; // The camera follows at this distance behind the character	
+	CameraBoom->bUsePawnControlRotation = false; // Rotate the arm based on the controller
 
 	// Create a follow camera
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
@@ -54,6 +66,7 @@ void AProject4Character::SetupPlayerInputComponent(class UInputComponent* Player
 {
 	// Set up gameplay key bindings
 	check(PlayerInputComponent);
+	InputComponent = PlayerInputComponent;
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
@@ -63,34 +76,98 @@ void AProject4Character::SetupPlayerInputComponent(class UInputComponent* Player
 	// We have 2 versions of the rotation bindings to handle different kinds of devices differently
 	// "turn" handles devices that provide an absolute delta, such as a mouse.
 	// "turnrate" is for devices that we choose to treat as a rate of change, such as an analog joystick
-	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
-	PlayerInputComponent->BindAxis("TurnRate", this, &AProject4Character::TurnAtRate);
-	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
-	PlayerInputComponent->BindAxis("LookUpRate", this, &AProject4Character::LookUpAtRate);
+	//PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
+	//PlayerInputComponent->BindAxis("TurnRate", this, &AProject4Character::TurnAtRate);
+	//PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);	
 
-	// handle touch devices
-	PlayerInputComponent->BindTouch(IE_Pressed, this, &AProject4Character::TouchStarted);
-	PlayerInputComponent->BindTouch(IE_Released, this, &AProject4Character::TouchStopped);
+	////////// ABOVE WAS AUTO GENERATED ///////////
+	PlayerInputComponent->BindAxis("CameraZoom", this, &AProject4Character::CameraZoom);
 
-	// VR headset functionality
-	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &AProject4Character::OnResetVR);
+	PlayerInputComponent->BindAction("MovePlayerCamera", IE_Pressed, this, &AProject4Character::StartMovePlayerCamera);
+	PlayerInputComponent->BindAction("MovePlayerCamera", IE_Released, this, &AProject4Character::StopMovePlayerCamera);
+
+	PlayerInputComponent->BindAction("RotatePlayerWithCamera", IE_Pressed, this, &AProject4Character::StartPlayerRotationToCamera);
+	PlayerInputComponent->BindAction("RotatePlayerWithCamera", IE_Released, this, &AProject4Character::StopPlayerRotationToCamera);
+
 }
 
 
-void AProject4Character::OnResetVR()
+// Called every frame
+void AProject4Character::Tick(float DeltaTime)
 {
-	UHeadMountedDisplayFunctionLibrary::ResetOrientationAndPosition();
+	Super::Tick(DeltaTime);
+
+	if (doInputRotateCamera)
+		AddInputToCameraRotation();
+
+	if (doRotatePlayerAndCamera) {
+		AddInputToCameraRotation();
+		SetPlayerRotationToCamera();
+		if (doInputRotateCamera)
+			MoveForward(1.f);
+	}
 }
 
-void AProject4Character::TouchStarted(ETouchIndex::Type FingerIndex, FVector Location)
+
+// this and next two handle left click to rotate camera and other inclusive functions that need call
+void AProject4Character::AddInputToCameraRotation()
 {
-		Jump();
+	float deltaX, deltaY;
+
+	GetWorld()->GetFirstPlayerController()->GetInputMouseDelta(deltaX, deltaY);
+
+	FRotator Rotation = CameraBoom->GetRelativeRotation();
+	Rotation.Pitch = FMath::Clamp((Rotation.Pitch + deltaY * CameraSensitivity), -75.f, 50.f);
+	Rotation.Yaw += deltaX * CameraSensitivity;
+	
+	CameraBoom->SetRelativeRotation(Rotation);
 }
 
-void AProject4Character::TouchStopped(ETouchIndex::Type FingerIndex, FVector Location)
-{
-		StopJumping();
+void AProject4Character::StartMovePlayerCamera() {
+	doInputRotateCamera = true;
 }
+
+
+void AProject4Character::StopMovePlayerCamera() {
+	doInputRotateCamera = false;
+}
+
+
+
+
+// This and next to handle right click funcitonality of setting the player's rotaiton to camera rotation
+void AProject4Character::SetPlayerRotationToCamera()
+{
+	// Rotation actually stored in the camera boom
+	if (GetController() != NULL && ISCLIENT) {
+		//FRotator Rot = this->GetActorTransform().GetRotation().Rotator();
+		FRotator Rot = GetController()->GetControlRotation();
+		//print(FString::SanitizeFloat(Rot.Yaw, 3));
+		Rot.Yaw = CameraBoom->GetRelativeRotation().Yaw;
+
+		GetController()->SetControlRotation(Rot);
+	}
+}
+
+void AProject4Character::StartPlayerRotationToCamera()
+{
+	// invoke both helper methods
+	doRotatePlayerAndCamera = true;
+}
+
+void AProject4Character::StopPlayerRotationToCamera()
+{
+	doRotatePlayerAndCamera = false;
+}
+
+
+
+void AProject4Character::CameraZoom(float Value)
+{
+	CameraBoom->TargetArmLength = FMath::Clamp(Value * CameraZoomGranularity + CameraBoom->TargetArmLength, CameraZoomMin, CameraZoomMax);
+}
+
+//// BELOW WAS AUTO GENERATED ////
 
 void AProject4Character::TurnAtRate(float Rate)
 {
@@ -98,36 +175,37 @@ void AProject4Character::TurnAtRate(float Rate)
 	AddControllerYawInput(Rate * BaseTurnRate * GetWorld()->GetDeltaSeconds());
 }
 
-void AProject4Character::LookUpAtRate(float Rate)
-{
-	// calculate delta for this frame from the rate information
-	AddControllerPitchInput(Rate * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
-}
+
+
+
 
 void AProject4Character::MoveForward(float Value)
 {
 	if ((Controller != NULL) && (Value != 0.0f))
 	{
 		// find out which way is forward
-		const FRotator Rotation = Controller->GetControlRotation();
-		const FRotator YawRotation(0, Rotation.Yaw, 0);
+		//const FRotator Rotation = Controller->GetControlRotation();
+		//const FRotator YawRotation(0, Rotation.Yaw, 0);
 
 		// get forward vector
-		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+		//const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+		const FVector Direction = AActor::GetActorForwardVector();
 		AddMovementInput(Direction, Value);
 	}
 }
 
 void AProject4Character::MoveRight(float Value)
 {
-	if ( (Controller != NULL) && (Value != 0.0f) )
+	if ((Controller != NULL) && (Value != 0.0f))
 	{
 		// find out which way is right
-		const FRotator Rotation = Controller->GetControlRotation();
-		const FRotator YawRotation(0, Rotation.Yaw, 0);
-	
+		//const FRotator Rotation = Controller->GetControlRotation();
+		//const FRotator YawRotation(0, Rotation.Yaw, 0);
+
 		// get right vector 
-		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+		//const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+		const FVector Direction = AActor::GetActorRightVector();
+
 		// add movement in that direction
 		AddMovementInput(Direction, Value);
 	}
