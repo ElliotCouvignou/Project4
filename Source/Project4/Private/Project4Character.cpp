@@ -73,13 +73,6 @@ void AProject4Character::SetupPlayerInputComponent(class UInputComponent* Player
 	PlayerInputComponent->BindAxis("MoveForward", this, &AProject4Character::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AProject4Character::MoveRight);
 
-	// We have 2 versions of the rotation bindings to handle different kinds of devices differently
-	// "turn" handles devices that provide an absolute delta, such as a mouse.
-	// "turnrate" is for devices that we choose to treat as a rate of change, such as an analog joystick
-	//PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
-	//PlayerInputComponent->BindAxis("TurnRate", this, &AProject4Character::TurnAtRate);
-	//PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);	
-
 	////////// ABOVE WAS AUTO GENERATED ///////////
 	PlayerInputComponent->BindAxis("CameraZoom", this, &AProject4Character::CameraZoom);
 
@@ -97,7 +90,7 @@ void AProject4Character::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (doInputRotateCamera)
+	if (doInputRotateCamera && !doRotatePlayerAndCamera)
 		AddInputToCameraRotation();
 
 	if (doRotatePlayerAndCamera) {
@@ -140,9 +133,7 @@ void AProject4Character::SetPlayerRotationToCamera()
 {
 	// Rotation actually stored in the camera boom
 	if (GetController() != NULL /*&& ISCLIENT*/) {
-		//FRotator Rot = this->GetActorTransform().GetRotation().Rotator();
 		FRotator Rot = GetController()->GetControlRotation();
-		//print(FString::SanitizeFloat(Rot.Yaw, 3));
 		Rot.Yaw = CameraBoom->GetRelativeRotation().Yaw;
 
 		GetController()->SetControlRotation(Rot);
@@ -151,7 +142,6 @@ void AProject4Character::SetPlayerRotationToCamera()
 
 void AProject4Character::StartPlayerRotationToCamera()
 {
-	// invoke both helper methods
 	doRotatePlayerAndCamera = true;
 }
 
