@@ -139,7 +139,7 @@ void AProject4Character::StopMovePlayerCamera() {
 void AProject4Character::SetPlayerRotationToCamera()
 {
 	// Rotation actually stored in the camera boom
-	if (GetController() != NULL && ISCLIENT) {
+	if (GetController() != NULL /*&& ISCLIENT*/) {
 		//FRotator Rot = this->GetActorTransform().GetRotation().Rotator();
 		FRotator Rot = GetController()->GetControlRotation();
 		//print(FString::SanitizeFloat(Rot.Yaw, 3));
