@@ -67,11 +67,11 @@ void AProject4Character::SetupPlayerInputComponent(class UInputComponent* Player
 	// Set up gameplay key bindings
 	check(PlayerInputComponent);
 	InputComponent = PlayerInputComponent;
-	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
-	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
+	PlayerInputComponent->BindAction("JumpAction", IE_Pressed, this, &ACharacter::Jump);
+	PlayerInputComponent->BindAction("JumpAction", IE_Released, this, &ACharacter::StopJumping);
 
-	PlayerInputComponent->BindAxis("MoveForward", this, &AProject4Character::MoveForward);
-	PlayerInputComponent->BindAxis("MoveRight", this, &AProject4Character::MoveRight);
+	PlayerInputComponent->BindAxis("MoveForward/Backward", this, &AProject4Character::MoveForward);
+	PlayerInputComponent->BindAxis("MoveRight/Left", this, &AProject4Character::MoveRight);
 
 	// We have 2 versions of the rotation bindings to handle different kinds of devices differently
 	// "turn" handles devices that provide an absolute delta, such as a mouse.
