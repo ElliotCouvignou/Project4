@@ -1,5 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
+#define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::Green,text)
+
 #include "Project4GameMode.h"
 #include "Project4Character.h"
 #include "UObject/ConstructorHelpers.h"
@@ -17,11 +19,13 @@ AProject4GameMode::AProject4GameMode()
 void AProject4GameMode::BeginPlay()
 {
 	Super::BeginPlay();
-
+	print(FString(TEXT("ALLO")));
 
 // run on server only (do some diagnostic checks and handle issues w/force quit //
 #if WITH_GAMELIFT
 	auto InitSDKOutcome = Aws::GameLift::Server::InitSDK();
+
+
 
 	if (InitSDKOutcome.IsSuccess()) {
 		auto OnStartGameSession = [](Aws::GameLift::Server::Model::GameSession GameSessionObj, void* Params)
