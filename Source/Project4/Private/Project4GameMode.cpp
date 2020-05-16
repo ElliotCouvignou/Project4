@@ -19,7 +19,7 @@ AProject4GameMode::AProject4GameMode()
 void AProject4GameMode::BeginPlay()
 {
 	Super::BeginPlay();
-	print(FString(TEXT("ALLO")));
+	//print(FString(TEXT("ALLO")));
 
 // run on server only (do some diagnostic checks and handle issues w/force quit //
 #if WITH_GAMELIFT
