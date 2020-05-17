@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "PlayerAttributeStruct.h"
 #include "Project4Character.generated.h"
 
 UCLASS(config = Game)
@@ -12,7 +13,7 @@ class AProject4Character : public ACharacter
 	GENERATED_BODY()
 
 		/** Camera boom positioning the camera behind the character */
-		UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 		class USpringArmComponent* CameraBoom;
 
 	/** Follow camera */
@@ -30,17 +31,26 @@ public:
 		float BaseLookUpRate;
 
 	/* next 3 are variables handling delta, min/max camera zoom values */
-	UPROPERTY(EditAnywhere, Category = Camera)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
 		float CameraZoomGranularity;
 
-	UPROPERTY(EditAnywhere, Category = Camera)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
 		float CameraZoomMin;
 
-	UPROPERTY(EditAnywhere, Category = Camera)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
 		float CameraZoomMax;
 
-	UPROPERTY(EditAnywhere, Category = Camera)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
 		float CameraSensitivity;
+
+	// Replicated Player attributes/stats
+	UPROPERTY(Replicated, BlueprintReadWrite)
+		FPlayerAttributes PlayerAttributes;
+
+	UPROPERTY(BlueprintReadWrite)
+		bool doInputRotateCamera;
+	UPROPERTY(BlueprintReadWrite)
+		bool doRotatePlayerAndCamera;
 
 protected:
 
@@ -69,14 +79,7 @@ protected:
 	void StartPlayerRotationToCamera();
 	void StopPlayerRotationToCamera();
 
-
-private:
-	// private variables until i get comfortable with UPROPERTY
-	class UInputComponent* InputComponent;
-
-	bool doInputRotateCamera;
-	bool doRotatePlayerAndCamera;
-
+	
 
 protected:
 	// APawn interface

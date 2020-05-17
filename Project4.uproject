@@ -7,17 +7,25 @@
 		{
 			"Name": "Project4",
 			"Type": "Runtime",
-			"LoadingPhase": "Default"
+			"LoadingPhase": "Default",
+			"AdditionalDependencies": [
+				"UMG",
+				"Engine"
+			]
 		}
 	],
 	"Plugins": [
 		{
 			"Name": "GameLiftServerSDK",
-			"Enabled":  true
+			"Enabled": true
 		},
 		{
 			"Name": "GameLiftClientSDK",
-			"Enabled":  true
+			"Enabled": true
+		},
+		{
+			"Name": "GameplayAbilities",
+			"Enabled": true
 		}
 	]
 }

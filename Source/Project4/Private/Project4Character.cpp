@@ -5,7 +5,8 @@
 
 #include "Project4Character.h"
 #include "Project4.h"
-#include "HeadMountedDisplayFunctionLibrary.h"
+#include "Engine.h"
+#include "Net/UnrealNetwork.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
@@ -18,6 +19,10 @@
 
 AProject4Character::AProject4Character()
 {
+	// TESTIng structs stuff
+	PlayerAttributes.Health = 100.f;
+	PlayerAttributes.HealthMax = 100.f;
+
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 
@@ -27,7 +32,7 @@ AProject4Character::AProject4Character()
 
 	CameraZoomGranularity = 50.f;
 	CameraZoomMin = 150.f;
-	CameraZoomMax = 2000.f;
+	CameraZoomMax = 1000.f;
 	CameraSensitivity = 5.f;
 
 	doInputRotateCamera = false;
@@ -66,21 +71,20 @@ void AProject4Character::SetupPlayerInputComponent(class UInputComponent* Player
 {
 	// Set up gameplay key bindings
 	check(PlayerInputComponent);
-	InputComponent = PlayerInputComponent;
-	PlayerInputComponent->BindAction("JumpAction", IE_Pressed, this, &ACharacter::Jump);
-	PlayerInputComponent->BindAction("JumpAction", IE_Released, this, &ACharacter::StopJumping);
-
-	PlayerInputComponent->BindAxis("MoveForward/Backward", this, &AProject4Character::MoveForward);
-	PlayerInputComponent->BindAxis("MoveRight/Left", this, &AProject4Character::MoveRight);
-
-	////////// ABOVE WAS AUTO GENERATED ///////////
+	//PlayerInputComponent->BindAction("JumpAction", IE_Pressed, this, &ACharacter::Jump);
+	//PlayerInputComponent->BindAction("JumpAction", IE_Released, this, &ACharacter::StopJumping);
+	//
+	//PlayerInputComponent->BindAxis("MoveForward/Backward", this, &AProject4Character::MoveForward);
+	//PlayerInputComponent->BindAxis("MoveRight/Left", this, &AProject4Character::MoveRight);
+	//
+	//////////// ABOVE WAS AUTO GENERATED ///////////
 	PlayerInputComponent->BindAxis("CameraZoom", this, &AProject4Character::CameraZoom);
-
-	PlayerInputComponent->BindAction("MovePlayerCamera", IE_Pressed, this, &AProject4Character::StartMovePlayerCamera);
-	PlayerInputComponent->BindAction("MovePlayerCamera", IE_Released, this, &AProject4Character::StopMovePlayerCamera);
-
-	PlayerInputComponent->BindAction("RotatePlayerWithCamera", IE_Pressed, this, &AProject4Character::StartPlayerRotationToCamera);
-	PlayerInputComponent->BindAction("RotatePlayerWithCamera", IE_Released, this, &AProject4Character::StopPlayerRotationToCamera);
+	//
+	//PlayerInputComponent->BindAction("MovePlayerCamera", IE_Pressed, this, &AProject4Character::StartMovePlayerCamera);
+	//PlayerInputComponent->BindAction("MovePlayerCamera", IE_Released, this, &AProject4Character::StopMovePlayerCamera);
+	//
+	//PlayerInputComponent->BindAction("RotatePlayerWithCamera", IE_Pressed, this, &AProject4Character::StartPlayerRotationToCamera);
+	//PlayerInputComponent->BindAction("RotatePlayerWithCamera", IE_Released, this, &AProject4Character::StopPlayerRotationToCamera);
 
 }
 
@@ -90,15 +94,15 @@ void AProject4Character::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (doInputRotateCamera && !doRotatePlayerAndCamera)
-		AddInputToCameraRotation();
-
-	if (doRotatePlayerAndCamera) {
-		AddInputToCameraRotation();
-		SetPlayerRotationToCamera();
-		if (doInputRotateCamera)
-			MoveForward(1.f);
-	}
+	//if (doInputRotateCamera && !doRotatePlayerAndCamera)
+	//	AddInputToCameraRotation();
+	//
+	//if (doRotatePlayerAndCamera) {
+	//	AddInputToCameraRotation();
+	//	SetPlayerRotationToCamera();
+	//	if (doInputRotateCamera)
+	//		MoveForward(1.f);
+	//}
 }
 
 
@@ -110,7 +114,7 @@ void AProject4Character::AddInputToCameraRotation()
 	GetWorld()->GetFirstPlayerController()->GetInputMouseDelta(deltaX, deltaY);
 
 	FRotator Rotation = CameraBoom->GetRelativeRotation();
-	Rotation.Pitch = FMath::Clamp((Rotation.Pitch + deltaY * CameraSensitivity), -75.f, 50.f);
+	//Rotation.Pitch = FMath::Clamp((Rotation.Pitch + deltaY * CameraSensitivity), -75.f, 50.f);
 	Rotation.Yaw += deltaX * CameraSensitivity;
 	
 	CameraBoom->SetRelativeRotation(Rotation);
@@ -134,8 +138,8 @@ void AProject4Character::SetPlayerRotationToCamera()
 	// Rotation actually stored in the camera boom
 	if (GetController() != NULL /*&& ISCLIENT*/) {
 		FRotator Rot = GetController()->GetControlRotation();
-		Rot.Yaw = CameraBoom->GetRelativeRotation().Yaw;
-
+		Rot.Yaw = CameraBoom->GetTargetRotation().Yaw;
+		//print(FString::SanitizeFloat(Rot.Yaw, 4));
 		GetController()->SetControlRotation(Rot);
 	}
 }
@@ -167,18 +171,10 @@ void AProject4Character::TurnAtRate(float Rate)
 
 
 
-
-
 void AProject4Character::MoveForward(float Value)
 {
 	if ((Controller != NULL) && (Value != 0.0f))
 	{
-		// find out which way is forward
-		//const FRotator Rotation = Controller->GetControlRotation();
-		//const FRotator YawRotation(0, Rotation.Yaw, 0);
-
-		// get forward vector
-		//const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
 		const FVector Direction = AActor::GetActorForwardVector();
 		AddMovementInput(Direction, Value);
 	}
@@ -188,15 +184,19 @@ void AProject4Character::MoveRight(float Value)
 {
 	if ((Controller != NULL) && (Value != 0.0f))
 	{
-		// find out which way is right
-		//const FRotator Rotation = Controller->GetControlRotation();
-		//const FRotator YawRotation(0, Rotation.Yaw, 0);
-
-		// get right vector 
-		//const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 		const FVector Direction = AActor::GetActorRightVector();
 
 		// add movement in that direction
 		AddMovementInput(Direction, Value);
 	}
+}
+
+
+// ovveride replciation with replication variables
+void AProject4Character::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const {
+
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(AProject4Character, PlayerAttributes);
+
 }

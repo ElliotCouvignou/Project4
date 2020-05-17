@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 
+#define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::Green,text)
 
 #define ISDEDICATED (GEngine->GetNetMode(GetWorld()) == NM_DedicatedServer)
 #define ISLISTEN (GEngine->GetNetMode(GetWorld()) == NM_ListenServer)
