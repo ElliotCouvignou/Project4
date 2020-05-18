@@ -31,4 +31,7 @@ public:
 	// allows furhter customization within editor instead of code only, meta tag does this
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
 		class UProgressBar* HealthBar;
+
+	UPROPERTY(EditDefaultsOnly)
+		TSubclassOf<ACharacter> player;
 };

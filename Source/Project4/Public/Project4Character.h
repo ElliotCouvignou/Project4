@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "../UI/GameplayHUD.h"
 #include "PlayerAttributeStruct.h"
 #include "Project4Character.generated.h"
 
@@ -51,6 +52,10 @@ public:
 		bool doInputRotateCamera;
 	UPROPERTY(BlueprintReadWrite)
 		bool doRotatePlayerAndCamera;
+
+	UPROPERTY(EditDefaultsOnly, Category="HUD")
+		AHUD* playerHUD;
+
 
 protected:
 

@@ -20,8 +20,11 @@
 AProject4Character::AProject4Character()
 {
 	// TESTIng structs stuff
-	PlayerAttributes.Health = 100.f;
+	PlayerAttributes.Health = 10.f;
 	PlayerAttributes.HealthMax = 100.f;
+
+	playerHUD = GetWorld()->GetFirstPlayerController()->GetHUD();
+	
 
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
