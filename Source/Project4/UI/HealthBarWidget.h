@@ -21,10 +21,14 @@ public:
 
 	virtual void NativeConstruct() override;
 
+	/* Updates percentage on progress bar with percent */
+	UFUNCTION()
 	void UpdateHealthPercent(float percent);
 
+	UFUNCTION()
 	void Hide();
 
+	UFUNCTION()
 	void Show();
 
 	// instead of manually creating a progress bar, find one and implement there
@@ -32,6 +36,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
 		class UProgressBar* HealthBar;
 
-	UPROPERTY(EditDefaultsOnly)
-		TSubclassOf<ACharacter> player;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		class UTextBlock* HealthText;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		class UTextBlock* HealthMaxText;
+
+	//UPROPERTY(BlueprintReadWrite)
+	//	class AProject4Character* player;
+
 };

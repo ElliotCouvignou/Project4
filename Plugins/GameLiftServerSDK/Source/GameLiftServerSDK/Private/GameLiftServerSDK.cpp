@@ -185,26 +185,11 @@ bool OnHealthCheckInternal(void* state) {
 
 FGameLiftGenericOutcome FGameLiftServerSDKModule::ProcessReady(FProcessParameters &processParameters) {
 #if WITH_GAMELIFT
-	char logPathsBuffer[MAX_LOG_PATHS][MAX_PATH_LENGTH];
-	const char* logPaths[MAX_LOG_PATHS];
-
-	memset(logPaths, 0, sizeof(logPaths));
-	memset(logPathsBuffer, 0, sizeof(logPathsBuffer));
-
-    //only use the first MAX_LOG_PATHS values (duplicate logic in cpp SDK)
-	int32 numLogs = FMath::Min(processParameters.logParameters.Num(), MAX_LOG_PATHS);
-
-	for (int i = 0; i < numLogs; i++)
-	{
-		FTCHARToUTF8 utf8text(*processParameters.logParameters[i]);
-		if (utf8text.Length() < MAX_PATH_LENGTH)
-
-		{
-			memcpy(logPathsBuffer[i], utf8text.Get(), utf8text.Length());
-		}
-
-		logPaths[i] = logPathsBuffer[i];
-	}
+    const char* logPaths[MAX_LOG_PATHS];
+    for (int i = 0; i < processParameters.logParameters.Num(); i++)
+    {
+        logPaths[i] = TCHAR_TO_UTF8(*processParameters.logParameters[i]);
+    }
 
     Aws::GameLift::Server::ProcessParameters processParams = Aws::GameLift::Server::ProcessParameters(
         OnActivateFunctionInternal,
@@ -214,7 +199,7 @@ FGameLiftGenericOutcome FGameLiftServerSDKModule::ProcessReady(FProcessParameter
         OnHealthCheckInternal,
         &(processParameters),
         processParameters.port,
-        Aws::GameLift::Server::LogParameters(logPaths, numLogs));
+        Aws::GameLift::Server::LogParameters(logPaths, processParameters.logParameters.Num()));
 
     auto outcome = Aws::GameLift::Server::ProcessReady(processParams);
     if (outcome.IsSuccess()){

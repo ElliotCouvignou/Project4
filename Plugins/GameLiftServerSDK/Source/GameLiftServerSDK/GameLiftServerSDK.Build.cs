@@ -18,7 +18,20 @@ public class GameLiftServerSDK : ModuleRules
 {
     public GameLiftServerSDK(ReadOnlyTargetRules Target) : base (Target)
     {
-    
+        PublicIncludePaths.AddRange(
+            new string[] {
+            "GameLiftServerSDK/Public"
+            }
+            );
+
+
+        PrivateIncludePaths.AddRange(
+            new string[] {
+            "GameLiftServerSDK/Private",
+            }
+            );
+
+
         PublicDependencyModuleNames.AddRange(
             new string[]
             {
@@ -27,7 +40,22 @@ public class GameLiftServerSDK : ModuleRules
             }
             );
 
-        PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
+
+        PrivateDependencyModuleNames.AddRange(
+            new string[]
+            {
+            }
+            );
+
+
+        DynamicallyLoadedModuleNames.AddRange(
+            new string[]
+            {
+            }
+            );
+
+        // This is required to fix a warning for Unreal Engine 4.21 and later
+        PrivatePCHHeaderFile = "Private/GameLiftServerSDKPrivatePCH.h";
 
         bEnableExceptions = true;
 
@@ -46,11 +74,14 @@ public class GameLiftServerSDK : ModuleRules
                     SDKDirectory = System.IO.Path.Combine(SDKDirectory, "x86_64-unknown-linux-gnu");
                     string SDKLib = System.IO.Path.Combine(SDKDirectory, "libaws-cpp-sdk-gamelift-server.so");
                 
-                    PublicAdditionalLibraries.Add(SDKLib);
+                    PublicLibraryPaths.Add(SDKDirectory);
+                    PublicAdditionalLibraries.Add(SDKLib);    
                     RuntimeDependencies.Add(SDKLib);
                 }
                 else if (Target.Platform == UnrealTargetPlatform.Win64)
                 {
+                    PublicDefinitions.Add("USE_IMPORT_EXPORT");
+                    PublicLibraryPaths.Add(SDKDirectory);
                     PublicAdditionalLibraries.Add(System.IO.Path.Combine(SDKDirectory, "aws-cpp-sdk-gamelift-server.lib"));
                     PublicDelayLoadDLLs.Add("aws-cpp-sdk-gamelift-server.dll");
                     string SDKLibWindows = System.IO.Path.Combine(SDKDirectory, "aws-cpp-sdk-gamelift-server.dll");

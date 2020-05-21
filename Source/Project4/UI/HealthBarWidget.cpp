@@ -10,8 +10,10 @@ UHealthBarWidget::UHealthBarWidget(const FObjectInitializer& ObjectInitializer) 
 
 void UHealthBarWidget::NativeConstruct()
 {
-	Super::NativeConstruct();
+	Super::NativeConstruct();	
+	
 }
+
 
 void UHealthBarWidget::UpdateHealthPercent(float percent)
 {
@@ -20,8 +22,6 @@ void UHealthBarWidget::UpdateHealthPercent(float percent)
 		HealthBar->SetPercent(percent);
 	}
 }
-
-
 
 void UHealthBarWidget::Hide()
 {

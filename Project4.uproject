@@ -10,7 +10,9 @@
 			"LoadingPhase": "Default",
 			"AdditionalDependencies": [
 				"UMG",
-				"Engine"
+				"Engine",
+				"GameplayAbilities",
+				"GameplayTasks"
 			]
 		}
 	],

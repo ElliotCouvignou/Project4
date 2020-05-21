@@ -14,17 +14,14 @@
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
 
+#include "GameplayAbilitySet.h"
+#include "AbilitySystemGlobals.h"
+
 //////////////////////////////////////////////////////////////////////////
 // AProject4Character
 
 AProject4Character::AProject4Character()
 {
-	// TESTIng structs stuff
-	PlayerAttributes.Health = 10.f;
-	PlayerAttributes.HealthMax = 100.f;
-
-	playerHUD = GetWorld()->GetFirstPlayerController()->GetHUD();
-	
 
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
@@ -63,6 +60,9 @@ AProject4Character::AProject4Character()
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 
+	AbilitySystem = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystem"));
+	AttributeSet = CreateDefaultSubobject<UPlayerAttributeSet>(TEXT("AttributeSet"));
+
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
 }
@@ -74,88 +74,71 @@ void AProject4Character::SetupPlayerInputComponent(class UInputComponent* Player
 {
 	// Set up gameplay key bindings
 	check(PlayerInputComponent);
-	//PlayerInputComponent->BindAction("JumpAction", IE_Pressed, this, &ACharacter::Jump);
-	//PlayerInputComponent->BindAction("JumpAction", IE_Released, this, &ACharacter::StopJumping);
-	//
-	//PlayerInputComponent->BindAxis("MoveForward/Backward", this, &AProject4Character::MoveForward);
-	//PlayerInputComponent->BindAxis("MoveRight/Left", this, &AProject4Character::MoveRight);
-	//
-	//////////// ABOVE WAS AUTO GENERATED ///////////
 	PlayerInputComponent->BindAxis("CameraZoom", this, &AProject4Character::CameraZoom);
-	//
-	//PlayerInputComponent->BindAction("MovePlayerCamera", IE_Pressed, this, &AProject4Character::StartMovePlayerCamera);
-	//PlayerInputComponent->BindAction("MovePlayerCamera", IE_Released, this, &AProject4Character::StopMovePlayerCamera);
-	//
-	//PlayerInputComponent->BindAction("RotatePlayerWithCamera", IE_Pressed, this, &AProject4Character::StartPlayerRotationToCamera);
-	//PlayerInputComponent->BindAction("RotatePlayerWithCamera", IE_Released, this, &AProject4Character::StopPlayerRotationToCamera);
+
+
+	// -------------------------------------------------------------------------------------------
+	//			GameplayAbility System Bindings
+	// -------------------------------------------------------------------------------------------
+
+	// bind player/client specific input component
+	//AbilitySystem->BindToInputComponent(PlayerInputComponent);
+	
+	//AbilitySystem->BindAbilityActivationToInputComponent(PlayerInputComponent, FGameplayAbilityInputBinds("ConfirmInput", "CancelInput", "EAbilityInput"));
+	FGameplayAbilityInputBinds AbilityBinds("AbilityConfirm", "AbilityCancel", "EAbilityInput");
+	AbilitySystem->BindAbilityActivationToInputComponent(PlayerInputComponent, AbilityBinds);
 
 }
+
+void AProject4Character::BeginPlay()
+{
+	Super::BeginPlay();
+
+	
+	// Bind Abilities (Remove once we get skill trees or unlock to get skills)
+	if (AbilitySystem) 
+	{
+		FGameplayAbilityActorInfo* actorInfo = new FGameplayAbilityActorInfo();
+		actorInfo->InitFromActor(this, this, AbilitySystem);
+		AbilitySystem->AbilityActorInfo = TSharedPtr<FGameplayAbilityActorInfo>(actorInfo);
+
+		if (HasAuthority() && Ability)
+		{
+			AbilitySystem->GiveAbility(FGameplayAbilitySpec(Ability.GetDefaultObject(), 1, 0, this));
+		}
+		if (HasAuthority() && AbilitySet)
+		{
+			AbilitySet->GiveAbilities(AbilitySystem);
+		}
+		AbilitySystem->InitAbilityActorInfo(this, this);
+	}
+
+	// Init playerAttributes with .csv
+	if (AbilitySystem) {
+		const UAttributeSet* Attrs = AbilitySystem->InitStats(UPlayerAttributeSet::StaticClass(), AttrDataTable);
+	}
+}
+
+
+
 
 
 // Called every frame
 void AProject4Character::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	//if (doInputRotateCamera && !doRotatePlayerAndCamera)
-	//	AddInputToCameraRotation();
-	//
-	//if (doRotatePlayerAndCamera) {
-	//	AddInputToCameraRotation();
-	//	SetPlayerRotationToCamera();
-	//	if (doInputRotateCamera)
-	//		MoveForward(1.f);
-	//}
 }
 
 
-// this and next two handle left click to rotate camera and other inclusive functions that need call
-void AProject4Character::AddInputToCameraRotation()
+
+/* Server Event: Apply Damage to Character (Inputs raw damage)*/
+/* Take Damage Override Function, Only executed from server */
+float AProject4Character::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
-	float deltaX, deltaY;
-
-	GetWorld()->GetFirstPlayerController()->GetInputMouseDelta(deltaX, deltaY);
-
-	FRotator Rotation = CameraBoom->GetRelativeRotation();
-	//Rotation.Pitch = FMath::Clamp((Rotation.Pitch + deltaY * CameraSensitivity), -75.f, 50.f);
-	Rotation.Yaw += deltaX * CameraSensitivity;
-	
-	CameraBoom->SetRelativeRotation(Rotation);
+	//AttributeSet->Health.SetCurrentValue(AttributeSet->Health.GetCurrentValue() - Damage);
+	return Damage;
 }
 
-void AProject4Character::StartMovePlayerCamera() {
-	doInputRotateCamera = true;
-}
-
-
-void AProject4Character::StopMovePlayerCamera() {
-	doInputRotateCamera = false;
-}
-
-
-
-
-// This and next to handle right click funcitonality of setting the player's rotaiton to camera rotation
-void AProject4Character::SetPlayerRotationToCamera()
-{
-	// Rotation actually stored in the camera boom
-	if (GetController() != NULL /*&& ISCLIENT*/) {
-		FRotator Rot = GetController()->GetControlRotation();
-		Rot.Yaw = CameraBoom->GetTargetRotation().Yaw;
-		//print(FString::SanitizeFloat(Rot.Yaw, 4));
-		GetController()->SetControlRotation(Rot);
-	}
-}
-
-void AProject4Character::StartPlayerRotationToCamera()
-{
-	doRotatePlayerAndCamera = true;
-}
-
-void AProject4Character::StopPlayerRotationToCamera()
-{
-	doRotatePlayerAndCamera = false;
-}
 
 
 
@@ -200,6 +183,87 @@ void AProject4Character::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& O
 
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	DOREPLIFETIME(AProject4Character, PlayerAttributes);
+	//DOREPLIFETIME_CONDITION_NOTIFY(UPlayerAttributeSet, Health, COND_None, REPNOTIFY_Always);
 
+
+}
+
+void AProject4Character::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+
+	// essential for networking, make sure ability stays linked 
+	if (AbilitySystem) {
+		AbilitySystem->InitAbilityActorInfo(this, this);
+	}
+
+}
+
+void AProject4Character::OnRep_Controller()
+{
+	Super::OnRep_Controller();
+
+	// Changed PlayerController, update AbilitySystemCompnent
+	if (AbilitySystem) {
+		AbilitySystem->RefreshAbilityActorInfo();
+	}
+}
+
+
+
+
+
+
+/* UNUSED ATM FUNCTIONS */
+
+
+
+
+
+// this and next two handle left click to rotate camera and other inclusive functions that need call
+void AProject4Character::AddInputToCameraRotation()
+{
+	float deltaX, deltaY;
+
+	GetWorld()->GetFirstPlayerController()->GetInputMouseDelta(deltaX, deltaY);
+
+	FRotator Rotation = CameraBoom->GetRelativeRotation();
+	//Rotation.Pitch = FMath::Clamp((Rotation.Pitch + deltaY * CameraSensitivity), -75.f, 50.f);
+	Rotation.Yaw += deltaX * CameraSensitivity;
+
+	CameraBoom->SetRelativeRotation(Rotation);
+}
+
+void AProject4Character::StartMovePlayerCamera() {
+	doInputRotateCamera = true;
+}
+
+
+void AProject4Character::StopMovePlayerCamera() {
+	doInputRotateCamera = false;
+}
+
+
+
+
+// This and next to handle right click funcitonality of setting the player's rotaiton to camera rotation
+void AProject4Character::SetPlayerRotationToCamera()
+{
+	// Rotation actually stored in the camera boom
+	if (GetController() != NULL /*&& ISCLIENT*/) {
+		FRotator Rot = GetController()->GetControlRotation();
+		Rot.Yaw = CameraBoom->GetTargetRotation().Yaw;
+		//print(FString::SanitizeFloat(Rot.Yaw, 4));
+		GetController()->SetControlRotation(Rot);
+	}
+}
+
+void AProject4Character::StartPlayerRotationToCamera()
+{
+	doRotatePlayerAndCamera = true;
+}
+
+void AProject4Character::StopPlayerRotationToCamera()
+{
+	doRotatePlayerAndCamera = false;
 }
