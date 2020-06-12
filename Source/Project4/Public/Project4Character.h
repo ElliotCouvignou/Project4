@@ -18,7 +18,11 @@ class AProject4Character : public ACharacter, public IAbilitySystemInterface
 
 	GENERATED_BODY()
 
-
+	/***************************/
+	/*       Components        */
+	/***************************/
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Abilities, meta = (AllowPrivateAccess = "true"))
+		class UAbilitySystemComponent* AbilitySystem;
 
 		/** Camera boom positioning the camera behind the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
@@ -59,9 +63,6 @@ public:
 	/* Gameplay Ability system */
 	/***************************/
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Abilities, meta = (AllowPrivateAccess = "true"))
-		class UAbilitySystemComponent* AbilitySystem;
-
 	UAbilitySystemComponent* GetAbilitySystemComponent() const override { return AbilitySystem; };
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
@@ -73,17 +74,26 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 		UPlayerAbilitySet* AbilitySet;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Abilities)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Attributes)
 		UDataTable* AttrDataTable;
 
+	/***************************/
+	/*    Targeting system     */
+	/***************************/
 
+	UPROPERTY(EditAnywhere, Replicated, BlueprintReadWrite, Category = Abilities)
+		AActor* SelectedTarget;
+
+	/***************************/
+	/*      Camera system      */
+	/***************************/
 
 	/* unused Camera bools (move inside main_char_BP) */
 	UPROPERTY(BlueprintReadWrite)
 		bool doInputRotateCamera;
 	UPROPERTY(BlueprintReadWrite)
 		bool doRotatePlayerAndCamera;
-
+	
 
 protected:
 
@@ -100,6 +110,32 @@ protected:
 	 */
 	void TurnAtRate(float Rate);
 
+	/***************************/
+	/*    Input Handlers       */
+	/***************************/
+
+	UFUNCTION()
+		void HandleLeftClickPressed();
+	UFUNCTION()
+		void HandleLeftClickReleased();
+
+	/***************************/
+	/*    Targeting system     */
+	/***************************/
+
+	UFUNCTION()
+		void SelectTargetFromCursor();  // For left-click selection
+	UFUNCTION()
+		void SelectNextNearestTarget(); // For tab-targeting
+	UFUNCTION(Server, Reliable, WithValidation)
+		void ServerSetSelectedTarget(AProject4Character* TargetedActor, AActor* NewSelectedTarget);    // replciated Selected Target
+	virtual bool ServerSetSelectedTarget_Validate(AProject4Character* TargetedActor, AActor* NewSelectedTarget) { return true; }
+	virtual void ServerSetSelectedTarget_Implementation(AProject4Character* TargetedActor, AActor* NewSelectedTarget);
+
+	/***************************/
+	/*      Camera system      */
+	/***************************/
+
 	void CameraZoom(float Value);
 
 	// Binds to on left click pressed
@@ -111,8 +147,6 @@ protected:
 	void SetPlayerRotationToCamera();
 	void StartPlayerRotationToCamera();
 	void StopPlayerRotationToCamera();
-
-	
 
 protected:
 	// APawn interface

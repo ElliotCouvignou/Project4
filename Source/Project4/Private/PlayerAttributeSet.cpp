@@ -20,7 +20,7 @@ UPlayerAttributeSet::UPlayerAttributeSet(const FObjectInitializer& ObjectInitial
 void UPlayerAttributeSet::PreAttributeBaseChange(const FGameplayAttribute& Attribute, float& NewValue) const
 {
 	if (Attribute == HealthAttribute()) {
-		NewValue = FMath::Clamp(NewValue, -0.1f, HealthMax.GetCurrentValue());
+		NewValue = FMath::Clamp(NewValue, 0.0f, HealthMax.GetCurrentValue());
 	}
 }
 

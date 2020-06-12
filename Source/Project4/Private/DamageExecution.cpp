@@ -106,11 +106,13 @@ void UDamageExecution::Execute_Implementation(const FGameplayEffectCustomExecuti
 	float MagicResistance = 0.f;
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(Attributes.MagicResistanceDef, EvaluationParameters, MagicResistance);
 
-	print(FString(TEXT("INHERE")));
+	
 
 	//Finally, we go through our simple example damage calculation. BaseAttackPower and AttackMultiplier come from soruce, DefensePower comes from target.
 	float DamageDone = AttackPower / Armor + MagicPower / MagicResistance;
 
+	print(FString::SanitizeFloat(DamageDone, 3));
+		
 	// An optional step is to clamp to not take health lower than 0. This can be ignored,
 	// or implemented in the attribute sets' PostGameplayEffectExecution function. Your call, really.
 	// DamageDone = FMath::Min<float>(Damage, Health);

@@ -22,6 +22,9 @@
 
 AProject4Character::AProject4Character()
 {
+	// Netoworking characteristics for character
+	bReplicates = true;
+	bAlwaysRelevant = true;
 
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
@@ -60,23 +63,31 @@ AProject4Character::AProject4Character()
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 
+
+	/* GAS INITS */
 	AbilitySystem = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystem"));
+	AbilitySystem->SetIsReplicated(true);
+	AbilitySystem->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
+
 	AttributeSet = CreateDefaultSubobject<UPlayerAttributeSet>(TEXT("AttributeSet"));
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
 }
 
-//////////////////////////////////////////////////////////////////////////
-// Input
+/***************************/
+/*    Input Handlers       */
+/***************************/
 
 void AProject4Character::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
 	// Set up gameplay key bindings
 	check(PlayerInputComponent);
 	PlayerInputComponent->BindAxis("CameraZoom", this, &AProject4Character::CameraZoom);
-
-
+	
+	PlayerInputComponent->BindAction("LeftClick", IE_Pressed, this, &AProject4Character::HandleLeftClickPressed);
+	PlayerInputComponent->BindAction("LeftClick", IE_Released, this, &AProject4Character::HandleLeftClickReleased);
+	
 	// -------------------------------------------------------------------------------------------
 	//			GameplayAbility System Bindings
 	// -------------------------------------------------------------------------------------------
@@ -88,6 +99,17 @@ void AProject4Character::SetupPlayerInputComponent(class UInputComponent* Player
 	FGameplayAbilityInputBinds AbilityBinds("AbilityConfirm", "AbilityCancel", "EAbilityInput");
 	AbilitySystem->BindAbilityActivationToInputComponent(PlayerInputComponent, AbilityBinds);
 
+}
+
+void AProject4Character::HandleLeftClickPressed()
+{
+	// TODO: fill this with handler to decide on camera rotation or target selection
+	SelectTargetFromCursor();
+}
+
+void AProject4Character::HandleLeftClickReleased()
+{
+	// TODO: fill this with handler to decide on camera rotation or target selection
 }
 
 void AProject4Character::BeginPlay()
@@ -119,17 +141,22 @@ void AProject4Character::BeginPlay()
 	}
 }
 
-
-
-
-
 // Called every frame
 void AProject4Character::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 }
 
+// ovveride replciation with replication variables
+void AProject4Character::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const {
 
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	//DOREPLIFETIME_CONDITION_NOTIFY(UPlayerAttributeSet, Health, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME(AProject4Character, SelectedTarget);
+
+
+}
 
 /* Server Event: Apply Damage to Character (Inputs raw damage)*/
 /* Take Damage Override Function, Only executed from server */
@@ -139,7 +166,64 @@ float AProject4Character::TakeDamage(float Damage, FDamageEvent const& DamageEve
 	return Damage;
 }
 
+void AProject4Character::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
 
+	// essential for networking, make sure ability stays linked 
+	if (AbilitySystem) {
+		AbilitySystem->InitAbilityActorInfo(this, this);
+	}
+
+}
+
+void AProject4Character::OnRep_Controller()
+{
+	Super::OnRep_Controller();
+
+	// Changed PlayerController, update AbilitySystemCompnent
+	if (AbilitySystem) {
+		AbilitySystem->RefreshAbilityActorInfo();
+	}
+}
+
+
+/***************************/
+/*    Targeting system     */
+/***************************/
+
+void AProject4Character::SelectTargetFromCursor()
+{
+	APlayerController* PController = GetWorld()->GetFirstPlayerController();
+	
+	FHitResult HitResult;
+	PController->GetHitResultUnderCursorByChannel(UEngineTypes::ConvertToTraceType(ECC_Visibility), true, HitResult);
+	
+	// only allow this class and children of this class to be selectable
+	AActor* HitActor = HitResult.GetActor();
+	if (Cast<AProject4Character>(HitActor)) {
+		ServerSetSelectedTarget(this, HitResult.GetActor());
+		SelectedTarget = HitResult.GetActor();
+		
+	}
+}
+
+void AProject4Character::SelectNextNearestTarget()
+{
+	// TODO Implement Tab-style targeting, make sure to grab next nearest
+}
+
+/*   Replication Area   */
+
+void AProject4Character::ServerSetSelectedTarget_Implementation(AProject4Character* TargetedActor, AActor* NewSelectedTarget)
+{
+	TargetedActor->SelectedTarget = NewSelectedTarget;
+}
+
+
+/***************************/
+/*      Camera system      */
+/***************************/
 
 
 void AProject4Character::CameraZoom(float Value)
@@ -154,6 +238,8 @@ void AProject4Character::TurnAtRate(float Rate)
 	// calculate delta for this frame from the rate information
 	AddControllerYawInput(Rate * BaseTurnRate * GetWorld()->GetDeltaSeconds());
 }
+
+
 
 
 
@@ -178,36 +264,7 @@ void AProject4Character::MoveRight(float Value)
 }
 
 
-// ovveride replciation with replication variables
-void AProject4Character::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const {
 
-	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-
-	//DOREPLIFETIME_CONDITION_NOTIFY(UPlayerAttributeSet, Health, COND_None, REPNOTIFY_Always);
-
-
-}
-
-void AProject4Character::PossessedBy(AController* NewController)
-{
-	Super::PossessedBy(NewController);
-
-	// essential for networking, make sure ability stays linked 
-	if (AbilitySystem) {
-		AbilitySystem->InitAbilityActorInfo(this, this);
-	}
-
-}
-
-void AProject4Character::OnRep_Controller()
-{
-	Super::OnRep_Controller();
-
-	// Changed PlayerController, update AbilitySystemCompnent
-	if (AbilitySystem) {
-		AbilitySystem->RefreshAbilityActorInfo();
-	}
-}
 
 
 
