@@ -4,6 +4,8 @@
 #define printFString(text, fstring) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Magenta, FString::Printf(TEXT(text), fstring))
 
 #include "Project4Character.h"
+#include "Project4Controller.h"
+#include "../UI/GameplayHUD.h"
 #include "Project4.h"
 #include "Engine.h"
 #include "Net/UnrealNetwork.h"
@@ -13,6 +15,11 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
+
+#include "AbilitySystemComponent.h"
+#include "P4GameplayAbility.h"
+#include "GameplayAbilitySpec.h"
+
 
 #include "GameplayAbilitySet.h"
 #include "AbilitySystemGlobals.h"
@@ -35,7 +42,7 @@ AProject4Character::AProject4Character()
 
 	CameraZoomGranularity = 50.f;
 	CameraZoomMin = 150.f;
-	CameraZoomMax = 1000.f;
+	CameraZoomMax = 1500.f;
 	CameraSensitivity = 5.f;
 
 	doInputRotateCamera = false;
@@ -96,8 +103,9 @@ void AProject4Character::SetupPlayerInputComponent(class UInputComponent* Player
 	//AbilitySystem->BindToInputComponent(PlayerInputComponent);
 	
 	//AbilitySystem->BindAbilityActivationToInputComponent(PlayerInputComponent, FGameplayAbilityInputBinds("ConfirmInput", "CancelInput", "EAbilityInput"));
-	FGameplayAbilityInputBinds AbilityBinds("AbilityConfirm", "AbilityCancel", "EAbilityInput");
-	AbilitySystem->BindAbilityActivationToInputComponent(PlayerInputComponent, AbilityBinds);
+	//FGameplayAbilityInputBinds AbilityBinds("AbilityConfirm", "AbilityCancel", "EAbilityInput");
+	//AbilitySystem->BindAbilityActivationToInputComponent(PlayerInputComponent, AbilityBinds);
+	BindASCInput();
 
 }
 
@@ -112,6 +120,8 @@ void AProject4Character::HandleLeftClickReleased()
 	// TODO: fill this with handler to decide on camera rotation or target selection
 }
 
+
+
 void AProject4Character::BeginPlay()
 {
 	Super::BeginPlay();
@@ -124,20 +134,19 @@ void AProject4Character::BeginPlay()
 		actorInfo->InitFromActor(this, this, AbilitySystem);
 		AbilitySystem->AbilityActorInfo = TSharedPtr<FGameplayAbilityActorInfo>(actorInfo);
 
-		if (HasAuthority() && Ability)
-		{
-			AbilitySystem->GiveAbility(FGameplayAbilitySpec(Ability.GetDefaultObject(), 1, 0, this));
-		}
-		if (HasAuthority() && AbilitySet)
-		{
-			AbilitySet->GiveAbilities(AbilitySystem);
-		}
 		AbilitySystem->InitAbilityActorInfo(this, this);
 	}
 
 	// Init playerAttributes with .csv
 	if (AbilitySystem) {
 		const UAttributeSet* Attrs = AbilitySystem->InitStats(UPlayerAttributeSet::StaticClass(), AttrDataTable);
+	}
+
+	if (IsLocallyControlled()) {
+		AProject4Controller* PC = Cast<AProject4Controller>(GetController());
+		if (PC) {
+			HUD = Cast<AGameplayHUD>(PC->GetHUD());
+		}
 	}
 }
 
@@ -173,6 +182,8 @@ void AProject4Character::PossessedBy(AController* NewController)
 	// essential for networking, make sure ability stays linked 
 	if (AbilitySystem) {
 		AbilitySystem->InitAbilityActorInfo(this, this);
+
+		AddAllStartupEffects();
 	}
 
 }
@@ -189,8 +200,90 @@ void AProject4Character::OnRep_Controller()
 
 
 /***************************/
+/* Gameplay Ability system */
+/***************************/
+
+
+void AProject4Character::AddAllCharacterAbilities()
+{
+	if (!HasAuthority() || !AbilitySystem) {
+		return;
+	}
+
+	int idx = 0;
+	for (TSubclassOf<UP4GameplayAbility>& StartupAbility : BoundAbilities) {
+		if (BoundAbilities[idx]) {
+			AbilitySpecHandles[idx] = AbilitySystem->GiveAbility(
+				FGameplayAbilitySpec(BoundAbilities[idx], 1, ABILITY_INPUT_OFFSET + idx, this));
+		}
+		idx += 1;
+	}
+}
+
+
+void AProject4Character::AddAllStartupEffects()
+{
+	if (!HasAuthority()|| !AbilitySystem)
+	{
+		return;
+	}
+
+	FGameplayEffectContextHandle EffectContext = AbilitySystem->MakeEffectContext();
+	EffectContext.AddSourceObject(this);
+
+	for (TSubclassOf<UGameplayEffect> GameplayEffect : StartupEffects)
+	{
+		FGameplayEffectSpecHandle NewHandle = AbilitySystem->MakeOutgoingSpec(GameplayEffect, 1, EffectContext);
+		if (NewHandle.IsValid())
+		{
+			FActiveGameplayEffectHandle ActiveGEHandle = AbilitySystem->ApplyGameplayEffectSpecToTarget(*NewHandle.Data.Get(), AbilitySystem);
+		}
+	}
+}
+
+void AProject4Character::GivePlayerAbility_Implementation(AProject4Character* TargetActor, int32 BlockIndex, TSubclassOf<class UP4GameplayAbility> Ability)
+{
+	if (TargetActor->AbilitySystem) {
+		if (TargetActor->AbilitySpecHandles.IsValidIndex(BlockIndex) && (TargetActor->AbilitySpecHandles[BlockIndex].IsValid())){
+				TargetActor->AbilitySystem->ClearAbility(AbilitySpecHandles[BlockIndex]);
+		}
+
+		TargetActor->BoundAbilities.Insert(Ability, BlockIndex);
+		FGameplayAbilitySpecHandle NewAbilityHandle = AbilitySystem->GiveAbility(
+			FGameplayAbilitySpec(BoundAbilities[BlockIndex], 1, ABILITY_INPUT_OFFSET + BlockIndex, this));
+		TargetActor->AbilitySpecHandles.Insert(NewAbilityHandle, BlockIndex);
+	}
+}
+
+
+bool AProject4Character::GivePlayerAbility_Validate(AProject4Character* TargetActor, int32 BlockIndex, TSubclassOf<class UP4GameplayAbility> Ability)
+{
+	if (TargetActor->AbilitySystem) {
+		if (TargetActor->AbilitySpecHandles.IsValidIndex(BlockIndex)) {
+			if (TargetActor->BoundAbilities[BlockIndex] != Ability)
+				return false;
+		}
+	}
+	return true;
+}
+
+void AProject4Character::BindASCInput()
+{
+	if (!bASCInputBound && AbilitySystem && IsValid(InputComponent)) {
+		FGameplayAbilityInputBinds AbilityBinds("ConfirmAbility", "CancelAbility", "EP4AbilityInputID", 
+			static_cast<int32>(EP4AbilityInputID::Confirm), static_cast<int32>(EP4AbilityInputID::Cancel));
+
+		AbilitySystem->BindAbilityActivationToInputComponent(InputComponent, AbilityBinds);
+		
+		bASCInputBound = true;
+	}
+}
+
+
+/***************************/
 /*    Targeting system     */
 /***************************/
+
 
 void AProject4Character::SelectTargetFromCursor()
 {
@@ -204,8 +297,18 @@ void AProject4Character::SelectTargetFromCursor()
 	if (Cast<AProject4Character>(HitActor)) {
 		ServerSetSelectedTarget(this, HitResult.GetActor());
 		SelectedTarget = HitResult.GetActor();
-		
+
+		// Update Target Selected Widget with new information
+		if(IsLocallyControlled())
+			HUD->SetNewTargetData(SelectedTarget);
 	}
+	else {
+		// Unselect target, set target widget off
+		if (IsLocallyControlled())
+			HUD->SetNewTargetData(nullptr);
+
+		SelectedTarget = nullptr; // might cause probs
+	}	
 }
 
 void AProject4Character::SelectNextNearestTarget()

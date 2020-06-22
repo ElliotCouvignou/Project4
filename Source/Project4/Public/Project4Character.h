@@ -8,6 +8,7 @@
 #include "AbilitySystemInterface.h"
 #include "PlayerAttributeSet.h"
 #include "PlayerAbilitySet.h"
+#include "P4GameplayAbility.h"
 #include "Project4Character.generated.h"
 
 
@@ -60,22 +61,36 @@ public:
 
 
 	/***************************/
-	/* Gameplay Ability system */
+	/* Gameplay Ability system */  
 	/***************************/
 
 	UAbilitySystemComponent* GetAbilitySystemComponent() const override { return AbilitySystem; };
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
-		TSubclassOf<class UGameplayAbility> Ability; 
-
 	UPROPERTY(EditAnywhere, Replicated, BlueprintReadOnly, Category = Attributes)
 		UPlayerAttributeSet* AttributeSet;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
-		UPlayerAbilitySet* AbilitySet;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Attributes)
 		UDataTable* AttrDataTable;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = Abilities)
+		TArray<TSubclassOf<class UGameplayEffect>> StartupEffects;
+
+	// 'sorted' Array to hold all bound abilities, Index 0 = UseAbility1, 9 = UseAbility0. 
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = Abilities)
+		TArray<TSubclassOf<class UP4GameplayAbility>> BoundAbilities;
+
+	// 'sorted' in same fashion above, this is essential
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = Abilities)
+		TArray<FGameplayAbilitySpecHandle> AbilitySpecHandles;
+
+	// Called on new hotbar ability assignment, can change input bindings and replace
+	// Abilities with new bindings. Does remove old abilities in spot if exists
+	// Adding abilities requires server control, so call server and it will replicate for us
+	UFUNCTION(BlueprintCallable, Server, Reliable, WithValidation, Category = Abilities)
+		void GivePlayerAbility(AProject4Character* TargetActor, int32 BlockIndex, TSubclassOf<class UP4GameplayAbility> Ability);
+	virtual bool GivePlayerAbility_Validate(AProject4Character* TargetActor, int32 BlockIndex, TSubclassOf<class UP4GameplayAbility> Ability);
+	virtual void GivePlayerAbility_Implementation(AProject4Character* TargetActor, int32 BlockIndex, TSubclassOf<class UP4GameplayAbility> Ability);
+
 
 	/***************************/
 	/*    Targeting system     */
@@ -83,6 +98,9 @@ public:
 
 	UPROPERTY(EditAnywhere, Replicated, BlueprintReadWrite, Category = Abilities)
 		AActor* SelectedTarget;
+
+	UPROPERTY()
+		class AGameplayHUD* HUD;
 
 	/***************************/
 	/*      Camera system      */
@@ -120,6 +138,21 @@ protected:
 		void HandleLeftClickReleased();
 
 	/***************************/
+	/* Gameplay Ability system */
+	/***************************/
+
+	bool bASCInputBound = false;
+
+	// grants abilities (maybe move to hotbar system or call it)
+	virtual void AddAllCharacterAbilities();
+
+	// Called on actorSpawn, GE's shouldn't be canceled unless we make skills to stop regen
+	virtual void AddAllStartupEffects();
+
+
+	void BindASCInput();
+
+	/***************************/
 	/*    Targeting system     */
 	/***************************/
 
@@ -148,7 +181,6 @@ protected:
 	void StartPlayerRotationToCamera();
 	void StopPlayerRotationToCamera();
 
-protected:
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	// End of APawn interface
@@ -176,21 +208,3 @@ public:
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 };
 
-//It's very important that this enum is UENUM, because the code will look for UENUM by the given name and crash if the UENUM can't be found. BlueprintType is there so we can use these in blueprints, too. Just in case. Can be neat to define ability packages.
-UENUM(BlueprintType)
-namespace EAbilityInput
-{
-	enum Type
-	{
-		UseAbility1				UMETA(DisplayName = "TestSpell"),
-		UseAbility2				UMETA(DisplayName = "TestSpell2"),
-		UseAbility3				UMETA(DisplayName = "Ability3"),
-		UseAbility4				UMETA(DisplayName = "Ability4"),
-		UseAbility5				UMETA(DisplayName = "Ability5"),
-		UseAbility6				UMETA(DisplayName = "Ability6"),
-		UseAbility7				UMETA(DisplayName = "Ability7"),
-		UseAbility8				UMETA(DisplayName = "Ability8"),
-		UseAbility9				UMETA(DisplayName = "Ability9"),
-		WeaponAbility			UMETA(DispalyName = "WeaponAutoAttack")
-	};
-}

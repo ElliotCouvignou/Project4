@@ -2,9 +2,9 @@
 
 
 #include "DamageExecution.h"
-#include "Project4.h"
+#include "PlayerAttributeSet.h"
 
-struct AttStruct
+struct DamageAttStruct
 {
 	DECLARE_ATTRIBUTE_CAPTUREDEF(Health); //The DECLARE_ATTRIBUTE_CAPTUREDEF macro actually only declares two variables. The variable names are dependent on the input, however. Here they will be HealthProperty(which is a UPROPERTY pointer)
 										  //and HealthDef(which is a FGameplayEffectAttributeCaptureDefinition).
@@ -14,7 +14,10 @@ struct AttStruct
 	DECLARE_ATTRIBUTE_CAPTUREDEF(AttackPower);
 	DECLARE_ATTRIBUTE_CAPTUREDEF(MagicPower);
 
-	AttStruct()
+	// Meta Attributes
+	DECLARE_ATTRIBUTE_CAPTUREDEF(Damage);
+
+	DamageAttStruct()
 	{
 		// We define the values of the variables we declared now. In this example, 
 		//HealthProperty will point to the Health attribute in the UPlayerAttributeSet 
@@ -33,12 +36,15 @@ struct AttStruct
 		//The same rules apply for the multiplier attributes too.
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UPlayerAttributeSet, Armor, Target, false);
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UPlayerAttributeSet, MagicResistance, Target, false);
+
+		// Meta Attributes
+		DEFINE_ATTRIBUTE_CAPTUREDEF(UPlayerAttributeSet, Damage, Target, false);
 	}
 };
 
-AttStruct& Damage()
+DamageAttStruct& Damage()
 {
-	static AttStruct It;
+	static DamageAttStruct It;
 	return It;
 }
 
@@ -46,7 +52,7 @@ AttStruct& Damage()
 UDamageExecution::UDamageExecution(const FObjectInitializer& ObjectInitializer)
     : Super(ObjectInitializer)
 {
-    AttStruct Attributes;
+	DamageAttStruct Attributes;
 
     //RelevantAttributesToCapture is the array that contains all attributes you wish to capture, without exceptions. 
     RelevantAttributesToCapture.Add(Attributes.HealthDef);  
@@ -63,12 +69,11 @@ UDamageExecution::UDamageExecution(const FObjectInitializer& ObjectInitializer)
 void UDamageExecution::Execute_Implementation(const FGameplayEffectCustomExecutionParameters& ExecutionParams, FGameplayEffectCustomExecutionOutput& OutExecutionOutput) const
 {
     //Creating the attribute struct, we will need its values later when we want to get the attribute values.
-    AttStruct Attributes;
+	DamageAttStruct Attributes;
 
     // We put AbilitySystemComponents into little helper variables. Not necessary, 
     // but it helps keeping us from typing so much.
-    UAbilitySystemComponent* TargetAbilitySystemComponent = ExecutionParams.GetTargetAbilitySystemComponent();
-
+	UAbilitySystemComponent* TargetAbilitySystemComponent = ExecutionParams.GetTargetAbilitySystemComponent();
 	UAbilitySystemComponent* SourceAbilitySystemComponent = ExecutionParams.GetSourceAbilitySystemComponent();
 
 	AActor* SourceActor = SourceAbilitySystemComponent ? SourceAbilitySystemComponent->AvatarActor : nullptr; //If our AbilitySystemComponents are valid, we get each their owning actors and put them in variables. This is mostly to prevent crashing by trying to get the AvatarActor variable from
@@ -109,10 +114,12 @@ void UDamageExecution::Execute_Implementation(const FGameplayEffectCustomExecuti
 	
 
 	//Finally, we go through our simple example damage calculation. BaseAttackPower and AttackMultiplier come from soruce, DefensePower comes from target.
-	float DamageDone = AttackPower / Armor + MagicPower / MagicResistance;
+	float BaseDamage = FMath::Max<float>(Spec.GetSetByCallerMagnitude(FGameplayTag::RequestGameplayTag(FName("Data.Damage")), false, -1.0f), 0.0f); //AttackPower / Armor + MagicPower / MagicResistance;
+	
+	float RawDamage = BaseDamage; // Apply Bonuses here
 
-	print(FString::SanitizeFloat(DamageDone, 3));
-		
+	float DamageDone = RawDamage; // Apply mitigation here
+
 	// An optional step is to clamp to not take health lower than 0. This can be ignored,
 	// or implemented in the attribute sets' PostGameplayEffectExecution function. Your call, really.
 	// DamageDone = FMath::Min<float>(Damage, Health);
@@ -123,8 +130,9 @@ void UDamageExecution::Execute_Implementation(const FGameplayEffectCustomExecuti
 	// GameplayEffectExecutionCalculation.
 	if (DamageDone > 0.f)
 	{
-		OutExecutionOutput.AddOutputModifier(FGameplayModifierEvaluatedData(Damage().HealthProperty, EGameplayModOp::Additive, -DamageDone));
+		OutExecutionOutput.AddOutputModifier(FGameplayModifierEvaluatedData(Damage().DamageProperty, EGameplayModOp::Additive, DamageDone));
+		//OutExecutionOutput.AddOutputModifier(FGameplayModifierEvaluatedData(Damage().HealthProperty, EGameplayModOp::Additive, -DamageDone));
 	}
-
+	
 	//Congratulations, your damage calculation is complete!
 }

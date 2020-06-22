@@ -18,26 +18,30 @@ public class Project4 : ModuleRules
 			"InputCore", 
 			"GameplayTags",
 			"GameplayAbilities",
-			"HeadMountedDisplay", // remove eventually (VR headsets)
+			"GameplayTasks",
 			"GameLiftServerSDK", 
 			"GameLiftClientSDK" 
 			}
 		);
 
 		/* Gameplay Ability System w/related plugins */
-		PrivateDependencyModuleNames.AddRange(new string[] { 
-			"GameplayAbilities",
-			"GameplayAbilitiesEditor",
-			"GameplayTagsEditor",
-			"GameplayTasks"
-			}
-		);
+		//PrivateDependencyModuleNames.AddRange(new string[] { 
+		//	"GameplayAbilities",
+		//	"GameplayTasks"
+		//	}
+		//);
+
+		//			"GameplayAbilitiesEditor",
+		//			"GameplayTagsEditor",
 
 		/* UI related modules */
 		PrivateDependencyModuleNames.AddRange(new string[] {
 			"Slate",
 			"SlateCore",
-			"UMG"
+			"UMG",
+			"GameplayAbilities",
+			"GameplayTags",
+			"GameplayTasks"
 			}
 		);
 

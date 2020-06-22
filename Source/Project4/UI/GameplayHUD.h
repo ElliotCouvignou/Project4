@@ -6,7 +6,6 @@
 #include "GameFramework/HUD.h"
 
 #include "Components/WidgetComponent.h"
-#include "HealthBarWidget.h"
 
 #include "GameplayHUD.generated.h"
 
@@ -27,14 +26,8 @@ public:
 
 	virtual void Tick(float DeltaSeconds) override;
 
-	UFUNCTION()
-	void UpdateHealthBar(float percent);
-
-	UPROPERTY(EditDefaultsOnly, Category = "Widgets")
-	TSubclassOf<UUserWidget> HealthBarClass;
-
-private:
-	UHealthBarWidget* HealthBarWidget;
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+		void SetNewTargetData(AActor* NewTarget);
 
 
 };

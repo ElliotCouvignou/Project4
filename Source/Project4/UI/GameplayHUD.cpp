@@ -25,17 +25,5 @@ void AGameplayHUD::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (HealthBarClass)
-	{
-		HealthBarWidget = CreateWidget<UHealthBarWidget>(GetWorld(), HealthBarClass);
-		if (HealthBarWidget)
-			HealthBarWidget->AddToViewport();
-	}
 }
 
-void AGameplayHUD::UpdateHealthBar(float percent)
-{
-	if (HealthBarWidget) {
-		HealthBarWidget->UpdateHealthPercent(percent);
-	}
-}

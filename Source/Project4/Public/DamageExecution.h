@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameplayEffectExecutionCalculation.h"
-#include "PlayerAttributeSet.h"
+
 #include "DamageExecution.generated.h"
 
 /**
@@ -15,9 +15,12 @@ class PROJECT4_API UDamageExecution : public UGameplayEffectExecutionCalculation
 {
 	GENERATED_UCLASS_BODY()
 
-		/* Actual Damage calculations */
-		UFUNCTION()
+public:
+
+	/* Actual Damage calculations */
+	UFUNCTION()
 		virtual void Execute_Implementation(const FGameplayEffectCustomExecutionParameters& ExecutionParams, FGameplayEffectCustomExecutionOutput& OutExecutionOutput) const;
+
 };
 
 
