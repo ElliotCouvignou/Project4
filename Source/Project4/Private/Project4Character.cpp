@@ -1,11 +1,9 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 // define a print message function to print to screen
-#define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::Green,text)
-#define printFString(text, fstring) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Magenta, FString::Printf(TEXT(text), fstring))
 
 #include "Project4Character.h"
 #include "Project4Controller.h"
-#include "../UI/GameplayHUD.h"
+#include "UI/GameplayHUD.h"
 #include "Project4.h"
 #include "Engine.h"
 #include "Net/UnrealNetwork.h"
@@ -16,13 +14,18 @@
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
 
-#include "AbilitySystemComponent.h"
-#include "P4GameplayAbility.h"
+#include "Project4PlayerState.h"
+
 #include "GameplayAbilitySpec.h"
-
-
-#include "GameplayAbilitySet.h"
+#include "AbilitySystemComponent.h"
 #include "AbilitySystemGlobals.h"
+#include "AbilitySystem/P4GameplayAbility.h"
+#include "AbilitySystem/PlayerAttributeSet.h"
+#include "AbilitySystem/P4GameplayAbilitySet.h"
+#include "AbilitySystem/P4AbilitySystemComponent.h"
+
+#define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Green,text)
+
 
 //////////////////////////////////////////////////////////////////////////
 // AProject4Character
@@ -72,14 +75,26 @@ AProject4Character::AProject4Character()
 
 
 	/* GAS INITS */
-	AbilitySystem = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystem"));
-	AbilitySystem->SetIsReplicated(true);
-	AbilitySystem->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
+	AbilitySystemComponent = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystem"));
+	AbilitySystemComponent->SetIsReplicated(true);
+	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
 
 	AttributeSet = CreateDefaultSubobject<UPlayerAttributeSet>(TEXT("AttributeSet"));
 
+	/* add RH and LH weapon Skeletal meshes socketed to hands */
+	MeshLH = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("MeshLH"));
+	MeshLH->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, FName(TEXT("Hand_L_Socket")));
+
+	MeshRH = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("MeshRH"));
+	MeshRH->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, FName(TEXT("hand_r_Socket")));
+
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
+}
+
+UAbilitySystemComponent* AProject4Character::GetAbilitySystemComponent() const
+{
+	return AbilitySystemComponent;
 }
 
 /***************************/
@@ -98,21 +113,14 @@ void AProject4Character::SetupPlayerInputComponent(class UInputComponent* Player
 	// -------------------------------------------------------------------------------------------
 	//			GameplayAbility System Bindings
 	// -------------------------------------------------------------------------------------------
-
-	// bind player/client specific input component
-	//AbilitySystem->BindToInputComponent(PlayerInputComponent);
-	
-	//AbilitySystem->BindAbilityActivationToInputComponent(PlayerInputComponent, FGameplayAbilityInputBinds("ConfirmInput", "CancelInput", "EAbilityInput"));
-	//FGameplayAbilityInputBinds AbilityBinds("AbilityConfirm", "AbilityCancel", "EAbilityInput");
-	//AbilitySystem->BindAbilityActivationToInputComponent(PlayerInputComponent, AbilityBinds);
 	BindASCInput();
-
 }
 
 void AProject4Character::HandleLeftClickPressed()
 {
 	// TODO: fill this with handler to decide on camera rotation or target selection
 	SelectTargetFromCursor();
+	
 }
 
 void AProject4Character::HandleLeftClickReleased()
@@ -126,20 +134,18 @@ void AProject4Character::BeginPlay()
 {
 	Super::BeginPlay();
 
-	
-	// Bind Abilities (Remove once we get skill trees or unlock to get skills)
-	if (AbilitySystem) 
-	{
+	if (AbilitySystemComponent) {
+
+		// Bind Abilities (Remove once we get skill trees or unlock to get skills)
 		FGameplayAbilityActorInfo* actorInfo = new FGameplayAbilityActorInfo();
-		actorInfo->InitFromActor(this, this, AbilitySystem);
-		AbilitySystem->AbilityActorInfo = TSharedPtr<FGameplayAbilityActorInfo>(actorInfo);
+		actorInfo->InitFromActor(this, this, AbilitySystemComponent);
+		AbilitySystemComponent->AbilityActorInfo = TSharedPtr<FGameplayAbilityActorInfo>(actorInfo);
 
-		AbilitySystem->InitAbilityActorInfo(this, this);
-	}
+		AbilitySystemComponent->InitAbilityActorInfo(this, this);
 
-	// Init playerAttributes with .csv
-	if (AbilitySystem) {
-		const UAttributeSet* Attrs = AbilitySystem->InitStats(UPlayerAttributeSet::StaticClass(), AttrDataTable);
+
+		// Init playerAttributes with .csv
+		const UAttributeSet* Attrs = AbilitySystemComponent->InitStats(UPlayerAttributeSet::StaticClass(), AttrDataTable);
 	}
 
 	if (IsLocallyControlled()) {
@@ -163,6 +169,9 @@ void AProject4Character::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& O
 
 	//DOREPLIFETIME_CONDITION_NOTIFY(UPlayerAttributeSet, Health, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME(AProject4Character, SelectedTarget);
+	DOREPLIFETIME(AProject4Character, AttributeSet);
+	DOREPLIFETIME(AProject4Character, BoundAbilities);
+	DOREPLIFETIME(AProject4Character, AbilitySpecHandles);
 
 
 }
@@ -180,10 +189,18 @@ void AProject4Character::PossessedBy(AController* NewController)
 	Super::PossessedBy(NewController);
 
 	// essential for networking, make sure ability stays linked 
-	if (AbilitySystem) {
-		AbilitySystem->InitAbilityActorInfo(this, this);
+	if (AbilitySystemComponent) {
+		AbilitySystemComponent->InitAbilityActorInfo(this, this);
 
 		AddAllStartupEffects();
+		GiveEssentialAbilities(this);
+
+		//AProject4PlayerState* PS = Cast<AProject4PlayerState>(GetPlayerState());
+		//if (PS)
+		//{
+		//	PS->SetAbilitySystemComponent(AbilitySystemComponent);
+		//}
+
 	}
 
 }
@@ -193,8 +210,8 @@ void AProject4Character::OnRep_Controller()
 	Super::OnRep_Controller();
 
 	// Changed PlayerController, update AbilitySystemCompnent
-	if (AbilitySystem) {
-		AbilitySystem->RefreshAbilityActorInfo();
+	if (AbilitySystemComponent) {
+		AbilitySystemComponent->RefreshAbilityActorInfo();
 	}
 }
 
@@ -206,14 +223,14 @@ void AProject4Character::OnRep_Controller()
 
 void AProject4Character::AddAllCharacterAbilities()
 {
-	if (!HasAuthority() || !AbilitySystem) {
+	if (!HasAuthority() || !AbilitySystemComponent) {
 		return;
 	}
 
 	int idx = 0;
 	for (TSubclassOf<UP4GameplayAbility>& StartupAbility : BoundAbilities) {
 		if (BoundAbilities[idx]) {
-			AbilitySpecHandles[idx] = AbilitySystem->GiveAbility(
+			AbilitySpecHandles[idx] = AbilitySystemComponent->GiveAbility(
 				FGameplayAbilitySpec(BoundAbilities[idx], 1, ABILITY_INPUT_OFFSET + idx, this));
 		}
 		idx += 1;
@@ -223,57 +240,73 @@ void AProject4Character::AddAllCharacterAbilities()
 
 void AProject4Character::AddAllStartupEffects()
 {
-	if (!HasAuthority()|| !AbilitySystem)
+	if (!HasAuthority()|| !AbilitySystemComponent)
 	{
 		return;
 	}
 
-	FGameplayEffectContextHandle EffectContext = AbilitySystem->MakeEffectContext();
+	FGameplayEffectContextHandle EffectContext = AbilitySystemComponent->MakeEffectContext();
 	EffectContext.AddSourceObject(this);
 
 	for (TSubclassOf<UGameplayEffect> GameplayEffect : StartupEffects)
 	{
-		FGameplayEffectSpecHandle NewHandle = AbilitySystem->MakeOutgoingSpec(GameplayEffect, 1, EffectContext);
+		FGameplayEffectSpecHandle NewHandle = AbilitySystemComponent->MakeOutgoingSpec(GameplayEffect, 1, EffectContext);
 		if (NewHandle.IsValid())
 		{
-			FActiveGameplayEffectHandle ActiveGEHandle = AbilitySystem->ApplyGameplayEffectSpecToTarget(*NewHandle.Data.Get(), AbilitySystem);
+			FActiveGameplayEffectHandle ActiveGEHandle = AbilitySystemComponent->ApplyGameplayEffectSpecToTarget(*NewHandle.Data.Get(), AbilitySystemComponent);
 		}
 	}
 }
 
-void AProject4Character::GivePlayerAbility_Implementation(AProject4Character* TargetActor, int32 BlockIndex, TSubclassOf<class UP4GameplayAbility> Ability)
+void AProject4Character::GivePlayerAbilityToBlock_Implementation(AProject4Character* TargetActor, int32 BlockIndex, TSubclassOf<class UP4GameplayAbility> Ability)
 {
-	if (TargetActor->AbilitySystem) {
+	if (TargetActor->AbilitySystemComponent) {
+		// check current block, if ability is bound then clear
 		if (TargetActor->AbilitySpecHandles.IsValidIndex(BlockIndex) && (TargetActor->AbilitySpecHandles[BlockIndex].IsValid())){
-				TargetActor->AbilitySystem->ClearAbility(AbilitySpecHandles[BlockIndex]);
+			TargetActor->AbilitySystemComponent->ClearAbility(AbilitySpecHandles[BlockIndex]);
 		}
 
-		TargetActor->BoundAbilities.Insert(Ability, BlockIndex);
-		FGameplayAbilitySpecHandle NewAbilityHandle = AbilitySystem->GiveAbility(
-			FGameplayAbilitySpec(BoundAbilities[BlockIndex], 1, ABILITY_INPUT_OFFSET + BlockIndex, this));
-		TargetActor->AbilitySpecHandles.Insert(NewAbilityHandle, BlockIndex);
+		// Bind ability if it isnt nullptr
+		if (Ability)
+		{
+			TargetActor->BoundAbilities.Insert(Ability, BlockIndex);
+			FGameplayAbilitySpecHandle NewAbilityHandle = AbilitySystemComponent->GiveAbility(
+				FGameplayAbilitySpec(BoundAbilities[BlockIndex], 1, ABILITY_INPUT_OFFSET + BlockIndex, this));
+			TargetActor->AbilitySpecHandles.Insert(NewAbilityHandle, BlockIndex);
+		}
+		else
+		{
+			// Set block to nothing
+			TargetActor->BoundAbilities.Insert(nullptr, BlockIndex);
+			TargetActor->AbilitySpecHandles.Insert(FGameplayAbilitySpecHandle(), BlockIndex);
+		}
 	}
 }
 
-
-bool AProject4Character::GivePlayerAbility_Validate(AProject4Character* TargetActor, int32 BlockIndex, TSubclassOf<class UP4GameplayAbility> Ability)
+void AProject4Character::InitBoundAbilityArrays_Implementation(AProject4Character* TargetActor)
 {
-	if (TargetActor->AbilitySystem) {
-		if (TargetActor->AbilitySpecHandles.IsValidIndex(BlockIndex)) {
-			if (TargetActor->BoundAbilities[BlockIndex] != Ability)
-				return false;
-		}
-	}
-	return true;
+	TargetActor->BoundAbilities.SetNum(ABILITY_BLOCK_AMOUNT);
+	TargetActor->BoundAbilities.Reset();
+
+	TargetActor->AbilitySpecHandles.SetNum(ABILITY_BLOCK_AMOUNT);
+	TargetActor->AbilitySpecHandles.Reset();
 }
+
+void AProject4Character::GiveEssentialAbilities_Implementation(AProject4Character* TargetActor)
+{
+	if (EssentialAbilities) {
+		EssentialAbilities->GiveAbilities(GetAbilitySystemComponent());
+	}
+}
+
 
 void AProject4Character::BindASCInput()
 {
-	if (!bASCInputBound && AbilitySystem && IsValid(InputComponent)) {
+	if (!bASCInputBound && AbilitySystemComponent && IsValid(InputComponent)) {
 		FGameplayAbilityInputBinds AbilityBinds("ConfirmAbility", "CancelAbility", "EP4AbilityInputID", 
 			static_cast<int32>(EP4AbilityInputID::Confirm), static_cast<int32>(EP4AbilityInputID::Cancel));
 
-		AbilitySystem->BindAbilityActivationToInputComponent(InputComponent, AbilityBinds);
+		AbilitySystemComponent->BindAbilityActivationToInputComponent(InputComponent, AbilityBinds);
 		
 		bASCInputBound = true;
 	}
@@ -287,6 +320,7 @@ void AProject4Character::BindASCInput()
 
 void AProject4Character::SelectTargetFromCursor()
 {
+	
 	APlayerController* PController = GetWorld()->GetFirstPlayerController();
 	
 	FHitResult HitResult;
@@ -299,15 +333,16 @@ void AProject4Character::SelectTargetFromCursor()
 		SelectedTarget = HitResult.GetActor();
 
 		// Update Target Selected Widget with new information
-		if(IsLocallyControlled())
+		if (IsLocallyControlled()) {
 			HUD->SetNewTargetData(SelectedTarget);
+		}
 	}
 	else {
 		// Unselect target, set target widget off
 		if (IsLocallyControlled())
 			HUD->SetNewTargetData(nullptr);
 
-		SelectedTarget = nullptr; // might cause probs
+		SelectedTarget = nullptr; 
 	}	
 }
 
@@ -315,6 +350,7 @@ void AProject4Character::SelectNextNearestTarget()
 {
 	// TODO Implement Tab-style targeting, make sure to grab next nearest
 }
+
 
 /*   Replication Area   */
 
@@ -327,6 +363,7 @@ void AProject4Character::ServerSetSelectedTarget_Implementation(AProject4Charact
 /***************************/
 /*      Camera system      */
 /***************************/
+
 
 
 void AProject4Character::CameraZoom(float Value)

@@ -6,9 +6,6 @@
 #include "GameFramework/Character.h"
 #include "AbilitySystemComponent.h"
 #include "AbilitySystemInterface.h"
-#include "PlayerAttributeSet.h"
-#include "PlayerAbilitySet.h"
-#include "P4GameplayAbility.h"
 #include "Project4Character.generated.h"
 
 
@@ -22,8 +19,10 @@ class AProject4Character : public ACharacter, public IAbilitySystemInterface
 	/***************************/
 	/*       Components        */
 	/***************************/
+
+		// Character ASC, this is shared btw players and mob classes
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Abilities, meta = (AllowPrivateAccess = "true"))
-		class UAbilitySystemComponent* AbilitySystem;
+		class UAbilitySystemComponent* AbilitySystemComponent;
 
 		/** Camera boom positioning the camera behind the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
@@ -32,6 +31,13 @@ class AProject4Character : public ACharacter, public IAbilitySystemInterface
 	/** Follow camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 		class UCameraComponent* FollowCamera;
+
+	/** The main skeletal mesh associated with this Character (optional sub-object). */
+	UPROPERTY(Category = Abilities, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		USkeletalMeshComponent* MeshLH;
+
+	UPROPERTY(Category = Abilities, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		USkeletalMeshComponent* MeshRH;
 
 
 
@@ -64,33 +70,47 @@ public:
 	/* Gameplay Ability system */  
 	/***************************/
 
-	UAbilitySystemComponent* GetAbilitySystemComponent() const override { return AbilitySystem; };
+	virtual class UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
 	UPROPERTY(EditAnywhere, Replicated, BlueprintReadOnly, Category = Attributes)
-		UPlayerAttributeSet* AttributeSet;
+		class UPlayerAttributeSet* AttributeSet;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Attributes)
 		UDataTable* AttrDataTable;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Abilities)
+		class UP4GameplayAbilitySet* EssentialAbilities;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = Abilities)
 		TArray<TSubclassOf<class UGameplayEffect>> StartupEffects;
 
 	// 'sorted' Array to hold all bound abilities, Index 0 = UseAbility1, 9 = UseAbility0. 
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = Abilities)
+	UPROPERTY(BlueprintReadOnly, Replicated, EditAnywhere, Category = Abilities)
 		TArray<TSubclassOf<class UP4GameplayAbility>> BoundAbilities;
 
 	// 'sorted' in same fashion above, this is essential
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = Abilities)
+	UPROPERTY(BlueprintReadOnly, Replicated, EditAnywhere, Category = Abilities)
 		TArray<FGameplayAbilitySpecHandle> AbilitySpecHandles;
 
 	// Called on new hotbar ability assignment, can change input bindings and replace
 	// Abilities with new bindings. Does remove old abilities in spot if exists
 	// Adding abilities requires server control, so call server and it will replicate for us
 	UFUNCTION(BlueprintCallable, Server, Reliable, WithValidation, Category = Abilities)
-		void GivePlayerAbility(AProject4Character* TargetActor, int32 BlockIndex, TSubclassOf<class UP4GameplayAbility> Ability);
-	virtual bool GivePlayerAbility_Validate(AProject4Character* TargetActor, int32 BlockIndex, TSubclassOf<class UP4GameplayAbility> Ability);
-	virtual void GivePlayerAbility_Implementation(AProject4Character* TargetActor, int32 BlockIndex, TSubclassOf<class UP4GameplayAbility> Ability);
+		void GivePlayerAbilityToBlock(AProject4Character* TargetActor, int32 BlockIndex, TSubclassOf<class UP4GameplayAbility> Ability);
+	virtual bool GivePlayerAbilityToBlock_Validate(AProject4Character* TargetActor, int32 BlockIndex, TSubclassOf<class UP4GameplayAbility> Ability) { return true; }
+	virtual void GivePlayerAbilityToBlock_Implementation(AProject4Character* TargetActor, int32 BlockIndex, TSubclassOf<class UP4GameplayAbility> Ability);
 
+	// sets array sizes to # ability blocks and then resets array values
+	UFUNCTION(BlueprintCallable, Server, Reliable, WithValidation, Category = Abilities)
+		void InitBoundAbilityArrays(AProject4Character* TargetActor);
+	virtual bool InitBoundAbilityArrays_Validate(AProject4Character* TargetActor) { return true; }
+	virtual void InitBoundAbilityArrays_Implementation(AProject4Character* TargetActor);
+
+
+	UFUNCTION(BlueprintCallable, Server, Reliable, WithValidation, Category = Abilities)
+		void GiveEssentialAbilities(AProject4Character* TargetActor);
+	virtual bool GiveEssentialAbilities_Validate(AProject4Character* TargetActor) { return true; }
+	virtual void GiveEssentialAbilities_Implementation(AProject4Character* TargetActor);
 
 	/***************************/
 	/*    Targeting system     */
@@ -109,6 +129,7 @@ public:
 	/* unused Camera bools (move inside main_char_BP) */
 	UPROPERTY(BlueprintReadWrite)
 		bool doInputRotateCamera;
+
 	UPROPERTY(BlueprintReadWrite)
 		bool doRotatePlayerAndCamera;
 	
@@ -160,10 +181,6 @@ protected:
 		void SelectTargetFromCursor();  // For left-click selection
 	UFUNCTION()
 		void SelectNextNearestTarget(); // For tab-targeting
-	UFUNCTION(Server, Reliable, WithValidation)
-		void ServerSetSelectedTarget(AProject4Character* TargetedActor, AActor* NewSelectedTarget);    // replciated Selected Target
-	virtual bool ServerSetSelectedTarget_Validate(AProject4Character* TargetedActor, AActor* NewSelectedTarget) { return true; }
-	virtual void ServerSetSelectedTarget_Implementation(AProject4Character* TargetedActor, AActor* NewSelectedTarget);
 
 	/***************************/
 	/*      Camera system      */
@@ -180,6 +197,13 @@ protected:
 	void SetPlayerRotationToCamera();
 	void StartPlayerRotationToCamera();
 	void StopPlayerRotationToCamera();
+
+	UFUNCTION(Server, Reliable, WithValidation)
+		void ServerSetSelectedTarget(AProject4Character* TargetedActor, AActor* NewSelectedTarget);    // replciated Selected Target
+	virtual bool ServerSetSelectedTarget_Validate(AProject4Character* TargetedActor, AActor* NewSelectedTarget) { return true; }
+	virtual void ServerSetSelectedTarget_Implementation(AProject4Character* TargetedActor, AActor* NewSelectedTarget);
+
+
 
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
