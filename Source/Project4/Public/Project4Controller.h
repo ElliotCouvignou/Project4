@@ -35,12 +35,15 @@ class PROJECT4_API AProject4Controller : public APlayerController
 public:
 	AProject4Controller(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
-	
+	// creates a widget based on gameplayHUDwidgetclass
+		void CreateMainHUDWidget();
 
-	// Allows BP's to set themselves as main widget
-	// No constructors in controllers so we need to relay the hud back to controller once that is made
-	UFUNCTION(BlueprintCallable)
-		void SetMainHUDWidget(class UGameplayHudWidget* NewWidget);
+	UFUNCTION(BlueprintCallable, Category = "Utility")
+		class UGameplayHudWidget* GetMainHUDWidget();
+
+	/*******************************/
+	/* Client RPC/Functions for UI */
+	/*******************************/
 
 	// Server calls this fucntion to display damage numbers to a player
 	UFUNCTION(Client, Reliable, WithValidation)
@@ -55,37 +58,46 @@ public:
 	bool DisplayHealNumber_Validate(float HealValue, AProject4Character* TargetCharacter) { return true; }
 
 	UFUNCTION(Client, Reliable, WithValidation)
-		void UpdateCurrentXPUI(float NewXP);
-	void UpdateCurrentXPUI_Implementation(float NewXP);
-	bool UpdateCurrentXPUI_Validate(float NewXP) { return true; }
+		void UpdateUICurrentXP(float NewXP);
+	void UpdateUICurrentXP_Implementation(float NewXP);
+	bool UpdateUICurrentXP_Validate(float NewXP) { return true; }
 
 	UFUNCTION(Client, Reliable, WithValidation)
-		void UpdateMaxXPUI(float NewMaxXP);
-	void UpdateMaxXPUI_Implementation(float NewMaxXP);
-	bool UpdateMaxXPUI_Validate(float NewMaxXP) { return true; }
+		void UpdateUIMaxXP(float NewMaxXP);
+	void UpdateUIMaxXP_Implementation(float NewMaxXP);
+	bool UpdateUIMaxXP_Validate(float NewMaxXP) { return true; }
 
 	// Called on Ding! Gratz
 	UFUNCTION(Client, Reliable, WithValidation)
-		void UpdateLevelUI(float NewLevel);
-	void UpdateLevelUI_Implementation(float NewLevel);
-	bool UpdateLevelUI_Validate(float NewLevel) { return true; }
+		void UpdateUILevel(float NewLevel);
+	void UpdateUILevel_Implementation(float NewLevel);
+	bool UpdateUILevel_Validate(float NewLevel) { return true; }
+
 
 	// Called on Ability Error (e.g. Out of range, Out of mana, etc.)
 	//UFUNCTION(Client, Reliable, WithValidation)
 	UFUNCTION(BlueprintCallable)
-		void SendAbilityErrorUI(EAbilityErrorText ErrorType);
+		void SendUIAbilityError(EAbilityErrorText ErrorType);
 
 
 
 
 protected:
 
-	// Floating Text Component Class to create
+	// Floating Text Component Class to create for dmg text
 	UPROPERTY(EditAnywhere, Category = "UI")
 		TSubclassOf<class UFloatingTextWidgetComponent> FloatingTextClass;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "UI")
 		class UGameplayHudWidget* GameplayHUDWidget;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "UI")
+		TSubclassOf<class UGameplayHudWidget> GameplayHUDWidgetClass;
+
+	// Server only
+	virtual void OnPossess(APawn* InPawn) override;
+
+	virtual void OnRep_PlayerState() override;
 };
 
 

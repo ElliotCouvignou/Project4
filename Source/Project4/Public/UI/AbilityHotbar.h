@@ -27,7 +27,7 @@ public:
 
 	// ATM this gets set in bliueprint construct, Cant find equivalent in c++
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Ability)
-		class AProject4Character* PlayerRef;
+		class AP4PlayerCharacterBase* PlayerRef;
 
 	UFUNCTION(BlueprintCallable, Category = Abilities)
 		void GivePlayerAbility(int32 BlockIndex, TSubclassOf<class UP4GameplayAbility> Ability);

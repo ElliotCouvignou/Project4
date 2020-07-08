@@ -9,7 +9,7 @@
 
 #include "Project4Controller.h"
 #include "Project4.h"
-#include "Project4Character.h"
+#include "Characters/Project4Character.h"
 
 
 #define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::Green,text)
@@ -46,16 +46,32 @@ void UPlayerAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute
 {
 	Super::PreAttributeChange(Attribute, NewValue);
 
+	// base value clamps
 	if (Attribute == GetHealthAttribute()) {
 		NewValue = FMath::Clamp(NewValue, 0.0f, HealthMax.GetCurrentValue());
 	}
-	if (Attribute == GetManaAttribute()) {
+	else if (Attribute == GetManaAttribute()) {
 		NewValue = FMath::Clamp(NewValue, 0.0f, ManaMax.GetCurrentValue());
 	}
-	if (Attribute == GetEnduranceAttribute()) {
+	else if (Attribute == GetEnduranceAttribute()) {
 		NewValue = FMath::Clamp(NewValue, 0.0f, EnduranceMax.GetCurrentValue());
 	}
-	if (Attribute == GetMovementSpeedAttribute()) {
+
+	// max value clampers, makes sure health/maxhealth % stays same 
+	else if (Attribute == GetHealthMaxAttribute())
+	{
+		AdjustAttributeForMaxChange(Health, HealthMax, NewValue, GetHealthAttribute());
+	}
+	else if (Attribute == GetManaMaxAttribute())
+	{
+		AdjustAttributeForMaxChange(Mana, ManaMax, NewValue, GetManaAttribute());
+	}
+	else if (Attribute == GetEnduranceMaxAttribute())
+	{
+		AdjustAttributeForMaxChange(Endurance, EnduranceMax, NewValue, GetEnduranceAttribute());
+	}
+
+	else if (Attribute == GetMovementSpeedAttribute()) {
 		AProject4Character* Pchar = Cast<AProject4Character>(GetOwningActor());
 		Pchar->GetCharacterMovement()->MaxWalkSpeed = NewValue;
 	}
@@ -163,7 +179,7 @@ void UPlayerAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCall
 				if (NewHealth < 0.f) {
 					// target died, give xp and generate loots
 					if (SourceCharacter) {
-						UPlayerAttributeSet* SourceAS = Cast< UPlayerAttributeSet>(SourceCharacter->AttributeSet);
+						UPlayerAttributeSet* SourceAS = SourceCharacter->GetAttributeSet();
 						float NewSourceXp = SourceAS->GetExperience() + GetExperienceBounty();
 
 						// Check Character Levelup
@@ -174,16 +190,16 @@ void UPlayerAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCall
 							// +1 Level, Send to UI							
 							const float NewLevel = SourceAS->GetLevel() + 1.f;
 							SourceAS->SetLevel(NewLevel);
-							SourcePC->UpdateLevelUI(NewLevel);
+							SourcePC->UpdateUILevel(NewLevel);
 
 							// ^ MaxXP, Send to UI
 							const float NewMaxXP = SourceAS->GetExperienceMax() * 2.5f;
 							SourceAS->SetExperienceMax(NewMaxXP);
-							SourcePC->UpdateMaxXPUI(NewMaxXP);
+							SourcePC->UpdateUIMaxXP(NewMaxXP);
 						}
 						// Add XP
 						SourceAS->SetExperience(NewSourceXp);
-						SourcePC->UpdateCurrentXPUI(NewSourceXp);
+						SourcePC->UpdateUICurrentXP(NewSourceXp);
 					}
 				}
 				SetHealth(FMath::Clamp(NewHealth, 0.f, GetHealthMax()));
@@ -271,6 +287,20 @@ void UPlayerAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& 
 	DOREPLIFETIME_CONDITION_NOTIFY(UPlayerAttributeSet, AttackSpeedInverse, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UPlayerAttributeSet, CritChance, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UPlayerAttributeSet, CritDamage, COND_None, REPNOTIFY_Always);
+}
+
+void UPlayerAttributeSet::AdjustAttributeForMaxChange(FGameplayAttributeData& AffectedAttribute, const FGameplayAttributeData& MaxAttribute, float NewMaxValue, const FGameplayAttribute& AffectedAttributeProperty)
+{
+	UAbilitySystemComponent* AbilityComp = GetOwningAbilitySystemComponent();
+	const float CurrentMaxValue = MaxAttribute.GetCurrentValue();
+	if (!FMath::IsNearlyEqual(CurrentMaxValue, NewMaxValue) && AbilityComp)
+	{
+		// Change current value to maintain the current Val / Max percent
+		const float CurrentValue = AffectedAttribute.GetCurrentValue();
+		float NewDelta = (CurrentMaxValue > 0.f) ? (CurrentValue * NewMaxValue / CurrentMaxValue) - CurrentValue : NewMaxValue;
+
+		AbilityComp->ApplyModToAttributeUnsafe(AffectedAttributeProperty, EGameplayModOp::Additive, NewDelta);
+	}
 }
 
 

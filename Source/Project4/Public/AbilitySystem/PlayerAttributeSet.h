@@ -47,7 +47,10 @@ public:
 
 	// For Replicaiton 
 	void GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const;
-
+	
+	// Adjusts current valued attributes when max valued attributes changes so that % stay constant
+	// This is the same idea Dota2 Uses for Health/Mana
+	void AdjustAttributeForMaxChange(FGameplayAttributeData& AffectedAttribute, const FGameplayAttributeData& MaxAttribute, float NewMaxValue, const FGameplayAttribute& AffectedAttributeProperty);
 
 	// all attributes are essentially floats, can still have int behavior thought
 

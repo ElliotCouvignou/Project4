@@ -3,7 +3,7 @@
 #define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::Green,text)
 
 #include "Project4GameMode.h"
-#include "Project4Character.h"
+#include "Characters/Project4Character.h"
 #include "UObject/ConstructorHelpers.h"
 
 AProject4GameMode::AProject4GameMode()

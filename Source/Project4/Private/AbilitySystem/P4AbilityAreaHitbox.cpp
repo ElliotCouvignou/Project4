@@ -4,7 +4,7 @@
 #include "AbilitySystem/P4AbilityAreaHitbox.h"
 
 #include "GameplayEffectTypes.h"
-#include "Project4Character.h"
+#include "Characters/Project4Character.h"
 
 // Sets default values
 AP4AbilityAreaHitbox::AP4AbilityAreaHitbox()

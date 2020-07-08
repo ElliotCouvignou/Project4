@@ -10,7 +10,7 @@
 #include "GameplayHUD.generated.h"
 
 /**
- * 
+ *  This is pretty unused atm might even delete
  */
 UCLASS()
 class PROJECT4_API AGameplayHUD : public AHUD
@@ -25,9 +25,5 @@ public:
 	virtual void BeginPlay() override;
 
 	virtual void Tick(float DeltaSeconds) override;
-
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
-		void SetNewTargetData(AActor* NewTarget);
-
 
 };

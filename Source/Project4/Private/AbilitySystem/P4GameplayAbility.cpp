@@ -41,7 +41,7 @@ void UP4GameplayAbility::SendErrorMessageToUI(EAbilityErrorText ErrorType)
 			Cast<AProject4Controller>(GetWorld()->GetFirstPlayerController());
 		if (PController)
 		{
-			PController->SendAbilityErrorUI(ErrorType);
+			PController->SendUIAbilityError(ErrorType);
 		}
 	}
 }

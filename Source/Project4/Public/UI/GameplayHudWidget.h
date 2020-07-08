@@ -18,6 +18,26 @@ class PROJECT4_API UGameplayHudWidget : public UUserWidget
 public:
 
 
+	UFUNCTION()
+		void UpdateHealth(float NewValue);
+	UFUNCTION()
+		void UpdateHealthMax(float NewValue);
+	UFUNCTION()
+		void UpdateHealthRegen(float NewValue);
+
+	UFUNCTION()
+		void UpdateMana(float NewValue);
+	UFUNCTION()
+		void UpdateManaMax(float NewValue);
+	UFUNCTION()
+		void UpdateManaRegen(float NewValue);
+
+	UFUNCTION()
+		void UpdateEndurance(float NewValue);
+	UFUNCTION()
+		void UpdateEnduranceMax(float NewValue);
+	UFUNCTION()
+		void UpdateEnduranceRegen(float NewValue);
 
 	UFUNCTION()
 		void UpdateCurrentXP(float NewXP);
@@ -30,6 +50,9 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 		void NewAbilityErrorMessage(EAbilityErrorText ErrorType);
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+		void SetNewTargetData(AActor* NewTarget);
 
 protected:
 	// gets created and filled out by BP
