@@ -76,3 +76,7 @@ DerivedDataCache/*
 
 # random temp folder from VS
 enc_temp_folder/
+
+# Ignore GameliftSDK Plugins
+Plugins/GameLiftClientSDK/*
+plugins/GameLiftServerSDK/*

@@ -59,7 +59,7 @@ UDamageExecution::UDamageExecution(const FObjectInitializer& ObjectInitializer)
     //RelevantAttributesToCapture is the array that contains all attributes you wish to capture, without exceptions. 
     RelevantAttributesToCapture.Add(Attributes.HealthDef);  
     //However, an attribute added here on top of being added in RelevantAttributesToCapture will still be captured, but will not be shown for potential in-function modifiers in the GameplayEffect blueprint, more on that later.
-    InvalidScopedModifierAttributes.Add(Attributes.HealthDef); 
+   // InvalidScopedModifierAttributes.Add(Attributes.HealthDef); 
 
     RelevantAttributesToCapture.Add(Attributes.AttackPowerDef);
     RelevantAttributesToCapture.Add(Attributes.MagicPowerDef);

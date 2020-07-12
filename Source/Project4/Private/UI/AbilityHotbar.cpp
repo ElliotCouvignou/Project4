@@ -17,11 +17,11 @@ void UAbilityHotbar::NativeConstruct()
 	Super::NativeConstruct();
 }
 
-void UAbilityHotbar::GivePlayerAbility(int32 BlockIndex, TSubclassOf<class UP4GameplayAbility> Ability)
-{
-	if (PlayerRef) {
-		PlayerRef->GivePlayerAbilityToBlock(PlayerRef, BlockIndex, Ability);
-	}
-}
+//void UAbilityHotbar::GivePlayerAbility(int32 BlockIndex, TSubclassOf<class UP4GameplayAbility> Ability)
+//{
+//	if (PlayerRef) {
+//		PlayerRef->GivePlayerAbilityToBlock(PlayerRef, BlockIndex, Ability);
+//	}
+//}
 
 

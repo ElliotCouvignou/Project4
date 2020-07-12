@@ -26,7 +26,7 @@ class PROJECT4_API AP4PlayerCharacterBase : public AProject4Character
 
 
 public:
-	AP4PlayerCharacterBase();
+	AP4PlayerCharacterBase(const class FObjectInitializer& ObjectInitializer);
 
 	/***************************/
 	/* Gameplay Ability system */
@@ -35,11 +35,17 @@ public:
 	// Called on new hotbar ability assignment, can change input bindings and replace
 	// Abilities with new bindings. Does remove old abilities in spot if exists
 	// Adding abilities requires server control, so call server and it will replicate for us
-	UFUNCTION(BlueprintCallable, Server, Reliable, WithValidation, Category = Abilities)
-		void GivePlayerAbilityToBlock(AP4PlayerCharacterBase* TargetActor, int32 BlockIndex, TSubclassOf<class UP4GameplayAbility> Ability);
-	virtual bool GivePlayerAbilityToBlock_Validate(AP4PlayerCharacterBase* TargetActor, int32 BlockIndex, TSubclassOf<class UP4GameplayAbility> Ability) { return true; }
-	virtual void GivePlayerAbilityToBlock_Implementation(AP4PlayerCharacterBase* TargetActor, int32 BlockIndex, TSubclassOf<class UP4GameplayAbility> Ability);
+	// However we need client work so clients need to do this function and call servers
+	UFUNCTION(BLueprintCallable)
+		void BindAbilityToHotbarBlock(int32 BlockIndex, TSubclassOf<class UP4GameplayAbility> Ability);
+	
+	// helper for above, calls on ASC from server to do input bindings based on hotbar bindings
+	UFUNCTION(Server, Reliable, WithValidation, Category = Abilities)
+		void BindAbilityToHotbarInput(AP4PlayerCharacterBase* TargetActor, int32 BlockIndex, TSubclassOf<class UP4GameplayAbility> Ability);
+	virtual bool BindAbilityToHotbarInput_Validate(AP4PlayerCharacterBase* TargetActor, int32 BlockIndex, TSubclassOf<class UP4GameplayAbility> Ability) { return true; }
+	virtual void BindAbilityToHotbarInput_Implementation(AP4PlayerCharacterBase* TargetActor, int32 BlockIndex, TSubclassOf<class UP4GameplayAbility> Ability);
 
+	
 	// sets array sizes to # ability blocks and then resets array values
 	UFUNCTION(BlueprintCallable, Server, Reliable, WithValidation, Category = Abilities)
 		void InitBoundAbilityArrays(AP4PlayerCharacterBase* TargetActor);
@@ -52,6 +58,11 @@ public:
 
 	void CameraZoom(float Value);
 
+	/***************************/
+	/*          Death          */
+	/***************************/
+
+	virtual void FinishDying() override;
 
 protected:
 	// APawn interface
@@ -69,7 +80,8 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Replicated, EditAnywhere, Category = Abilities)
 		TArray<FGameplayAbilitySpecHandle> AbilitySpecHandles;
 
-	// grants abilities (maybe move to hotbar system or call it)
+	// grants and binds binds hotbar abilitites 
+	// TODO expose this to grant learned (but not bound) abilities
 	virtual void AddAllCharacterAbilities();
 
 	void BindASCInput();

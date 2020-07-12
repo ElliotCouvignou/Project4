@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "GameplayTagContainer.h"
+#include "AbilitySystem/P4GameplayAbility.h"
 #include "AbilityHotbarBlock.generated.h"
 
 /**
@@ -27,5 +28,6 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Ability)
 		TSubclassOf<class UP4GameplayAbility> Ability;
 
-
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+		void BindAbilityToBlock(TSubclassOf<class UP4GameplayAbility> NewAbility);
 };

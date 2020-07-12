@@ -6,6 +6,7 @@
 #include "Project4.h"
 #include "Project4Controller.h"
 #include "Project4PlayerState.h"
+#include "Project4GameMode.h"
 #include "Net/UnrealNetwork.h"
 
 #include "Camera/CameraComponent.h"
@@ -24,14 +25,14 @@
 
 
 #define CAMERA_ZOOM_MIN 100.f
-#define CAMERA_ZOOM_MAX 1000.f
+#define CAMERA_ZOOM_MAX 1250.f
 #define CAMERA_ZOOM_GRANULARITY 50.f
 
 
 
-AP4PlayerCharacterBase::AP4PlayerCharacterBase() {
-
-
+AP4PlayerCharacterBase::AP4PlayerCharacterBase(const class FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
+{
 	// Create a camera boom (pulls in towards the player if there is a collision)
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
@@ -44,7 +45,6 @@ AP4PlayerCharacterBase::AP4PlayerCharacterBase() {
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 
 }
-
 
 void AP4PlayerCharacterBase::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
@@ -85,8 +85,36 @@ void AP4PlayerCharacterBase::HandleLeftClickReleased()
 }
 
 
+void AP4PlayerCharacterBase::FinishDying()
+{
+	if (HasAuthority())
+	{
+		AProject4GameMode* GM = Cast<AProject4GameMode>(GetWorld()->GetAuthGameMode());
+		if (GM)
+		{
+			GM->PlayerDeath(GetController());
+		}
+	}
+	// Call super at end since we dont want actor destroyed 
+	// for a bit
+	Super::FinishDying();
+}
 
-void AP4PlayerCharacterBase::GivePlayerAbilityToBlock_Implementation(AP4PlayerCharacterBase* TargetActor, int32 BlockIndex, TSubclassOf<class UP4GameplayAbility> Ability)
+
+void AP4PlayerCharacterBase::BindAbilityToHotbarBlock(int32 BlockIndex, TSubclassOf<class UP4GameplayAbility> Ability)
+{
+	if (IsLocallyControlled())
+	{
+		AProject4Controller* PC = Cast<AProject4Controller>(GetController());
+		if (PC)
+		{
+			PC->SetupUIAbilityToHotBarBlock(BlockIndex, Ability);
+		}
+		BindAbilityToHotbarInput(this, BlockIndex, Ability);
+	}
+}
+
+void AP4PlayerCharacterBase::BindAbilityToHotbarInput_Implementation(AP4PlayerCharacterBase* TargetActor, int32 BlockIndex, TSubclassOf<class UP4GameplayAbility> Ability)
 {
 	UAbilitySystemComponent* ASC = TargetActor->GetAbilitySystemComponent();
 	if (ASC) {
@@ -199,7 +227,6 @@ void AP4PlayerCharacterBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty
 	//DOREPLIFETIME_CONDITION_NOTIFY(UPlayerAttributeSet, Health, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME(AP4PlayerCharacterBase, BoundAbilities);
 	DOREPLIFETIME(AP4PlayerCharacterBase, AbilitySpecHandles);
-	DOREPLIFETIME(AP4PlayerCharacterBase, SelectedTarget);
 }
 
 
@@ -236,7 +263,6 @@ void AP4PlayerCharacterBase::PossessedBy(AController* NewController)
 		// Set the ASC for clients. Server does this in PossessedBy.
 		AbilitySystemComponent = Cast<UAbilitySystemComponent>(PS->GetAbilitySystemComponent());
 
-
 		// Init ASC Actor Info for clients. Server will init its ASC when it possesses a new Actor.
 		PS->GetAbilitySystemComponent()->InitAbilityActorInfo(PS, this);
 
@@ -247,8 +273,7 @@ void AP4PlayerCharacterBase::PossessedBy(AController* NewController)
 		PS->BindAbilityDelegates();
 
 		// Init playerAttributes with .csv
-		AbilitySystemComponent->InitStats(UPlayerAttributeSet::StaticClass(), AttrDataTable);
-
+		InitializeAttributeSet();
 
 		BindASCInput();
 
@@ -291,7 +316,7 @@ void AP4PlayerCharacterBase::OnRep_PlayerState()
 		PS->BindAbilityDelegates();
 
 		// Init playerAttributes with .csv
-		AbilitySystemComponent->InitStats(UPlayerAttributeSet::StaticClass(), AttrDataTable);
+		InitializeAttributeSet();
 
 		BindASCInput();
 

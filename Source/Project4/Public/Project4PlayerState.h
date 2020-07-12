@@ -40,7 +40,7 @@ public:
 
 protected:
 
-	// Weak Reference to character's ASC
+	// Hard refs of ASC and AS, this gets plugged into AProject4Characters' weak ptrs
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Abilities, meta = (AllowPrivateAccess = "true"))
 		class UAbilitySystemComponent* AbilitySystemComponent;
 

@@ -7,6 +7,7 @@
 #include "GameplayTagContainer.h"
 
 
+
 UP4GameplayAbility::UP4GameplayAbility()
 {
 	// Instancing is necessary for ability costs and doesnt hurt to keep it on for all abilities
@@ -16,7 +17,6 @@ UP4GameplayAbility::UP4GameplayAbility()
 	//ActivationBlockedTags.AddTag(FGameplayTag::RequestGameplayTag(FName("State.Dead")));
 	//ActivationBlockedTags.AddTag(FGameplayTag::RequestGameplayTag(FName("State.Debuff.Stun")));
 }
-
 
 void UP4GameplayAbility::OnAvatarSet(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec)
 {

@@ -12,6 +12,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "TimerManager.h"
 
 #include "UI/GameplayHudWidget.h"
 
@@ -32,10 +33,13 @@
 //////////////////////////////////////////////////////////////////////////
 // AProject4Character
 
-AProject4Character::AProject4Character()
+AProject4Character::AProject4Character(const class FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
 {
-	// Netoworking characteristics for character
-	bReplicates = true;
+	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	PrimaryActorTick.bCanEverTick = false;
+
+	// Networking characteristics for characters
 	bAlwaysRelevant = true;
 
 	// Set size for collision capsule
@@ -61,6 +65,9 @@ AProject4Character::AProject4Character()
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
+
+	DeadTag = FGameplayTag::RequestGameplayTag(FName("PlayerState.Dead"));
+	//Respawn = FGameplayTag::RequestGameplayTag(FName(""));
 }
 
 UAbilitySystemComponent* AProject4Character::GetAbilitySystemComponent() const
@@ -74,6 +81,7 @@ UPlayerAttributeSet* AProject4Character::GetAttributeSet() const
 	return AttributeSet.Get();
 }
 
+
 bool AProject4Character::IsAlive() const
 {
 	if (AttributeSet.Get()) {
@@ -85,39 +93,99 @@ bool AProject4Character::IsAlive() const
 	return false;
 }
 
+void AProject4Character::Die()
+{
+	// TODO fix issue crash when 2+ clients
+	//RemoveAllAbilitites();
 
+	// Stop player and remove collisions, freeze in air
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	//GetCharacterMovement()->GravityScale = 0;
+	//GetCharacterMovement()->Velocity = FVector(0);
+
+	// broadcast delegate I ded
+	OnCharacterDied.Broadcast(this);
+
+	if (AbilitySystemComponent.IsValid())
+	{
+		// stop all abilitites regardless of tags (not GE's)
+		AbilitySystemComponent->CancelAllAbilities();
+	}
+
+	// play death montage if set, else play ALS ragdoll with manual delay
+	if (DeathMontage)
+	{
+		PlayAnimMontage(DeathMontage);
+	}
+	else
+	{
+		// calls ALS to do ragdoll
+		ActivateRagdoll();
+		GetWorld()->GetTimerManager().SetTimer(RadgollDeathHandle, this, &AProject4Character::FinishDying, RadgollDeathDelay, false);
+	}
+}
+
+void AProject4Character::FinishDying()
+{
+	//Destroy();
+}
+
+void AProject4Character::UndoRagdoll_Implementation()
+{
+	if (!DeathMontage)
+	{
+		// HACK: kindof assuming we are in ragdoll to undo it
+		ActivateRagdoll();
+	}
+}
 
 void AProject4Character::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (AbilitySystemComponent.Get()) {
-
-		// Bind Abilities (Remove once we get skill trees or unlock to get skills)
-		FGameplayAbilityActorInfo* actorInfo = new FGameplayAbilityActorInfo();
-		actorInfo->InitFromActor(this, this, AbilitySystemComponent.Get());
-		AbilitySystemComponent->AbilityActorInfo = TSharedPtr<FGameplayAbilityActorInfo>(actorInfo);
-
-		AbilitySystemComponent->InitAbilityActorInfo(this, this);
-
-
-		// Init playerAttributes with .csv
-		const UAttributeSet* Attrs = AbilitySystemComponent->InitStats(UPlayerAttributeSet::StaticClass(), AttrDataTable);		
-	}
-
 }
 
-// Called every frame
-void AProject4Character::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-}
 
 
 
 /***************************/
 /* Gameplay Ability system */
 /***************************/
+
+void AProject4Character::RemoveAllAbilitites()
+{
+	if (!HasAuthority() || !AbilitySystemComponent.IsValid())
+	{
+		return;
+	}
+
+	
+	TArray<FGameplayAbilitySpecHandle> AbilitiesToRemove;
+	//TArray<FGameplayAbilitySpec> AllAbilities = AbilitySystemComponent->GetActivatableAbilities();
+	
+	// remove essential abilities (Player abilities removed in player class virtual)
+	//for (const FP4GameplayAbilityBindInfo& Spec : EssentialAbilities->Abilities)
+	//{
+	//
+	//	//if ((Spec.SourceObject == this) )
+	//	//{
+	//	//	AbilitiesToRemove.Add(Spec.Handle);
+	//	//}
+	//}
+
+	// Do in two passes so the removal happens after we have the full list
+	for (int32 i = 0; i < AbilitiesToRemove.Num(); i++)
+	{
+		AbilitySystemComponent->ClearAbility(AbilitiesToRemove[i]);
+	}
+}
+
+void AProject4Character::GiveEssentialAbilities()
+{
+	if (EssentialAbilities && HasAuthority()) {
+		EssentialAbilities->GiveAbilities(GetAbilitySystemComponent());
+	}
+}
 
 void AProject4Character::AddAllStartupEffects()
 {
@@ -139,13 +207,13 @@ void AProject4Character::AddAllStartupEffects()
 	}
 }
 
-
-
-void AProject4Character::GiveEssentialAbilities()
+void AProject4Character::InitializeAttributeSet()
 {
-	if (EssentialAbilities) {
-		EssentialAbilities->GiveAbilities(GetAbilitySystemComponent());
+	if (AbilitySystemComponent.IsValid())
+	{
+		AbilitySystemComponent->InitStats(UPlayerAttributeSet::StaticClass(), AttrDataTable);
 	}
+
 }
 
 
@@ -154,7 +222,8 @@ void AProject4Character::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& O
 
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	DOREPLIFETIME(AProject4Character, AttributeSet);
+	//DOREPLIFETIME(AProject4Character, AttributeSet);
+	DOREPLIFETIME(AProject4Character, SelectedTarget);
 }
 
 

@@ -3,16 +3,77 @@
 #define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::Green,text)
 
 #include "Project4GameMode.h"
+#include "Project4Controller.h"
 #include "Characters/Project4Character.h"
+#include "Characters/P4PlayerCharacterBase.h"
+#include "GameFramework/SpectatorPawn.h"
+#include "Kismet/GameplayStatics.h"
+#include "TimerManager.h"
 #include "UObject/ConstructorHelpers.h"
+#include "Blueprint/WidgetBlueprintLibrary.h"
 
 AProject4GameMode::AProject4GameMode()
 {
+	bUseSeamlessTravel = true;
+
 	// set default pawn class to our Blueprinted character
-	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/AdvancedLocomotionV4/Blueprints/CharacterLogic/ALS_AnimMan_CharacterBP"));
+	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/Project4/Characters/Player/BP_ALS_PlayerBase"));
 	if (PlayerPawnBPClass.Class != NULL)
 	{
 		DefaultPawnClass = PlayerPawnBPClass.Class;
+	}
+}
+
+void AProject4GameMode::PlayerDeath(AController* Controller)
+{
+	// place to spectator cam and respawn after delay
+	//FActorSpawnParameters SpawnParameters;
+	//SpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+	//ASpectatorPawn* SpectatorPawn = GetWorld()->SpawnActor<ASpectatorPawn>(SpectatorClass, Controller->GetPawn()->GetActorTransform(), SpawnParameters);
+	//
+	//
+	//Controller->UnPossess();
+	//Controller->Possess(SpectatorPawn);
+
+	// forced respawns on timer finished
+	FTimerHandle RespawnTimerHandle;
+	FTimerDelegate RespawnDelegate;
+
+	RespawnDelegate = FTimerDelegate::CreateUObject(this, &AProject4GameMode::RespawnPlayer, Controller);
+	GetWorldTimerManager().SetTimer(RespawnTimerHandle, RespawnDelegate, RespawnDelay, false);
+
+	AProject4Controller* PC = Cast<AProject4Controller>(Controller);
+	if (PC)
+	{
+		PC->SetUIRespawnCountdown(RespawnDelay);
+	}
+}
+
+void AProject4GameMode::RespawnPlayer(AController* Controller)
+{
+	if (Controller->IsPlayerController())
+	{
+		AActor* PlayerStart = FindPlayerStart(Controller);
+
+		AProject4Controller* PC = Cast<AProject4Controller>(Controller);
+		AP4PlayerCharacterBase* PChar = Cast<AP4PlayerCharacterBase>(PC->GetPawn());
+		if (PChar)
+		{
+			PChar->SetActorTransform(PlayerStart->GetTransform());
+			PChar->UndoRagdoll();
+			PC->SetIgnoreMoveInput(false);
+		}
+		
+		// remove spectator pawn and replace with new player actor
+		//APawn* OldSpectatorPawn = Controller->GetPawn();
+		//Controller->UnPossess();
+		//OldSpectatorPawn->Destroy();
+		//Controller->Possess(Player);
+	}
+	else
+	{
+		// AI Controller of player class 
+		// only do if we want bots of Players
 	}
 }
 

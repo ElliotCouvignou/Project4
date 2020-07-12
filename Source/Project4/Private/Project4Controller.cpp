@@ -1,6 +1,7 @@
 // Project4 Copyright (Elliot Couvignou) Dont steal this mayne :(
 
 #include "Project4Controller.h"
+#include "Project4GameMode.h"
 #include "Characters/Project4Character.h"
 
 #include "GameFramework/SpringArmComponent.h"
@@ -16,6 +17,7 @@ AProject4Controller::AProject4Controller(const FObjectInitializer& ObjectInitial
 
 }
 
+// called in onRep_PC in playercharacterbase
 void AProject4Controller::CreateMainHUDWidget()
 {
 
@@ -31,6 +33,25 @@ void AProject4Controller::CreateMainHUDWidget()
 UGameplayHudWidget* AProject4Controller::GetMainHUDWidget()
 {
 	return GameplayHUDWidget;
+}
+
+TSubclassOf< AP4PlayerCharacterBase> AProject4Controller::GetPlayerCharacterClass()
+{
+	return PlayerCharacterClass;
+}
+
+void AProject4Controller::SetPlayerCharacterClass(TSubclassOf<AP4PlayerCharacterBase> CharacterClass)
+{
+	PlayerCharacterClass = CharacterClass;
+}
+
+void AProject4Controller::ClientRequestRespawn_Implementation()
+{
+	AProject4GameMode* GM = Cast<AProject4GameMode>(GetWorld()->GetAuthGameMode());
+	if (GM)
+	{
+		GM->RespawnPlayer(this);
+	}
 }
 
 void AProject4Controller::DisplayDamageNumber_Implementation(float DamageValue, AProject4Character* TargetCharacter)
@@ -64,9 +85,19 @@ void AProject4Controller::UpdateUILevel_Implementation(float NewLevel)
 	GameplayHUDWidget->UpdatePlayerLevel(NewLevel);
 }
 
+void AProject4Controller::SetUIRespawnCountdown_Implementation(float Duration)
+{
+	GameplayHUDWidget->SetRespawnCountdown(Duration);
+}
+
 void AProject4Controller::SendUIAbilityError(EAbilityErrorText ErrorType)
 {
 	GameplayHUDWidget->NewAbilityErrorMessage(ErrorType);
+}
+
+void AProject4Controller::SetupUIAbilityToHotBarBlock(int32 BlockIndex, TSubclassOf<class UP4GameplayAbility> Ability)
+{
+	GameplayHUDWidget->SetAbilityHotbarBlock(BlockIndex, Ability);
 }
 
 

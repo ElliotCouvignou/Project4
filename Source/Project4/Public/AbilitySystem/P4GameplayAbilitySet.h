@@ -5,8 +5,8 @@
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
 #include "Templates/SubclassOf.h"
-#include "AbilitySystem/P4GameplayAbility.h"
 #include "Project4.h"
+#include "GameplayAbilitySpec.h"
 #include "P4GameplayAbilitySet.generated.h"
 
 
@@ -24,7 +24,9 @@ struct FP4GameplayAbilityBindInfo
 		EP4AbilityInputID	Command;
 
 	UPROPERTY(EditAnywhere, Category = BindInfo)
-		TSubclassOf<UP4GameplayAbility>	AbilityClass;
+		TSubclassOf<class UP4GameplayAbility>	AbilityClass;
+
+	//bool operator==(const class UGameplayAbility& lhs) const;
 };
 
 
@@ -36,9 +38,12 @@ class PROJECT4_API UP4GameplayAbilitySet : public UDataAsset
 {
 	GENERATED_UCLASS_BODY()
 
+public:
+
 	UPROPERTY(EditAnywhere, Category = AbilitySet)
 		TArray<FP4GameplayAbilityBindInfo>	Abilities;
 
 	void GiveAbilities(UAbilitySystemComponent* AbilitySystemComponent) const;
-	
+
+	void AddClassesToRemove(TArray<FGameplayAbilitySpecHandle>& RemoveArray, TArray<FGameplayAbilitySpec>& AbilitiesArray);
 };

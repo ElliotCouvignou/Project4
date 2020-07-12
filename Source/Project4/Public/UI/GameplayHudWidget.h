@@ -41,18 +41,29 @@ public:
 
 	UFUNCTION()
 		void UpdateCurrentXP(float NewXP);
-
 	UFUNCTION()
 		void UpdateMaxXP(float NewMaxXP);
 
 	UFUNCTION()
 		void UpdatePlayerLevel(float NewLevel);
 
+	UFUNCTION()
+		void SetAbilityHotbarBlock(int32 BlockIndex, TSubclassOf<class UP4GameplayAbility> Ability);
+
+
+	/* Blueprint implementable functions, for widgets that dont 
+		need a special class made for them in c++ so let BP's 
+		handle from here                                   */
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+		void SetRespawnCountdown(float Duration);
+
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 		void NewAbilityErrorMessage(EAbilityErrorText ErrorType);
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 		void SetNewTargetData(AActor* NewTarget);
+
+	
 
 protected:
 	// gets created and filled out by BP
@@ -61,4 +72,7 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		class UResourceBarsWidget* ResourceBarsWidget;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		class UAbilityHotbar* AbilityHotbar;
 };

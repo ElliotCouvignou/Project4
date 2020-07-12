@@ -38,6 +38,11 @@ UPlayerAttributeSet* AProject4PlayerState::GetAttributeSet() const
 	return AttributeSet;
 }
 
+bool AProject4PlayerState::IsAlive() const
+{
+	return AttributeSet->GetHealth() > 0.f;
+}
+
 void AProject4PlayerState::BeginPlay()
 {
 	Super::BeginPlay();
@@ -70,10 +75,7 @@ void AProject4PlayerState::BindAbilityDelegates()
 }
 
 
-bool AProject4PlayerState::IsAlive() const
-{
-	return AttributeSet->GetHealth() > 0.f;
-}
+
 
 
 
@@ -88,7 +90,7 @@ void AProject4PlayerState::HealthChanged(const FOnAttributeChangeData& Data)
 	
 	AP4PlayerCharacterBase* PChar = Cast<AP4PlayerCharacterBase>(GetPawn());
 
-	// update floating status bar
+	// TODO: update floating status bar
 
 	// update Player HUD (ref in controller)
 	AProject4Controller* PC = Cast<AProject4Controller>(GetOwner());
@@ -107,8 +109,7 @@ void AProject4PlayerState::HealthChanged(const FOnAttributeChangeData& Data)
 	{
 		if (PChar)
 		{
-			// do die stuff (call ragdoll rn)
-			print(FString("Died"));
+			PChar->Die();
 		}
 	}
 }
@@ -161,7 +162,7 @@ void AProject4PlayerState::ManaChanged(const FOnAttributeChangeData& Data)
 
 	AP4PlayerCharacterBase* PChar = Cast<AP4PlayerCharacterBase>(GetPawn());
 
-	// update floating status bar
+	// TODO: update floating status bar
 
 	// update Player HUD (ref in controller)
 	AProject4Controller* PC = Cast<AProject4Controller>(GetOwner());
@@ -182,7 +183,7 @@ void AProject4PlayerState::ManaMaxChanged(const FOnAttributeChangeData& Data)
 
 	AP4PlayerCharacterBase* PChar = Cast<AP4PlayerCharacterBase>(GetPawn());
 
-	// update floating status bar 
+	// TODO: update floating status bar 
 
 	// update Player HUD (ref in controller)
 	AProject4Controller* PC = Cast<AProject4Controller>(GetOwner());
@@ -220,7 +221,7 @@ void AProject4PlayerState::EnduranceChanged(const FOnAttributeChangeData& Data)
 
 	AP4PlayerCharacterBase* PChar = Cast<AP4PlayerCharacterBase>(GetPawn());
 
-	// update floating status bar
+	// TODO: update floating status bar
 
 	// update Player HUD (ref in controller)
 	AProject4Controller* PC = Cast<AProject4Controller>(GetOwner());
@@ -241,7 +242,7 @@ void AProject4PlayerState::EnduranceMaxChanged(const FOnAttributeChangeData& Dat
 
 	AP4PlayerCharacterBase* PChar = Cast<AP4PlayerCharacterBase>(GetPawn());
 
-	// update floating status bar
+	// TODO: update floating status bar
 
 	// update Player HUD (ref in controller)
 	AProject4Controller* PC = Cast<AProject4Controller>(GetOwner());
@@ -253,7 +254,7 @@ void AProject4PlayerState::EnduranceMaxChanged(const FOnAttributeChangeData& Dat
 		{
 			HUD->UpdateEnduranceMax(EnduranceMax);
 		}
-	}
+	} 
 }
 
 void AProject4PlayerState::EnduranceRegenChanged(const FOnAttributeChangeData& Data)

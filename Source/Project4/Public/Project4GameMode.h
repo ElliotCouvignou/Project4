@@ -60,6 +60,9 @@ struct FHealthCheckState
 };
 
 
+// Only those with authority can have access to gamemodes
+// This includes dedicated servers and clients if they are doing 
+// some offline mode or singleplayer
 
 UCLASS(minimalapi)
 class AProject4GameMode : public AGameModeBase
@@ -69,21 +72,47 @@ class AProject4GameMode : public AGameModeBase
 public:
 	AProject4GameMode();
 
-protected:
-	virtual void BeginPlay() override;
+
+	/***************************/
+	/*      Player Death       */
+	/***************************/
+
+	// Called after FinishDying for Player character classes
+	// starts respawn process 
+	UFUNCTION()
+		void PlayerDeath(AController* Controller);
+
+	UFUNCTION()
+		void RespawnPlayer(AController* Controller);
+
 
 private:
+
+	/***************************/
+	/*      AWS Gamelift       */
+	/***************************/
+
+	// AWS stuff, Got it from tutorial lel 
 	UPROPERTY()
 		FStartGameSessionState StartGameSessionState;
-
 	UPROPERTY()
 		FUpdateGameSessionState UpdateGameSessionState;
-
 	UPROPERTY()
 		FProcessTerminateState ProcessTerminateState;
-
 	UPROPERTY()
 		FHealthCheckState HealthCheckState;
+
+protected:
+	/***************************/
+	/*     Player Death        */
+	/***************************/
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+		float RespawnDelay = 5.f;
+
+	/* Virtual Overrides */
+
+	virtual void BeginPlay() override;
 };
 
 

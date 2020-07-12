@@ -9,6 +9,8 @@
 #include "Project4Character.generated.h"
 
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FCharacterDiedDelegate, AProject4Character*, Character);
+
 /**
 * The base Character class for the game. Everything with an AbilitySystemComponent in this game will inherit from this class.
 * This class should not be instantiated and instead subclassed.
@@ -25,12 +27,10 @@ protected:
 	/*       Components        */
 	/***************************/
 
-		// Character ASC, this is shared  players and mob classes
-	UPROPERTY(VisibleAnywhere, Category = Abilities, meta = (AllowPrivateAccess = "true"))
-		TWeakObjectPtr<class UAbilitySystemComponent> AbilitySystemComponent;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Replicated, Category = Attributes)
-		TWeakObjectPtr<class UPlayerAttributeSet> AttributeSet;
+	// Character ASC, this is shared  players and mob classes
+	// No UPROPERTY for these, makes their UObject references go stale when out of scope
+	TWeakObjectPtr<class UAbilitySystemComponent> AbilitySystemComponent;
+	TWeakObjectPtr<class UPlayerAttributeSet> AttributeSet;
 
 	/** The main skeletal mesh associated with this Character (optional sub-object). */
 	UPROPERTY(Category = Abilities, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
@@ -40,7 +40,10 @@ protected:
 		USkeletalMeshComponent* MeshRH;
 
 public:
-	AProject4Character();
+	AProject4Character(const class FObjectInitializer& ObjectInitializer);
+
+	UPROPERTY(BlueprintAssignable)
+		FCharacterDiedDelegate OnCharacterDied;
 
 	/***************************/
 	/* Gameplay Ability system */  
@@ -51,10 +54,28 @@ public:
 	UFUNCTION(BlueprintPure, Category = Ability, meta = (DefaultToSelf = Target))
 		class UPlayerAttributeSet* GetAttributeSet() const;
 
+	/***************************/
+	/*          Death          */
+	/***************************/
+
 	// Simple check if health
 	UFUNCTION(BlueprintCallable)
 		virtual bool IsAlive() const;
 
+	virtual void Die();
+
+	// blueprintcallable for anim notify
+	UFUNCTION(BlueprintCallable, Category = Death)
+		virtual	void FinishDying();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = Death)
+		void ActivateRagdoll();
+
+	// used by gamemode to undo ragdoll IF no death montage
+	UFUNCTION(NetMulticast, Reliable, WithValidation)
+		void UndoRagdoll();
+	void UndoRagdoll_Implementation();
+	bool UndoRagdoll_Validate() { return true; }
 
 	/***************************/
 	/*     Targeting system    */
@@ -75,9 +96,12 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Abilities)
 		class UP4GameplayAbilitySet* EssentialAbilities;
-
+	
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = Abilities)
 		TArray<TSubclassOf<class UGameplayEffect>> StartupEffects;
+
+	// unbinds all active abilities, Occurs on death
+	virtual void RemoveAllAbilitites();
 
 	// Called on actorspawn ONLY servers need to call this and startupeffects
 	virtual	void GiveEssentialAbilities();
@@ -85,11 +109,28 @@ protected:
 	// Called on actorSpawn, GE's shouldn't be canceled unless we make skills to stop regen
 	virtual void AddAllStartupEffects();
 
+	// Init playerAttributes with .csv
+	void InitializeAttributeSet();
+
+	/***************************/
+	/*          Death          */
+	/***************************/
+
+	// delay from ragdoll in die() to FinishDying()
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+		float RadgollDeathDelay = 5.f;
+
+	FTimerHandle RadgollDeathHandle;
+
+	// optinal death animation montage (doesnt exist -> ALS ragdoll)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Animation")
+		UAnimMontage* DeathMontage;
+
+	FGameplayTag DeadTag;
+	FGameplayTag RespawnTag;
+
 public:
 	/* Virtual Overrides */
-
-	/* Event Tick Override */
-	virtual void Tick(float DeltaTime) override;
 
 	/* override BeginPlay */
 	virtual void BeginPlay() override;

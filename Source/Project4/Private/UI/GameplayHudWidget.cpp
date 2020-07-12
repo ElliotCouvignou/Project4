@@ -4,6 +4,9 @@
 #include "UI/GameplayHudWidget.h"
 #include "UI/XPBarWidget.h"
 #include "UI/ResourceBarsWidget.h"
+#include "UI/AbilityHotbar.h"
+
+#define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::Green,text)
 
 
 void UGameplayHudWidget::UpdateHealth(float NewValue)
@@ -96,5 +99,13 @@ void UGameplayHudWidget::UpdatePlayerLevel(float NewLevel)
 	if (ResourceBarsWidget)
 	{
 		ResourceBarsWidget->UpdatePlayerLevel(NewLevel);
+	}
+}
+
+void UGameplayHudWidget::SetAbilityHotbarBlock(int32 BlockIndex, TSubclassOf<class UP4GameplayAbility> Ability)
+{
+	if (AbilityHotbar)
+	{
+		AbilityHotbar->SetupHotbarAbility(BlockIndex, Ability);
 	}
 }

@@ -41,6 +41,23 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Utility")
 		class UGameplayHudWidget* GetMainHUDWidget();
 
+	UFUNCTION(BlueprintCallable, Category = "Utility")
+		TSubclassOf<AP4PlayerCharacterBase> GetPlayerCharacterClass();
+
+	UFUNCTION(BlueprintCallable, Category = "Utility")
+		void SetPlayerCharacterClass(TSubclassOf<AP4PlayerCharacterBase> CharacterClass);
+
+	/************************************/
+	/* Server RPC/Functions From Client */
+	/************************************/
+
+	// Called after respawn button pressed
+	// need server for gamemode access to respawn
+	UFUNCTION(Server, Reliable, WithValidation, BlueprintCallable)
+		void ClientRequestRespawn();
+	void ClientRequestRespawn_Implementation();
+	bool ClientRequestRespawn_Validate() { return true; }
+
 	/*******************************/
 	/* Client RPC/Functions for UI */
 	/*******************************/
@@ -73,16 +90,28 @@ public:
 	void UpdateUILevel_Implementation(float NewLevel);
 	bool UpdateUILevel_Validate(float NewLevel) { return true; }
 
+	UFUNCTION(Client, Reliable, WithValidation)
+		void SetUIRespawnCountdown(float Duration);
+	void SetUIRespawnCountdown_Implementation(float Duration);
+	bool SetUIRespawnCountdown_Validate(float Duration) { return true; }
 
 	// Called on Ability Error (e.g. Out of range, Out of mana, etc.)
-	//UFUNCTION(Client, Reliable, WithValidation)
+	// doesn't need client RPC since ability error texts occurs during
+	// ability try activate which is done by owning clients too
 	UFUNCTION(BlueprintCallable)
 		void SendUIAbilityError(EAbilityErrorText ErrorType);
 
+	UFUNCTION(BlueprintCallable)
+		void SetupUIAbilityToHotBarBlock(int32 BlockIndex, TSubclassOf<class UP4GameplayAbility> Ability);
 
 
 
 protected:
+
+	// Which character class does player want (i.e Berserker, ranger, etc.)
+	// TODO make this class on spawn not from GM
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+		TSubclassOf<class AP4PlayerCharacterBase> PlayerCharacterClass;
 
 	// Floating Text Component Class to create for dmg text
 	UPROPERTY(EditAnywhere, Category = "UI")

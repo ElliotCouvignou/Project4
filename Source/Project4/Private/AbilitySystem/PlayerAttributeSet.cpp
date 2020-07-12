@@ -29,10 +29,10 @@ void UPlayerAttributeSet::PreAttributeBaseChange(const FGameplayAttribute& Attri
 	if (Attribute == GetHealthAttribute()) {
 		NewValue = FMath::Clamp(NewValue, 0.0f, HealthMax.GetCurrentValue());
 	}
-	if (Attribute == GetManaAttribute()) {
+	else if (Attribute == GetManaAttribute()) {
 		NewValue = FMath::Clamp(NewValue, 0.0f, ManaMax.GetCurrentValue());
 	}
-	if (Attribute == GetEnduranceAttribute()) {
+	else if (Attribute == GetEnduranceAttribute()) {
 		NewValue = FMath::Clamp(NewValue, 0.0f, EnduranceMax.GetCurrentValue());
 	}
 
@@ -73,7 +73,10 @@ void UPlayerAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute
 
 	else if (Attribute == GetMovementSpeedAttribute()) {
 		AProject4Character* Pchar = Cast<AProject4Character>(GetOwningActor());
-		Pchar->GetCharacterMovement()->MaxWalkSpeed = NewValue;
+		if (Pchar) 
+		{
+			Pchar->GetCharacterMovement()->MaxWalkSpeed = NewValue;
+		}
 	}
 }
 

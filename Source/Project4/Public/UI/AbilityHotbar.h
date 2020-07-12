@@ -29,6 +29,11 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Ability)
 		class AP4PlayerCharacterBase* PlayerRef;
 
-	UFUNCTION(BlueprintCallable, Category = Abilities)
-		void GivePlayerAbility(int32 BlockIndex, TSubclassOf<class UP4GameplayAbility> Ability);
+	// give player ability to block #
+	//UFUNCTION(BlueprintCallable, Category = Abilities)
+	//	void GivePlayerAbility(int32 BlockIndex, TSubclassOf<class UP4GameplayAbility> Ability);
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+		void SetupHotbarAbility(int32 BlockIndex, TSubclassOf<class UP4GameplayAbility> Ability);
+	
 };
