@@ -4,6 +4,7 @@
 
 #include "Project4GameMode.h"
 #include "Project4Controller.h"
+#include "Project4PlayerState.h"
 #include "Characters/Project4Character.h"
 #include "Characters/P4PlayerCharacterBase.h"
 #include "GameFramework/SpectatorPawn.h"
@@ -21,6 +22,7 @@ AProject4GameMode::AProject4GameMode()
 	if (PlayerPawnBPClass.Class != NULL)
 	{
 		DefaultPawnClass = PlayerPawnBPClass.Class;
+		PlayerStateClass = AProject4PlayerState::StaticClass();
 	}
 }
 
@@ -60,10 +62,11 @@ void AProject4GameMode::RespawnPlayer(AController* Controller)
 		if (PChar)
 		{
 			PChar->SetActorTransform(PlayerStart->GetTransform());
-			PChar->UndoRagdoll();
 			PC->SetIgnoreMoveInput(false);
+			PChar->Respawn();
+
 		}
-		
+
 		// remove spectator pawn and replace with new player actor
 		//APawn* OldSpectatorPawn = Controller->GetPawn();
 		//Controller->UnPossess();
@@ -165,4 +168,25 @@ void AProject4GameMode::BeginPlay()
 		// TODO handle when ProcessReady returns false (rare, but it happens)
 	}
 #endif
+}
+
+FString AProject4GameMode::InitNewPlayer(APlayerController* NewPlayerController, const FUniqueNetIdRepl& UniqueId, const FString& Options, const FString& Portal)
+{
+	FString InitializedString = Super::InitNewPlayer(NewPlayerController, UniqueId, Options, Portal);
+
+	/*if (NewPlayerController != nullptr) {
+		APlayerState* PlayerState = NewPlayerController->PlayerState;
+		if (PlayerState != nullptr) {
+			AGameLiftTutorialPlayerState* GameLiftTutorialPlayerState = Cast<AGameLiftTutorialPlayerState>(PlayerState);
+			if (GameLiftTutorialPlayerState != nullptr) {
+				if (FMath::RandRange(0, 1) == 0) {
+					GameLiftTutorialPlayerState->Team = "cowboys";
+				}
+				else {
+					GameLiftTutorialPlayerState->Team = "aliens";
+				}
+			}
+		}
+	}*/
+	return InitializedString;
 }

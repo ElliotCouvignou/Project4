@@ -51,9 +51,13 @@ public:
 	virtual void OnAvatarSet(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec) override; 
 
 	UFUNCTION(BlueprintCallable, Category = "Ability Functions")
-	void SetAbilityInputID(EP4AbilityInputID NewInputID);
+		void SetAbilityInputID(EP4AbilityInputID NewInputID);
 
 	UFUNCTION(BlueprintCallable, Category = "Utility | UI")
 		void SendErrorMessageToUI(EAbilityErrorText ErrorType);
+
+	/* Calls palyMontage ASC function that isn't blueprint exposed on default */
+	UFUNCTION(BlueprintCallable, Category = "Utility | Animation")
+		float PlayAnimationMontage(class AProject4Character* TargetActor, FGameplayAbilityActivationInfo ActivationInfo, UAnimMontage* Montage, float InPlayRate = 1.0f, FName StartSectionName = NAME_None);
 
 };

@@ -4,6 +4,7 @@
 #include "AbilitySystem/P4GameplayAbility.h"
 #include "AbilitySystemComponent.h"
 #include "Project4Controller.h"
+#include "Characters/Project4Character.h"
 #include "GameplayTagContainer.h"
 
 
@@ -14,8 +15,8 @@ UP4GameplayAbility::UP4GameplayAbility()
 	InstancingPolicy = EGameplayAbilityInstancingPolicy::InstancedPerActor;
 
 	// Default tags that block this ability from activating 
-	//ActivationBlockedTags.AddTag(FGameplayTag::RequestGameplayTag(FName("State.Dead")));
-	//ActivationBlockedTags.AddTag(FGameplayTag::RequestGameplayTag(FName("State.Debuff.Stun")));
+	ActivationBlockedTags.AddTag(FGameplayTag::RequestGameplayTag(FName("PlayerState.Dead")));
+	ActivationBlockedTags.AddTag(FGameplayTag::RequestGameplayTag(FName("PlayerState.Debuff.Stunned")));
 }
 
 void UP4GameplayAbility::OnAvatarSet(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec)
@@ -45,4 +46,21 @@ void UP4GameplayAbility::SendErrorMessageToUI(EAbilityErrorText ErrorType)
 		}
 	}
 }
+
+float UP4GameplayAbility::PlayAnimationMontage(AProject4Character* TargetActor, FGameplayAbilityActivationInfo ActivationInfo, UAnimMontage* Montage, float InPlayRate, FName StartSectionName)
+{
+	float ret = 0.f;
+	
+	if (TargetActor)
+	{
+		UAbilitySystemComponent* ASC = TargetActor->GetAbilitySystemComponent();
+		if (ASC)
+		{
+			ret = ASC->PlayMontage(this, ActivationInfo, Montage, InPlayRate, StartSectionName);
+		}
+	}
+
+	return ret;
+}
+
 

@@ -9,12 +9,15 @@
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
+#include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "TimerManager.h"
+#include "Containers/Array.h"
 
 #include "UI/GameplayHudWidget.h"
+#include "UI/FloatingStatusBarWidget.h"
 
 #include "GameplayAbilitySpec.h"
 #include "AbilitySystemComponent.h"
@@ -63,8 +66,11 @@ AProject4Character::AProject4Character(const class FObjectInitializer& ObjectIni
 	MeshRH = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("MeshRH"));
 	MeshRH->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, FName(TEXT("hand_r_Socket")));
 
-	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
-	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
+	UIFloatingStatusBarComponent = CreateDefaultSubobject<UWidgetComponent>(FName("UIFloatingStatusBarComponent"));
+	UIFloatingStatusBarComponent->SetupAttachment(RootComponent);
+	UIFloatingStatusBarComponent->SetRelativeLocation(FVector(0, 0, 120));
+	UIFloatingStatusBarComponent->SetWidgetSpace(EWidgetSpace::Screen);
+	UIFloatingStatusBarComponent->SetDrawSize(FVector2D(500, 500));
 
 	DeadTag = FGameplayTag::RequestGameplayTag(FName("PlayerState.Dead"));
 	//Respawn = FGameplayTag::RequestGameplayTag(FName(""));
@@ -82,6 +88,7 @@ UPlayerAttributeSet* AProject4Character::GetAttributeSet() const
 }
 
 
+
 bool AProject4Character::IsAlive() const
 {
 	if (AttributeSet.Get()) {
@@ -95,7 +102,7 @@ bool AProject4Character::IsAlive() const
 
 void AProject4Character::Die()
 {
-	// TODO fix issue crash when 2+ clients
+	// fix issue crash when 2+ clients
 	//RemoveAllAbilitites();
 
 	// Stop player and remove collisions, freeze in air
@@ -110,6 +117,8 @@ void AProject4Character::Die()
 	{
 		// stop all abilitites regardless of tags (not GE's)
 		AbilitySystemComponent->CancelAllAbilities();
+
+		AbilitySystemComponent->AddLooseGameplayTag(DeadTag);
 	}
 
 	// play death montage if set, else play ALS ragdoll with manual delay
@@ -130,8 +139,13 @@ void AProject4Character::FinishDying()
 	//Destroy();
 }
 
-void AProject4Character::UndoRagdoll_Implementation()
+void AProject4Character::Respawn_Implementation()
 {
+	if (AbilitySystemComponent.IsValid())
+	{
+		AbilitySystemComponent->SetTagMapCount(DeadTag, 0);
+		int32 count = AbilitySystemComponent->GetTagCount(DeadTag);
+	}
 	if (!DeathMontage)
 	{
 		// HACK: kindof assuming we are in ragdoll to undo it
@@ -139,10 +153,48 @@ void AProject4Character::UndoRagdoll_Implementation()
 	}
 }
 
+/***************************/
+/*           UI            */
+/***************************/
+
+void AProject4Character::InitFloatingStatusBarWidget()
+{
+	if (AbilitySystemComponent.IsValid())
+	{
+		// Setup FloatingStatusBar UI for Locally Owned Players only but exclude your own FSB
+		APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+		if (PC && PC->IsLocalPlayerController() && !IsLocallyControlled())
+		{
+			if (UIFloatingStatusBarClass)
+			{
+				UIFloatingStatusBar = CreateWidget<UFloatingStatusBarWidget>(PC, UIFloatingStatusBarClass);
+				if (UIFloatingStatusBar && UIFloatingStatusBarComponent)
+				{
+					UIFloatingStatusBarComponent->SetWidget(UIFloatingStatusBar);
+					UIFloatingStatusBarComponent->SetDrawSize(UIFloatingStatusBar->GetDesiredSize());
+
+					// Setup the floating status bar
+					UIFloatingStatusBar->SetHealthPercentage(AttributeSet->GetHealth() / AttributeSet->GetHealthMax());
+
+					// TODO: set real character name in floating bar
+					//UIFloatingStatusBar->SetCharacterName(CharacterName);
+				}
+			}
+		}
+	}
+}
+
+UFloatingStatusBarWidget* AProject4Character::GetFloatingStatusBarWidget()
+{
+	return UIFloatingStatusBar;
+}
+
+
 void AProject4Character::BeginPlay()
 {
 	Super::BeginPlay();
 
+	
 }
 
 
@@ -159,25 +211,28 @@ void AProject4Character::RemoveAllAbilitites()
 		return;
 	}
 
-	
 	TArray<FGameplayAbilitySpecHandle> AbilitiesToRemove;
-	//TArray<FGameplayAbilitySpec> AllAbilities = AbilitySystemComponent->GetActivatableAbilities();
-	
+	TArray<FGameplayAbilitySpec> AllAbilities = AbilitySystemComponent->GetActivatableAbilities();
+	UAbilitySystemComponent* ASC = GetAbilitySystemComponent();
+
 	// remove essential abilities (Player abilities removed in player class virtual)
-	//for (const FP4GameplayAbilityBindInfo& Spec : EssentialAbilities->Abilities)
-	//{
-	//
-	//	//if ((Spec.SourceObject == this) )
-	//	//{
-	//	//	AbilitiesToRemove.Add(Spec.Handle);
-	//	//}
-	//}
+	for (const FP4GameplayAbilityBindInfo& Ability : EssentialAbilities->Abilities)
+	{
+		FGameplayAbilitySpec* spec = ASC->FindAbilitySpecFromClass(Ability.AbilityClass);
+		if (spec)
+		{
+			AbilitiesToRemove.Add(spec->Handle);
+		}
+	}
 
 	// Do in two passes so the removal happens after we have the full list
 	for (int32 i = 0; i < AbilitiesToRemove.Num(); i++)
 	{
 		AbilitySystemComponent->ClearAbility(AbilitiesToRemove[i]);
 	}
+
+	// prevent player from inputting abilities
+
 }
 
 void AProject4Character::GiveEssentialAbilities()

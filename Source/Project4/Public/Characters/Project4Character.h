@@ -39,6 +39,12 @@ protected:
 	UPROPERTY(Category = Abilities, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		USkeletalMeshComponent* MeshRH;
 
+	// Floatingstatusbar is connected to statusbarcomponent
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "UI")
+		class UFloatingStatusBarWidget* UIFloatingStatusBar;
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "UI")
+		class UWidgetComponent* UIFloatingStatusBarComponent;
+
 public:
 	AProject4Character(const class FObjectInitializer& ObjectInitializer);
 
@@ -72,10 +78,10 @@ public:
 		void ActivateRagdoll();
 
 	// used by gamemode to undo ragdoll IF no death montage
-	UFUNCTION(NetMulticast, Reliable, WithValidation)
-		void UndoRagdoll();
-	void UndoRagdoll_Implementation();
-	bool UndoRagdoll_Validate() { return true; }
+	UFUNCTION(BlueprintCallable, NetMulticast, Reliable, WithValidation)
+		virtual void Respawn();
+	virtual void Respawn_Implementation();
+	virtual bool Respawn_Validate() { return true; }
 
 	/***************************/
 	/*     Targeting system    */
@@ -85,11 +91,21 @@ public:
 	UPROPERTY(EditAnywhere, Replicated, BlueprintReadWrite, Category = Abilities)
 		AActor* SelectedTarget;
 
+	/***************************/
+	/*           UI            */
+	/***************************/
+
+	UFUNCTION(BlueprintCallable)
+		class UFloatingStatusBarWidget* GetFloatingStatusBarWidget();
+
 protected:
 
 	/***************************/
 	/* Gameplay Ability system */
 	/***************************/
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "UI")
+		TSubclassOf<class UFloatingStatusBarWidget> UIFloatingStatusBarClass;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Attributes)
 		UDataTable* AttrDataTable;
@@ -117,8 +133,9 @@ protected:
 	/***************************/
 
 	// delay from ragdoll in die() to FinishDying()
+	// i.e time to show death animation before moving onto respawn timer
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-		float RadgollDeathDelay = 5.f;
+		float RadgollDeathDelay = 2.f;
 
 	FTimerHandle RadgollDeathHandle;
 
@@ -128,6 +145,18 @@ protected:
 
 	FGameplayTag DeadTag;
 	FGameplayTag RespawnTag;
+
+
+	/***************************/
+	/*           UI            */
+	/***************************/
+
+	UFUNCTION(BlueprintCallable)
+		virtual void InitFloatingStatusBarWidget();
+
+	// TODO: Find a way to fill this out
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+		FText CharacterName;
 
 public:
 	/* Virtual Overrides */

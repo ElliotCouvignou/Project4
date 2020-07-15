@@ -5,7 +5,9 @@
 
 #include "AbilitySystemComponent.h"
 #include "AbilitySystem/PlayerAttributeSet.h"
+#include "AbilitySystem/P4AbilitySystemComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "UI/FloatingStatusBarWidget.h"
 
 
 #define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Green,text)
@@ -16,7 +18,7 @@ AP4MobCharacterBase::AP4MobCharacterBase(const class FObjectInitializer& ObjectI
 	: Super(ObjectInitializer)
 {
 	// Create ASC with minimal replication since theres no need for prediction on mobs
-	AbilitySystemComponentHardRef = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystemComponentHardRef"));
+	AbilitySystemComponentHardRef = CreateDefaultSubobject<UP4AbilitySystemComponent>(TEXT("AbilitySystemComponentHardRef"));
 	AbilitySystemComponentHardRef->SetIsReplicated(true);
 	AbilitySystemComponentHardRef->SetReplicationMode(EGameplayEffectReplicationMode::Minimal);
 
@@ -61,6 +63,8 @@ void AP4MobCharacterBase::BeginPlay()
 		HealthChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetHealthAttribute()).AddUObject(this, &AP4MobCharacterBase::HealthChanged);
 
 		BindDelegates();
+
+		InitFloatingStatusBarWidget();
 	}
 }
 
@@ -81,7 +85,11 @@ void AP4MobCharacterBase::HealthChanged(const FOnAttributeChangeData& Data)
 {
 	float Health = Data.NewValue;
 
-	// TODO: Update floating bar
+	// Update floating bar
+	if (UIFloatingStatusBar)
+	{
+		UIFloatingStatusBar->SetHealthPercentage(AttributeSet->GetHealth() / AttributeSet->GetHealthMax());
+	}
 
 	// check ded
 	if (!IsAlive() && !AbilitySystemComponent->HasMatchingGameplayTag(DeadTag))
@@ -94,5 +102,9 @@ void AP4MobCharacterBase::ManaChanged(const FOnAttributeChangeData& Data)
 {
 	float Mana = Data.NewValue;
 
-	// TODO: Update floating bar
+	// Update floating bar
+	if (UIFloatingStatusBar)
+	{
+		UIFloatingStatusBar->SetManaPercentage(AttributeSet->GetMana() / AttributeSet->GetManaMax());
+	}
 }

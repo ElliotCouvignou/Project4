@@ -181,7 +181,8 @@ void UPlayerAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCall
 				
 				if (NewHealth < 0.f) {
 					// target died, give xp and generate loots
-					if (SourceCharacter) {
+					if (SourceCharacter && (SourceController != TargetController))
+					{
 						UPlayerAttributeSet* SourceAS = SourceCharacter->GetAttributeSet();
 						float NewSourceXp = SourceAS->GetExperience() + GetExperienceBounty();
 
@@ -203,6 +204,7 @@ void UPlayerAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCall
 						// Add XP
 						SourceAS->SetExperience(NewSourceXp);
 						SourcePC->UpdateUICurrentXP(NewSourceXp);
+						
 					}
 				}
 				SetHealth(FMath::Clamp(NewHealth, 0.f, GetHealthMax()));

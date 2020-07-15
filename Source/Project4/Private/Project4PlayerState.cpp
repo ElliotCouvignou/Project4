@@ -11,13 +11,14 @@
 #include "AbilitySystem/P4AbilitySystemComponent.h"
 
 #include "UI/GameplayHudWidget.h"
+#include "UI/FloatingStatusBarWidget.h"
 
 #define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Green,text)
 
 
 AProject4PlayerState::AProject4PlayerState()
 {
-	AbilitySystemComponent = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystem"));
+	AbilitySystemComponent = CreateDefaultSubobject<UP4AbilitySystemComponent>(TEXT("AbilitySystem"));
     AbilitySystemComponent->SetIsReplicated(true);
     AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
     
@@ -90,7 +91,15 @@ void AProject4PlayerState::HealthChanged(const FOnAttributeChangeData& Data)
 	
 	AP4PlayerCharacterBase* PChar = Cast<AP4PlayerCharacterBase>(GetPawn());
 
-	// TODO: update floating status bar
+	// update floating status bar
+	if (PChar)
+	{
+		UFloatingStatusBarWidget* FSBWidget = PChar->GetFloatingStatusBarWidget();
+		if (FSBWidget && AttributeSet)
+		{
+			FSBWidget->SetHealthPercentage(Health / AttributeSet->GetHealthMax());
+		}
+	}
 
 	// update Player HUD (ref in controller)
 	AProject4Controller* PC = Cast<AProject4Controller>(GetOwner());
@@ -122,7 +131,11 @@ void AProject4PlayerState::HealthMaxChanged(const FOnAttributeChangeData& Data)
 	AProject4Character* PChar = Cast<AProject4Character>(GetPawn());
 	if (PChar)
 	{
-
+		UFloatingStatusBarWidget* FSBWidget = PChar->GetFloatingStatusBarWidget();
+		if (FSBWidget && AttributeSet)
+		{
+			FSBWidget->SetHealthPercentage(AttributeSet->GetHealth() / HealthMax);
+		}
 	}
 
 	// update Player HUD (ref in controller)
@@ -162,7 +175,15 @@ void AProject4PlayerState::ManaChanged(const FOnAttributeChangeData& Data)
 
 	AP4PlayerCharacterBase* PChar = Cast<AP4PlayerCharacterBase>(GetPawn());
 
-	// TODO: update floating status bar
+	//  update floating status bar
+	if (PChar)
+	{
+		UFloatingStatusBarWidget* FSBWidget = PChar->GetFloatingStatusBarWidget();
+		if (FSBWidget && AttributeSet)
+		{
+			FSBWidget->SetManaPercentage(Mana / AttributeSet->GetManaMax());
+		}
+	}
 
 	// update Player HUD (ref in controller)
 	AProject4Controller* PC = Cast<AProject4Controller>(GetOwner());
@@ -183,7 +204,15 @@ void AProject4PlayerState::ManaMaxChanged(const FOnAttributeChangeData& Data)
 
 	AP4PlayerCharacterBase* PChar = Cast<AP4PlayerCharacterBase>(GetPawn());
 
-	// TODO: update floating status bar 
+	// update floating status bar 
+	if (PChar)
+	{
+		UFloatingStatusBarWidget* FSBWidget = PChar->GetFloatingStatusBarWidget();
+		if (FSBWidget && AttributeSet)
+		{
+			FSBWidget->SetManaPercentage(AttributeSet->GetMana() / ManaMax);
+		}
+	}
 
 	// update Player HUD (ref in controller)
 	AProject4Controller* PC = Cast<AProject4Controller>(GetOwner());

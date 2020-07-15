@@ -113,6 +113,8 @@ protected:
 	/* Virtual Overrides */
 
 	virtual void BeginPlay() override;
+
+	virtual FString InitNewPlayer(APlayerController* NewPlayerController, const FUniqueNetIdRepl& UniqueId, const FString& Options, const FString& Portal) override;
 };
 
 

@@ -235,7 +235,7 @@ void AP4PlayerCharacterBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty
 void AP4PlayerCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
-
+	
 }
 
 
@@ -290,6 +290,8 @@ void AP4PlayerCharacterBase::PossessedBy(AController* NewController)
 			PC->CreateMainHUDWidget();
 		}
 
+		InitFloatingStatusBarWidget();
+
 	}
 }
 
@@ -326,5 +328,7 @@ void AP4PlayerCharacterBase::OnRep_PlayerState()
 		{
 			PC->CreateMainHUDWidget();
 		}
+
+		InitFloatingStatusBarWidget();
 	}
 }

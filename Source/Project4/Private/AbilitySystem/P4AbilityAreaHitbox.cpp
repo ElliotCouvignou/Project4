@@ -31,7 +31,6 @@ void AP4AbilityAreaHitbox::Tick(float DeltaTime)
 
 }
 
-#define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::Green,text)
 
 void AP4AbilityAreaHitbox::ExecuteHitBoxDamage(UPrimitiveComponent* HitboxComponent)
 {
