@@ -162,7 +162,6 @@ void AProject4PlayerState::OnBuffTagRemoved(const FGameplayTag Tag, int32 Count)
 	// delete buff icon in local player UI
 	if (Count == 0)
 	{
-		print(FString("DeleteTag" + Tag.ToString()));
 		PC->RemoveBuffIconFromUI(Tag);
 	}
 }
