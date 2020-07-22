@@ -123,14 +123,13 @@ void AProject4PlayerState::OnActiveGameplayEffectApplied(UAbilitySystemComponent
 
 		const UP4GameplayAbility* Ability = Cast<UP4GameplayAbility>(SpecApplied.GetEffectContext().GetAbility());
 		
-		UGameplayHudWidget* HUD = PC->GetMainHUDWidget();
 		for (const FGameplayTag BuffTag : BuffTags)
 		{
 			int OwnerStackCount = AbilitySystemComponent->GetCurrentStackCount(ActiveHandle);
 			if (OwnerStackCount == 1)
 			{
 				//PC->SendBuffIconToUI(Ability->AbilityIcon, SpecApplied.GetDuration(), Ability->BuffToolTipText, BuffTag, BuffResetTimer, Stackable);
-				PC->SendBuffIconToUI(SpecApplied, ActiveHandle);
+				PC->SendBuffIconToUI(BuffTag, SpecApplied, ActiveHandle);
 			}
 			else
 			{
@@ -145,7 +144,8 @@ void AProject4PlayerState::OnActiveGameplayEffectApplied(UAbilitySystemComponent
 			}
 			else if (SpecApplied.Def->DurationPolicy == EGameplayEffectDurationType::Infinite)
 			{	
-				if (!DelegatedBuffTags.Contains(BuffTag.ToString())) {
+				if (!DelegatedBuffTags.Contains(BuffTag.ToString())) 
+				{
 					AbilitySystemComponent->RegisterGameplayTagEvent(BuffTag).AddUObject(this, &AProject4PlayerState::OnBuffTagRemoved);
 					DelegatedBuffTags.Add(BuffTag.ToString());
 				}
@@ -162,6 +162,7 @@ void AProject4PlayerState::OnBuffTagRemoved(const FGameplayTag Tag, int32 Count)
 	// delete buff icon in local player UI
 	if (Count == 0)
 	{
+		print(FString("DeleteTag" + Tag.ToString()));
 		PC->RemoveBuffIconFromUI(Tag);
 	}
 }

@@ -111,9 +111,9 @@ public:
 	/*    Buff Icons   */
 	/*******************/
 	UFUNCTION(Client, Reliable, WithValidation, BlueprintCallable)
-		void SendBuffIconToUI(const FGameplayEffectSpec& SpecApplied, const FActiveGameplayEffectHandle& ActiveHandle);
-	void SendBuffIconToUI_Implementation(const FGameplayEffectSpec& SpecApplied, const FActiveGameplayEffectHandle& ActiveHandle);
-	bool SendBuffIconToUI_Validate(const FGameplayEffectSpec& SpecApplied, const FActiveGameplayEffectHandle& ActiveHandle) { return true; }
+		void SendBuffIconToUI(const FGameplayTag& BuffTag, const FGameplayEffectSpec& SpecApplied, const FActiveGameplayEffectHandle& ActiveHandle);
+	void SendBuffIconToUI_Implementation(const FGameplayTag& BuffTag, const FGameplayEffectSpec& SpecApplied, const FActiveGameplayEffectHandle& ActiveHandle);
+	bool SendBuffIconToUI_Validate(const FGameplayTag& BuffTag, const FGameplayEffectSpec& SpecApplied, const FActiveGameplayEffectHandle& ActiveHandle) { return true; }
 
 	UFUNCTION(Client, Reliable, WithValidation, BlueprintCallable)
 		void UpdateBuffIconStacksUI(const FGameplayTag& BuffTag, int32 Count);

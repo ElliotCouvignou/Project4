@@ -101,11 +101,11 @@ void AProject4Controller::SetupUIAbilityToHotBarBlock(int32 BlockIndex, TSubclas
 	GameplayHUDWidget->SetAbilityHotbarBlock(BlockIndex, Ability);
 }
 
-void AProject4Controller::SendBuffIconToUI_Implementation(const FGameplayEffectSpec& SpecApplied, const FActiveGameplayEffectHandle& ActiveHandle)
+void AProject4Controller::SendBuffIconToUI_Implementation(const FGameplayTag& BuffTag, const FGameplayEffectSpec& SpecApplied, const FActiveGameplayEffectHandle& ActiveHandle)
 {
 	if (GameplayHUDWidget)
 	{
-		GameplayHUDWidget->SendBuffIconToUI(SpecApplied, ActiveHandle);
+		GameplayHUDWidget->SendBuffIconToUI(BuffTag, SpecApplied, ActiveHandle);
 	}
 }
 

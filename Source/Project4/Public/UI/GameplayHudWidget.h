@@ -66,7 +66,7 @@ public:
 		void SetNewTargetData(AActor* NewTarget);
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
-		void SendBuffIconToUI(const FGameplayEffectSpec& SpecApplied, const FActiveGameplayEffectHandle& ActiveHandle);
+		void SendBuffIconToUI(const FGameplayTag& Bufftag, const FGameplayEffectSpec& SpecApplied, const FActiveGameplayEffectHandle& ActiveHandle);
 	
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 		void UpdateBuffIconStacksUI(const FGameplayTag& BuffTag, int32 Count);
