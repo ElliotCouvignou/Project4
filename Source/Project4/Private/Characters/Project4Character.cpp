@@ -72,7 +72,7 @@ AProject4Character::AProject4Character(const class FObjectInitializer& ObjectIni
 	UIFloatingStatusBarComponent->SetWidgetSpace(EWidgetSpace::Screen);
 	UIFloatingStatusBarComponent->SetDrawSize(FVector2D(500, 500));
 
-	DeadTag = FGameplayTag::RequestGameplayTag(FName("PlayerState.Dead"));
+	DeadTag = FGameplayTag::RequestGameplayTag(FName("State.Dead"));
 	//Respawn = FGameplayTag::RequestGameplayTag(FName(""));
 }
 

@@ -9,6 +9,7 @@
 
 #include "UI/FloatingTextWidgetComponent.h"
 #include "UI/GameplayHudWidget.h"
+#include "UI/BuffIconsWidget.h"
 
 
 AProject4Controller::AProject4Controller(const FObjectInitializer& ObjectInitializer)
@@ -98,6 +99,30 @@ void AProject4Controller::SendUIAbilityError(EAbilityErrorText ErrorType)
 void AProject4Controller::SetupUIAbilityToHotBarBlock(int32 BlockIndex, TSubclassOf<class UP4GameplayAbility> Ability)
 {
 	GameplayHUDWidget->SetAbilityHotbarBlock(BlockIndex, Ability);
+}
+
+void AProject4Controller::SendBuffIconToUI_Implementation(const FGameplayEffectSpec& SpecApplied, const FActiveGameplayEffectHandle& ActiveHandle)
+{
+	if (GameplayHUDWidget)
+	{
+		GameplayHUDWidget->SendBuffIconToUI(SpecApplied, ActiveHandle);
+	}
+}
+
+void AProject4Controller::UpdateBuffIconStacksUI_Implementation(const FGameplayTag& BuffTag, int32 Count)
+{
+	if (GameplayHUDWidget)
+	{
+		GameplayHUDWidget->UpdateBuffIconStacksUI(BuffTag, Count);
+	}
+}
+
+void AProject4Controller::RemoveBuffIconFromUI_Implementation(const FGameplayTag& BuffTag)
+{
+	if (GameplayHUDWidget)
+	{
+		GameplayHUDWidget->RemoveBuffIconFromUI(BuffTag);
+	}
 }
 
 

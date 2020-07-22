@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "Project4Controller.h"
+#include "GameplayTagContainer.h"
+#include "GameplayEffect.h"
 #include "GameplayHudWidget.generated.h"
 
 /**
@@ -53,17 +55,25 @@ public:
 
 	/* Blueprint implementable functions, for widgets that dont 
 		need a special class made for them in c++ so let BP's 
-		handle from here                                   */
+		handle from here (only need 1 function for this widget) */
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 		void SetRespawnCountdown(float Duration);
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 		void NewAbilityErrorMessage(EAbilityErrorText ErrorType);
-
+	
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 		void SetNewTargetData(AActor* NewTarget);
 
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+		void SendBuffIconToUI(const FGameplayEffectSpec& SpecApplied, const FActiveGameplayEffectHandle& ActiveHandle);
 	
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+		void UpdateBuffIconStacksUI(const FGameplayTag& BuffTag, int32 Count);
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+		void RemoveBuffIconFromUI(const FGameplayTag& BuffTag);
+
 
 protected:
 	// gets created and filled out by BP
@@ -75,4 +85,7 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		class UAbilityHotbar* AbilityHotbar;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		class UBuffIconsWidget* BuffIconsWidget;
 };

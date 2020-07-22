@@ -6,7 +6,7 @@
 #include "Project4Controller.h"
 #include "Characters/Project4Character.h"
 #include "GameplayTagContainer.h"
-
+#include "UI/GameplayHudWidget.h"
 
 
 UP4GameplayAbility::UP4GameplayAbility()
@@ -15,8 +15,9 @@ UP4GameplayAbility::UP4GameplayAbility()
 	InstancingPolicy = EGameplayAbilityInstancingPolicy::InstancedPerActor;
 
 	// Default tags that block this ability from activating 
-	ActivationBlockedTags.AddTag(FGameplayTag::RequestGameplayTag(FName("PlayerState.Dead")));
-	ActivationBlockedTags.AddTag(FGameplayTag::RequestGameplayTag(FName("PlayerState.Debuff.Stunned")));
+	ActivationBlockedTags.AddTag(FGameplayTag::RequestGameplayTag(FName("State.Dead")));
+	ActivationBlockedTags.AddTag(FGameplayTag::RequestGameplayTag(FName("Buffs.Negative.Stunned")));
+	ActivationBlockedTags.AddTag(FGameplayTag::RequestGameplayTag(FName("Buffs.Negative.Silenced")));
 }
 
 void UP4GameplayAbility::OnAvatarSet(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec)
@@ -29,10 +30,6 @@ void UP4GameplayAbility::OnAvatarSet(const FGameplayAbilityActorInfo* ActorInfo,
 	}
 }
 
-void UP4GameplayAbility::SetAbilityInputID(EP4AbilityInputID NewInputID)
-{
-	AbilityID = NewInputID;
-}
 
 void UP4GameplayAbility::SendErrorMessageToUI(EAbilityErrorText ErrorType)
 {

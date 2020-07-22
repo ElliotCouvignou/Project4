@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "GameplayTagContainer.h"
+#include "GameplayEffect.h"
 #include "Project4Controller.generated.h"
 
 
@@ -104,6 +106,24 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void SetupUIAbilityToHotBarBlock(int32 BlockIndex, TSubclassOf<class UP4GameplayAbility> Ability);
 
+
+	/*******************/
+	/*    Buff Icons   */
+	/*******************/
+	UFUNCTION(Client, Reliable, WithValidation, BlueprintCallable)
+		void SendBuffIconToUI(const FGameplayEffectSpec& SpecApplied, const FActiveGameplayEffectHandle& ActiveHandle);
+	void SendBuffIconToUI_Implementation(const FGameplayEffectSpec& SpecApplied, const FActiveGameplayEffectHandle& ActiveHandle);
+	bool SendBuffIconToUI_Validate(const FGameplayEffectSpec& SpecApplied, const FActiveGameplayEffectHandle& ActiveHandle) { return true; }
+
+	UFUNCTION(Client, Reliable, WithValidation, BlueprintCallable)
+		void UpdateBuffIconStacksUI(const FGameplayTag& BuffTag, int32 Count);
+	void UpdateBuffIconStacksUI_Implementation(const FGameplayTag& BuffTag, int32 Count);
+	bool UpdateBuffIconStacksUI_Validate(const FGameplayTag& BuffTag, int32 Count) { return true; }
+
+	UFUNCTION(Client, Reliable, WithValidation, BlueprintCallable)
+		void RemoveBuffIconFromUI(const FGameplayTag& BuffTag);
+	void RemoveBuffIconFromUI_Implementation(const FGameplayTag& BuffTag);
+	bool RemoveBuffIconFromUI_Validate(const FGameplayTag& BuffTag) { return true; }
 
 
 protected:

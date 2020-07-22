@@ -5,8 +5,7 @@
 #include "UI/XPBarWidget.h"
 #include "UI/ResourceBarsWidget.h"
 #include "UI/AbilityHotbar.h"
-
-#define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::Green,text)
+#include "UI/BuffIconsWidget.h"
 
 
 void UGameplayHudWidget::UpdateHealth(float NewValue)
@@ -109,3 +108,5 @@ void UGameplayHudWidget::SetAbilityHotbarBlock(int32 BlockIndex, TSubclassOf<cla
 		AbilityHotbar->SetupHotbarAbility(BlockIndex, Ability);
 	}
 }
+
+

@@ -9,6 +9,8 @@
 
 #include "AbilitySystem/PlayerAttributeSet.h"
 #include "AbilitySystem/P4AbilitySystemComponent.h"
+#include "AbilitySystem/P4GameplayAbility.h"
+#include "AbilitySystemComponent.h"
 
 #include "UI/GameplayHudWidget.h"
 #include "UI/FloatingStatusBarWidget.h"
@@ -26,7 +28,8 @@ AProject4PlayerState::AProject4PlayerState()
 
 	NetUpdateFrequency = 10.f;
 
-	DeadTag = FGameplayTag::RequestGameplayTag(FName("PlayerState.Dead"));
+	DeadTag = FGameplayTag::RequestGameplayTag(FName("State.Dead"));
+	BuffDebuffTag = FGameplayTag::RequestGameplayTag(FName("Buffs"));
 }
 
 UAbilitySystemComponent* AProject4PlayerState::GetAbilitySystemComponent() const
@@ -60,6 +63,9 @@ void AProject4PlayerState::BindAbilityDelegates()
 {
 	if (AbilitySystemComponent && AttributeSet)
 	{
+		AbilitySystemComponent->OnActiveGameplayEffectAddedDelegateToSelf.AddUObject(this, &AProject4PlayerState::OnActiveGameplayEffectApplied);
+		//AbilitySystemComponent->RegisterGameplayTagEvent(BuffDebuffTag).AddUObject(this, &AProject4PlayerState::OnBuffTagChanged);
+
 		HealthChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetHealthAttribute()).AddUObject(this, &AProject4PlayerState::HealthChanged);
 		HealthMaxChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetHealthMaxAttribute()).AddUObject(this, &AProject4PlayerState::HealthMaxChanged);
 		HealthRegenChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetHealthRegenAttribute()).AddUObject(this, &AProject4PlayerState::HealthRegenChanged);
@@ -83,6 +89,104 @@ void AProject4PlayerState::BindAbilityDelegates()
 /*********************/
 /* Delegate Handlers */
 /*********************/
+
+
+void AProject4PlayerState::OnActiveGameplayEffectApplied(UAbilitySystemComponent* Target, const FGameplayEffectSpec& SpecApplied, FActiveGameplayEffectHandle ActiveHandle)
+{
+	// get tags
+	AProject4Controller* PC = Cast<AProject4Controller>(GetOwner());
+
+	FGameplayTagContainer TagContainer = FGameplayTagContainer();
+	SpecApplied.GetAllGrantedTags(TagContainer);
+
+	if (TagContainer.HasTag(BuffDebuffTag) && HasAuthority())
+	{
+		// Buff GE, find some stats for UI update
+		// Need: IconImage (in ability class default), Duration. TooltipText(with iconimage), Bufftag, bool buffresettimer 
+		
+		// Find buff tag in this GE
+		TArray<FGameplayTag> TagArray;
+		TagContainer.GetGameplayTagArray(TagArray);
+
+		TArray<FGameplayTag> BuffTags;
+		for (const FGameplayTag& tag : TagArray)
+		{
+			if (tag.ToString().Contains(BuffDebuffTag.ToString()) || tag.RequestDirectParent().ToString().Contains(BuffDebuffTag.ToString()))
+			{
+				BuffTags.Add(tag);
+			}
+		}
+		
+		// find reset policy
+		bool BuffResetTimer = (SpecApplied.Def->StackDurationRefreshPolicy == EGameplayEffectStackingDurationPolicy::NeverRefresh ? false : true);
+		bool Stackable = (SpecApplied.Def->StackLimitCount == 0 ? false : true);
+
+		const UP4GameplayAbility* Ability = Cast<UP4GameplayAbility>(SpecApplied.GetEffectContext().GetAbility());
+		
+		UGameplayHudWidget* HUD = PC->GetMainHUDWidget();
+		for (const FGameplayTag BuffTag : BuffTags)
+		{
+			int OwnerStackCount = AbilitySystemComponent->GetCurrentStackCount(ActiveHandle);
+			if (OwnerStackCount == 1)
+			{
+				//PC->SendBuffIconToUI(Ability->AbilityIcon, SpecApplied.GetDuration(), Ability->BuffToolTipText, BuffTag, BuffResetTimer, Stackable);
+				PC->SendBuffIconToUI(SpecApplied, ActiveHandle);
+			}
+			else
+			{
+				// Possible case of new GE sharing buff tag with another GE
+				PC->UpdateBuffIconStacksUI(BuffTag, OwnerStackCount);
+			}
+
+			if (Stackable)
+			{
+				// create binding on GE tag for stack count changes 
+				AbilitySystemComponent->OnGameplayEffectStackChangeDelegate(ActiveHandle)->AddUObject(this, &AProject4PlayerState::OnBuffGameplayEffectStackChanged);
+			}
+			else if (SpecApplied.Def->DurationPolicy == EGameplayEffectDurationType::Infinite)
+			{	
+				if (!DelegatedBuffTags.Contains(BuffTag.ToString())) {
+					AbilitySystemComponent->RegisterGameplayTagEvent(BuffTag).AddUObject(this, &AProject4PlayerState::OnBuffTagRemoved);
+					DelegatedBuffTags.Add(BuffTag.ToString());
+				}
+			}
+		}
+	}
+}
+
+// Server only function (Client tag counts are bugged... IDK man.......)
+void AProject4PlayerState::OnBuffTagRemoved(const FGameplayTag Tag, int32 Count)
+{
+	AProject4Controller* PC = Cast<AProject4Controller>(GetOwner());
+
+	// delete buff icon in local player UI
+	if (Count == 0)
+	{
+		PC->RemoveBuffIconFromUI(Tag);
+	}
+}
+
+void AProject4PlayerState::OnBuffGameplayEffectStackChanged(FActiveGameplayEffectHandle ActiveHandle, int32 NewStackCount, int32 OldStackCount)
+{
+	AProject4Controller* PC = Cast<AProject4Controller>(GetOwner());
+
+	const FGameplayTagContainer* TagContainer = AbilitySystemComponent->GetGameplayEffectTargetTagsFromHandle(ActiveHandle);
+
+	if (TagContainer->HasTag(BuffDebuffTag))
+	{
+		TArray<FGameplayTag> TagArray;
+		TagContainer->GetGameplayTagArray(TagArray);
+
+		TArray<FGameplayTag> BuffTags;
+		for (const FGameplayTag& tag : TagArray)
+		{
+			if (tag.ToString().Contains(BuffDebuffTag.ToString()) || tag.RequestDirectParent().ToString().Contains(BuffDebuffTag.ToString()))
+			{
+				PC->UpdateBuffIconStacksUI(tag, NewStackCount);
+			}
+		}
+	}
+}
 
 
 void AProject4PlayerState::HealthChanged(const FOnAttributeChangeData& Data)

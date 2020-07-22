@@ -47,11 +47,15 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Abilities, meta = (AllowPrivateAccess = "true"))
 		class UPlayerAttributeSet* AttributeSet;
 	
-	UPROPERTY()
+
+
 	FGameplayTag DeadTag;
+	FGameplayTag BuffDebuffTag;
 
 	// delegates for attribute changes
 	// Only use for attributes that need to be delegated (I.E. Not all Att's need to be delegated in PS)
+	FDelegateHandle BuffChangedDelegateHandle;
+	
 	FDelegateHandle HealthChangedDelegateHandle;
 	FDelegateHandle HealthMaxChangedDelegateHandle;
 	FDelegateHandle HealthRegenChangedDelegateHandle;
@@ -61,8 +65,23 @@ protected:
 	FDelegateHandle EnduranceChangedDelegateHandle;
 	FDelegateHandle EnduranceMaxChangedDelegateHandle;
 	FDelegateHandle EnduranceRegenChangedDelegateHandle;
+
+	// Called on GE's applied to this PS
+	void OnActiveGameplayEffectApplied(UAbilitySystemComponent* Target, const FGameplayEffectSpec& SpecApplied, FActiveGameplayEffectHandle ActiveHandle);
 	
+	// Holds tag names that are delegated for removal
+	// used to make sure we dont make 2 delegates for same purpose
+	TArray<FString>DelegatedBuffTags;
+
+	// Used by above functions for Tags with infinite duration so bind event for when they die
+	// THIS MUST BE HANDLED BY SERVERS, (Tag stack counts dont get updated after 1 stack for clients. IDK weird bug)
+	void OnBuffTagRemoved(const FGameplayTag Tag, int32 Count);
+	void OnBuffGameplayEffectStackChanged(FActiveGameplayEffectHandle ActiveHandle, int32 NewStackCount, int32 OldStackCount);
+
+
 	// Above delegate funciton handlers
+	//xvirtual void OnBuffDebuffTagChanged(const FGameplayTag Tag, int32 NewCount);
+
 	virtual void HealthChanged(const FOnAttributeChangeData& Data);
 	virtual void HealthMaxChanged(const FOnAttributeChangeData& Data);
 	virtual void HealthRegenChanged(const FOnAttributeChangeData& Data);

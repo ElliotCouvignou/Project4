@@ -6,6 +6,7 @@
 #include "Abilities/GameplayAbility.h"
 #include "Project4.h"
 #include "Project4Controller.h"
+#include "GameplayTagContainer.h"
 #include "P4GameplayAbility.generated.h"
 
 /**
@@ -20,13 +21,13 @@ public:
 	UP4GameplayAbility();
 
 	// Binds Ability to an input mapped from the enum which maps to project setting inputs.
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Ability")
-		EP4AbilityInputID AbilityInputID = EP4AbilityInputID::None;
-
-	// This is more for passive abilities that require an input slot even though users dont actually
-	// do an input for it. Basically keeping up with GAS requirements
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Ability")
-		EP4AbilityInputID AbilityID = EP4AbilityInputID::None;
+	//UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Ability")
+	//	EP4AbilityInputID AbilityInputID = EP4AbilityInputID::None;
+	//
+	//// This is more for passive abilities that require an input slot even though users dont actually
+	//// do an input for it. Basically keeping up with GAS requirements
+	//UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Ability")
+	//	EP4AbilityInputID AbilityID = EP4AbilityInputID::None;
 
 	// when true fire off ability moment actor has it like some wort of Autocast
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Ability")
@@ -39,6 +40,13 @@ public:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Ability")
 		UTexture2D* AbilityIcon;
 
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Ability")
+		FText AbilityToolTipText;
+
+	// Only if ability applies buff GE, not required to fill out
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Ability")
+		FText BuffToolTipText;
+
 
 	
 	/*************************/
@@ -49,9 +57,6 @@ public:
 	// If an ability is marked as 'ActivateAbilityOnGranted', activate them immediately when given here
 	// Epic's comment: Projects may want to initiate passives or do other "BeginPlay" type of logic here.
 	virtual void OnAvatarSet(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec) override; 
-
-	UFUNCTION(BlueprintCallable, Category = "Ability Functions")
-		void SetAbilityInputID(EP4AbilityInputID NewInputID);
 
 	UFUNCTION(BlueprintCallable, Category = "Utility | UI")
 		void SendErrorMessageToUI(EAbilityErrorText ErrorType);
