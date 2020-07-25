@@ -120,7 +120,7 @@ protected:
 		float BaseLookUpRate = 45.f;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
-		float CameraSensitivity = 5.f;
+		float CameraSensitivity = 3.f;
 
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }

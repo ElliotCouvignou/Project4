@@ -40,6 +40,7 @@ public:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Ability")
 		UTexture2D* AbilityIcon;
 
+	/* tooltip text to show when on ability hotbar */
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Ability")
 		FText AbilityToolTipText;
 

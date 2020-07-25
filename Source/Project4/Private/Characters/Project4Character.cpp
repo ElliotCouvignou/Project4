@@ -102,9 +102,6 @@ bool AProject4Character::IsAlive() const
 
 void AProject4Character::Die()
 {
-	// fix issue crash when 2+ clients
-	//RemoveAllAbilitites();
-
 	// Stop player and remove collisions, freeze in air
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	//GetCharacterMovement()->GravityScale = 0;
@@ -194,7 +191,6 @@ void AProject4Character::BeginPlay()
 {
 	Super::BeginPlay();
 
-	
 }
 
 
@@ -204,36 +200,6 @@ void AProject4Character::BeginPlay()
 /* Gameplay Ability system */
 /***************************/
 
-void AProject4Character::RemoveAllAbilitites()
-{
-	if (!HasAuthority() || !AbilitySystemComponent.IsValid())
-	{
-		return;
-	}
-
-	TArray<FGameplayAbilitySpecHandle> AbilitiesToRemove;
-	TArray<FGameplayAbilitySpec> AllAbilities = AbilitySystemComponent->GetActivatableAbilities();
-	UAbilitySystemComponent* ASC = GetAbilitySystemComponent();
-
-	// remove essential abilities (Player abilities removed in player class virtual)
-	for (const FP4GameplayAbilityBindInfo& Ability : EssentialAbilities->Abilities)
-	{
-		FGameplayAbilitySpec* spec = ASC->FindAbilitySpecFromClass(Ability.AbilityClass);
-		if (spec)
-		{
-			AbilitiesToRemove.Add(spec->Handle);
-		}
-	}
-
-	// Do in two passes so the removal happens after we have the full list
-	for (int32 i = 0; i < AbilitiesToRemove.Num(); i++)
-	{
-		AbilitySystemComponent->ClearAbility(AbilitiesToRemove[i]);
-	}
-
-	// prevent player from inputting abilities
-
-}
 
 void AProject4Character::GiveEssentialAbilities()
 {

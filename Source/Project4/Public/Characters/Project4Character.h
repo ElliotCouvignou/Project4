@@ -116,8 +116,6 @@ protected:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = Abilities)
 		TArray<TSubclassOf<class UGameplayEffect>> StartupEffects;
 
-	// unbinds all active abilities, Occurs on death
-	virtual void RemoveAllAbilitites();
 
 	// Called on actorspawn ONLY servers need to call this and startupeffects
 	virtual	void GiveEssentialAbilities();
