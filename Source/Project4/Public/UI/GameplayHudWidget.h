@@ -75,6 +75,7 @@ public:
 		void RemoveBuffIconFromUI(const FGameplayTag& BuffTag);
 
 
+
 protected:
 	// gets created and filled out by BP
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
@@ -88,4 +89,9 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		class UBuffIconsWidget* BuffIconsWidget;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		class UCrosshairWidget* CrosshairWidget;
+
+	
 };

@@ -12,7 +12,7 @@
 #include "Characters/Project4Character.h"
 
 
-#define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::Green,text)
+#define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 0.5 , FColor::Green,text)
 
 UPlayerAttributeSet::UPlayerAttributeSet(const FObjectInitializer& ObjectInitializer) 
 	: Super(ObjectInitializer)
@@ -90,6 +90,7 @@ void UPlayerAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCall
 	Super::PostGameplayEffectExecute(Data);
 
 	
+	
 	FGameplayEffectContextHandle Context = Data.EffectSpec.GetContext();
 	UAbilitySystemComponent* Source = Context.GetOriginalInstigatorAbilitySystemComponent();
 	const FGameplayTagContainer& SourceTags = *Data.EffectSpec.CapturedSourceTags.GetAggregatedTags();
@@ -142,6 +143,7 @@ void UPlayerAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCall
 
 	// Source and Target Info collected, onto the 'meat'
 	if (Data.EvaluatedData.Attribute == GetDamageAttribute()) {
+
 		// Try to extract a hit result
 		FHitResult HitResult;
 		if (Context.GetHitResult())

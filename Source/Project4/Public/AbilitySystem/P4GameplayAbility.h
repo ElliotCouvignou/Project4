@@ -66,4 +66,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Utility | Animation")
 		float PlayAnimationMontage(class AProject4Character* TargetActor, FGameplayAbilityActivationInfo ActivationInfo, UAnimMontage* Montage, float InPlayRate = 1.0f, FName StartSectionName = NAME_None);
 
+
+protected:
+
+	/* virtual overrides */
+	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
+
 };

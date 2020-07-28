@@ -17,14 +17,21 @@ public:
 	// Sets default values for this actor's properties
 	AP4AbilityAreaHitbox();
 
-	// expose on spawn sets as parameter for actor spawns of this class.
+	// expose on spawn sets as parameter for actor spawns of this class
+	/* You can still use bp made varaibles for multiple effects, just to more calls */
 	UPROPERTY(BlueprintReadWrite, Meta = (ExposeOnSpawn = true))
-		FGameplayEffectSpecHandle DamageEffectSpecHandle;
+		FGameplayEffectSpecHandle GameplayEffectSpecHandle;
 
 	// sends DamageEffectSpecHandle to all overlapping actors in hitbox mesh component
 	// Only applies damage to AProject4Character derived classes
+
+	/* Only applies damage */
 	UFUNCTION(BlueprintCallable)
-		void ExecuteHitBoxDamage(UPrimitiveComponent* HitboxComponent);
+		void ExecuteHitBoxWithGameplayEffect(UPrimitiveComponent* HitboxComponent, const FGameplayEffectSpecHandle& GameplayEffect);
+
+	UFUNCTION(BlueprintCallable)
+		void ExecuteHitBoxWithGameplayEffectArray(UPrimitiveComponent* HitboxComponent, const TArray<FGameplayEffectSpecHandle> GameplayEffects);
+
 
 protected:
 	// Called when the game starts or when spawned

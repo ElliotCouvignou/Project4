@@ -60,4 +60,11 @@ float UP4GameplayAbility::PlayAnimationMontage(AProject4Character* TargetActor, 
 	return ret;
 }
 
+void UP4GameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
+{
+	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
+
+	// TODO: Autocast here?
+}
+
 

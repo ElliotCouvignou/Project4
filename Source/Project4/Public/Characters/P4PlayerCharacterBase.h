@@ -96,7 +96,8 @@ protected:
 	UFUNCTION()
 		void SelectNextNearestTarget(); // For tab-targeting
 
-	UFUNCTION(Server, Reliable, WithValidation)
+	/* client update selected target */
+	UFUNCTION(Server, Reliable, WithValidation, BlueprintCallable)
 		void ServerSetSelectedTarget(AP4PlayerCharacterBase* TargetedActor, AActor* NewSelectedTarget);    // replciated Selected Target
 	virtual bool ServerSetSelectedTarget_Validate(AP4PlayerCharacterBase* TargetedActor, AActor* NewSelectedTarget) { return true; }
 	virtual void ServerSetSelectedTarget_Implementation(AP4PlayerCharacterBase* TargetedActor, AActor* NewSelectedTarget);

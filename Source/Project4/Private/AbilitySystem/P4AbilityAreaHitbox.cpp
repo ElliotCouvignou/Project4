@@ -32,9 +32,9 @@ void AP4AbilityAreaHitbox::Tick(float DeltaTime)
 }
 
 
-void AP4AbilityAreaHitbox::ExecuteHitBoxDamage(UPrimitiveComponent* HitboxComponent)
+void AP4AbilityAreaHitbox::ExecuteHitBoxWithGameplayEffect(UPrimitiveComponent* HitboxComponent, const FGameplayEffectSpecHandle& GameplayEffect)
 {
-	if (DamageEffectSpecHandle.IsValid()) {
+	if (GameplayEffect.IsValid()) {
 		TSet<AActor*> OutOverlappingActors;
 	
 		HitboxComponent->GetOverlappingActors(OutOverlappingActors, TSubclassOf<AProject4Character>());
@@ -47,11 +47,40 @@ void AP4AbilityAreaHitbox::ExecuteHitBoxDamage(UPrimitiveComponent* HitboxCompon
 				UAbilitySystemComponent* ASC = PChar->GetAbilitySystemComponent();
 				
 				// TODO: Check playerstate for alive status 
-				if (ASC) 
+				if (ASC && PChar->IsAlive())
 				{
-					ASC->ApplyGameplayEffectSpecToSelf(*DamageEffectSpecHandle.Data.Get());
+					ASC->ApplyGameplayEffectSpecToSelf(*GameplayEffect.Data.Get());
 				}
 			}
 		}
 	}
 }
+
+void AP4AbilityAreaHitbox::ExecuteHitBoxWithGameplayEffectArray(UPrimitiveComponent* HitboxComponent, const TArray<FGameplayEffectSpecHandle> GameplayEffects)
+{
+	
+	TSet<AActor*> OutOverlappingActors;
+	HitboxComponent->GetOverlappingActors(OutOverlappingActors, TSubclassOf<AProject4Character>());
+	
+	for (AActor* OtherActor : OutOverlappingActors)
+	{
+		AProject4Character* PChar = Cast<AProject4Character>(OtherActor);
+		if (PChar && OtherActor != GetOwner())
+		{
+			UAbilitySystemComponent* ASC = PChar->GetAbilitySystemComponent();
+	
+			// TODO: Check playerstate for alive status 
+			if (ASC && PChar->IsAlive())
+			{
+				// apply GE's from array
+				for (const FGameplayEffectSpecHandle& GameplayEffectSpec : GameplayEffects)
+				{
+					ASC->ApplyGameplayEffectSpecToSelf(*GameplayEffectSpec.Data.Get());
+				}
+				
+			}
+		}
+	}
+	
+}
+
