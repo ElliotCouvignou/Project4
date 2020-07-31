@@ -1,8 +1,12 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "AbilitySystem/DamageExecution.h"
+#include "AbilitySystem/ExecutionCalculations/DamageExecution.h"
 #include "AbilitySystem/PlayerAttributeSet.h"
+
+
+// TODO: Add crit + critdmg attributes
+
 
 struct DamageAttStruct
 {
@@ -13,7 +17,6 @@ struct DamageAttStruct
 
 	DECLARE_ATTRIBUTE_CAPTUREDEF(AttackPower);
 	DECLARE_ATTRIBUTE_CAPTUREDEF(MagicPower);
-	DECLARE_ATTRIBUTE_CAPTUREDEF(CritDamage);
 
 	// Meta Attributes
 	DECLARE_ATTRIBUTE_CAPTUREDEF(Damage);
@@ -33,7 +36,6 @@ struct DamageAttStruct
 		// source's stat changes halfway through flight, after all.
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UPlayerAttributeSet, AttackPower, Source, true);
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UPlayerAttributeSet, MagicPower, Source, true);
-		DEFINE_ATTRIBUTE_CAPTUREDEF(UPlayerAttributeSet, CritDamage, Source, false);
 
 		//The same rules apply for the multiplier attributes too.
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UPlayerAttributeSet, Armor, Target, false);
@@ -56,6 +58,8 @@ UDamageExecution::UDamageExecution(const FObjectInitializer& ObjectInitializer)
 {
 	DamageAttStruct Attributes;
 
+	RelevantAttributesToCapture.Add(Attributes.DamageDef);
+
     //RelevantAttributesToCapture is the array that contains all attributes you wish to capture, without exceptions. 
     RelevantAttributesToCapture.Add(Attributes.HealthDef);  
     //However, an attribute added here on top of being added in RelevantAttributesToCapture will still be captured, but will not be shown for potential in-function modifiers in the GameplayEffect blueprint, more on that later.
@@ -66,6 +70,7 @@ UDamageExecution::UDamageExecution(const FObjectInitializer& ObjectInitializer)
     
     RelevantAttributesToCapture.Add(Attributes.ArmorDef);
     RelevantAttributesToCapture.Add(Attributes.MagicResistanceDef);
+
 }
 
 void UDamageExecution::Execute_Implementation(const FGameplayEffectCustomExecutionParameters& ExecutionParams, FGameplayEffectCustomExecutionOutput& OutExecutionOutput) const
@@ -113,10 +118,12 @@ void UDamageExecution::Execute_Implementation(const FGameplayEffectCustomExecuti
 	float MagicResistance = 0.f;
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(Attributes.MagicResistanceDef, EvaluationParameters, MagicResistance);
 
-	
+	float InputDamage = 0.f;
+	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(Attributes.DamageDef, EvaluationParameters, InputDamage);
+
 
 	//Finally, we go through our simple example damage calculation. BaseAttackPower and AttackMultiplier come from soruce, DefensePower comes from target.
-	float BaseDamage = FMath::Max<float>(Spec.GetSetByCallerMagnitude(FGameplayTag::RequestGameplayTag(FName("Data.Damage")), false, -1.0f), 0.0f); //AttackPower / Armor + MagicPower / MagicResistance;
+	float BaseDamage = InputDamage + FMath::Max<float>(Spec.GetSetByCallerMagnitude(FGameplayTag::RequestGameplayTag(FName("Data.Damage")), false, -1.0f), 0.0f); //AttackPower / Armor + MagicPower / MagicResistance;
 	
 	float RawDamage = BaseDamage; // Apply Bonuses here
 

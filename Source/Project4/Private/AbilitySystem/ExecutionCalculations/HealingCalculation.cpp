@@ -1,7 +1,7 @@
 // Project4 Copyright (Elliot Couvignou) Dont steal this mayne :(
 
 
-#include "AbilitySystem/HealingCalculation.h"
+#include "AbilitySystem/ExecutionCalculations/HealingCalculation.h"
 #include "AbilitySystem/PlayerAttributeSet.h"
 
 struct HealAttStruct

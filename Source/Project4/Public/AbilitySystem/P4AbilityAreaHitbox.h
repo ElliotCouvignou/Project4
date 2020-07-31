@@ -27,10 +27,10 @@ public:
 
 	/* Only applies damage */
 	UFUNCTION(BlueprintCallable)
-		void ExecuteHitBoxWithGameplayEffect(UPrimitiveComponent* HitboxComponent, const FGameplayEffectSpecHandle& GameplayEffect);
+		void ExecuteHitBoxWithGameplayEffect(UPrimitiveComponent* HitboxComponent, const FGameplayEffectSpecHandle& GameplayEffect, TArray<class AProject4Character*>& HitCharacters);
 
 	UFUNCTION(BlueprintCallable)
-		void ExecuteHitBoxWithGameplayEffectArray(UPrimitiveComponent* HitboxComponent, const TArray<FGameplayEffectSpecHandle> GameplayEffects);
+		void ExecuteHitBoxWithGameplayEffectArray(UPrimitiveComponent* HitboxComponent, const TArray<FGameplayEffectSpecHandle> GameplayEffects, TArray<class AProject4Character*>& HitCharacters);
 
 
 protected:

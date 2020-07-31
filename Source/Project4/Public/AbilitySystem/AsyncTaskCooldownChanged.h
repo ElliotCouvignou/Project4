@@ -26,6 +26,9 @@ public:
 	UPROPERTY(BlueprintAssignable)
 		FOnCooldownChanged OnCooldownEnd;
 
+	UPROPERTY(BlueprintAssignable)
+		FOnCooldownChanged OnCooldownDurationChanged;
+
 	// Listens for changes (Begin and End) to cooldown GameplayEffects based on the cooldown tag.
 	// UseServerCooldown determines if the Sever's cooldown is returned in addition to the local predicted cooldown.
 	// If using ServerCooldown, TimeRemaining and Duration will return -1 to signal local predicted cooldown has begun.
@@ -38,6 +41,11 @@ public:
 		void EndTask();
 
 protected:
+
+	UPROPERTY()
+		UAsyncTaskCooldownChanged* AsyncTaskCDChanged;
+
+
 	UPROPERTY()
 		UAbilitySystemComponent* ASC;
 
@@ -47,6 +55,8 @@ protected:
 
 	virtual void OnActiveGameplayEffectAddedCallback(UAbilitySystemComponent* Target, const FGameplayEffectSpec& SpecApplied, FActiveGameplayEffectHandle ActiveHandle);
 	virtual void CooldownTagChanged(const FGameplayTag CooldownTag, int32 NewCount);
+
+	void OnActiveGameplayEffectTimeChanged(FActiveGameplayEffectHandle ActiveGEHandle, float NewStartTime, float NewDuration);
 
 	bool GetCooldownRemainingForTag(FGameplayTagContainer CooldownTags, float& TimeRemaining, float& CooldownDuration);
 };

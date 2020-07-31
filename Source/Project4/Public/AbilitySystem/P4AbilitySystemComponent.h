@@ -9,6 +9,10 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FRecievedDamageDelegate, UP4AbilitySystemComponent*, SourceASC, float, RawDamage, float, TotalDamage);
 
+
+/** Notify interested parties that ActiveGameplayEffect has been modified */
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnActiveGameplayEffectDurationChanged, const FActiveGameplayEffect&);
+
 /**
  * 
  */
@@ -23,6 +27,8 @@ public:
 	
 	FRecievedDamageDelegate RecievedDamage;
 
+	FOnActiveGameplayEffectDurationChanged ActiveGameplayEffectDirtiedCallback;
+
 
 	/* Virtual Overrides */
 
@@ -33,4 +39,7 @@ public:
 
 	// called from DamageExecCalculation, to broadcast damage as delegate
 	virtual void RecieveDamage(UP4AbilitySystemComponent* SourceASC, float RawDamage, float TotalDamage);
+
+	// Used for changing active GE durations, Used for CD refunding
+	bool SetGameplayEffectDurationWithHandle(const FActiveGameplayEffectHandle& Handle, float NewDuration);
 };

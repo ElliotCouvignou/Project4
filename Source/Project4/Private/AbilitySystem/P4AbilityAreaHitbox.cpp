@@ -32,7 +32,7 @@ void AP4AbilityAreaHitbox::Tick(float DeltaTime)
 }
 
 
-void AP4AbilityAreaHitbox::ExecuteHitBoxWithGameplayEffect(UPrimitiveComponent* HitboxComponent, const FGameplayEffectSpecHandle& GameplayEffect)
+void AP4AbilityAreaHitbox::ExecuteHitBoxWithGameplayEffect(UPrimitiveComponent* HitboxComponent, const FGameplayEffectSpecHandle& GameplayEffect, TArray<class AProject4Character*>& HitCharacters)
 {
 	if (GameplayEffect.IsValid()) {
 		TSet<AActor*> OutOverlappingActors;
@@ -46,17 +46,17 @@ void AP4AbilityAreaHitbox::ExecuteHitBoxWithGameplayEffect(UPrimitiveComponent* 
 			{
 				UAbilitySystemComponent* ASC = PChar->GetAbilitySystemComponent();
 				
-				// TODO: Check playerstate for alive status 
 				if (ASC && PChar->IsAlive())
 				{
 					ASC->ApplyGameplayEffectSpecToSelf(*GameplayEffect.Data.Get());
+					HitCharacters.Add(PChar);
 				}
 			}
 		}
 	}
 }
 
-void AP4AbilityAreaHitbox::ExecuteHitBoxWithGameplayEffectArray(UPrimitiveComponent* HitboxComponent, const TArray<FGameplayEffectSpecHandle> GameplayEffects)
+void AP4AbilityAreaHitbox::ExecuteHitBoxWithGameplayEffectArray(UPrimitiveComponent* HitboxComponent, const TArray<FGameplayEffectSpecHandle> GameplayEffects, TArray<class AProject4Character*>& HitCharacters)
 {
 	
 	TSet<AActor*> OutOverlappingActors;
@@ -69,13 +69,13 @@ void AP4AbilityAreaHitbox::ExecuteHitBoxWithGameplayEffectArray(UPrimitiveCompon
 		{
 			UAbilitySystemComponent* ASC = PChar->GetAbilitySystemComponent();
 	
-			// TODO: Check playerstate for alive status 
 			if (ASC && PChar->IsAlive())
 			{
 				// apply GE's from array
 				for (const FGameplayEffectSpecHandle& GameplayEffectSpec : GameplayEffects)
 				{
 					ASC->ApplyGameplayEffectSpecToSelf(*GameplayEffectSpec.Data.Get());
+					HitCharacters.Add(PChar);
 				}
 				
 			}

@@ -3,6 +3,12 @@
 
 #include "AbilitySystem/AsyncTaskCooldownChanged.h"
 
+
+
+#define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Green,text)
+
+
+
 UAsyncTaskCooldownChanged* UAsyncTaskCooldownChanged::ListenForCooldownChange(UAbilitySystemComponent* AbilitySystemComponent, FGameplayTagContainer InCooldownTags, bool InUseServerCooldown)
 {
 	UAsyncTaskCooldownChanged* ListenForCooldownChange = NewObject<UAsyncTaskCooldownChanged>();
@@ -90,8 +96,14 @@ void UAsyncTaskCooldownChanged::OnActiveGameplayEffectAddedCallback(UAbilitySyst
 				// This can be useful to gray out abilities until Server's cooldown comes in.
 				OnCooldownBegin.Broadcast(CooldownTag, -1.0f, -1.0f);
 			}
+
+			// From Active GE Handle, get active GE to bind to  FActiveGameplayEffectEvents::FOnActiveGameplayEffectTimeChange
+			// This binding will be fired when the CD duration is manually changed but not 100% refunded (e.g CD refund from an effect).
+			const FActiveGameplayEffect* ActiveGE = Target->GetActiveGameplayEffect(ActiveHandle);
+			ASC->OnGameplayEffectTimeChangeDelegate(ActiveHandle)->AddUObject(this, &UAsyncTaskCooldownChanged::OnActiveGameplayEffectTimeChanged);
+		
 		}
-	}
+	} 
 }
 
 void UAsyncTaskCooldownChanged::CooldownTagChanged(const FGameplayTag CooldownTag, int32 NewCount)
@@ -100,6 +112,13 @@ void UAsyncTaskCooldownChanged::CooldownTagChanged(const FGameplayTag CooldownTa
 	{
 		OnCooldownEnd.Broadcast(CooldownTag, -1.0f, -1.0f);
 	}
+}
+
+void UAsyncTaskCooldownChanged::OnActiveGameplayEffectTimeChanged(FActiveGameplayEffectHandle ActiveGEHandle, float NewStartTime, float NewDuration)
+{
+	// really only need to send NewDuration but since I'm hijacking an already existing delegate
+	// I have to fill in other values with redundancy or junk
+	OnCooldownDurationChanged.Broadcast(FGameplayTag(), NewDuration, NewDuration);
 }
 
 bool UAsyncTaskCooldownChanged::GetCooldownRemainingForTag(FGameplayTagContainer InCooldownTags, float& TimeRemaining, float& CooldownDuration)

@@ -27,8 +27,7 @@ AP4MobCharacterBase::AP4MobCharacterBase(const class FObjectInitializer& ObjectI
 	AttributeSetHardRef = CreateDefaultSubobject<UPlayerAttributeSet>(TEXT("AttributeSetHardRef"));
 
 	AttributeSet = AttributeSetHardRef;
-	
-	// TODO: initialize floating health bar stuffs
+
 }
 
 void AP4MobCharacterBase::FinishDying()
