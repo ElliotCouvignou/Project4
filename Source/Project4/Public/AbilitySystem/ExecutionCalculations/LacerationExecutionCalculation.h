@@ -24,7 +24,7 @@ public:
 		float ManaRefundAmount = 2.0f;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-		float CooldownRefundAmount = 5.f;  // in seconds
+		float CooldownRefundAmount = 0.5f;  // in seconds
 
 	UFUNCTION()
 		virtual void Execute_Implementation(const FGameplayEffectCustomExecutionParameters& ExecutionParams, FGameplayEffectCustomExecutionOutput& OutExecutionOutput) const;
