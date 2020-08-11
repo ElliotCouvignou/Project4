@@ -48,6 +48,9 @@ public:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Ability")
 		FText BuffToolTipText;
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		FVector TargetDataLocation;
+
 
 	
 	/*************************/
@@ -62,14 +65,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Utility | UI")
 		void SendErrorMessageToUI(EAbilityErrorText ErrorType);
 
-	/* Calls palyMontage ASC function that isn't blueprint exposed on default */
-	UFUNCTION(BlueprintCallable, Category = "Utility | Animation")
-		float PlayAnimationMontage(class AProject4Character* TargetActor, FGameplayAbilityActivationInfo ActivationInfo, UAnimMontage* Montage, float InPlayRate = 1.0f, FName StartSectionName = NAME_None);
-
-
-protected:
-
-	/* virtual overrides */
-	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
+	UFUNCTION(BlueprintCallable, Server, Reliable, WithValidation)
+		void SendTargetDataToServer(UP4GameplayAbility* AbilityRef, const FVector& HitLocation);
+	void SendTargetDataToServer_Implementation(UP4GameplayAbility* AbilityRef, const FVector& HitLocation);
+	bool SendTargetDataToServer_Validate(UP4GameplayAbility* AbilityRef, const FVector& HitLocation) { return true; }
 
 };

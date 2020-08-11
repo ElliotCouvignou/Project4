@@ -19,38 +19,49 @@ class PROJECT4_API UGameplayHudWidget : public UUserWidget
 
 public:
 
+	/* Callback funciton when viewport size changes, update's crosshair y offset length (in world space) */
+	// No UFUNCTION since viewport isnt exposed to Unreal script
+	void OnViewportResizedCallback(FViewport* ActiveViewport, uint32 UnknownUnsignedInt);
 
-	UFUNCTION()
+	// Offset in pixels (for 1920x1024 (default) scale)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Crosshair")
+		float CrosshairScreenYOffset;
+
+
+	UFUNCTION(Category = Attributes)
 		void UpdateHealth(float NewValue);
-	UFUNCTION()
+	UFUNCTION(Category = Attributes)
 		void UpdateHealthMax(float NewValue);
-	UFUNCTION()
+	UFUNCTION(Category = Attributes)
 		void UpdateHealthRegen(float NewValue);
 
-	UFUNCTION()
+	UFUNCTION(Category = Attributes)
 		void UpdateMana(float NewValue);
-	UFUNCTION()
+	UFUNCTION(Category = Attributes)
 		void UpdateManaMax(float NewValue);
-	UFUNCTION()
+	UFUNCTION(Category = Attributes)
 		void UpdateManaRegen(float NewValue);
 
-	UFUNCTION()
+	UFUNCTION(Category = Attributes)
 		void UpdateEndurance(float NewValue);
-	UFUNCTION()
+	UFUNCTION(Category = Attributes)
 		void UpdateEnduranceMax(float NewValue);
-	UFUNCTION()
+	UFUNCTION(Category = Attributes)
 		void UpdateEnduranceRegen(float NewValue);
 
-	UFUNCTION()
+	UFUNCTION(Category = Attributes)
 		void UpdateCurrentXP(float NewXP);
-	UFUNCTION()
+	UFUNCTION(Category = Attributes)
 		void UpdateMaxXP(float NewMaxXP);
 
-	UFUNCTION()
+	UFUNCTION(Category = Attributes)
 		void UpdatePlayerLevel(float NewLevel);
 
-	UFUNCTION()
+	UFUNCTION(Category = "Ability Block")
 		void SetAbilityHotbarBlock(int32 BlockIndex, TSubclassOf<class UP4GameplayAbility> Ability);
+
+	UFUNCTION(BlueprintCallable, Category = "Crosshair")
+		void GetCrosshairGroundLocation(float MaxSearchDistance, FVector& EndLocation, FVector& StartLocation);
 
 
 	/* Blueprint implementable functions, for widgets that dont 
@@ -62,36 +73,41 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 		void NewAbilityErrorMessage(EAbilityErrorText ErrorType);
 	
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Crosshair")
 		void SetNewTargetData(AActor* NewTarget);
 
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Buff Icons")
 		void SendBuffIconToUI(const FGameplayTag& Bufftag, const FGameplayEffectSpec& SpecApplied, const FActiveGameplayEffectHandle& ActiveHandle);
 	
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Buff Icons")
 		void UpdateBuffIconStacksUI(const FGameplayTag& BuffTag, int32 Count);
 
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Buff Icons")
 		void RemoveBuffIconFromUI(const FGameplayTag& BuffTag);
 
 
 
+
 protected:
+
+	virtual void NativeConstruct() override;
+
 	// gets created and filled out by BP
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Attributes)
 		class UXPBarWidget* XPBarWidget;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Attributes)
 		class UResourceBarsWidget* ResourceBarsWidget;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Ability Hotbar")
 		class UAbilityHotbar* AbilityHotbar;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Buff Icons")
 		class UBuffIconsWidget* BuffIconsWidget;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Crosshair")
 		class UCrosshairWidget* CrosshairWidget;
+
 
 	
 };

@@ -33,7 +33,6 @@ ULacerationExecutionCalculation::ULacerationExecutionCalculation(const FObjectIn
 
 	RelevantAttributesToCapture.Add(Attributes.ManaDef);
 	InvalidScopedModifierAttributes.Add(Attributes.ManaDef); 
-
 }
 
 void ULacerationExecutionCalculation::Execute_Implementation(const FGameplayEffectCustomExecutionParameters& ExecutionParams, FGameplayEffectCustomExecutionOutput& OutExecutionOutput) const

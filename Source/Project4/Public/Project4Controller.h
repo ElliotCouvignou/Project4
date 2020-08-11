@@ -18,6 +18,7 @@ enum class EAbilityErrorText : uint8
 	OutOfMana			UMETA(DisplayName = "OutOfMana"),
 	NoTarget			UMETA(DisplayName = "NoTarget"),
 	InvalidTarget       UMETA(DisplayName = "InvalidTarget"),
+	InvalidState		UMETA(DisplayName = "InvalidState"),
 	OnCooldown			UMETA(DisplayName = "OnCooldown")
 };
 
@@ -36,6 +37,16 @@ class PROJECT4_API AProject4Controller : public APlayerController
 
 public:
 	AProject4Controller(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+
+
+	/* Pitch offset from screen center due to crosshair Y offset. (Rads) */
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Crosshair")
+		float CrosshairOffsetPitchAngle;
+
+	/* Called on Gameplayhud creation (in BP) and when screensize changes
+	   Results are saved in CrosshaitCenterX/CrosshairCenterY */
+	UFUNCTION(BlueprintCallable)
+		void FindCrosshairOffsetPitchAngle(const FIntPoint& ViewportSizeXY, float CrosshairScreenYOffset);
 
 	// creates a widget based on gameplayHUDwidgetclass
 		void CreateMainHUDWidget();
@@ -59,6 +70,12 @@ public:
 		void ClientRequestRespawn();
 	void ClientRequestRespawn_Implementation();
 	bool ClientRequestRespawn_Validate() { return true; }
+
+	/* Called on Crosshair creation and viewport/resolution size changed */
+	UFUNCTION(Server, Reliable, WithValidation, BlueprintCallable)
+		void SendCrosshairOffsetAngleToServer(float NewAngle);
+	void SendCrosshairOffsetAngleToServer_Implementation(float NewAngle);
+	bool SendCrosshairOffsetAngleToServer_Validate(float NewAngle) { return true; }
 
 	/*******************************/
 	/* Client RPC/Functions for UI */
@@ -124,6 +141,8 @@ public:
 		void RemoveBuffIconFromUI(const FGameplayTag& BuffTag);
 	void RemoveBuffIconFromUI_Implementation(const FGameplayTag& BuffTag);
 	bool RemoveBuffIconFromUI_Validate(const FGameplayTag& BuffTag) { return true; }
+
+
 
 
 protected:

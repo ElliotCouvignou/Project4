@@ -34,7 +34,7 @@ struct HealAttStruct
 	}
 };
 
-HealAttStruct& Damage()
+HealAttStruct& Heal()
 {
 	static HealAttStruct It;
 	return It;
@@ -104,6 +104,6 @@ void UHealingCalculation::Execute_Implementation(const FGameplayEffectCustomExec
 	// GameplayEffectExecutionCalculation.
 	if (HealingDone > 0.f)
 	{
-		OutExecutionOutput.AddOutputModifier(FGameplayModifierEvaluatedData(Damage().HealProperty, EGameplayModOp::Additive, HealingDone));
+		OutExecutionOutput.AddOutputModifier(FGameplayModifierEvaluatedData(Heal().HealProperty, EGameplayModOp::Additive, HealingDone));
 	}
 }

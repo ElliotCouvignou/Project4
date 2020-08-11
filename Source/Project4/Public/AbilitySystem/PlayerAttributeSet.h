@@ -191,11 +191,12 @@ public:
 	UFUNCTION()
 		void OnRep_MagicPower(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UPlayerAttributeSet, MagicPower, Previous); }
 
-	UPROPERTY(Category = "Player Attributes | Offensive", EditAnywhere, ReplicatedUsing = OnRep_AttackSpeedInverse, BlueprintReadWrite)
-		FGameplayAttributeData AttackSpeedInverse;
-	ATTRIBUTE_ACCESSORS(UPlayerAttributeSet, AttackSpeedInverse)
+	/* % measurement for increase attack speed, applied to weapon attack interval for total auto attack rate */
+	UPROPERTY(Category = "Player Attributes | Offensive", EditAnywhere, ReplicatedUsing = OnRep_AttackSpeed, BlueprintReadWrite)
+		FGameplayAttributeData AttackSpeed;
+	ATTRIBUTE_ACCESSORS(UPlayerAttributeSet, AttackSpeed)
 		UFUNCTION()
-		void OnRep_AttackSpeedInverse(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UPlayerAttributeSet, AttackSpeedInverse, Previous); }
+		void OnRep_AttackSpeed(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UPlayerAttributeSet, AttackSpeed, Previous); }
 
 	UPROPERTY(Category = "Player Attributes | Offensive", EditAnywhere, ReplicatedUsing = OnRep_CritChance, BlueprintReadWrite)
 		FGameplayAttributeData CritChance;

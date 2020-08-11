@@ -34,6 +34,12 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 		void SetDistanceText(float Distance);
 
+	/* used in skillshot abilities where we want to know where on the ground the player is aiming
+		(World space) */
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+		void FindGroundLocation(float MaxSearchDistance, FVector& EndLocation, FVector& StartLocation);
+
+
 
 	/*   Public Varaibles */
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Target")

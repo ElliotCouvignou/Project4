@@ -1,7 +1,5 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::Green,text)
-
 #include "Project4GameMode.h"
 #include "Project4Controller.h"
 #include "Project4PlayerState.h"

@@ -4,16 +4,25 @@
 #include "AbilitySystem/P4AbilitySystemComponent.h"
 //#include "GameplayEffectTypes.h"
 
+
+
 float UP4AbilitySystemComponent::PlayMontage(UGameplayAbility* AnimatingAbility, FGameplayAbilityActivationInfo ActivationInfo, UAnimMontage* Montage, float InPlayRate, FName StartSectionName)
 {
 	float ret = Super::PlayMontage(AnimatingAbility, ActivationInfo, Montage, InPlayRate, StartSectionName);
 	return ret;
 }
 
-void UP4AbilitySystemComponent::RecieveDamage(UP4AbilitySystemComponent* SourceASC, float RawDamage, float TotalDamage)
+void UP4AbilitySystemComponent::BroadcastAutoAttackResults(const TArray<AProject4Character*>& HitArray)
 {
-	RecievedDamage.Broadcast(SourceASC, RawDamage, TotalDamage);
+	// Check size , if 0 then no hit -> no broadcast
+	// If != 0 then broadcast both delegates 
+	if (HitArray.Num() != 0)
+	{
+		AutoAttackHitCallback.Broadcast();
+		AutoAttackHitTargetsCallback.Broadcast(HitArray);
+	}
 }
+
 
 bool UP4AbilitySystemComponent::SetGameplayEffectDurationWithHandle(const FActiveGameplayEffectHandle& Handle, float NewDuration)
 {

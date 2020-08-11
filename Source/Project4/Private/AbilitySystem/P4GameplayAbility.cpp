@@ -9,6 +9,9 @@
 #include "UI/GameplayHudWidget.h"
 
 
+#define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Green,text)
+
+
 UP4GameplayAbility::UP4GameplayAbility()
 {
 	// Instancing is necessary for ability costs and doesnt hurt to keep it on for all abilities
@@ -18,6 +21,7 @@ UP4GameplayAbility::UP4GameplayAbility()
 	ActivationBlockedTags.AddTag(FGameplayTag::RequestGameplayTag(FName("State.Dead")));
 	ActivationBlockedTags.AddTag(FGameplayTag::RequestGameplayTag(FName("Buffs.Negative.Stunned")));
 	ActivationBlockedTags.AddTag(FGameplayTag::RequestGameplayTag(FName("Buffs.Negative.Silenced")));
+	
 }
 
 void UP4GameplayAbility::OnAvatarSet(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec)
@@ -44,27 +48,12 @@ void UP4GameplayAbility::SendErrorMessageToUI(EAbilityErrorText ErrorType)
 	}
 }
 
-float UP4GameplayAbility::PlayAnimationMontage(AProject4Character* TargetActor, FGameplayAbilityActivationInfo ActivationInfo, UAnimMontage* Montage, float InPlayRate, FName StartSectionName)
+void UP4GameplayAbility::SendTargetDataToServer_Implementation(UP4GameplayAbility* AbilityRef, const FVector& HitLocation)
 {
-	float ret = 0.f;
-	
-	if (TargetActor)
-	{
-		UAbilitySystemComponent* ASC = TargetActor->GetAbilitySystemComponent();
-		if (ASC)
-		{
-			ret = ASC->PlayMontage(this, ActivationInfo, Montage, InPlayRate, StartSectionName);
-		}
-	}
-
-	return ret;
+	//FGameplayAbilityTargetDataHandle TargetRef = FGameplayAbilityTargetDataHandle(DataHandle);
+	AbilityRef->TargetDataLocation = FVector(HitLocation);
+	print(FString(AbilityRef->TargetDataLocation.ToString()));
 }
 
-void UP4GameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
-{
-	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
-
-	// TODO: Autocast here?
-}
 
 

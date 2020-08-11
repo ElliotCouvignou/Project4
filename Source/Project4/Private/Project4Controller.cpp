@@ -11,11 +11,34 @@
 #include "UI/GameplayHudWidget.h"
 #include "UI/BuffIconsWidget.h"
 
+#define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Green,text)
+
 
 AProject4Controller::AProject4Controller(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
 
+}
+
+void AProject4Controller::FindCrosshairOffsetPitchAngle(const FIntPoint& ViewportSizeXY, float CrosshairScreenYOffset)
+{
+	// All math here but essentialy trying to find distance between screen's center and crosshair
+	// in world space, this is necessary so we can use skillshots aiming at our displaced crosshair 
+	float CenterScreenX = ViewportSizeXY.X / 2;
+	float CenterScreenY = ViewportSizeXY.Y / 2;
+	float CenterCrosshairY = CenterScreenY + (ViewportSizeXY.Y / 1024.f * CrosshairScreenYOffset);
+
+	//CrosshairScreenLocation.X = CenterScreenX;
+	//CrosshairScreenLocation.Y = CenterCrosshairY;
+	// Convert Screen location to world space
+	FVector ScreenCenterDirection;	FVector CrosshairDirection;	FVector Useless;
+	DeprojectScreenPositionToWorld(CenterScreenX, CenterScreenY, Useless, ScreenCenterDirection);
+	DeprojectScreenPositionToWorld(CenterScreenX, CenterCrosshairY, Useless, CrosshairDirection);
+	
+	CrosshairOffsetPitchAngle = FMath::Acos(FVector::DotProduct(ScreenCenterDirection, CrosshairDirection));
+	CrosshairOffsetPitchAngle = FMath::RadiansToDegrees(CrosshairOffsetPitchAngle);
+
+	SendCrosshairOffsetAngleToServer(CrosshairOffsetPitchAngle);
 }
 
 // called in onRep_PC in playercharacterbase
@@ -53,6 +76,11 @@ void AProject4Controller::ClientRequestRespawn_Implementation()
 	{
 		GM->RespawnPlayer(this);
 	}
+}
+
+void AProject4Controller::SendCrosshairOffsetAngleToServer_Implementation(float NewAngle)
+{
+	CrosshairOffsetPitchAngle = NewAngle;
 }
 
 void AProject4Controller::DisplayDamageNumber_Implementation(float DamageValue, AProject4Character* TargetCharacter)

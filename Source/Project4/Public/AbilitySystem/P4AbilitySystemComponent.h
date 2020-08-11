@@ -4,14 +4,20 @@
 
 #include "CoreMinimal.h"
 #include "AbilitySystemComponent.h"
+#include "AbilitySystem/P4GameplayAbility.h"
+
 #include "P4AbilitySystemComponent.generated.h"
 
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FRecievedDamageDelegate, UP4AbilitySystemComponent*, SourceASC, float, RawDamage, float, TotalDamage);
+class AProject4Character;
 
 
 /** Notify interested parties that ActiveGameplayEffect has been modified */
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnActiveGameplayEffectDurationChanged, const FActiveGameplayEffect&);
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAutoAttackHitTargets, const TArray<AProject4Character*>&, HitTargets);
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnAutoAttackHit);
+
 
 /**
  * 
@@ -24,22 +30,31 @@ class PROJECT4_API UP4AbilitySystemComponent : public UAbilitySystemComponent
 public:
 	bool CharacterAbilitiesGiven = false;
 	bool StartupEffectsApplied = false;
-	
-	FRecievedDamageDelegate RecievedDamage;
+
+	/*   Delegates   */
 
 	FOnActiveGameplayEffectDurationChanged ActiveGameplayEffectDirtiedCallback;
 
+	/* contains array of all hit actors */
+	UPROPERTY(BlueprintAssignable, Category = "Delegates")
+		FOnAutoAttackHitTargets AutoAttackHitTargetsCallback;
+
+	UPROPERTY(BlueprintAssignable, Category = "Delegates")
+		FOnAutoAttackHit AutoAttackHitCallback;
+
+	UFUNCTION(BlueprintCallable, Category = "Delegates")
+		void BroadcastAutoAttackResults(const TArray<AProject4Character*>& HitArray);
 
 	/* Virtual Overrides */
 
 	/* Calls palyMontage ASC function that isn't blueprint exposed on default
-		Similar function exists in P4GameplayAbility with a target actor */
+		Similar function exists in P4GameplayAbility with a target actor
+				OUTDATED FUNCTION????										*/
 	UFUNCTION(BlueprintCallable)
 		virtual float PlayMontage(UGameplayAbility* AnimatingAbility, FGameplayAbilityActivationInfo ActivationInfo, UAnimMontage* Montage, float InPlayRate, FName StartSectionName = NAME_None) override;
 
-	// called from DamageExecCalculation, to broadcast damage as delegate
-	virtual void RecieveDamage(UP4AbilitySystemComponent* SourceASC, float RawDamage, float TotalDamage);
-
+	
+	
 	// Used for changing active GE durations, Used for CD refunding
 	bool SetGameplayEffectDurationWithHandle(const FActiveGameplayEffectHandle& Handle, float NewDuration);
 };

@@ -35,6 +35,9 @@ void UPlayerAttributeSet::PreAttributeBaseChange(const FGameplayAttribute& Attri
 	else if (Attribute == GetEnduranceAttribute()) {
 		NewValue = FMath::Clamp(NewValue, 0.0f, EnduranceMax.GetCurrentValue());
 	}
+	else if (Attribute == GetAttackSpeedAttribute()) {
+		NewValue = FMath::Clamp(NewValue, 0.0f, 100.f);
+	}
 
 }
 
@@ -46,7 +49,7 @@ void UPlayerAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute
 {
 	Super::PreAttributeChange(Attribute, NewValue);
 
-	// base value clamps
+	// Dynamic Attribute value clamps
 	if (Attribute == GetHealthAttribute()) {
 		NewValue = FMath::Clamp(NewValue, 0.0f, HealthMax.GetCurrentValue());
 	}
@@ -55,6 +58,9 @@ void UPlayerAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute
 	}
 	else if (Attribute == GetEnduranceAttribute()) {
 		NewValue = FMath::Clamp(NewValue, 0.0f, EnduranceMax.GetCurrentValue());
+	}
+	else if (Attribute == GetAttackSpeedAttribute()) {
+		NewValue = FMath::Clamp(NewValue, 0.0f, 100.f);
 	}
 
 	// max value clampers, makes sure health/maxhealth % stays same 
@@ -71,11 +77,12 @@ void UPlayerAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute
 		AdjustAttributeForMaxChange(Endurance, EnduranceMax, NewValue, GetEnduranceAttribute());
 	}
 
+
 	else if (Attribute == GetMovementSpeedAttribute()) {
-		AProject4Character* Pchar = Cast<AProject4Character>(GetOwningActor());
-		if (Pchar) 
+		UCharacterMovementComponent* CMC = Cast<UCharacterMovementComponent>(GetActorInfo()->MovementComponent);
+		if (CMC)
 		{
-			Pchar->GetCharacterMovement()->MaxWalkSpeed = NewValue;
+			CMC->MaxWalkSpeed = NewValue;
 		}
 	}
 }
@@ -291,7 +298,7 @@ void UPlayerAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& 
 
 	DOREPLIFETIME_CONDITION_NOTIFY(UPlayerAttributeSet, AttackPower, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UPlayerAttributeSet, MagicPower, COND_None, REPNOTIFY_Always);
-	DOREPLIFETIME_CONDITION_NOTIFY(UPlayerAttributeSet, AttackSpeedInverse, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UPlayerAttributeSet, AttackSpeed, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UPlayerAttributeSet, CritChance, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UPlayerAttributeSet, CritDamage, COND_None, REPNOTIFY_Always);
 }

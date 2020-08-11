@@ -6,6 +6,26 @@
 #include "UI/ResourceBarsWidget.h"
 #include "UI/AbilityHotbar.h"
 #include "UI/BuffIconsWidget.h"
+#include "UI/CrosshairWidget.h"
+
+
+void UGameplayHudWidget::NativeConstruct()
+{
+	Super::NativeConstruct();
+
+	// Bind Delegate for when Screen size changes
+	GEngine->GameViewport->Viewport->ViewportResizedEvent.AddUObject(this, &UGameplayHudWidget::OnViewportResizedCallback);
+}
+
+
+void UGameplayHudWidget::OnViewportResizedCallback(FViewport* ActiveViewport, uint32 UnknownUnsignedInt)
+{
+	AProject4Controller* PC = Cast<AProject4Controller>(GetOwningPlayer());
+	if (PC)
+	{
+		PC->FindCrosshairOffsetPitchAngle(ActiveViewport->GetSizeXY(), CrosshairScreenYOffset);
+	}
+}
 
 
 void UGameplayHudWidget::UpdateHealth(float NewValue)
@@ -67,6 +87,7 @@ void UGameplayHudWidget::UpdateEnduranceMax(float NewValue)
 	{
 		ResourceBarsWidget->UpdateEnduranceMax(NewValue);
 	}
+	
 }
 
 void UGameplayHudWidget::UpdateEnduranceRegen(float NewValue)
@@ -106,6 +127,14 @@ void UGameplayHudWidget::SetAbilityHotbarBlock(int32 BlockIndex, TSubclassOf<cla
 	if (AbilityHotbar)
 	{
 		AbilityHotbar->SetupHotbarAbility(BlockIndex, Ability);
+	}
+}
+
+void UGameplayHudWidget::GetCrosshairGroundLocation(float MaxSearchDistance, FVector& EndLocation, FVector& StartLocation)
+{
+	if (CrosshairWidget && GetOwningPlayer()->IsLocalController())
+	{
+		CrosshairWidget->FindGroundLocation(MaxSearchDistance, EndLocation, StartLocation);
 	}
 }
 
