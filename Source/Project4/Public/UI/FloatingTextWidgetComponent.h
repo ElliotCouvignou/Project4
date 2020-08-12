@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/WidgetComponent.h"
+#include "Project4Controller.h"
 #include "FloatingTextWidgetComponent.generated.h"
 
 /**
@@ -17,13 +18,7 @@ class PROJECT4_API UFloatingTextWidgetComponent : public UWidgetComponent
 
 public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
-		void SetMixedDamageText(float Damage);
-
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
-		void SetPhysicalDamageText(float Damage);
-
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
-		void SetMagicDamageText(float Damage);
+		void SetDamageText(FP4DamageNumber Damage);
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 		void SetHealText(float Heal);

@@ -83,12 +83,12 @@ void AProject4Controller::SendCrosshairOffsetAngleToServer_Implementation(float 
 	CrosshairOffsetPitchAngle = NewAngle;
 }
 
-void AProject4Controller::DisplayDamageNumber_Implementation(float DamageValue, AProject4Character* TargetCharacter)
+void AProject4Controller::DisplayDamageNumber_Implementation(FP4DamageNumber Damage, AProject4Character* TargetCharacter)
 {
 	UFloatingTextWidgetComponent* DamageText = NewObject<UFloatingTextWidgetComponent>(TargetCharacter, FloatingTextClass);
 	DamageText->RegisterComponent();
 	DamageText->AttachToComponent(TargetCharacter->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
-	DamageText->SetMixedDamageText(DamageValue);
+	DamageText->SetDamageText(Damage);
 }
 
 void AProject4Controller::DisplayHealNumber_Implementation(float HealValue, AProject4Character* TargetCharacter)

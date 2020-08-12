@@ -4,17 +4,17 @@
 
 #include "CoreMinimal.h"
 #include "GameplayEffectExecutionCalculation.h"
-#include "EnrageExecutionCalculation.generated.h"
+#include "MagicDamageExecCalc.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROJECT4_API UEnrageExecutionCalculation : public UGameplayEffectExecutionCalculation
+class PROJECT4_API UMagicDamageExecCalc : public UGameplayEffectExecutionCalculation
 {
 	GENERATED_UCLASS_BODY()
-	
-public:
+
+private:
 
 	UFUNCTION()
 		virtual void Execute_Implementation(const FGameplayEffectCustomExecutionParameters& ExecutionParams, FGameplayEffectCustomExecutionOutput& OutExecutionOutput) const;

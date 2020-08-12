@@ -28,6 +28,13 @@ class PROJECT4_API UPlayerAttributeSet : public UAttributeSet
 	/* Constructor */
 	UPlayerAttributeSet(const FObjectInitializer& ObjectInitializer);
 
+private:
+
+	/* class vars so we dont remake each post exec */
+	FGameplayTag CritTag;
+	FGameplayTag PhysicalDamageTag;
+	FGameplayTag MagicDamageTag;
+
 public:
 
 	/*  is called before... well, an attribute's base value (so without any temporary modifiers) is changed.
@@ -191,19 +198,21 @@ public:
 	UFUNCTION()
 		void OnRep_MagicPower(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UPlayerAttributeSet, MagicPower, Previous); }
 
-	/* % measurement for increase attack speed, applied to weapon attack interval for total auto attack rate */
+	/* % decimal measurement for increase attack speed (e.g 0.3 = 30%), applied to weapon attack interval for total auto attack rate */
 	UPROPERTY(Category = "Player Attributes | Offensive", EditAnywhere, ReplicatedUsing = OnRep_AttackSpeed, BlueprintReadWrite)
 		FGameplayAttributeData AttackSpeed;
 	ATTRIBUTE_ACCESSORS(UPlayerAttributeSet, AttackSpeed)
 		UFUNCTION()
 		void OnRep_AttackSpeed(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UPlayerAttributeSet, AttackSpeed, Previous); }
 
+	/* % (0-1) measurement for Crit % chance MUST BE BETWEEN 0 and 1 */
 	UPROPERTY(Category = "Player Attributes | Offensive", EditAnywhere, ReplicatedUsing = OnRep_CritChance, BlueprintReadWrite)
 		FGameplayAttributeData CritChance;
 	ATTRIBUTE_ACCESSORS(UPlayerAttributeSet, CritChance)
 		UFUNCTION()
 		void OnRep_CritChance(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UPlayerAttributeSet, CritChance, Previous); }
 
+	/* % Damage increase when crit applies  */
 	UPROPERTY(Category = "Player Attributes | Offensive", EditAnywhere, ReplicatedUsing = OnRep_CritDamage, BlueprintReadWrite)
 		FGameplayAttributeData CritDamage;
 	ATTRIBUTE_ACCESSORS(UPlayerAttributeSet, CritDamage)

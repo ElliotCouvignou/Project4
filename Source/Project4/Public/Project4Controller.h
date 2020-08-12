@@ -8,6 +8,37 @@
 #include "GameplayEffect.h"
 #include "Project4Controller.generated.h"
 
+/* UNUSED ATM */
+UENUM(BlueprintType)
+enum class EDamageTypes : uint8
+{
+	Physical			UMETA(DisplayName = "Physical"),
+	Magic				UMETA(DisplayName = "Magic"),
+	Nature				UMETA(DispalyName = "Naute")
+	// TODO: Add elemental damage types here
+};
+
+/* Damage Nubmer class to display */
+USTRUCT(BlueprintType)
+struct PROJECT4_API FP4DamageNumber
+{
+	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		float DamageAmount;
+
+	/* contains Tags for info about Crit, Damage types, etc. */
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		FGameplayTagContainer Tags;
+
+	FP4DamageNumber() {}
+
+	FP4DamageNumber(float InDamageAmount, FGameplayTagContainer InTags) : DamageAmount(InDamageAmount)
+	{
+		// Copy tag container
+		Tags.AppendTags(InTags);
+	}
+};
 
 // location of this struct might need to be moved if necessary
 // ONLY CREATE A NEW ENUM IF: you want to bind an enum to a NEW inputAction event DisplayName
@@ -83,9 +114,9 @@ public:
 
 	// Server calls this fucntion to display damage numbers to a player
 	UFUNCTION(Client, Reliable, WithValidation)
-		void DisplayDamageNumber(float DamageValue, AProject4Character* TargetCharacter);
-	void DisplayDamageNumber_Implementation(float DamageValue, AProject4Character* TargetCharacter);
-	bool DisplayDamageNumber_Validate(float DamageValue, AProject4Character* TargetCharacter) { return true; }
+		void DisplayDamageNumber(FP4DamageNumber Damage, AProject4Character* TargetCharacter);
+	void DisplayDamageNumber_Implementation(FP4DamageNumber Damage, AProject4Character* TargetCharacter);
+	bool DisplayDamageNumber_Validate(FP4DamageNumber Damage, AProject4Character* TargetCharacter) { return true; }
 
 	// Server calls this fucntion to display damage numbers to a player
 	UFUNCTION(Client, Reliable, WithValidation)
@@ -127,6 +158,7 @@ public:
 	/*******************/
 	/*    Buff Icons   */
 	/*******************/
+
 	UFUNCTION(Client, Reliable, WithValidation, BlueprintCallable)
 		void SendBuffIconToUI(const FGameplayTag& BuffTag, const FGameplayEffectSpec& SpecApplied, const FActiveGameplayEffectHandle& ActiveHandle);
 	void SendBuffIconToUI_Implementation(const FGameplayTag& BuffTag, const FGameplayEffectSpec& SpecApplied, const FActiveGameplayEffectHandle& ActiveHandle);

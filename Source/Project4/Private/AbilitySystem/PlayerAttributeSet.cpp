@@ -17,7 +17,9 @@
 UPlayerAttributeSet::UPlayerAttributeSet(const FObjectInitializer& ObjectInitializer) 
 	: Super(ObjectInitializer)
 {
-
+	CritTag = FGameplayTag::RequestGameplayTag(FName("Effect.Damage.Crit"));
+	PhysicalDamageTag = FGameplayTag::RequestGameplayTag(FName("Effect.Damage.Physical"));
+	MagicDamageTag = FGameplayTag::RequestGameplayTag(FName("Effect.Damage.Magic"));
 }
 
 /*  is called before... well, an attribute's base value (so without any temporary modifiers) is changed. 
@@ -183,8 +185,26 @@ void UPlayerAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCall
 
 				// Show Damage numbers to source actor (ignore self-damage)
 				if (SourceActor != TargetActor) {
-					if (SourcePC) {
-						SourcePC->DisplayDamageNumber(DamageTaken, TargetCharacter);
+					if (SourcePC) 
+					{
+						FGameplayTagContainer DamageNumberTags;
+
+						/* Look at dynamic asset tags for info about damage type */
+						if (Data.EffectSpec.DynamicAssetTags.HasTag(CritTag))
+						{
+							DamageNumberTags.AddTagFast(CritTag);
+						}
+						if (Data.EffectSpec.DynamicAssetTags.HasTag(PhysicalDamageTag))
+						{
+							DamageNumberTags.AddTagFast(PhysicalDamageTag);
+						}
+						else if (Data.EffectSpec.DynamicAssetTags.HasTag(MagicDamageTag))
+						{
+							DamageNumberTags.AddTagFast(MagicDamageTag);
+						}
+
+						/* Send collected damage data tags to client, let them do parse */
+						SourcePC->DisplayDamageNumber(FP4DamageNumber(DamageTaken, DamageNumberTags), TargetCharacter);
 					}
 				}
 				
