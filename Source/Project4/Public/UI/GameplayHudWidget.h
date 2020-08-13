@@ -86,6 +86,14 @@ public:
 		void RemoveBuffIconFromUI(const FGameplayTag& BuffTag);
 
 
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Input Menus")
+		void OpenCharacterInfoWidget();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Input Menus")
+		void OpenInventoryBagWidget();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Input Menus")
+		void OpenSkillsWidget();
 
 
 protected:

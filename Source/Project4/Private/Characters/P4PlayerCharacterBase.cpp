@@ -52,8 +52,6 @@ void AP4PlayerCharacterBase::SetupPlayerInputComponent(class UInputComponent* Pl
 	check(PlayerInputComponent);
 	PlayerInputComponent->BindAxis("CameraZoom", this, &AP4PlayerCharacterBase::CameraZoom);
 
-	PlayerInputComponent->BindAction("LeftClick", IE_Pressed, this, &AP4PlayerCharacterBase::HandleLeftClickPressed);
-	PlayerInputComponent->BindAction("LeftClick", IE_Released, this, &AP4PlayerCharacterBase::HandleLeftClickReleased);
 
 	// Bind ASC Input
 	BindASCInput();
@@ -71,17 +69,6 @@ void AP4PlayerCharacterBase::BindASCInput()
 
 		bASCInputBound = true;
 	}
-}
-
-void AP4PlayerCharacterBase::HandleLeftClickPressed()
-{
-	// TODO: fill this with handler to decide on camera rotation or target selection
-	SelectTargetFromCursor();
-}
-
-void AP4PlayerCharacterBase::HandleLeftClickReleased()
-{
-	// TODO: fill this with handler to decide on camera rotation or target selection
 }
 
 
@@ -198,10 +185,6 @@ void AP4PlayerCharacterBase::SelectTargetFromCursor()
 	}
 }
 
-void AP4PlayerCharacterBase::SelectNextNearestTarget()
-{
-	// TODO Implement Tab-style targeting, make sure to grab next nearest
-}
 
 
 /*   Replication Area   */
@@ -210,6 +193,7 @@ void AP4PlayerCharacterBase::ServerSetSelectedTarget_Implementation(AP4PlayerCha
 {
 	TargetedActor->SelectedTarget = NewSelectedTarget;
 }
+
 
 /***************************/
 /*      Camera system      */

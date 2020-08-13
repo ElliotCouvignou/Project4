@@ -91,10 +91,8 @@ protected:
 	/*    Targeting system     */
 	/***************************/
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 		void SelectTargetFromCursor();  // For left-click selection
-	UFUNCTION()
-		void SelectNextNearestTarget(); // For tab-targeting
 
 	/* client update selected target */
 	UFUNCTION(Server, Reliable, WithValidation, BlueprintCallable)
@@ -105,12 +103,6 @@ protected:
 	/***************************/
 	/*    Input Handlers       */
 	/***************************/
-
-	UFUNCTION()
-		void HandleLeftClickPressed();
-	UFUNCTION()
-		void HandleLeftClickReleased();
-
 
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)

@@ -199,17 +199,7 @@ void UPlayerAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCall
 						if (Data.EffectSpec.DynamicAssetTags.HasTag(CritTag))
 						{
 							DamageNumberTags.AddTagFast(CritTag);
-						}
-						if (Data.EffectSpec.DynamicAssetTags.HasTag(PhysicalDamageTag))
-						{
-							DamageNumberTags.AddTagFast(PhysicalDamageTag);
-						}
-						else if (Data.EffectSpec.DynamicAssetTags.HasTag(MagicDamageTag))
-						{
-							DamageNumberTags.AddTagFast(MagicDamageTag);
-						}
-
-						
+						}					
 
 						/* Send collected damage data tags to client, let them do parse */
 						SourcePC->DisplayDamageNumber(FP4DamageNumber(DamageTaken, DamageNumberTags), TargetCharacter);

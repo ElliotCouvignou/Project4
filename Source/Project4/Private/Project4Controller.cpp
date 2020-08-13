@@ -153,6 +153,39 @@ void AProject4Controller::RemoveBuffIconFromUI_Implementation(const FGameplayTag
 	}
 }
 
+void AProject4Controller::OpenCharacterInfoMenu()
+{
+	if (GameplayHUDWidget)
+	{
+		GameplayHUDWidget->OpenCharacterInfoWidget();
+	}
+}
+
+void AProject4Controller::OpenInventoryBagMenu()
+{
+	if (GameplayHUDWidget)
+	{
+		GameplayHUDWidget->OpenInventoryBagWidget();
+	}
+}
+
+void AProject4Controller::OpenSkillsMenu()
+{
+	if (GameplayHUDWidget)
+	{
+		GameplayHUDWidget->OpenSkillsWidget();
+	}
+}
+
+void AProject4Controller::SetupInputComponent()
+{
+	Super::SetupInputComponent();
+
+	InputComponent->BindAction("OpenCharacterInfoMenu", IE_Pressed, this, &AProject4Controller::OpenCharacterInfoMenu);
+	InputComponent->BindAction("OpenInventoryBagMenu", IE_Pressed, this, &AProject4Controller::OpenInventoryBagMenu);
+	InputComponent->BindAction("OpenSkillsMenu", IE_Pressed, this, &AProject4Controller::OpenSkillsMenu);
+
+}
 
 // Server only
 void AProject4Controller::OnPossess(APawn* InPawn)
