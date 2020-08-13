@@ -78,6 +78,8 @@ void AP4MobCharacterBase::BindDelegates()
 	{
 		HealthChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetHealthAttribute()).AddUObject(this, &AP4MobCharacterBase::HealthChanged);
 		ManaChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetHealthAttribute()).AddUObject(this, &AP4MobCharacterBase::ManaChanged);
+		
+		AbilitySystemComponent->RegisterGameplayTagEvent(FGameplayTag::RequestGameplayTag(FName("Buffs.Negative.Stunned")), EGameplayTagEventType::NewOrRemoved).AddUObject(this, &AP4MobCharacterBase::OnStunTagChanged);
 	}
 }
 void AP4MobCharacterBase::HealthChanged(const FOnAttributeChangeData& Data)
@@ -105,5 +107,23 @@ void AP4MobCharacterBase::ManaChanged(const FOnAttributeChangeData& Data)
 	if (UIFloatingStatusBar)
 	{
 		UIFloatingStatusBar->SetManaPercentage(AttributeSet->GetMana() / AttributeSet->GetManaMax());
+	}
+}
+
+void AP4MobCharacterBase::OnStunTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
+{
+	if (NewCount > 0)
+	{
+		FGameplayTagContainer AbilityTagsToCancel;
+		AbilityTagsToCancel.AddTag(FGameplayTag::RequestGameplayTag(FName("Ability")));
+
+		// TODO: Create Tag Layer for unsstunnable abilities (Dont think they will exist)
+		FGameplayTagContainer AbilityTagsToIgnore;
+		//AbilityTagsToIgnore.AddTag(FGameplayTag::RequestGameplayTag(FName("")));
+
+		AbilitySystemComponent->CancelAbilities(&AbilityTagsToCancel, &AbilityTagsToIgnore);
+
+		PlayStunnedAnimationMontage();
+
 	}
 }

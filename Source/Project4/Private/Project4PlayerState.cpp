@@ -78,6 +78,8 @@ void AProject4PlayerState::BindAbilityDelegates()
 		EnduranceMaxChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetEnduranceMaxAttribute()).AddUObject(this, &AProject4PlayerState::EnduranceMaxChanged);
 		EnduranceRegenChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetEnduranceRegenAttribute()).AddUObject(this, &AProject4PlayerState::EnduranceRegenChanged);
 
+
+		AbilitySystemComponent->RegisterGameplayTagEvent(FGameplayTag::RequestGameplayTag(FName("Buffs.Negative.Stunned")), EGameplayTagEventType::NewOrRemoved).AddUObject(this, &AProject4PlayerState::OnStunTagChanged);
 	}
 }
 
@@ -404,6 +406,30 @@ void AProject4PlayerState::EnduranceRegenChanged(const FOnAttributeChangeData& D
 		{
 			HUD->UpdateEnduranceRegen(EnduranceRegen);
 		}
+	}
+}
+
+void AProject4PlayerState::OnStunTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
+{
+	if (NewCount > 0)
+	{
+		
+
+		FGameplayTagContainer AbilityTagsToCancel;
+		AbilityTagsToCancel.AddTag(FGameplayTag::RequestGameplayTag(FName("Ability")));
+
+		// TODO: Create Tag Layer for unsstunnable abilities (Dont think they will exist)
+		FGameplayTagContainer AbilityTagsToIgnore;
+		//AbilityTagsToIgnore.AddTag(FGameplayTag::RequestGameplayTag(FName("")));
+
+		AbilitySystemComponent->CancelAbilities(&AbilityTagsToCancel, &AbilityTagsToIgnore);
+
+		AProject4Character* P4Char = Cast<AProject4Character>(GetPawn());
+		if (P4Char)
+		{
+			P4Char->PlayStunnedAnimationMontage();
+		}
+
 	}
 }
 

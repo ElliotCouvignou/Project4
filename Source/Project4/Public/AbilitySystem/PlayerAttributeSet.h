@@ -35,6 +35,8 @@ private:
 	FGameplayTag PhysicalDamageTag;
 	FGameplayTag MagicDamageTag;
 
+	FGameplayTagContainer DamageNumberContainerFilter;
+
 public:
 
 	/*  is called before... well, an attribute's base value (so without any temporary modifiers) is changed.

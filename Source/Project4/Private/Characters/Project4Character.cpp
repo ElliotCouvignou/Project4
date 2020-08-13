@@ -27,6 +27,8 @@
 #include "AbilitySystem/P4GameplayAbilitySet.h"
 #include "AbilitySystem/P4AbilitySystemComponent.h"
 
+#include "Characters/P4CharacterMovementComponent.h"
+
 
 
 
@@ -37,7 +39,7 @@
 // AProject4Character
 
 AProject4Character::AProject4Character(const class FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+	: Super(ObjectInitializer.SetDefaultSubobjectClass<UP4CharacterMovementComponent>(ACharacter::CharacterMovementComponentName))
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
@@ -73,6 +75,8 @@ AProject4Character::AProject4Character(const class FObjectInitializer& ObjectIni
 	UIFloatingStatusBarComponent->SetDrawSize(FVector2D(500, 500));
 
 	DeadTag = FGameplayTag::RequestGameplayTag(FName("State.Dead"));
+	StunnedTag = FGameplayTag::RequestGameplayTag(FName("Buffs.Negative.Stunned"));
+
 	//Respawn = FGameplayTag::RequestGameplayTag(FName(""));
 }
 
@@ -184,6 +188,14 @@ void AProject4Character::InitFloatingStatusBarWidget()
 UFloatingStatusBarWidget* AProject4Character::GetFloatingStatusBarWidget()
 {
 	return UIFloatingStatusBar;
+}
+
+void AProject4Character::PlayStunnedAnimationMontage()
+{
+	if (StunnedMontage && !HasAuthority())
+	{
+		PlayAnimMontage(StunnedMontage);
+	}
 }
 
 

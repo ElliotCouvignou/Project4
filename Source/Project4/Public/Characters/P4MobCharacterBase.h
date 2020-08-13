@@ -39,6 +39,8 @@ protected:
 	virtual void HealthChanged(const FOnAttributeChangeData& Data);
 	virtual void ManaChanged(const FOnAttributeChangeData& Data);
 
+	virtual void OnStunTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
+
 	/*  Virtual Overrides  */
 	virtual void FinishDying() override;
 

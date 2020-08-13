@@ -90,9 +90,6 @@ void UPhysicalDamageExecCalc::Execute_Implementation(const FGameplayEffectCustom
 	float InputDamage = 0.f;
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(Attributes.DamageDef, EvaluationParameters, InputDamage);
 
-	/* Add dynamic crit tag to this GE spec To be read in player Attributes post exec */
-	FGameplayEffectSpec* MutableSpec = ExecutionParams.GetOwningSpecForPreExecuteMod();
-	MutableSpec->DynamicAssetTags.AddTag(FGameplayTag::RequestGameplayTag(FName("Effect.Damage.Physical")));
 
 	//Finally, we go through our simple example damage calculation. DefensePower comes from target.
 	float BaseDamage = InputDamage + FMath::Max<float>(Spec.GetSetByCallerMagnitude(FGameplayTag::RequestGameplayTag(FName("Data.Damage")), false, -1.0f), 0.0f);
@@ -106,6 +103,9 @@ void UPhysicalDamageExecCalc::Execute_Implementation(const FGameplayEffectCustom
 	if (FMath::FRand() <= CritChance && !AssetTags.HasTagExact(FGameplayTag::RequestGameplayTag(FName("Effect.CannotCrit"))))
 	{
 		RawDamage *= 1.f + CritDamage;
+
+		/* Add dynamic crit tag to this GE spec To be read in player Attributes post exec */
+		FGameplayEffectSpec* MutableSpec = ExecutionParams.GetOwningSpecForPreExecuteMod();
 		MutableSpec->DynamicAssetTags.AddTag(FGameplayTag::RequestGameplayTag(FName("Effect.Damage.Crit")));
 	}
 	

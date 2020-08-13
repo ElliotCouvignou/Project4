@@ -92,6 +92,7 @@ protected:
 	virtual void EnduranceMaxChanged(const FOnAttributeChangeData& Data);
 	virtual void EnduranceRegenChanged(const FOnAttributeChangeData& Data);
 
+	virtual void OnStunTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

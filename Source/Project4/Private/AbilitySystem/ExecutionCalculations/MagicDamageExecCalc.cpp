@@ -90,10 +90,6 @@ void UMagicDamageExecCalc::Execute_Implementation(const FGameplayEffectCustomExe
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(Attributes.DamageDef, EvaluationParameters, InputDamage);
 
 
-	/* Add dynamic Tags to this GE for damage info */
-	FGameplayEffectSpec* MutableSpec = ExecutionParams.GetOwningSpecForPreExecuteMod();
-	MutableSpec->DynamicAssetTags.AddTag(FGameplayTag::RequestGameplayTag(FName("Effect.Damage.Magic")));
-
 	//Finally, we go through our simple example damage calculation. DefensePower comes from target.
 	float BaseDamage = InputDamage + FMath::Max<float>(Spec.GetSetByCallerMagnitude(FGameplayTag::RequestGameplayTag(FName("Data.Damage")), false, -1.0f), 0.0f);
 
@@ -107,7 +103,8 @@ void UMagicDamageExecCalc::Execute_Implementation(const FGameplayEffectCustomExe
 	{
 		RawDamage *= 1.f + CritDamage;
 
-		
+		/* Add dynamic Tags to this GE for damage info */
+		FGameplayEffectSpec* MutableSpec = ExecutionParams.GetOwningSpecForPreExecuteMod();
 		MutableSpec->DynamicAssetTags.AddTag(FGameplayTag::RequestGameplayTag(FName("Effect.Damage.Crit")));
 		
 	}

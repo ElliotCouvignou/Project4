@@ -55,10 +55,12 @@ public:
 	/* Gameplay Ability system */  
 	/***************************/
 
+
 	virtual class UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
 	UFUNCTION(BlueprintPure, Category = Ability, meta = (DefaultToSelf = Target))
 		class UPlayerAttributeSet* GetAttributeSet() const;
+
 
 	/***************************/
 	/*          Death          */
@@ -97,6 +99,12 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		class UFloatingStatusBarWidget* GetFloatingStatusBarWidget();
+
+	/***************************/
+	/*         Utility         */
+	/***************************/
+
+	void PlayStunnedAnimationMontage();
 
 protected:
 
@@ -141,8 +149,13 @@ protected:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Animation")
 		UAnimMontage* DeathMontage;
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Animation")
+		UAnimMontage* StunnedMontage;
+
+	/* Tags to bind to when granted to this char */
 	FGameplayTag DeadTag;
 	FGameplayTag RespawnTag;
+	FGameplayTag StunnedTag;
 
 
 	/***************************/
