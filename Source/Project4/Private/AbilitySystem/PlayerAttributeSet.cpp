@@ -12,7 +12,6 @@
 #include "Characters/Project4Character.h"
 
 
-#define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 0.5 , FColor::Green,text)
 
 UPlayerAttributeSet::UPlayerAttributeSet(const FObjectInitializer& ObjectInitializer) 
 	: Super(ObjectInitializer)

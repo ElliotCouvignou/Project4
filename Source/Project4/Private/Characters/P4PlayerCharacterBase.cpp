@@ -256,6 +256,7 @@ void AP4PlayerCharacterBase::PossessedBy(AController* NewController)
 		// Tell PS to bind delegates before init
 		PS->BindAbilityDelegates();
 
+
 		// Init playerAttributes with .csv
 		InitializeAttributeSet();
 
@@ -264,8 +265,6 @@ void AP4PlayerCharacterBase::PossessedBy(AController* NewController)
 		// do startuf effects and essential ability setup
 		AddAllStartupEffects();
 
-		GiveEssentialAbilities();
-
 		// For edge cases where the PlayerState is repped before the Hero is possessed.
 		// Maybe dont use this for servers? some might still need a ref for some reason
 		AProject4Controller* PC = Cast<AProject4Controller>(GetController());
@@ -273,6 +272,8 @@ void AP4PlayerCharacterBase::PossessedBy(AController* NewController)
 		{
 			PC->CreateMainHUDWidget();
 		}
+
+		GiveEssentialAbilities();
 
 		InitFloatingStatusBarWidget();
 
@@ -301,17 +302,20 @@ void AP4PlayerCharacterBase::OnRep_PlayerState()
 		// Tell PS to bind delegates before init
 		PS->BindAbilityDelegates();
 
+
 		// Init playerAttributes with .csv
 		InitializeAttributeSet();
 
-		BindASCInput();
 
 		// For edge cases where the PlayerState is repped before the Hero is possessed.
+		// Maybe dont use this for servers? some might still need a ref for some reason
 		AProject4Controller* PC = Cast<AProject4Controller>(GetController());
 		if (PC)
 		{
 			PC->CreateMainHUDWidget();
 		}
+
+		BindASCInput();
 
 		InitFloatingStatusBarWidget();
 	}

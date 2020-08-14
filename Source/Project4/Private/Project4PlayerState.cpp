@@ -66,6 +66,7 @@ void AProject4PlayerState::BindAbilityDelegates()
 		AbilitySystemComponent->OnActiveGameplayEffectAddedDelegateToSelf.AddUObject(this, &AProject4PlayerState::OnActiveGameplayEffectApplied);
 		//AbilitySystemComponent->RegisterGameplayTagEvent(BuffDebuffTag).AddUObject(this, &AProject4PlayerState::OnBuffTagChanged);
 
+		/*   Resource Stat Bindings   */
 		HealthChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetHealthAttribute()).AddUObject(this, &AProject4PlayerState::HealthChanged);
 		HealthMaxChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetHealthMaxAttribute()).AddUObject(this, &AProject4PlayerState::HealthMaxChanged);
 		HealthRegenChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetHealthRegenAttribute()).AddUObject(this, &AProject4PlayerState::HealthRegenChanged);
@@ -78,7 +79,22 @@ void AProject4PlayerState::BindAbilityDelegates()
 		EnduranceMaxChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetEnduranceMaxAttribute()).AddUObject(this, &AProject4PlayerState::EnduranceMaxChanged);
 		EnduranceRegenChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetEnduranceRegenAttribute()).AddUObject(this, &AProject4PlayerState::EnduranceRegenChanged);
 
+		/* following Delegates are UI ONLY, dont waste server's time */
+		if (!HasAuthority())
+		{
+			/*   Defensive Stat Bindings   */
+			ArmorChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetArmorAttribute()).AddUObject(this, &AProject4PlayerState::ArmorChanged);
+			MagicResistanceChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetMagicResistanceAttribute()).AddUObject(this, &AProject4PlayerState::MagicResistanceChanged);
+			MovementSpeedChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetMovementSpeedAttribute()).AddUObject(this, &AProject4PlayerState::MovementSpeedChanged);
 
+			/*   Offsensive Stat Bindings   */
+			AttackPowerDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetAttackPowerAttribute()).AddUObject(this, &AProject4PlayerState::AttackPowerChanged);
+			MagicPowerChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetMagicPowerAttribute()).AddUObject(this, &AProject4PlayerState::MagicPowerChanged);
+			AttackSpeedChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetAttackSpeedAttribute()).AddUObject(this, &AProject4PlayerState::AttackSpeedChanged);
+			CritChanceChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetCritChanceAttribute()).AddUObject(this, &AProject4PlayerState::CritChanceChanged);
+			CritDamageChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetCritDamageAttribute()).AddUObject(this, &AProject4PlayerState::CritDamageChanged);
+
+		}
 		AbilitySystemComponent->RegisterGameplayTagEvent(FGameplayTag::RequestGameplayTag(FName("Buffs.Negative.Stunned")), EGameplayTagEventType::NewOrRemoved).AddUObject(this, &AProject4PlayerState::OnStunTagChanged);
 	}
 }
@@ -405,6 +421,134 @@ void AProject4PlayerState::EnduranceRegenChanged(const FOnAttributeChangeData& D
 		if (HUD)
 		{
 			HUD->UpdateEnduranceRegen(EnduranceRegen);
+		}
+	}
+}
+
+void AProject4PlayerState::ArmorChanged(const FOnAttributeChangeData& Data)
+{
+	float NewValue  = Data.NewValue;
+
+	AProject4Controller* PC = Cast<AProject4Controller>(GetOwner());
+	if (PC)
+	{
+
+		UGameplayHudWidget* HUD = PC->GetMainHUDWidget();
+		if (HUD)
+		{
+			HUD->UpdateArmor(NewValue);
+		}
+	}
+}
+
+void AProject4PlayerState::MagicResistanceChanged(const FOnAttributeChangeData& Data)
+{
+	float NewValue = Data.NewValue;
+
+	AProject4Controller* PC = Cast<AProject4Controller>(GetOwner());
+	if (PC)
+	{
+
+		UGameplayHudWidget* HUD = PC->GetMainHUDWidget();
+		if (HUD)
+		{
+			HUD->UpdateMagicResistance(NewValue);
+		}
+	}
+}
+
+void AProject4PlayerState::MovementSpeedChanged(const FOnAttributeChangeData& Data)
+{
+	float NewValue = Data.NewValue;
+
+	AProject4Controller* PC = Cast<AProject4Controller>(GetOwner());
+	if (PC)
+	{
+
+		UGameplayHudWidget* HUD = PC->GetMainHUDWidget();
+		if (HUD)
+		{
+			HUD->UpdateMovementSpeed(NewValue);
+		}
+	}
+}
+
+void AProject4PlayerState::AttackPowerChanged(const FOnAttributeChangeData& Data)
+{
+	float NewValue = Data.NewValue;
+
+	AProject4Controller* PC = Cast<AProject4Controller>(GetOwner());
+	if (PC)
+	{
+
+		UGameplayHudWidget* HUD = PC->GetMainHUDWidget();
+		if (HUD)
+		{
+			HUD->UpdateAttackPower(NewValue);
+		}
+	}
+}
+
+void AProject4PlayerState::MagicPowerChanged(const FOnAttributeChangeData& Data)
+{
+	float NewValue = Data.NewValue;
+
+	AProject4Controller* PC = Cast<AProject4Controller>(GetOwner());
+	if (PC)
+	{
+
+		UGameplayHudWidget* HUD = PC->GetMainHUDWidget();
+		if (HUD)
+		{
+			HUD->UpdateMagicPower(NewValue);
+		}
+	}
+}
+
+void AProject4PlayerState::AttackSpeedChanged(const FOnAttributeChangeData& Data)
+{
+	float NewValue = Data.NewValue;
+
+	AProject4Controller* PC = Cast<AProject4Controller>(GetOwner());
+	if (PC)
+	{
+
+		UGameplayHudWidget* HUD = PC->GetMainHUDWidget();
+		if (HUD)
+		{
+			HUD->UpdateAttackSpeed(NewValue);
+		}
+	}
+}
+
+void AProject4PlayerState::CritChanceChanged(const FOnAttributeChangeData& Data)
+{
+	float NewValue = Data.NewValue;
+
+	AProject4Controller* PC = Cast<AProject4Controller>(GetOwner());
+	if (PC)
+	{
+
+		UGameplayHudWidget* HUD = PC->GetMainHUDWidget();
+		if (HUD)
+		{
+			HUD->UpdateCritChance(NewValue);
+		}
+	}
+}
+
+void AProject4PlayerState::CritDamageChanged(const FOnAttributeChangeData& Data)
+{
+	float NewValue = Data.NewValue;
+
+	AProject4Controller* PC = Cast<AProject4Controller>(GetOwner());
+	if (PC)
+	{
+
+		UGameplayHudWidget* HUD = PC->GetMainHUDWidget();
+		if (HUD)
+		{
+			HUD->UpdateCritDamage(NewValue);
 		}
 	}
 }

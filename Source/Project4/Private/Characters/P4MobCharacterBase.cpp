@@ -10,9 +10,6 @@
 #include "UI/FloatingStatusBarWidget.h"
 
 
-#define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Green,text)
-
-
 
 AP4MobCharacterBase::AP4MobCharacterBase(const class FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
