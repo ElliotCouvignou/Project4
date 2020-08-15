@@ -1,7 +1,7 @@
 // Project4 Copyright (Elliot Couvignou) Dont steal this mayne :(
 
 
-#include "P4Interactable.h"
+#include "Interactables/P4Interactable.h"
 
 // Sets default values
 AP4Interactable::AP4Interactable()
