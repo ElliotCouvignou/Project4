@@ -56,6 +56,7 @@ protected:
 	// Only use for attributes that need to be delegated (I.E. Not all Att's need to be delegated in PS)
 	FDelegateHandle BuffChangedDelegateHandle;
 	
+	/*   Resource Stat Bindings   */
 	FDelegateHandle HealthChangedDelegateHandle;
 	FDelegateHandle HealthMaxChangedDelegateHandle;
 	FDelegateHandle HealthRegenChangedDelegateHandle;
@@ -65,6 +66,18 @@ protected:
 	FDelegateHandle EnduranceChangedDelegateHandle;
 	FDelegateHandle EnduranceMaxChangedDelegateHandle;
 	FDelegateHandle EnduranceRegenChangedDelegateHandle;
+
+	/*   Defensive Stat Bindings   */
+	FDelegateHandle ArmorChangedDelegateHandle;
+	FDelegateHandle MagicResistanceChangedDelegateHandle;
+	FDelegateHandle MovementSpeedChangedDelegateHandle;
+
+	/*   Offsensive Stat Bindings   */
+	FDelegateHandle AttackPowerDelegateHandle;
+	FDelegateHandle MagicPowerChangedDelegateHandle;
+	FDelegateHandle AttackSpeedChangedDelegateHandle;
+	FDelegateHandle CritChanceChangedDelegateHandle;
+	FDelegateHandle CritDamageChangedDelegateHandle;
 
 	// Called on GE's applied to this PS
 	void OnActiveGameplayEffectApplied(UAbilitySystemComponent* Target, const FGameplayEffectSpec& SpecApplied, FActiveGameplayEffectHandle ActiveHandle);
@@ -82,6 +95,7 @@ protected:
 	// Above delegate funciton handlers
 	//xvirtual void OnBuffDebuffTagChanged(const FGameplayTag Tag, int32 NewCount);
 
+	/*   Resource Stat Callback   */
 	virtual void HealthChanged(const FOnAttributeChangeData& Data);
 	virtual void HealthMaxChanged(const FOnAttributeChangeData& Data);
 	virtual void HealthRegenChanged(const FOnAttributeChangeData& Data);
@@ -91,6 +105,18 @@ protected:
 	virtual void EnduranceChanged(const FOnAttributeChangeData& Data);
 	virtual void EnduranceMaxChanged(const FOnAttributeChangeData& Data);
 	virtual void EnduranceRegenChanged(const FOnAttributeChangeData& Data);
+
+	/*   Defensive Stat Callback   */
+	virtual void ArmorChanged(const FOnAttributeChangeData& Data);
+	virtual void MagicResistanceChanged(const FOnAttributeChangeData& Data);
+	virtual void MovementSpeedChanged(const FOnAttributeChangeData& Data);
+
+	/*   Offsensive Stat Callback   */
+	virtual void AttackPowerChanged(const FOnAttributeChangeData& Data);
+	virtual void MagicPowerChanged(const FOnAttributeChangeData& Data);
+	virtual void AttackSpeedChanged(const FOnAttributeChangeData& Data);
+	virtual void CritChanceChanged(const FOnAttributeChangeData& Data);
+	virtual void CritDamageChanged(const FOnAttributeChangeData& Data);
 
 	virtual void OnStunTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
 

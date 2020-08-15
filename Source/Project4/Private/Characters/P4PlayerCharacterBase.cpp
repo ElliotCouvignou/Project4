@@ -52,8 +52,6 @@ void AP4PlayerCharacterBase::SetupPlayerInputComponent(class UInputComponent* Pl
 	check(PlayerInputComponent);
 	PlayerInputComponent->BindAxis("CameraZoom", this, &AP4PlayerCharacterBase::CameraZoom);
 
-	PlayerInputComponent->BindAction("LeftClick", IE_Pressed, this, &AP4PlayerCharacterBase::HandleLeftClickPressed);
-	PlayerInputComponent->BindAction("LeftClick", IE_Released, this, &AP4PlayerCharacterBase::HandleLeftClickReleased);
 
 	// Bind ASC Input
 	BindASCInput();
@@ -71,17 +69,6 @@ void AP4PlayerCharacterBase::BindASCInput()
 
 		bASCInputBound = true;
 	}
-}
-
-void AP4PlayerCharacterBase::HandleLeftClickPressed()
-{
-	// TODO: fill this with handler to decide on camera rotation or target selection
-	SelectTargetFromCursor();
-}
-
-void AP4PlayerCharacterBase::HandleLeftClickReleased()
-{
-	// TODO: fill this with handler to decide on camera rotation or target selection
 }
 
 
@@ -198,10 +185,6 @@ void AP4PlayerCharacterBase::SelectTargetFromCursor()
 	}
 }
 
-void AP4PlayerCharacterBase::SelectNextNearestTarget()
-{
-	// TODO Implement Tab-style targeting, make sure to grab next nearest
-}
 
 
 /*   Replication Area   */
@@ -210,6 +193,7 @@ void AP4PlayerCharacterBase::ServerSetSelectedTarget_Implementation(AP4PlayerCha
 {
 	TargetedActor->SelectedTarget = NewSelectedTarget;
 }
+
 
 /***************************/
 /*      Camera system      */
@@ -272,6 +256,7 @@ void AP4PlayerCharacterBase::PossessedBy(AController* NewController)
 		// Tell PS to bind delegates before init
 		PS->BindAbilityDelegates();
 
+
 		// Init playerAttributes with .csv
 		InitializeAttributeSet();
 
@@ -280,8 +265,6 @@ void AP4PlayerCharacterBase::PossessedBy(AController* NewController)
 		// do startuf effects and essential ability setup
 		AddAllStartupEffects();
 
-		GiveEssentialAbilities();
-
 		// For edge cases where the PlayerState is repped before the Hero is possessed.
 		// Maybe dont use this for servers? some might still need a ref for some reason
 		AProject4Controller* PC = Cast<AProject4Controller>(GetController());
@@ -289,6 +272,8 @@ void AP4PlayerCharacterBase::PossessedBy(AController* NewController)
 		{
 			PC->CreateMainHUDWidget();
 		}
+
+		GiveEssentialAbilities();
 
 		InitFloatingStatusBarWidget();
 
@@ -317,17 +302,20 @@ void AP4PlayerCharacterBase::OnRep_PlayerState()
 		// Tell PS to bind delegates before init
 		PS->BindAbilityDelegates();
 
+
 		// Init playerAttributes with .csv
 		InitializeAttributeSet();
 
-		BindASCInput();
 
 		// For edge cases where the PlayerState is repped before the Hero is possessed.
+		// Maybe dont use this for servers? some might still need a ref for some reason
 		AProject4Controller* PC = Cast<AProject4Controller>(GetController());
 		if (PC)
 		{
 			PC->CreateMainHUDWidget();
 		}
+
+		BindASCInput();
 
 		InitFloatingStatusBarWidget();
 	}

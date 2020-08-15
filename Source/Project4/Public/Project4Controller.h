@@ -174,8 +174,18 @@ public:
 	void RemoveBuffIconFromUI_Implementation(const FGameplayTag& BuffTag);
 	bool RemoveBuffIconFromUI_Validate(const FGameplayTag& BuffTag) { return true; }
 
+	/*********************/
+	/*   Input Handlers  */
+	/*********************/
 
+	UFUNCTION(BlueprintCallable)
+		void OpenCharacterInfoMenu();
 
+	UFUNCTION(BlueprintCallable)
+		void OpenInventoryBagMenu();
+
+	UFUNCTION(BlueprintCallable)
+		void OpenSkillsMenu();
 
 protected:
 
@@ -193,6 +203,9 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "UI")
 		TSubclassOf<class UGameplayHudWidget> GameplayHUDWidgetClass;
+
+
+	virtual void SetupInputComponent() override;
 
 	// Server only
 	virtual void OnPossess(APawn* InPawn) override;

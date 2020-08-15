@@ -27,6 +27,25 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Crosshair")
 		float CrosshairScreenYOffset;
 
+	/***********************/
+	/*     Progression     */
+	/***********************/
+
+	UFUNCTION(Category = Attributes)
+		void UpdateCurrentXP(float NewXP);
+	UFUNCTION(Category = Attributes)
+		void UpdateMaxXP(float NewMaxXP);
+	UFUNCTION(Category = Attributes)
+		void UpdatePlayerLevel(float NewLevel);
+
+
+	UFUNCTION(Category = Attributes)
+		void UpdatePlayerName(const FString& NewName);
+
+
+	/********************/
+	/*     Resource     */
+	/********************/
 
 	UFUNCTION(Category = Attributes)
 		void UpdateHealth(float NewValue);
@@ -49,13 +68,32 @@ public:
 	UFUNCTION(Category = Attributes)
 		void UpdateEnduranceRegen(float NewValue);
 
-	UFUNCTION(Category = Attributes)
-		void UpdateCurrentXP(float NewXP);
-	UFUNCTION(Category = Attributes)
-		void UpdateMaxXP(float NewMaxXP);
+	/********************/
+	/*     Defensive    */
+	/********************/
 
 	UFUNCTION(Category = Attributes)
-		void UpdatePlayerLevel(float NewLevel);
+		void UpdateArmor(float NewValue);
+	UFUNCTION(Category = Attributes)
+		void UpdateMagicResistance(float NewValue);
+	UFUNCTION(Category = Attributes)
+		void UpdateMovementSpeed(float NewValue);
+
+	/********************/
+	/*     Offensive    */
+	/********************/
+
+	UFUNCTION(Category = Attributes)
+		void UpdateAttackPower(float NewValue);
+	UFUNCTION(Category = Attributes)
+		void UpdateMagicPower(float NewValue);
+	UFUNCTION(Category = Attributes)
+		void UpdateAttackSpeed(float NewValue);
+	UFUNCTION(Category = Attributes)
+		void UpdateCritChance(float NewValue);
+	UFUNCTION(Category = Attributes)
+		void UpdateCritDamage(float NewValue);
+
 
 	UFUNCTION(Category = "Ability Block")
 		void SetAbilityHotbarBlock(int32 BlockIndex, TSubclassOf<class UP4GameplayAbility> Ability);
@@ -86,6 +124,14 @@ public:
 		void RemoveBuffIconFromUI(const FGameplayTag& BuffTag);
 
 
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Input Menus")
+		void OpenCharacterInfoWidget();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Input Menus")
+		void OpenInventoryBagWidget();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Input Menus")
+		void OpenSkillsWidget();
 
 
 protected:
@@ -107,6 +153,9 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Crosshair")
 		class UCrosshairWidget* CrosshairWidget;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Crosshair")
+		class UCharacterInfoWidget* CharacterInfoWidget;
 
 
 	

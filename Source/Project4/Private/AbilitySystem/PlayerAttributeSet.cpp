@@ -12,7 +12,6 @@
 #include "Characters/Project4Character.h"
 
 
-#define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 0.5 , FColor::Green,text)
 
 UPlayerAttributeSet::UPlayerAttributeSet(const FObjectInitializer& ObjectInitializer) 
 	: Super(ObjectInitializer)
@@ -199,17 +198,7 @@ void UPlayerAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCall
 						if (Data.EffectSpec.DynamicAssetTags.HasTag(CritTag))
 						{
 							DamageNumberTags.AddTagFast(CritTag);
-						}
-						if (Data.EffectSpec.DynamicAssetTags.HasTag(PhysicalDamageTag))
-						{
-							DamageNumberTags.AddTagFast(PhysicalDamageTag);
-						}
-						else if (Data.EffectSpec.DynamicAssetTags.HasTag(MagicDamageTag))
-						{
-							DamageNumberTags.AddTagFast(MagicDamageTag);
-						}
-
-						
+						}					
 
 						/* Send collected damage data tags to client, let them do parse */
 						SourcePC->DisplayDamageNumber(FP4DamageNumber(DamageTaken, DamageNumberTags), TargetCharacter);
