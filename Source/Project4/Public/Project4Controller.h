@@ -91,6 +91,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Utility")
 		void SetPlayerCharacterClass(TSubclassOf<AP4PlayerCharacterBase> CharacterClass);
 
+	/* Calls Parent GetPlayerViewPoint, This is just exposing to BP */
+	UFUNCTION(BlueprintCallable, Category = "Utility")
+		void GetPlayerViewPointBP(FVector& out_Location, FRotator& out_Rotation);
+
 	/************************************/
 	/* Server RPC/Functions From Client */
 	/************************************/

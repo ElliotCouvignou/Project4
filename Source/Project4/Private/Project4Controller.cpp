@@ -69,6 +69,11 @@ void AProject4Controller::SetPlayerCharacterClass(TSubclassOf<AP4PlayerCharacter
 	PlayerCharacterClass = CharacterClass;
 }
 
+void AProject4Controller::GetPlayerViewPointBP(FVector& out_Location, FRotator& out_Rotation)
+{
+	GetPlayerViewPoint(out_Location, out_Rotation);
+}
+
 void AProject4Controller::ClientRequestRespawn_Implementation()
 {
 	AProject4GameMode* GM = Cast<AProject4GameMode>(GetWorld()->GetAuthGameMode());

@@ -6,6 +6,7 @@
 #include "Project4Character.h"
 #include "AbilitySystemComponent.h"
 #include "AbilitySystemInterface.h"
+#include "Interactables/P4InventoryBagComponent.h"
 #include "P4PlayerCharacterBase.generated.h"
 
 /**
@@ -24,9 +25,18 @@ class PROJECT4_API AP4PlayerCharacterBase : public AProject4Character
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 		class UCameraComponent* FollowCamera;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+		class UP4InventoryBagComponent* InventoryBagComponent;
+
 
 public:
 	AP4PlayerCharacterBase(const class FObjectInitializer& ObjectInitializer);
+
+	/***************************/
+	/* Player Inventory system */
+	/***************************/
+	UFUNCTION(BlueprintCallable)
+		UP4InventoryBagComponent* GetInventoryBagComponent() const { return InventoryBagComponent; }
 
 	/***************************/
 	/* Gameplay Ability system */
@@ -36,7 +46,7 @@ public:
 	// Abilities with new bindings. Does remove old abilities in spot if exists
 	// Adding abilities requires server control, so call server and it will replicate for us
 	// However we need client work so clients need to do this function and call servers
-	UFUNCTION(BLueprintCallable)
+	UFUNCTION(BlueprintCallable)
 		void BindAbilityToHotbarBlock(int32 BlockIndex, TSubclassOf<class UP4GameplayAbility> Ability);
 	
 	// helper for above, calls on ASC from server to do input bindings based on hotbar bindings

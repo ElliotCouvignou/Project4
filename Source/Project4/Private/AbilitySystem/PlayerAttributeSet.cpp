@@ -11,6 +11,7 @@
 #include "Project4.h"
 #include "Characters/Project4Character.h"
 
+#define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Green,text)
 
 
 UPlayerAttributeSet::UPlayerAttributeSet(const FObjectInitializer& ObjectInitializer) 
@@ -81,8 +82,6 @@ void UPlayerAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute
 	{
 		AdjustAttributeForMaxChange(Endurance, EnduranceMax, NewValue, GetEnduranceAttribute());
 	}
-
-
 	else if (Attribute == GetMovementSpeedAttribute()) {
 		UCharacterMovementComponent* CMC = Cast<UCharacterMovementComponent>(GetActorInfo()->MovementComponent);
 		if (CMC)

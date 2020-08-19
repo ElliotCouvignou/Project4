@@ -44,6 +44,8 @@ AP4PlayerCharacterBase::AP4PlayerCharacterBase(const class FObjectInitializer& O
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 
+	// Create Player Inventory Component
+	InventoryBagComponent = CreateDefaultSubobject<UP4InventoryBagComponent>(TEXT("InventoryBagComponent"));
 }
 
 void AP4PlayerCharacterBase::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
