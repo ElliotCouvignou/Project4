@@ -26,7 +26,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Visuals, meta = (AllowPrivateAccess = "true"))
 		UNiagaraComponent* NiagaraComponent;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Visuals, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Visuals, meta = (AllowPrivateAccess = "true"))
 		UStaticMeshComponent* StaticMesh;
 
 	// Called when the game starts or when spawned

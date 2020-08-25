@@ -31,7 +31,9 @@ public:
 	bool CharacterAbilitiesGiven = false;
 	bool StartupEffectsApplied = false;
 
+	/*****************/
 	/*   Delegates   */
+	/*****************/
 
 	FOnActiveGameplayEffectDurationChanged ActiveGameplayEffectDirtiedCallback;
 
@@ -44,6 +46,51 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Delegates")
 		void BroadcastAutoAttackResults(const TArray<AProject4Character*>& HitArray);
+
+	/****************************/
+	/*   BP Exposed Functions   */
+	/****************************/
+	
+	/** Checks if the ability system is currently blocking InputID. Returns true if InputID is blocked, false otherwise.  */
+	UFUNCTION(BlueprintCallable, Category = "BP Exposed")
+		bool IsAbilityInputBlocked_BP(int32 InputID) const { return IsAbilityInputBlocked(InputID); }
+	
+	/** Block or cancel blocking for specific input IDs */
+	UFUNCTION(BlueprintCallable, Category = "BP Exposed")
+		void BlockAbilityByInputID_BP(int32 InputID) { BlockAbilityByInputID(InputID); }
+	UFUNCTION(BlueprintCallable, Category = "BP Exposed")
+		void UnBlockAbilityByInputID_BP(int32 InputID) { UnBlockAbilityByInputID(InputID); }
+
+	/** Block or cancel blocking for specific ability tags */
+	UFUNCTION(BlueprintCallable, Category = "BP Exposed")
+		void BlockAbilitiesWithTags_BP(const FGameplayTagContainer& Tags) { BlockAbilitiesWithTags(Tags); }
+	UFUNCTION(BlueprintCallable, Category = "BP Exposed")
+		void UnBlockAbilitiesWithTags_BP(const FGameplayTagContainer& Tags) { UnBlockAbilitiesWithTags(Tags); }
+
+	/** Checks if the ability system is currently blocking InputID. Returns true if InputID is blocked, false otherwise.  */
+//UFUNCTION(BlueprintCallable, Category = "BP Exposed")
+//	bool IsAbilityInputBlocked_BP(int32 InputID) const { return IsAbilityInputBlocked(InputID); }
+//
+///** Block or cancel blocking for specific input IDs */
+//
+///* Client Request input block (server needs to execute) */
+//UFUNCTION(BlueprintCallable, Server, Reliable, WithValidation, Category = "BP Exposed")
+//	void ServerBlockAbilityByInputID(int32 InputID);
+//void ServerBlockAbilityByInputID_Implementation(int32 InputID) { BlockAbilityByInputID(InputID); }
+//bool ServerBlockAbilityByInputID_Validate(int32 InputID) { return true; }
+//
+///* Client Request input unblock (server needs to execute) */
+//UFUNCTION(BlueprintCallable, Server, Reliable, WithValidation, Category = "BP Exposed")
+//	void ServerUnBlockAbilityByInputID(int32 InputID);
+//void ServerUnBlockAbilityByInputID_Implementation(int32 InputID) { UnBlockAbilityByInputID(InputID); }
+//bool ServerUnBlockAbilityByInputID_Validate(int32 InputID) { return true; }
+//
+/** Block or cancel blocking for specific ability tags */
+//UFUNCTION(BlueprintCallable, Category = "BP Exposed")
+//	void BlockAbilitiesWithTags_BP(const FGameplayTagContainer& Tags) { BlockAbilitiesWithTags(Tags); }
+//UFUNCTION(BlueprintCallable, Category = "BP Exposed")
+//	void UnBlockAbilitiesWithTags_BP(const FGameplayTagContainer& Tags) { UnBlockAbilitiesWithTags(Tags); }
+
 
 	/* Virtual Overrides */
 

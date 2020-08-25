@@ -22,10 +22,11 @@ protected:
 
 
 	/* created on spawn for handoffs */
-	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	UPROPERTY(BlueprintReadOnly, Replicated, EditAnywhere)
 		FInventoryItemStruct InventoryItemStruct;
 
-
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
 
 public:
 
@@ -34,16 +35,19 @@ public:
 	UFUNCTION(BlueprintCallable)
 		virtual void GrantUniqueItemAbility();
 
-	UFUNCTION(BlueprintCallable)
-		virtual void OnItemEquipped();
-
-	UFUNCTION(BlueprintCallable)
-		virtual void OnItemUnequipped();
-
 	/* OnInteract == Pickup item */
 		virtual void OnInteract(const AP4PlayerCharacterBase* SourceActor, bool& Result) override;
 
+	/* Used on actor spawn to set visuals and item info */
+	UFUNCTION(BlueprintCallable)
+		void SetItemStructAndStaticMesh(const FInventoryItemStruct& InputInventoryItemStruct);
 
 	UFUNCTION(BlueprintCallable)
 		FInventoryItemStruct& GetInventoryItemStructt() { return InventoryItemStruct; }
+
+	UFUNCTION(BlueprintCallable)
+		void UpdateInventoryItemStruct(const FInventoryItemStruct& InputIventoryItemStruct) { InventoryItemStruct = InputIventoryItemStruct; }
+
+
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 };

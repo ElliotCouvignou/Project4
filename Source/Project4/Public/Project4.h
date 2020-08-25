@@ -43,6 +43,7 @@ enum class EP4AbilityInputID : uint8
 	WeaponAttack    UMETA(DisplayName = "WeaponAttack"), // LMB "Auto Attack" bind
 	SpecialAttack   UMETA(DisplayName = "SpecialAttack"), // RMB bind
 	TabTarget       UMETA(DisplayName = "TabTarget"),
+	ShowMouse		UMETA(DisplayName = "ShowMouse"),	
 	ChangeWeapon	UMETA(DisplayName = "ChangeWeapon"),
 	Sprint			UMETA(DisplayName = "Sprint")
 	

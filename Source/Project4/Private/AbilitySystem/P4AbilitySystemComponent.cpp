@@ -23,7 +23,6 @@ void UP4AbilitySystemComponent::BroadcastAutoAttackResults(const TArray<AProject
 	}
 }
 
-
 bool UP4AbilitySystemComponent::SetGameplayEffectDurationWithHandle(const FActiveGameplayEffectHandle& Handle, float NewDuration)
 {
 	if (!Handle.IsValid())

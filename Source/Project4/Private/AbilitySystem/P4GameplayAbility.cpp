@@ -21,6 +21,7 @@ UP4GameplayAbility::UP4GameplayAbility()
 	ActivationBlockedTags.AddTag(FGameplayTag::RequestGameplayTag(FName("State.Dead")));
 	ActivationBlockedTags.AddTag(FGameplayTag::RequestGameplayTag(FName("Buffs.Negative.Stunned")));
 	ActivationBlockedTags.AddTag(FGameplayTag::RequestGameplayTag(FName("Buffs.Negative.Silenced")));
+	ActivationBlockedTags.AddTag(FGameplayTag::RequestGameplayTag(FName("State.DisabledAbilities")));
 	
 }
 

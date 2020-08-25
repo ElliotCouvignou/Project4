@@ -8,14 +8,21 @@
 
 
 // Sets default values
-AP4Interactable::AP4Interactable()
+AP4Interactable::AP4Interactable() : Super()
 {
+	// Enable replication and relevancy
+	bReplicates = true;
+	bAlwaysRelevant = true;
+
  	//  turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
 	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh"));
 	StaticMesh->SetupAttachment(RootComponent);
 	StaticMesh->SetCollisionProfileName(TEXT("Interactables"));
+	
+	//RootComponent->SetIsReplicated(true);
+	StaticMesh->SetIsReplicated(true);
 
 	//NiagaraComponent = CreateDefaultSubobject<UNiagaraComponent>(TEXT("NiagaraComponent"));
 	//NiagaraComponent->SetupAttachment(RootComponent);
@@ -42,7 +49,6 @@ void AP4Interactable::StartNiagaraEffect()
 {
 	if (/*NiagaraComponent &&*/ NiagaraEffect)
 	{
-		print(FString("Activate Effect"));
 		NiagaraComponent = UNiagaraFunctionLibrary::SpawnSystemAttached(NiagaraEffect, RootComponent, FName(TEXT("None")), FVector(0.f, 0.f, 0.f), FRotator(0.f, 0.f, 0.f), EAttachLocation::KeepRelativeOffset, true);
 	}
 }
