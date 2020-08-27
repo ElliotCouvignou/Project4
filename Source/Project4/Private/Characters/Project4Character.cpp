@@ -64,9 +64,11 @@ AProject4Character::AProject4Character(const class FObjectInitializer& ObjectIni
 	/* add RH and LH weapon Skeletal meshes socketed to hands */
 	MeshLH = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("MeshLH"));
 	MeshLH->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, FName(TEXT("Hand_L_Socket")));
+	MeshLH->SetIsReplicated(true);
 
 	MeshRH = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("MeshRH"));
 	MeshRH->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, FName(TEXT("hand_r_Socket")));
+	MeshRH->SetIsReplicated(true);
 
 	UIFloatingStatusBarComponent = CreateDefaultSubobject<UWidgetComponent>(FName("UIFloatingStatusBarComponent"));
 	UIFloatingStatusBarComponent->SetupAttachment(RootComponent);
@@ -188,6 +190,40 @@ void AProject4Character::InitFloatingStatusBarWidget()
 UFloatingStatusBarWidget* AProject4Character::GetFloatingStatusBarWidget()
 {
 	return UIFloatingStatusBar;
+}
+
+void AProject4Character::SetRightHandWeaponInfo(const UItemWeaponDataAsset* WeaponDataAsset)
+{
+	if (WeaponDataAsset && HasAuthority())
+	{
+		if (MeshRH)
+		{
+			USkeletalMesh* SM = WeaponDataAsset->WeaponSkeletalMesh;
+			if (SM)
+			{
+				MeshRH->SetSkeletalMesh(SM);
+			}
+		}
+		GetAttributeSet()->SetRightHandAttackInterval(WeaponDataAsset->AttackInterval);
+	}
+}
+
+void AProject4Character::SetLeftHandWeaponInfo(const UItemWeaponDataAsset* WeaponDataAsset)
+{
+	if (WeaponDataAsset && HasAuthority())
+	{
+		if (MeshLH)
+		{
+			USkeletalMesh* SM = WeaponDataAsset->WeaponSkeletalMesh;
+			if (SM)
+			{
+				MeshLH->SetSkeletalMesh(SM);
+			}
+
+		}
+		GetAttributeSet()->SetLeftHandAttackInterval(WeaponDataAsset->AttackInterval);
+	}
+	
 }
 
 void AProject4Character::PlayStunnedAnimationMontage()

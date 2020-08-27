@@ -6,6 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "Interactables/ItemBaseDataAsset.h"
 #include "Interactables/ItemArmorDataAsset.h"
+#include "Interactables/ItemWeaponDataAsset.h"
 #include "P4InventoryBagComponent.generated.h"
 
 
@@ -58,6 +59,27 @@ struct FInventoryItemStruct
 	}
 };
 
+/* each enum represents a slot in ui character equip slots */
+UENUM(BlueprintType)
+enum class EEquipSlotType : uint8
+{
+	// 0 None
+	None			UMETA(DisplayName = "None"),  // "None" for empty slots (this shouldnt be necessary at this depth)
+	Helmet			UMETA(DispalyName = "Helmet"),
+	Necklace		UMETA(DispalyName = "Necklace"),
+	Shoulder		UMETA(DispalyName = "Shoulder"),
+	Chest			UMETA(DispalyName = "Chest"),
+	Back			UMETA(DispalyName = "Back"),
+	Gloves			UMETA(DispalyName = "Gloves"),
+	Belt			UMETA(DispalyName = "Belt"),
+	Legs			UMETA(DispalyName = "Legs"),
+	Boots			UMETA(DispalyName = "Boots"),
+	RingLeft		UMETA(DispalyName = "RingLeft"),
+	RingRight		UMETA(DispalyName = "RingRight"),
+	Bag				UMETA(DispalyName = "Bag"),
+	WeaponLeft		UMETA(DisplayName = "WeaponLeft"),
+	WeaponRight		UMETA(DisplayName = "WeaponRight")
+};
 
 USTRUCT(BlueprintType)
 struct FEquippmentSlotStruct
@@ -67,34 +89,28 @@ struct FEquippmentSlotStruct
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Essentials")
 		FInventoryItemStruct InventoryItemStruct;
 
+	// Pretty sure storing the enum is unecessary with get/set functions doing the work for us 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Essentials")
-		EArmorType SlotArmorType;
+		EEquipSlotType EquipSlotType;
 
-	/* if EArmorType::Ringr then this variable matters */
+	/* used for quick access to remove attribute bonuses on unequip */
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Essentials")
-		bool bIsRightFinger;
-
-	// TODO: add weapon type enum (left/right/both) make sure if weapon enum exists then set armor to none vice versa
+		FActiveGameplayEffectHandle EqippedEffectHandle;
 
 	FEquippmentSlotStruct()
 	{
-		bIsRightFinger = false;
+
 		InventoryItemStruct = FInventoryItemStruct();
-		SlotArmorType = EArmorType::None;
+		EquipSlotType = EEquipSlotType::None;
+		EqippedEffectHandle = FActiveGameplayEffectHandle();
 	}
 
-	FEquippmentSlotStruct(EArmorType ArmorType)
-	{
-		bIsRightFinger = false;
-		InventoryItemStruct = FInventoryItemStruct();
-		SlotArmorType = ArmorType;
-	}
 
-	FEquippmentSlotStruct(EArmorType ArmorType, bool RightFinger)
+	FEquippmentSlotStruct(EEquipSlotType EquipType)
 	{
 		InventoryItemStruct = FInventoryItemStruct();
-		SlotArmorType = ArmorType;
-		bIsRightFinger = RightFinger;
+		EquipSlotType = EquipType;
+		EqippedEffectHandle = FActiveGameplayEffectHandle();
 	}
 };
 
@@ -104,6 +120,7 @@ struct FEquippedItemsStruct
 {
 	GENERATED_USTRUCT_BODY()
 
+	/* Armor stuff */
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Essentials")
 		FEquippmentSlotStruct HelmetSlot;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Essentials")
@@ -129,21 +146,29 @@ struct FEquippedItemsStruct
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Essentials")
 		FEquippmentSlotStruct BagSlot;
 
+	/* Weapon Stuff */
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Essentials")
+		FEquippmentSlotStruct WeaponLeftSlot;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Essentials")
+		FEquippmentSlotStruct WeaponRightSlot;
+
 	// TODO: add weapon type enum (left/right/both) make sure if weapon enum exists then set armor to none vice versa
 	FEquippedItemsStruct()
 	{
-		HelmetSlot = FEquippmentSlotStruct(EArmorType::Helmet);
-		NecklaceSlot = FEquippmentSlotStruct(EArmorType::Necklace);
-		ShoulderSlot = FEquippmentSlotStruct(EArmorType::Shoulder);
-		ChestSlot = FEquippmentSlotStruct(EArmorType::Chest);
-		BackSlot = FEquippmentSlotStruct(EArmorType::Back);
-		GlovesSlot = FEquippmentSlotStruct(EArmorType::Gloves);
-		BeltSlot = FEquippmentSlotStruct(EArmorType::Belt);
-		LegsSlot = FEquippmentSlotStruct(EArmorType::Legs);
-		BootsSlot = FEquippmentSlotStruct(EArmorType::Boots);
-		RingRightSlot = FEquippmentSlotStruct(EArmorType::Ring, true);
-		RingLeftSlot = FEquippmentSlotStruct(EArmorType::Ring, false);
-		BagSlot = FEquippmentSlotStruct(EArmorType::Bag);
+		HelmetSlot = FEquippmentSlotStruct(EEquipSlotType::Helmet);
+		NecklaceSlot = FEquippmentSlotStruct(EEquipSlotType::Necklace);
+		ShoulderSlot = FEquippmentSlotStruct(EEquipSlotType::Shoulder);
+		ChestSlot = FEquippmentSlotStruct(EEquipSlotType::Chest);
+		BackSlot = FEquippmentSlotStruct(EEquipSlotType::Back);
+		GlovesSlot = FEquippmentSlotStruct(EEquipSlotType::Gloves);
+		BeltSlot = FEquippmentSlotStruct(EEquipSlotType::Belt);
+		LegsSlot = FEquippmentSlotStruct(EEquipSlotType::Legs);
+		BootsSlot = FEquippmentSlotStruct(EEquipSlotType::Boots);
+		RingRightSlot = FEquippmentSlotStruct(EEquipSlotType::RingLeft);
+		RingLeftSlot = FEquippmentSlotStruct(EEquipSlotType::RingRight);
+		BagSlot = FEquippmentSlotStruct(EEquipSlotType::Bag);
+		WeaponLeftSlot = FEquippmentSlotStruct(EEquipSlotType::WeaponLeft);
+		WeaponRightSlot = FEquippmentSlotStruct(EEquipSlotType::WeaponRight);
 	}
 };
 
@@ -190,13 +215,20 @@ protected:
 	// Helper for placing items in inventory
 	void FindFirstEmptySpot(bool& WasSuccessful, int& Index);
 
+	/*******************/
+	/*     Utility     */
+	/*******************/
+	// Utility codes are bulky and so are shoved to the bottom of .cpp
+	UFUNCTION(Category = "Utility")
+		EEquipSlotType ArmorTypeToEquipSlotType(EArmorType ArmorType, bool IsRightFinger);
+
 	// isntead of for looping get reference to equipslot with hardcoded indexes (REQUIRES MANUAL MAINTENANCE FOR NEW/CHANGED SLOTS)
 	UFUNCTION(Category = "Utility")
-		bool GetEquipSlotInfo(EArmorType ArmorType, bool IsRightFinger, FEquippmentSlotStruct& ReturnSlot);
+		bool GetEquipSlotInfo(EEquipSlotType EquipSlotType, FEquippmentSlotStruct& ReturnSlot);
 	
 	// Similar structure to above but sets its info with inventoryItemStruct
 	UFUNCTION(Category = "Utility")
-		bool SetEquipSlotInfo(EArmorType ArmorType, bool IsRightFinger, FInventoryItemStruct ItemStruct);
+		bool SetEquipSlotInfo(EEquipSlotType EquipSlotType, FInventoryItemStruct ItemStruct, FActiveGameplayEffectHandle ActiveGEHandle);
 
 public:	
 
@@ -266,17 +298,30 @@ public:
 	void ServerDropItemFromInventory_Implementation(int InventoryIndex);
 	bool ServerDropItemFromInventory_Validate(int InventoryIndex) { return true; }
 
+
+	/**** EQUIPPING ITEMS FROM INVENTORY ****/
+
 	/* client request equip item (from inventory widget)  */
+	/* bool Used for weapons and rings for which side user inputted (right or left) */
 	UFUNCTION(BlueprintCallable, Server, Reliable, WithValidation, Category = "Utility")
-		void ServerEquipItemFromInventory(int InventoryIndex, bool IsRightFinger);
-	void ServerEquipItemFromInventory_Implementation(int InventoryIndex, bool IsRightFinger);
-	bool ServerEquipItemFromInventory_Validate(int InventoryIndex, bool IsRightFinger) { return true; }
+		void ServerEquipItemFromInventory(int InventoryIndex, bool IsRightSide);
+	void ServerEquipItemFromInventory_Implementation(int InventoryIndex, bool IsRightSide);
+	bool ServerEquipItemFromInventory_Validate(int InventoryIndex, bool IsRightSide) { return true; }
+
+	/* Server helper function for doing ArmorType Equip */
+	void EquipArmorItemFromInventory(int InventoryIndex, bool IsRightFinger, FInventoryItemStruct& Item);
+
+	/* Server Helper funciton for doing weapontype Equip */
+	void EquipWeaponItemFromInventory(int InventoryIndex, bool IsRightHand, FInventoryItemStruct& Item);
+
+
+	/**** UNEQUIPPING ITEMS FROM INVENTORY ****/
 
 	/* client request Unequip item (from Characterinfo widget), if ring then use bool to specify finger, else ignore  */
 	UFUNCTION(BlueprintCallable, Server, Reliable, WithValidation, Category = "Utility")
-		void ServerUnEquipItemFromInventory(EArmorType ArmorType, bool IsRightFinger);
-	void ServerUnEquipItemFromInventory_Implementation(EArmorType ArmorType, bool IsRightFinger);
-	bool ServerUnEquipItemFromInventory_Validate(EArmorType ArmorType, bool IsRightFinger) { return true; }
+		void ServerUnEquipItemFromInventory(EEquipSlotType EquipSlotType);
+	void ServerUnEquipItemFromInventory_Implementation(EEquipSlotType EquipSlotType);
+	bool ServerUnEquipItemFromInventory_Validate(EEquipSlotType EquipSlotType) { return true; }
 
 
 	/* Overrides */

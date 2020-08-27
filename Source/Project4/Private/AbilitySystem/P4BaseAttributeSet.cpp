@@ -11,6 +11,7 @@
 #include "Project4.h"
 #include "Characters/Project4Character.h"
 
+#define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Green,text)
 
 
 UP4BaseAttributeSet::UP4BaseAttributeSet(const FObjectInitializer& ObjectInitializer)
@@ -21,20 +22,28 @@ UP4BaseAttributeSet::UP4BaseAttributeSet(const FObjectInitializer& ObjectInitial
 
 void UP4BaseAttributeSet::PreAttributeBaseChange(const FGameplayAttribute& Attribute, float& NewValue) const
 {
+	Super::PreAttributeBaseChange(Attribute, NewValue);
 }
 
 void UP4BaseAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
 {
+	Super::PreAttributeChange(Attribute, NewValue);
+
 }
 
 void UP4BaseAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
 {
+	Super::PostGameplayEffectExecute(Data);
+
 }
 
 void UP4BaseAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
 }
 
 void UP4BaseAttributeSet::AdjustAttributeForMaxChange(FGameplayAttributeData& AffectedAttribute, const FGameplayAttributeData& MaxAttribute, float NewMaxValue, const FGameplayAttribute& AffectedAttributeProperty)
 {
+	
 }

@@ -1,17 +1,19 @@
 // Project4 Copyright (Elliot Couvignou) Dont steal this mayne :(
 
 
-#include "Interactables/ItemArmorDataAsset.h"
+#include "Interactables/ItemWeaponDataAsset.h"
 
-UItemArmorDataAsset::UItemArmorDataAsset()
+
+UItemWeaponDataAsset::UItemWeaponDataAsset()
 	: Super()
 {
-	// Set base info thats consistent for all armor items
+	// Set base info thats consistent for all weapon items
 	ItemInfo.bIsStackable = false;
-	ItemInfo.ItemType = EItemType::Armor;
+	ItemInfo.ItemType = EItemType::Weapon;
 }
 
-void UItemArmorDataAsset::GetAttributeNamesAndValuesFromGameplayEffect(TArray<FAttributeDataUIStruct>& OutDataArray)
+
+void UItemWeaponDataAsset::GetAttributeNamesAndValuesFromGameplayEffect(TArray<FAttributeDataUIStruct>& OutDataArray)
 {
 	if (!EquippedGameplayEffect)
 		return;

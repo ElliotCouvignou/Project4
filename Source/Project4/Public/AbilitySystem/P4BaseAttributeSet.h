@@ -56,6 +56,9 @@ public:
 	// This is the same idea Dota2 Uses for Health/Mana
 	virtual void AdjustAttributeForMaxChange(FGameplayAttributeData& AffectedAttribute, const FGameplayAttributeData& MaxAttribute, float NewMaxValue, const FGameplayAttribute& AffectedAttributeProperty);
 
+
+	/****************/
+
 	// all attributes are essentially floats, can still have int behavior thought
 
 	////////////////////////////////////
@@ -183,6 +186,21 @@ public:
 	ATTRIBUTE_ACCESSORS(UP4BaseAttributeSet, MagicPower)
 		UFUNCTION()
 		void OnRep_MagicPower(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, MagicPower, Previous); }
+
+	/* Interval of main hand (right hand) auto attack */
+	UPROPERTY(Category = "Player Attributes | Offensive", EditAnywhere, ReplicatedUsing = OnRep_RightHandAttackInterval, BlueprintReadWrite)
+		FGameplayAttributeData RightHandAttackInterval;
+	ATTRIBUTE_ACCESSORS(UP4BaseAttributeSet, RightHandAttackInterval)
+		UFUNCTION()
+		void OnRep_RightHandAttackInterval(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, RightHandAttackInterval, Previous); }
+
+	/* */
+	UPROPERTY(Category = "Player Attributes | Leftensive", EditAnywhere, ReplicatedUsing = OnRep_LeftHandAttackInterval, BlueprintReadWrite)
+		FGameplayAttributeData LeftHandAttackInterval;
+	ATTRIBUTE_ACCESSORS(UP4BaseAttributeSet, LeftHandAttackInterval)
+		UFUNCTION()
+		void OnRep_LeftHandAttackInterval(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, LeftHandAttackInterval, Previous); }
+
 
 	/* % decimal measurement for increase attack speed (e.g 0.3 = 30%), applied to weapon attack interval for total auto attack rate */
 	UPROPERTY(Category = "Player Attributes | Offensive", EditAnywhere, ReplicatedUsing = OnRep_AttackSpeed, BlueprintReadWrite)

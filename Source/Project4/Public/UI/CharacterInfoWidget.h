@@ -19,7 +19,7 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 		void UpdatePlayerName(const FString& NewName);
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
-		void UpdatePlayerLevel(float NewLevel);
+		void UpdatePlayerLevel();
 
 
 	/******************/
@@ -27,41 +27,54 @@ public:
 	/******************/
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
-		void UpdateHealthMax(float NewValue);
+		void UpdateHealthMax();
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
-		void UpdateHealthRegen(float NewValue);
+		void UpdateHealthRegen();
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
-		void UpdateManaMax(float NewValue);
+		void UpdateManaMax();
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
-		void UpdateManaRegen(float NewValue);
+		void UpdateManaRegen();
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
-		void UpdateEnduranceMax(float NewValue);
+		void UpdateEnduranceMax();
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
-		void UpdateEnduranceRegen(float NewValue);
+		void UpdateEnduranceRegen();
+
+	/******************/
+	/*    Base att    */
+	/******************/
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+		void UpdateStrength();
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+		void UpdateDexterity();
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+		void UpdateIntelligence();
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+		void UpdateSpirit();
 
 	/********************/
 	/*     Defensive    */
 	/********************/
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
-		void UpdateArmor(float NewValue);
+		void UpdateArmor();
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
-		void UpdateMagicResistance(float NewValue);
+		void UpdateMagicResistance();
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
-		void UpdateMovementSpeed(float NewValue);
+		void UpdateMovementSpeed();
 
 	/********************/
 	/*     Offensive    */
 	/********************/
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
-		void UpdateAttackPower(float NewValue);
+		void UpdateAttackPower();
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
-		void UpdateMagicPower(float NewValue);
+		void UpdateMagicPower();
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
-		void UpdateAttackSpeed(float NewValue);
+		void UpdateAttackSpeed();
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
-		void UpdateCritChance(float NewValue);
+		void UpdateCritChance();
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
-		void UpdateCritDamage(float NewValue);
+		void UpdateCritDamage();
 };

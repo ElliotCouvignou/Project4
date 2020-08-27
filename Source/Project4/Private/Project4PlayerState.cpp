@@ -80,21 +80,25 @@ void AProject4PlayerState::BindAbilityDelegates()
 		EnduranceRegenChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetEnduranceRegenAttribute()).AddUObject(this, &AProject4PlayerState::EnduranceRegenChanged);
 
 		/* following Delegates are UI ONLY, dont waste server's time */
-		if (!HasAuthority())
-		{
-			/*   Defensive Stat Bindings   */
-			ArmorChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetArmorAttribute()).AddUObject(this, &AProject4PlayerState::ArmorChanged);
-			MagicResistanceChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetMagicResistanceAttribute()).AddUObject(this, &AProject4PlayerState::MagicResistanceChanged);
-			MovementSpeedChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetMovementSpeedAttribute()).AddUObject(this, &AProject4PlayerState::MovementSpeedChanged);
+		/*   Base Stat Bindings   */
+		StrengthChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetStrengthAttribute()).AddUObject(this, &AProject4PlayerState::StrengthChanged);
+		DexterityChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetDexterityAttribute()).AddUObject(this, &AProject4PlayerState::DexterityChanged);
+		IntelligenceChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetIntelligenceAttribute()).AddUObject(this, &AProject4PlayerState::IntelligenceChanged);
+		SpiritChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetSpiritAttribute()).AddUObject(this, &AProject4PlayerState::SpiritChanged);
 
-			/*   Offsensive Stat Bindings   */
-			AttackPowerDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetAttackPowerAttribute()).AddUObject(this, &AProject4PlayerState::AttackPowerChanged);
-			MagicPowerChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetMagicPowerAttribute()).AddUObject(this, &AProject4PlayerState::MagicPowerChanged);
-			AttackSpeedChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetAttackSpeedAttribute()).AddUObject(this, &AProject4PlayerState::AttackSpeedChanged);
-			CritChanceChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetCritChanceAttribute()).AddUObject(this, &AProject4PlayerState::CritChanceChanged);
-			CritDamageChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetCritDamageAttribute()).AddUObject(this, &AProject4PlayerState::CritDamageChanged);
+		/*   Defensive Stat Bindings   */
+		ArmorChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetArmorAttribute()).AddUObject(this, &AProject4PlayerState::ArmorChanged);
+		MagicResistanceChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetMagicResistanceAttribute()).AddUObject(this, &AProject4PlayerState::MagicResistanceChanged);
+		MovementSpeedChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetMovementSpeedAttribute()).AddUObject(this, &AProject4PlayerState::MovementSpeedChanged);
 
-		}
+		/*   Offsensive Stat Bindings   */
+		AttackPowerDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetAttackPowerAttribute()).AddUObject(this, &AProject4PlayerState::AttackPowerChanged);
+		MagicPowerChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetMagicPowerAttribute()).AddUObject(this, &AProject4PlayerState::MagicPowerChanged);
+		AttackSpeedChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetAttackSpeedAttribute()).AddUObject(this, &AProject4PlayerState::AttackSpeedChanged);
+		CritChanceChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetCritChanceAttribute()).AddUObject(this, &AProject4PlayerState::CritChanceChanged);
+		CritDamageChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetCritDamageAttribute()).AddUObject(this, &AProject4PlayerState::CritDamageChanged);
+		
+
 		AbilitySystemComponent->RegisterGameplayTagEvent(FGameplayTag::RequestGameplayTag(FName("Buffs.Negative.Stunned")), EGameplayTagEventType::NewOrRemoved).AddUObject(this, &AProject4PlayerState::OnStunTagChanged);
 	}
 }
@@ -206,6 +210,58 @@ void AProject4PlayerState::OnBuffGameplayEffectStackChanged(FActiveGameplayEffec
 	}
 }
 
+
+void AProject4PlayerState::StrengthChanged(const FOnAttributeChangeData& Data)
+{
+	AProject4Controller* PC = Cast<AProject4Controller>(GetOwner());
+	if (PC)
+	{
+		UGameplayHudWidget* HUD = PC->GetMainHUDWidget();
+		if (HUD)
+		{
+			HUD->UpdateStrength(Data.NewValue);
+		}
+	}
+}
+
+void AProject4PlayerState::DexterityChanged(const FOnAttributeChangeData& Data)
+{
+	AProject4Controller* PC = Cast<AProject4Controller>(GetOwner());
+	if (PC)
+	{
+		UGameplayHudWidget* HUD = PC->GetMainHUDWidget();
+		if (HUD)
+		{
+			HUD->UpdateDexterity(Data.NewValue);
+		}
+	}
+}
+
+void AProject4PlayerState::IntelligenceChanged(const FOnAttributeChangeData& Data)
+{
+	AProject4Controller* PC = Cast<AProject4Controller>(GetOwner());
+	if (PC)
+	{
+		UGameplayHudWidget* HUD = PC->GetMainHUDWidget();
+		if (HUD)
+		{
+			HUD->UpdateIntelligence(Data.NewValue);
+		}
+	}
+}
+
+void AProject4PlayerState::SpiritChanged(const FOnAttributeChangeData& Data)
+{
+	AProject4Controller* PC = Cast<AProject4Controller>(GetOwner());
+	if (PC)
+	{
+		UGameplayHudWidget* HUD = PC->GetMainHUDWidget();
+		if (HUD)
+		{
+			HUD->UpdateSpirit(Data.NewValue);
+		}
+	}
+}
 
 void AProject4PlayerState::HealthChanged(const FOnAttributeChangeData& Data)
 {
@@ -508,7 +564,7 @@ void AProject4PlayerState::MagicPowerChanged(const FOnAttributeChangeData& Data)
 void AProject4PlayerState::AttackSpeedChanged(const FOnAttributeChangeData& Data)
 {
 	float NewValue = Data.NewValue;
-
+	
 	AProject4Controller* PC = Cast<AProject4Controller>(GetOwner());
 	if (PC)
 	{

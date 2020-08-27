@@ -77,6 +77,10 @@ struct FItemBaseInfoStruct
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Essentials")
 		int MaxStackCount;
 
+	/* Level requirement to use/wear item (can be left empty if irrelevant) */
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Essentials")
+		int LevelRequirement;
+
 	/* Item ID for every item type (e.g all 'feathers' have same ItemID */
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Essentials")
 		int32 ItemID;
@@ -93,6 +97,7 @@ struct FItemBaseInfoStruct
 		bIsStackable = false;
 		ItemWeight = 0.f;
 		MaxStackCount = 0.f;
+		LevelRequirement = 0;
 		ItemID = -1;
 	}
 
@@ -108,7 +113,33 @@ struct FItemBaseInfoStruct
 		bIsStackable = Other.bIsStackable;
 		ItemWeight = Other.ItemWeight;
 		MaxStackCount = Other.MaxStackCount;
+		LevelRequirement = Other.LevelRequirement;
 		ItemID = Other.ItemID;
+	}
+};
+
+/* info used in inherited classes as BP readable struct on GE attr changes */
+USTRUCT(BlueprintType)
+struct FAttributeDataUIStruct
+{
+	GENERATED_USTRUCT_BODY()
+
+		UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Essentials")
+		FString AttributeName;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Essentials")
+		float AttributeValue;
+
+	FAttributeDataUIStruct()
+	{
+		AttributeName = FString();
+		AttributeValue = 0.f;
+	}
+
+	FAttributeDataUIStruct(FString Name, float Value)
+	{
+		AttributeName = Name;
+		AttributeValue = Value;
 	}
 };
 
@@ -123,11 +154,14 @@ class PROJECT4_API UItemBaseDataAsset : public UDataAsset
 
 public:
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = AbilitySet)
+	UItemBaseDataAsset();
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Item")
 		FItemBaseInfoStruct	ItemInfo;
+
 
 	/* Attribute Set Data Table for Attribute Bonuses
 		Can Be left empty */
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Attributes)
-		UDataTable* AttrDataTable;
+	//UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Attributes)
+	//	UDataTable* AttrDataTable;
 };

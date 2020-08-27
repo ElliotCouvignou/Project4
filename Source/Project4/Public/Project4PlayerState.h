@@ -56,6 +56,12 @@ protected:
 	// Only use for attributes that need to be delegated (I.E. Not all Att's need to be delegated in PS)
 	FDelegateHandle BuffChangedDelegateHandle;
 	
+	/*   Base Stat Bindings   */
+	FDelegateHandle StrengthChangedDelegateHandle;
+	FDelegateHandle DexterityChangedDelegateHandle;
+	FDelegateHandle IntelligenceChangedDelegateHandle;
+	FDelegateHandle SpiritChangedDelegateHandle;
+
 	/*   Resource Stat Bindings   */
 	FDelegateHandle HealthChangedDelegateHandle;
 	FDelegateHandle HealthMaxChangedDelegateHandle;
@@ -94,6 +100,11 @@ protected:
 
 	// Above delegate funciton handlers
 	//xvirtual void OnBuffDebuffTagChanged(const FGameplayTag Tag, int32 NewCount);
+	/*   Base Stat Callback   */
+	virtual void StrengthChanged(const FOnAttributeChangeData& Data);
+	virtual void DexterityChanged(const FOnAttributeChangeData& Data);
+	virtual void IntelligenceChanged(const FOnAttributeChangeData& Data);
+	virtual void SpiritChanged(const FOnAttributeChangeData& Data);
 
 	/*   Resource Stat Callback   */
 	virtual void HealthChanged(const FOnAttributeChangeData& Data);

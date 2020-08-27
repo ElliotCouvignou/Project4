@@ -3,9 +3,13 @@
 
 #include "Interactables/P4InventoryBagComponent.h"
 #include "Engine/World.h"
-#include "Interactables/P4ItemBaseActor.h"
 #include "Kismet/GameplayStatics.h"
 #include "Containers/Array.h"
+
+#include "Characters/Project4Character.h"
+#include "Interactables/P4ItemBaseActor.h"
+#include "Interactables/ItemArmorDataAsset.h"
+#include "AbilitySystem/EquipItemGameplayEffect.h"
 
 #define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Green,text)
 
@@ -66,188 +70,7 @@ void UP4InventoryBagComponent::InitializeEmptyEquippment()
 
 }
 
-bool UP4InventoryBagComponent::GetEquipSlotInfo(EArmorType ArmorType, bool IsRightFinger, FEquippmentSlotStruct& ReturnSlot)
-{
-	// These hardcoded values should reflect IntiializeEmptyEquippment order
-	if (ArmorType == EArmorType::Helmet) {
-		ReturnSlot = EquippmentSlots.HelmetSlot;
-		return true;
-	}
-	else if (ArmorType == EArmorType::Necklace) {
-		ReturnSlot = EquippmentSlots.NecklaceSlot;
-		return true;
-	}
-	else if (ArmorType == EArmorType::Shoulder) {
-		ReturnSlot = EquippmentSlots.ShoulderSlot;
-		return true;
-	}
-	else if (ArmorType == EArmorType::Chest) {
-		ReturnSlot = EquippmentSlots.ChestSlot;
-		return true;
-	}
-	else if (ArmorType == EArmorType::Back) {
-		ReturnSlot = EquippmentSlots.BackSlot;
-		return true;
-	}
-	else if (ArmorType == EArmorType::Gloves) {
-		ReturnSlot = EquippmentSlots.GlovesSlot;
-		return true;
-	}
-	else if (ArmorType == EArmorType::Belt) {
-		ReturnSlot = EquippmentSlots.BeltSlot;
-		return true;
-	}
-	else if (ArmorType == EArmorType::Legs) {
-		ReturnSlot = EquippmentSlots.LegsSlot;
-		return true;
-	}
-	else if (ArmorType == EArmorType::Boots) {
-		ReturnSlot = EquippmentSlots.BootsSlot;
-		return true;
-	}
-	else if (ArmorType == EArmorType::Ring && IsRightFinger == true) {
-		ReturnSlot = EquippmentSlots.RingRightSlot;
-		return true;
-	}
-	else if (ArmorType == EArmorType::Ring && IsRightFinger == false) {
-		ReturnSlot = EquippmentSlots.RingLeftSlot;
-		return true;
-	}
-	else if (ArmorType == EArmorType::Bag) {
-		ReturnSlot = EquippmentSlots.BagSlot;
-		return true;
-	}
 
-	return false;
-}
-
-bool UP4InventoryBagComponent::SetEquipSlotInfo(EArmorType ArmorType, bool IsRightFinger, FInventoryItemStruct ItemStruct)
-{
-	// These hardcoded values should reflect IntiializeEmptyEquippment order
-	if (ArmorType == EArmorType::Helmet) {
-		EquippmentSlots.HelmetSlot.InventoryItemStruct = FInventoryItemStruct(ItemStruct);
-		OnEquippmentSlotUpdated.Broadcast(EquippmentSlots.HelmetSlot);
-		ClientBroadcastEquippmentUpdateDelegate(EquippmentSlots.HelmetSlot);
-		//if (EquippmentSlots.HelmetSlot.InventoryItemStruct.ItemBaseDataAsset)
-		//	print(FString("Set Helmet with " + EquippmentSlots.HelmetSlot.InventoryItemStruct.ItemBaseDataAsset->ItemInfo.ItemName));
-		//else
-		//	print(FString("Set Helmet with Empty"));
-		return true;
-	}
-	else if (ArmorType == EArmorType::Necklace) {
-		EquippmentSlots.NecklaceSlot.InventoryItemStruct = FInventoryItemStruct(ItemStruct);
-		OnEquippmentSlotUpdated.Broadcast(EquippmentSlots.NecklaceSlot);
-		ClientBroadcastEquippmentUpdateDelegate(EquippmentSlots.NecklaceSlot);
-		//if (EquippmentSlots.NecklaceSlot.InventoryItemStruct.ItemBaseDataAsset)
-		//	print(FString("Set Necklace with " + EquippmentSlots.NecklaceSlot.InventoryItemStruct.ItemBaseDataAsset->ItemInfo.ItemName));
-		//else
-		//	print(FString("Set Necklace with Empty"));
-		return true;
-	}
-	else if (ArmorType == EArmorType::Shoulder) {
-		EquippmentSlots.ShoulderSlot.InventoryItemStruct = FInventoryItemStruct(ItemStruct);
-		OnEquippmentSlotUpdated.Broadcast(EquippmentSlots.ShoulderSlot);
-		ClientBroadcastEquippmentUpdateDelegate(EquippmentSlots.ShoulderSlot);
-		//if (EquippmentSlots.ShoulderSlot.InventoryItemStruct.ItemBaseDataAsset)
-		//	print(FString("Set Shoulder with " + EquippmentSlots.ShoulderSlot.InventoryItemStruct.ItemBaseDataAsset->ItemInfo.ItemName));
-		//else
-		//	print(FString("Set Shoulder with Empty"));
-		return true;
-	}
-	else if (ArmorType == EArmorType::Chest) {
-		EquippmentSlots.ChestSlot.InventoryItemStruct = FInventoryItemStruct(ItemStruct);
-		OnEquippmentSlotUpdated.Broadcast(EquippmentSlots.ChestSlot);
-		ClientBroadcastEquippmentUpdateDelegate(EquippmentSlots.ChestSlot);
-		//if (EquippmentSlots.ChestSlot.InventoryItemStruct.ItemBaseDataAsset)
-		//	print(FString("Set Chest with " + EquippmentSlots.ChestSlot.InventoryItemStruct.ItemBaseDataAsset->ItemInfo.ItemName));
-		//else
-		//	print(FString("Set Chest with Empty"));
-		return true;
-	}
-	else if (ArmorType == EArmorType::Back) {
-		EquippmentSlots.BackSlot.InventoryItemStruct = FInventoryItemStruct(ItemStruct);
-		OnEquippmentSlotUpdated.Broadcast(EquippmentSlots.BackSlot);
-		ClientBroadcastEquippmentUpdateDelegate(EquippmentSlots.BackSlot);
-		//if (EquippmentSlots.BackSlot.InventoryItemStruct.ItemBaseDataAsset)
-		//	print(FString("Set Back with " + EquippmentSlots.BackSlot.InventoryItemStruct.ItemBaseDataAsset->ItemInfo.ItemName));
-		//else
-		//	print(FString("Set Back with Empty"));
-		return true;
-	}
-	else if (ArmorType == EArmorType::Gloves) {
-		EquippmentSlots.GlovesSlot.InventoryItemStruct = FInventoryItemStruct(ItemStruct);
-		OnEquippmentSlotUpdated.Broadcast(EquippmentSlots.GlovesSlot);
-		ClientBroadcastEquippmentUpdateDelegate(EquippmentSlots.GlovesSlot);
-		//if (EquippmentSlots.GlovesSlot.InventoryItemStruct.ItemBaseDataAsset)
-		//	print(FString("Set Gloves with " + EquippmentSlots.GlovesSlot.InventoryItemStruct.ItemBaseDataAsset->ItemInfo.ItemName));
-		//else
-		//	print(FString("Set Gloves with Empty"));
-		return true;
-	}
-	else if (ArmorType == EArmorType::Belt) {
-		EquippmentSlots.BeltSlot.InventoryItemStruct = FInventoryItemStruct(ItemStruct);
-		OnEquippmentSlotUpdated.Broadcast(EquippmentSlots.BeltSlot);
-		ClientBroadcastEquippmentUpdateDelegate(EquippmentSlots.BeltSlot);
-		//if (EquippmentSlots.BeltSlot.InventoryItemStruct.ItemBaseDataAsset)
-		//	print(FString("Set Belt with " + EquippmentSlots.BeltSlot.InventoryItemStruct.ItemBaseDataAsset->ItemInfo.ItemName));
-		//else
-		//	print(FString("Set Belt with Empty"));
-		return true;
-	}
-	else if (ArmorType == EArmorType::Legs) {
-		EquippmentSlots.LegsSlot.InventoryItemStruct = FInventoryItemStruct(ItemStruct);
-		OnEquippmentSlotUpdated.Broadcast(EquippmentSlots.LegsSlot);
-		ClientBroadcastEquippmentUpdateDelegate(EquippmentSlots.LegsSlot);
-		//if (EquippmentSlots.LegsSlot.InventoryItemStruct.ItemBaseDataAsset)
-		//	print(FString("Set Legs with " + EquippmentSlots.LegsSlot.InventoryItemStruct.ItemBaseDataAsset->ItemInfo.ItemName));
-		//else
-		//	print(FString("Set Legs with Empty"));
-		return true;
-	}
-	else if (ArmorType == EArmorType::Boots) {
-		EquippmentSlots.BootsSlot.InventoryItemStruct = FInventoryItemStruct(ItemStruct);
-		OnEquippmentSlotUpdated.Broadcast(EquippmentSlots.BootsSlot);
-		ClientBroadcastEquippmentUpdateDelegate(EquippmentSlots.BootsSlot);
-		//if (EquippmentSlots.BootsSlot.InventoryItemStruct.ItemBaseDataAsset)
-		//	print(FString("Set Boots with " + EquippmentSlots.BootsSlot.InventoryItemStruct.ItemBaseDataAsset->ItemInfo.ItemName));
-		//else
-		//	print(FString("Set Boots with Empty"));
-		return true;
-	}
-	else if (ArmorType == EArmorType::Ring && IsRightFinger == true) {
-		EquippmentSlots.RingRightSlot.InventoryItemStruct = FInventoryItemStruct(ItemStruct);
-		OnEquippmentSlotUpdated.Broadcast(EquippmentSlots.RingRightSlot);
-		ClientBroadcastEquippmentUpdateDelegate(EquippmentSlots.RingRightSlot);
-		//if (EquippmentSlots.RingRightSlot.InventoryItemStruct.ItemBaseDataAsset)
-		//	print(FString("Set RingRight with " + EquippmentSlots.RingRightSlot.InventoryItemStruct.ItemBaseDataAsset->ItemInfo.ItemName));
-		//else
-		//	print(FString("Set RingRight with Empty"));
-		return true;
-	}
-	else if (ArmorType == EArmorType::Ring && IsRightFinger == false) {
-		EquippmentSlots.RingLeftSlot.InventoryItemStruct = FInventoryItemStruct(ItemStruct);
-		OnEquippmentSlotUpdated.Broadcast(EquippmentSlots.RingLeftSlot);
-		ClientBroadcastEquippmentUpdateDelegate(EquippmentSlots.RingLeftSlot);
-		//if (EquippmentSlots.RingLeftSlot.InventoryItemStruct.ItemBaseDataAsset)
-		//	print(FString("Set RingLeft with " + EquippmentSlots.RingLeftSlot.InventoryItemStruct.ItemBaseDataAsset->ItemInfo.ItemName));
-		//else
-		//	print(FString("Set RingLeft with Empty"));
-		return true;
-	}
-	else if (ArmorType == EArmorType::Bag) {
-		EquippmentSlots.BagSlot.InventoryItemStruct = FInventoryItemStruct(ItemStruct);
-		OnEquippmentSlotUpdated.Broadcast(EquippmentSlots.BagSlot);
-		ClientBroadcastEquippmentUpdateDelegate(EquippmentSlots.BagSlot);
-		//if (EquippmentSlots.BagSlot.InventoryItemStruct.ItemBaseDataAsset)
-		//	print(FString("Set Bag with " + EquippmentSlots.BagSlot.InventoryItemStruct.ItemBaseDataAsset->ItemInfo.ItemName));
-		//else
-		//	print(FString("Set Bag with Empty"));
-		return true;
-	}
-
-	print(FString("Faield to Equip item due to invalid armortype"));
-	return false;
-}
 
 void UP4InventoryBagComponent::FindItemsFromItemData(const FInventoryItemStruct& SearchItem, bool& WasFound, TArray<int>& FoundIndexes)
 {
@@ -370,7 +193,7 @@ void UP4InventoryBagComponent::ServerDropItemFromInventory_Implementation(int In
 }
 
 
-void UP4InventoryBagComponent::ServerEquipItemFromInventory_Implementation(int InventoryIndex, bool IsRightFinger)
+void UP4InventoryBagComponent::ServerEquipItemFromInventory_Implementation(int InventoryIndex, bool IsRightSide)
 {
 	// grab item, check that we can wear it (armor / weapon only)
 	FInventoryItemStruct Item = InventoryArray[InventoryIndex];
@@ -379,48 +202,122 @@ void UP4InventoryBagComponent::ServerEquipItemFromInventory_Implementation(int I
 	{
 		if (Item.ItemBaseDataAsset->ItemInfo.ItemType == EItemType::Armor)
 		{
-			// figure out what slot this goes to 
-			UItemArmorDataAsset* ArmorItem = Cast<UItemArmorDataAsset>(Item.ItemBaseDataAsset);
-			if (ArmorItem)
-			{
-				FEquippmentSlotStruct EquipSlot; // Just sentinel value, following function bool will help
-				if (GetEquipSlotInfo(ArmorItem->ArmorType, IsRightFinger, EquipSlot))
-				{
-					if (EquipSlot.InventoryItemStruct.bIsEmpty)
-					{
-						SetEquipSlotInfo(ArmorItem->ArmorType, IsRightFinger, Item);
-
-						//print(FString("Equip Item: " + ArmorItem->ItemInfo.ItemName.ToString()));
-
-						// place empty inventory spot
-						InventoryArray[InventoryIndex] = FInventoryItemStruct();
-						OnInventorySlotUpdated.Broadcast(FInventoryItemStruct(), InventoryIndex);
-						ClientBroadcastInventoryUpdateDelegate(FInventoryItemStruct(), InventoryIndex);
-
-						// done here
-						return;
-					}
-					else
-					{
-						//TODO: Swap items here
-					}
-				}	
-			}
+			EquipArmorItemFromInventory(InventoryIndex, IsRightSide, Item);
 		}
 		else if (Item.ItemBaseDataAsset->ItemInfo.ItemType == EItemType::Weapon)
 		{
-			// TODO: equip weapon implementation
+			EquipWeaponItemFromInventory(InventoryIndex, IsRightSide, Item);
+		}
+	}
+}
+
+void UP4InventoryBagComponent::EquipArmorItemFromInventory(int InventoryIndex, bool IsRightFinger, FInventoryItemStruct& Item)
+{
+	// figure out what slot this goes to 
+	const UItemArmorDataAsset* ArmorItem = Cast<UItemArmorDataAsset>(Item.ItemBaseDataAsset);
+	if (ArmorItem)
+	{
+		FEquippmentSlotStruct EquipSlot; // Just sentinel value, following function bool will help
+		EEquipSlotType EquipSlotType = ArmorTypeToEquipSlotType(ArmorItem->ArmorType, IsRightFinger);
+		if (GetEquipSlotInfo(EquipSlotType, EquipSlot))
+		{
+			if (EquipSlot.InventoryItemStruct.bIsEmpty)
+			{
+				AProject4Character* P4Char = Cast<AProject4Character>(GetOwner());
+				if (P4Char)
+				{
+					UAbilitySystemComponent* ASC = P4Char->GetAbilitySystemComponent();
+					if (ASC)
+					{
+						FActiveGameplayEffectHandle EqippedEffectHandle = ASC->BP_ApplyGameplayEffectToSelf(ArmorItem->EquippedGameplayEffect, 1, ASC->MakeEffectContext());
+						if (EqippedEffectHandle.WasSuccessfullyApplied())
+						{
+							// place empty inventory spot
+							InventoryArray[InventoryIndex] = FInventoryItemStruct();
+							OnInventorySlotUpdated.Broadcast(FInventoryItemStruct(), InventoryIndex);
+							ClientBroadcastInventoryUpdateDelegate(FInventoryItemStruct(), InventoryIndex);
+
+							SetEquipSlotInfo(EquipSlotType, Item, EqippedEffectHandle);
+
+							// done here
+							return;
+						}
+						else
+						{
+							print(FString("Invalid GE equip applying :(0"));
+						}
+					}
+				}
+			}
+			else
+			{
+				//TODO: Swap items here
+			}
 		}
 	}
 }
 
 
+void UP4InventoryBagComponent::EquipWeaponItemFromInventory(int InventoryIndex, bool IsRightHand, FInventoryItemStruct& Item)
+{
+	// TODO: add method for weapon types and replacement of such
+	const UItemWeaponDataAsset* WeaponItem = Cast<UItemWeaponDataAsset>(Item.ItemBaseDataAsset);
+	if (WeaponItem)
+	{
+		FEquippmentSlotStruct EquipSlot;
+		EEquipSlotType EquipSlotType = (IsRightHand) ? EEquipSlotType::WeaponRight : EEquipSlotType::WeaponLeft;
+		if (GetEquipSlotInfo(EquipSlotType, EquipSlot))
+		{
+			if (EquipSlot.InventoryItemStruct.bIsEmpty)
+			{
+				AProject4Character* P4Char = Cast<AProject4Character>(GetOwner());
+				if (P4Char)
+				{
+					UAbilitySystemComponent* ASC = P4Char->GetAbilitySystemComponent();
+					if (ASC)
+					{
+						FActiveGameplayEffectHandle EqippedEffectHandle = ASC->BP_ApplyGameplayEffectToSelf(WeaponItem->EquippedGameplayEffect, 1, ASC->MakeEffectContext());
+						if (EqippedEffectHandle.WasSuccessfullyApplied())
+						{
+							// place empty inventory spot
+							InventoryArray[InventoryIndex] = FInventoryItemStruct();
+							OnInventorySlotUpdated.Broadcast(FInventoryItemStruct(), InventoryIndex);
+							ClientBroadcastInventoryUpdateDelegate(FInventoryItemStruct(), InventoryIndex);
+
+							SetEquipSlotInfo(EquipSlotType, Item, EqippedEffectHandle);
+
+							// TODO: Ask P4char to change skeletal mesh to weapons
+							if (IsRightHand)
+								P4Char->SetRightHandWeaponInfo(WeaponItem);
+							else
+								P4Char->SetLeftHandWeaponInfo(WeaponItem);
+
+							// done here
+							return;
+						}
+						else
+						{
+							print(FString("Invalid GE equip applying :(0"));
+						}
+					}
+				}
+			}
+			else
+			{
+				//TODO: Swap items here
+			}
+		}
+	}
+
+}
+
+
 				
-void UP4InventoryBagComponent::ServerUnEquipItemFromInventory_Implementation(EArmorType ArmorType, bool IsRightFinger)
+void UP4InventoryBagComponent::ServerUnEquipItemFromInventory_Implementation(EEquipSlotType EquipSlotType)
 {
 
 	FEquippmentSlotStruct EquipSlot;
-	if (GetEquipSlotInfo(ArmorType, IsRightFinger, EquipSlot))
+	if (GetEquipSlotInfo(EquipSlotType, EquipSlot))
 	{
 		if (!EquipSlot.InventoryItemStruct.bIsEmpty)
 		{
@@ -430,17 +327,30 @@ void UP4InventoryBagComponent::ServerUnEquipItemFromInventory_Implementation(EAr
 			if (success)
 			{
 				//print(FString("UnEquip Item: " + EquipSlot.InventoryItemStruct.ItemBaseDataAsset->ItemInfo.ItemName.ToString()));
+				AProject4Character* P4Char = Cast<AProject4Character>(GetOwner());
+				if (P4Char)
+				{
+					UAbilitySystemComponent* ASC = P4Char->GetAbilitySystemComponent();
+					if (ASC)
+					{
+						if (ASC->RemoveActiveGameplayEffect(EquipSlot.EqippedEffectHandle))
+						{
+							// place empty inventory spot
+							InventoryArray[Index] = FInventoryItemStruct(EquipSlot.InventoryItemStruct);
+							OnInventorySlotUpdated.Broadcast(InventoryArray[Index], Index);
+							ClientBroadcastInventoryUpdateDelegate(InventoryArray[Index], Index);
 
-				// place empty inventory spot
-				InventoryArray[Index] = FInventoryItemStruct(EquipSlot.InventoryItemStruct);
-				OnInventorySlotUpdated.Broadcast(InventoryArray[Index], Index);
-				ClientBroadcastInventoryUpdateDelegate(InventoryArray[Index], Index);
+							SetEquipSlotInfo(EquipSlotType, FInventoryItemStruct(), FActiveGameplayEffectHandle());
 
-				SetEquipSlotInfo(ArmorType, IsRightFinger, FInventoryItemStruct());
-
-				// done here
-				return;
-
+							// done here
+							return;
+						}
+						else
+						{
+							print(FString("failed to remove active GE on unequip :("));
+						}
+					}
+				}
 			}
 			else
 			{
@@ -501,6 +411,264 @@ void UP4InventoryBagComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProper
 //	}
 //}
 
+
+
+EEquipSlotType UP4InventoryBagComponent::ArmorTypeToEquipSlotType(EArmorType ArmorType, bool IsRightFinger)
+{
+	if (ArmorType == EArmorType::Helmet)
+		return EEquipSlotType::Helmet;
+	else if (ArmorType == EArmorType::Necklace)
+		return EEquipSlotType::Necklace;
+	else if (ArmorType == EArmorType::Shoulder)
+		return EEquipSlotType::Shoulder;
+	else if (ArmorType == EArmorType::Chest)
+		return EEquipSlotType::Chest;
+	else if (ArmorType == EArmorType::Back)
+		return EEquipSlotType::Back;
+	else if (ArmorType == EArmorType::Gloves)
+		return EEquipSlotType::Gloves;
+	else if (ArmorType == EArmorType::Belt)
+		return EEquipSlotType::Belt;
+	else if (ArmorType == EArmorType::Legs)
+		return EEquipSlotType::Legs;
+	else if (ArmorType == EArmorType::Boots)
+		return EEquipSlotType::Boots;
+	else if (ArmorType == EArmorType::Ring && IsRightFinger)
+		return EEquipSlotType::RingRight;
+	else if (ArmorType == EArmorType::Necklace && !IsRightFinger)
+		return EEquipSlotType::RingLeft;
+	else if (ArmorType == EArmorType::Bag)
+		return EEquipSlotType::Bag;
+	else if (ArmorType == EArmorType::Necklace)
+		return EEquipSlotType::Necklace;
+
+	return EEquipSlotType::None;
+}
+
+bool UP4InventoryBagComponent::GetEquipSlotInfo(EEquipSlotType EquipSlotType, FEquippmentSlotStruct& ReturnSlot)
+{
+	// These hardcoded values should reflect IntiializeEmptyEquippment order
+	if (EquipSlotType == EEquipSlotType::Helmet) {
+		ReturnSlot = EquippmentSlots.HelmetSlot;
+		return true;
+	}
+	else if (EquipSlotType == EEquipSlotType::Necklace) {
+		ReturnSlot = EquippmentSlots.NecklaceSlot;
+		return true;
+	}
+	else if (EquipSlotType == EEquipSlotType::Shoulder) {
+		ReturnSlot = EquippmentSlots.ShoulderSlot;
+		return true;
+	}
+	else if (EquipSlotType == EEquipSlotType::Chest) {
+		ReturnSlot = EquippmentSlots.ChestSlot;
+		return true;
+	}
+	else if (EquipSlotType == EEquipSlotType::Back) {
+		ReturnSlot = EquippmentSlots.BackSlot;
+		return true;
+	}
+	else if (EquipSlotType == EEquipSlotType::Gloves) {
+		ReturnSlot = EquippmentSlots.GlovesSlot;
+		return true;
+	}
+	else if (EquipSlotType == EEquipSlotType::Belt) {
+		ReturnSlot = EquippmentSlots.BeltSlot;
+		return true;
+	}
+	else if (EquipSlotType == EEquipSlotType::Legs) {
+		ReturnSlot = EquippmentSlots.LegsSlot;
+		return true;
+	}
+	else if (EquipSlotType == EEquipSlotType::Boots) {
+		ReturnSlot = EquippmentSlots.BootsSlot;
+		return true;
+	}
+	else if (EquipSlotType == EEquipSlotType::RingLeft) {
+		ReturnSlot = EquippmentSlots.RingRightSlot;
+		return true;
+	}
+	else if (EquipSlotType == EEquipSlotType::RingRight) {
+		ReturnSlot = EquippmentSlots.RingLeftSlot;
+		return true;
+	}
+	else if (EquipSlotType == EEquipSlotType::Bag) {
+		ReturnSlot = EquippmentSlots.BagSlot;
+		return true;
+	}
+	else if (EquipSlotType == EEquipSlotType::WeaponLeft) {
+		ReturnSlot = EquippmentSlots.WeaponLeftSlot;
+		return true;
+	}
+	else if (EquipSlotType == EEquipSlotType::WeaponRight) {
+		ReturnSlot = EquippmentSlots.WeaponRightSlot;
+		return true;
+	}
+
+	return false;
+}
+
+bool UP4InventoryBagComponent::SetEquipSlotInfo(EEquipSlotType EquipSlotType, FInventoryItemStruct ItemStruct, FActiveGameplayEffectHandle ActiveGEHandle)
+{
+	// These hardcoded values should reflect IntiializeEmptyEquippment order
+	if (EquipSlotType == EEquipSlotType::Helmet) {
+		EquippmentSlots.HelmetSlot.InventoryItemStruct = FInventoryItemStruct(ItemStruct);
+		EquippmentSlots.HelmetSlot.EqippedEffectHandle = ActiveGEHandle;
+		OnEquippmentSlotUpdated.Broadcast(EquippmentSlots.HelmetSlot);
+		ClientBroadcastEquippmentUpdateDelegate(EquippmentSlots.HelmetSlot);
+		//if (EquippmentSlots.HelmetSlot.InventoryItemStruct.ItemBaseDataAsset)
+		//	print(FString("Set Helmet with " + EquippmentSlots.HelmetSlot.InventoryItemStruct.ItemBaseDataAsset->ItemInfo.ItemName));
+		//else
+		//	print(FString("Set Helmet with Empty"));
+		return true;
+	}
+	else if (EquipSlotType == EEquipSlotType::Necklace) {
+		EquippmentSlots.NecklaceSlot.InventoryItemStruct = FInventoryItemStruct(ItemStruct);
+		OnEquippmentSlotUpdated.Broadcast(EquippmentSlots.NecklaceSlot);
+		EquippmentSlots.NecklaceSlot.EqippedEffectHandle = ActiveGEHandle;
+		ClientBroadcastEquippmentUpdateDelegate(EquippmentSlots.NecklaceSlot);
+		//if (EquippmentSlots.NecklaceSlot.InventoryItemStruct.ItemBaseDataAsset)
+		//	print(FString("Set Necklace with " + EquippmentSlots.NecklaceSlot.InventoryItemStruct.ItemBaseDataAsset->ItemInfo.ItemName));
+		//else
+		//	print(FString("Set Necklace with Empty"));
+		return true;
+	}
+	else if (EquipSlotType == EEquipSlotType::Shoulder) {
+		EquippmentSlots.ShoulderSlot.InventoryItemStruct = FInventoryItemStruct(ItemStruct);
+		OnEquippmentSlotUpdated.Broadcast(EquippmentSlots.ShoulderSlot);
+		EquippmentSlots.ShoulderSlot.EqippedEffectHandle = ActiveGEHandle;
+		ClientBroadcastEquippmentUpdateDelegate(EquippmentSlots.ShoulderSlot);
+		//if (EquippmentSlots.ShoulderSlot.InventoryItemStruct.ItemBaseDataAsset)
+		//	print(FString("Set Shoulder with " + EquippmentSlots.ShoulderSlot.InventoryItemStruct.ItemBaseDataAsset->ItemInfo.ItemName));
+		//else
+		//	print(FString("Set Shoulder with Empty"));
+		return true;
+	}
+	else if (EquipSlotType == EEquipSlotType::Chest) {
+		EquippmentSlots.ChestSlot.InventoryItemStruct = FInventoryItemStruct(ItemStruct);
+		OnEquippmentSlotUpdated.Broadcast(EquippmentSlots.ChestSlot);
+		EquippmentSlots.ChestSlot.EqippedEffectHandle = ActiveGEHandle;
+		ClientBroadcastEquippmentUpdateDelegate(EquippmentSlots.ChestSlot);
+		//if (EquippmentSlots.ChestSlot.InventoryItemStruct.ItemBaseDataAsset)
+		//	print(FString("Set Chest with " + EquippmentSlots.ChestSlot.InventoryItemStruct.ItemBaseDataAsset->ItemInfo.ItemName));
+		//else
+		//	print(FString("Set Chest with Empty"));
+		return true;
+	}
+	else if (EquipSlotType == EEquipSlotType::Back) {
+		EquippmentSlots.BackSlot.InventoryItemStruct = FInventoryItemStruct(ItemStruct);
+		OnEquippmentSlotUpdated.Broadcast(EquippmentSlots.BackSlot);
+		EquippmentSlots.BackSlot.EqippedEffectHandle = ActiveGEHandle;
+		ClientBroadcastEquippmentUpdateDelegate(EquippmentSlots.BackSlot);
+		//if (EquippmentSlots.BackSlot.InventoryItemStruct.ItemBaseDataAsset)
+		//	print(FString("Set Back with " + EquippmentSlots.BackSlot.InventoryItemStruct.ItemBaseDataAsset->ItemInfo.ItemName));
+		//else
+		//	print(FString("Set Back with Empty"));
+		return true;
+	}
+	else if (EquipSlotType == EEquipSlotType::Gloves) {
+		EquippmentSlots.GlovesSlot.InventoryItemStruct = FInventoryItemStruct(ItemStruct);
+		OnEquippmentSlotUpdated.Broadcast(EquippmentSlots.GlovesSlot);
+		EquippmentSlots.GlovesSlot.EqippedEffectHandle = ActiveGEHandle;
+		ClientBroadcastEquippmentUpdateDelegate(EquippmentSlots.GlovesSlot);
+		//if (EquippmentSlots.GlovesSlot.InventoryItemStruct.ItemBaseDataAsset)
+		//	print(FString("Set Gloves with " + EquippmentSlots.GlovesSlot.InventoryItemStruct.ItemBaseDataAsset->ItemInfo.ItemName));
+		//else
+		//	print(FString("Set Gloves with Empty"));
+		return true;
+	}
+	else if (EquipSlotType == EEquipSlotType::Belt) {
+		EquippmentSlots.BeltSlot.InventoryItemStruct = FInventoryItemStruct(ItemStruct);
+		OnEquippmentSlotUpdated.Broadcast(EquippmentSlots.BeltSlot);
+		EquippmentSlots.BeltSlot.EqippedEffectHandle = ActiveGEHandle;
+		ClientBroadcastEquippmentUpdateDelegate(EquippmentSlots.BeltSlot);
+		//if (EquippmentSlots.BeltSlot.InventoryItemStruct.ItemBaseDataAsset)
+		//	print(FString("Set Belt with " + EquippmentSlots.BeltSlot.InventoryItemStruct.ItemBaseDataAsset->ItemInfo.ItemName));
+		//else
+		//	print(FString("Set Belt with Empty"));
+		return true;
+	}
+	else if (EquipSlotType == EEquipSlotType::Legs) {
+		EquippmentSlots.LegsSlot.InventoryItemStruct = FInventoryItemStruct(ItemStruct);
+		OnEquippmentSlotUpdated.Broadcast(EquippmentSlots.LegsSlot);
+		EquippmentSlots.LegsSlot.EqippedEffectHandle = ActiveGEHandle;
+		ClientBroadcastEquippmentUpdateDelegate(EquippmentSlots.LegsSlot);
+		//if (EquippmentSlots.LegsSlot.InventoryItemStruct.ItemBaseDataAsset)
+		//	print(FString("Set Legs with " + EquippmentSlots.LegsSlot.InventoryItemStruct.ItemBaseDataAsset->ItemInfo.ItemName));
+		//else
+		//	print(FString("Set Legs with Empty"));
+		return true;
+	}
+	else if (EquipSlotType == EEquipSlotType::Boots) {
+		EquippmentSlots.BootsSlot.InventoryItemStruct = FInventoryItemStruct(ItemStruct);
+		OnEquippmentSlotUpdated.Broadcast(EquippmentSlots.BootsSlot);
+		EquippmentSlots.BootsSlot.EqippedEffectHandle = ActiveGEHandle;
+		ClientBroadcastEquippmentUpdateDelegate(EquippmentSlots.BootsSlot);
+		//if (EquippmentSlots.BootsSlot.InventoryItemStruct.ItemBaseDataAsset)
+		//	print(FString("Set Boots with " + EquippmentSlots.BootsSlot.InventoryItemStruct.ItemBaseDataAsset->ItemInfo.ItemName));
+		//else
+		//	print(FString("Set Boots with Empty"));
+		return true;
+	}
+	else if (EquipSlotType == EEquipSlotType::RingLeft) {
+		EquippmentSlots.RingRightSlot.InventoryItemStruct = FInventoryItemStruct(ItemStruct);
+		OnEquippmentSlotUpdated.Broadcast(EquippmentSlots.RingRightSlot);
+		EquippmentSlots.RingRightSlot.EqippedEffectHandle = ActiveGEHandle;
+		ClientBroadcastEquippmentUpdateDelegate(EquippmentSlots.RingRightSlot);
+		//if (EquippmentSlots.RingRightSlot.InventoryItemStruct.ItemBaseDataAsset)
+		//	print(FString("Set RingRight with " + EquippmentSlots.RingRightSlot.InventoryItemStruct.ItemBaseDataAsset->ItemInfo.ItemName));
+		//else
+		//	print(FString("Set RingRight with Empty"));
+		return true;
+	}
+	else if (EquipSlotType == EEquipSlotType::RingRight) {
+		EquippmentSlots.RingLeftSlot.InventoryItemStruct = FInventoryItemStruct(ItemStruct);
+		OnEquippmentSlotUpdated.Broadcast(EquippmentSlots.RingLeftSlot);
+		EquippmentSlots.RingLeftSlot.EqippedEffectHandle = ActiveGEHandle;
+		ClientBroadcastEquippmentUpdateDelegate(EquippmentSlots.RingLeftSlot);
+		//if (EquippmentSlots.RingLeftSlot.InventoryItemStruct.ItemBaseDataAsset)
+		//	print(FString("Set RingLeft with " + EquippmentSlots.RingLeftSlot.InventoryItemStruct.ItemBaseDataAsset->ItemInfo.ItemName));
+		//else
+		//	print(FString("Set RingLeft with Empty"));
+		return true;
+	}
+	else if (EquipSlotType == EEquipSlotType::Bag) {
+		EquippmentSlots.BagSlot.InventoryItemStruct = FInventoryItemStruct(ItemStruct);
+		OnEquippmentSlotUpdated.Broadcast(EquippmentSlots.BagSlot);
+		EquippmentSlots.BagSlot.EqippedEffectHandle = ActiveGEHandle;
+		ClientBroadcastEquippmentUpdateDelegate(EquippmentSlots.BagSlot);
+		//if (EquippmentSlots.BagSlot.InventoryItemStruct.ItemBaseDataAsset)
+		//	print(FString("Set Bag with " + EquippmentSlots.BagSlot.InventoryItemStruct.ItemBaseDataAsset->ItemInfo.ItemName));
+		//else
+		//	print(FString("Set Bag with Empty"));
+		return true;
+	}
+	else if (EquipSlotType == EEquipSlotType::WeaponLeft) {
+	EquippmentSlots.WeaponLeftSlot.InventoryItemStruct = FInventoryItemStruct(ItemStruct);
+	OnEquippmentSlotUpdated.Broadcast(EquippmentSlots.WeaponLeftSlot);
+	EquippmentSlots.WeaponLeftSlot.EqippedEffectHandle = ActiveGEHandle;
+	ClientBroadcastEquippmentUpdateDelegate(EquippmentSlots.WeaponLeftSlot);
+	//if (EquippmentSlots.WeaponLeftSlot.InventoryItemStruct.ItemBaseDataAsset)
+	//	print(FString("Set WeaponLeft with " + EquippmentSlots.WeaponLeftSlot.InventoryItemStruct.ItemBaseDataAsset->ItemInfo.ItemName));
+	//else
+	//	print(FString("Set WeaponLeft with Empty"));
+	return true;
+	}
+	else if (EquipSlotType == EEquipSlotType::WeaponRight) {
+	EquippmentSlots.WeaponRightSlot.InventoryItemStruct = FInventoryItemStruct(ItemStruct);
+	OnEquippmentSlotUpdated.Broadcast(EquippmentSlots.WeaponRightSlot);
+	EquippmentSlots.WeaponRightSlot.EqippedEffectHandle = ActiveGEHandle;
+	ClientBroadcastEquippmentUpdateDelegate(EquippmentSlots.WeaponRightSlot);
+	//if (EquippmentSlots.WeaponRightSlot.InventoryItemStruct.ItemBaseDataAsset)
+	//	print(FString("Set WeaponRight with " + EquippmentSlots.WeaponRightSlot.InventoryItemStruct.ItemBaseDataAsset->ItemInfo.ItemName));
+	//else
+	//	print(FString("Set WeaponRight with Empty"));
+	return true;
+	}
+
+	print(FString("Faield to Equip item due to invalid EquipSlotType"));
+	return false;
+}
 
 
 

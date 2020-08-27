@@ -26,6 +26,8 @@ enum class EArmorType : uint8
 	Bag				UMETA(DispalyName = "Bag")
 };
 
+
+
 /**
  * 
  */
@@ -39,7 +41,19 @@ public:
 	UItemArmorDataAsset();
 
 	// Not much addon just more specific on what armor type the armor item is
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = AbilitySet)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Item | Armor")
 		EArmorType ArmorType;
+
+	/* Use a gameplay effect to fill out attribute buffs to reduce serverload at cost of game memory size (not that much hopefully) */
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Item | Armor")
+		TSubclassOf<UGameplayEffect> EquippedGameplayEffect;
+
+
+
+	/*********************/
+	/* Utility Funcitons */
+	/*********************/
+	UFUNCTION(BlueprintCallable, Category = "Utility")
+		void GetAttributeNamesAndValuesFromGameplayEffect(TArray<FAttributeDataUIStruct>& OutDataArray);
 
 };

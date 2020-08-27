@@ -51,7 +51,7 @@ void UGameplayHudWidget::UpdateHealthMax(float NewValue)
 	}
 	if (CharacterInfoWidget)
 	{
-		CharacterInfoWidget->UpdateHealthMax(NewValue);
+		CharacterInfoWidget->UpdateHealthMax();
 	}
 }
 
@@ -63,7 +63,7 @@ void UGameplayHudWidget::UpdateHealthRegen(float NewValue)
 	}
 	if (CharacterInfoWidget)
 	{
-		CharacterInfoWidget->UpdateHealthRegen(NewValue);
+		CharacterInfoWidget->UpdateHealthRegen();
 	}
 }
 
@@ -82,7 +82,7 @@ void UGameplayHudWidget::UpdateManaMax(float NewValue)
 	}
 	if (CharacterInfoWidget)
 	{
-		CharacterInfoWidget->UpdateManaMax(NewValue);
+		CharacterInfoWidget->UpdateManaMax();
 	}
 }
 
@@ -94,7 +94,7 @@ void UGameplayHudWidget::UpdateManaRegen(float NewValue)
 	}
 	if (CharacterInfoWidget)
 	{
-		CharacterInfoWidget->UpdateManaMax(NewValue);
+		CharacterInfoWidget->UpdateManaMax();
 	}
 }
 
@@ -113,7 +113,7 @@ void UGameplayHudWidget::UpdateEnduranceMax(float NewValue)
 	}
 	if (CharacterInfoWidget)
 	{
-		CharacterInfoWidget->UpdateEnduranceMax(NewValue);
+		CharacterInfoWidget->UpdateEnduranceMax();
 	}
 }
 
@@ -125,7 +125,7 @@ void UGameplayHudWidget::UpdateEnduranceRegen(float NewValue)
 	}
 	if (CharacterInfoWidget)
 	{
-		CharacterInfoWidget->UpdateEnduranceRegen(NewValue);
+		CharacterInfoWidget->UpdateEnduranceRegen();
 	}
 }
 
@@ -153,7 +153,39 @@ void UGameplayHudWidget::UpdatePlayerLevel(float NewLevel)
 	}
 	if(CharacterInfoWidget)
 	{
-		CharacterInfoWidget->UpdatePlayerLevel(NewLevel);
+		CharacterInfoWidget->UpdatePlayerLevel();
+	}
+}
+
+void UGameplayHudWidget::UpdateStrength(float NewValue)
+{
+	if (CharacterInfoWidget)
+	{
+		CharacterInfoWidget->UpdateStrength();
+	}
+}
+
+void UGameplayHudWidget::UpdateDexterity(float NewValue)
+{
+	if (CharacterInfoWidget)
+	{
+		CharacterInfoWidget->UpdateDexterity();
+	}
+}
+
+void UGameplayHudWidget::UpdateIntelligence(float NewValue)
+{
+	if (CharacterInfoWidget)
+	{
+		CharacterInfoWidget->UpdateIntelligence();
+	}
+}
+
+void UGameplayHudWidget::UpdateSpirit(float NewValue)
+{
+	if (CharacterInfoWidget)
+	{
+		CharacterInfoWidget->UpdateSpirit();
 	}
 }
 
@@ -161,7 +193,7 @@ void UGameplayHudWidget::UpdateArmor(float NewValue)
 {
 	if (CharacterInfoWidget)
 	{
-		CharacterInfoWidget->UpdateArmor(NewValue);
+		CharacterInfoWidget->UpdateArmor();
 	}
 }
 
@@ -169,7 +201,7 @@ void UGameplayHudWidget::UpdateMagicResistance(float NewValue)
 {
 	if (CharacterInfoWidget)
 	{
-		CharacterInfoWidget->UpdateMagicResistance(NewValue);
+		CharacterInfoWidget->UpdateMagicResistance();
 	}
 }
 
@@ -177,7 +209,7 @@ void UGameplayHudWidget::UpdateMovementSpeed(float NewValue)
 {
 	if (CharacterInfoWidget)
 	{
-		CharacterInfoWidget->UpdateMovementSpeed(NewValue);
+		CharacterInfoWidget->UpdateMovementSpeed();
 	}
 }
 
@@ -185,7 +217,7 @@ void UGameplayHudWidget::UpdateAttackPower(float NewValue)
 {
 	if (CharacterInfoWidget)
 	{
-		CharacterInfoWidget->UpdateAttackPower(NewValue);
+		CharacterInfoWidget->UpdateAttackPower();
 	}
 }
 
@@ -193,7 +225,7 @@ void UGameplayHudWidget::UpdateMagicPower(float NewValue)
 {
 	if (CharacterInfoWidget)
 	{
-		CharacterInfoWidget->UpdateMagicPower(NewValue);
+		CharacterInfoWidget->UpdateMagicPower();
 	}
 }
 
@@ -201,7 +233,7 @@ void UGameplayHudWidget::UpdateAttackSpeed(float NewValue)
 {
 	if (CharacterInfoWidget)
 	{
-		CharacterInfoWidget->UpdateAttackSpeed(NewValue);
+		CharacterInfoWidget->UpdateAttackSpeed();
 	}
 }
 
@@ -209,7 +241,7 @@ void UGameplayHudWidget::UpdateCritChance(float NewValue)
 {
 	if (CharacterInfoWidget)
 	{
-		CharacterInfoWidget->UpdateCritChance(NewValue);
+		CharacterInfoWidget->UpdateCritChance();
 	}
 }
 
@@ -217,7 +249,7 @@ void UGameplayHudWidget::UpdateCritDamage(float NewValue)
 {
 	if (CharacterInfoWidget)
 	{
-		CharacterInfoWidget->UpdateCritDamage(NewValue);
+		CharacterInfoWidget->UpdateCritDamage();
 	}
 }
 

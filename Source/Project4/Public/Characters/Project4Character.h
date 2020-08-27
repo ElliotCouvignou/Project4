@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "AbilitySystemComponent.h"
 #include "AbilitySystemInterface.h"
+#include "Interactables/ItemWeaponDataAsset.h"
 #include "Project4Character.generated.h"
 
 
@@ -103,6 +104,14 @@ public:
 	/***************************/
 	/*         Utility         */
 	/***************************/
+
+	/* This must be called by the server, mesh will be replicated automatically */
+	/* Also Overrides attack intervals with new one inside weapondata */
+	UFUNCTION(BlueprintCallable, Category = "Utility | Server")
+		void SetRightHandWeaponInfo(const UItemWeaponDataAsset* WeaponDataAsset);
+	UFUNCTION(BlueprintCallable, Category = "Utility | Server")
+		void SetLeftHandWeaponInfo(const UItemWeaponDataAsset* WeaponDataAsset);
+
 
 	void PlayStunnedAnimationMontage();
 

@@ -68,6 +68,19 @@ public:
 	UFUNCTION(Category = Attributes)
 		void UpdateEnduranceRegen(float NewValue);
 
+	/****************/
+	/*     Base     */
+	/****************/
+
+	UFUNCTION(Category = Attributes)
+		void UpdateStrength(float NewValue);
+	UFUNCTION(Category = Attributes)
+		void UpdateDexterity(float NewValue);
+	UFUNCTION(Category = Attributes)
+		void UpdateIntelligence(float NewValue);
+	UFUNCTION(Category = Attributes)
+		void UpdateSpirit(float NewValue);
+
 	/********************/
 	/*     Defensive    */
 	/********************/

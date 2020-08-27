@@ -2,4 +2,11 @@
 
 
 #include "Interactables/ItemBaseDataAsset.h"
-#include "AttributeSet.h"
+
+UItemBaseDataAsset::UItemBaseDataAsset()
+	: Super()
+{
+
+}
+
+
