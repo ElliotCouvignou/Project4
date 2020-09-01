@@ -3,6 +3,8 @@
 
 #include "Interactables/P4ItemBaseActor.h"
 #include "Characters/P4PlayerCharacterBase.h"
+#include "UI/ItemActorNameWidget.cpp"
+
 
 
 #define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Green,text)
@@ -10,8 +12,17 @@
 
 AP4ItemBaseActor::AP4ItemBaseActor() : Super()
 {
-	
+	WidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("WidgetComponent"));
+	WidgetComponent->SetupAttachment(StaticMesh);
+	WidgetComponent->SetWidgetSpace(EWidgetSpace::Screen);
+	WidgetComponent->SetDrawAtDesiredSize(true);
 
+	if (ItemNameWidgetClass)
+	{
+		WidgetComponent->SetWidget(Cast<UUserWidget>(ItemNameWidgetClass));
+	}
+	
+	
 }
 
 void AP4ItemBaseActor::BeginPlay()
@@ -53,6 +64,20 @@ void AP4ItemBaseActor::SetItemStructAndStaticMesh(const FInventoryItemStruct& In
 		{
 			StaticMesh->SetStaticMesh(SM);
 		}
+
+		MultiCastWidgetTextName(InputInventoryItemStruct.ItemBaseDataAsset->ItemInfo.ItemName, InputInventoryItemStruct.ItemBaseDataAsset->ItemInfo.ItemRank);
+	}
+
+	// Relays inventoryItemStruct to others
+	
+}
+
+void AP4ItemBaseActor::MultiCastWidgetTextName_Implementation(const FString& Name, EItemRank ItemRank)
+{
+	UItemActorNameWidget* NameWidget = Cast<UItemActorNameWidget>(WidgetComponent->GetUserWidgetObject());
+	if (NameWidget)
+	{
+		NameWidget->SetItemName(Name, ItemRank);
 	}
 }
 

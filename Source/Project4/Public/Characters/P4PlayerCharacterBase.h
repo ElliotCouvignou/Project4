@@ -84,11 +84,11 @@ protected:
 	/***************************/
 
 	// 'sorted' Array to hold all bound abilities, Index 0 = UseAbility1, 9 = UseAbility0. 
-	UPROPERTY(BlueprintReadOnly, Replicated, EditAnywhere, Category = Abilities)
+	UPROPERTY(BlueprintReadOnly, Replicated, VisibleAnywhere, Category = GAS)
 		TArray<TSubclassOf<class UP4GameplayAbility>> BoundAbilities;
 
 	// 'sorted' in same fashion above, this is essential
-	UPROPERTY(BlueprintReadOnly, Replicated, EditAnywhere, Category = Abilities)
+	UPROPERTY(BlueprintReadOnly, Replicated, VisibleAnywhere, Category = GAS)
 		TArray<FGameplayAbilitySpecHandle> AbilitySpecHandles;
 
 	// grants and binds binds hotbar abilitites 

@@ -63,6 +63,8 @@ public:
 		class UPlayerAttributeSet* GetAttributeSet() const;
 
 
+
+
 	/***************************/
 	/*          Death          */
 	/***************************/
@@ -112,6 +114,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Utility | Server")
 		void SetLeftHandWeaponInfo(const UItemWeaponDataAsset* WeaponDataAsset);
 
+	UFUNCTION(BlueprintCallable, NetMulticast, Reliable, WithValidation, Category = "Utility | Multicast")
+		void MulticastSetWeaponSkeletalMesh(bool IsRightHand, USkeletalMesh* SkeletalMesh);
+	void MulticastSetWeaponSkeletalMesh_Implementation(bool IsRightHand, USkeletalMesh* SkeletalMesh);
+	bool MulticastSetWeaponSkeletalMesh_Validate(bool IsRightHand, USkeletalMesh* SkeletalMesh) {  return true;  }
 
 	void PlayStunnedAnimationMontage();
 
@@ -124,15 +130,25 @@ protected:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "UI")
 		TSubclassOf<class UFloatingStatusBarWidget> UIFloatingStatusBarClass;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Attributes)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = GAS)
 		UDataTable* AttrDataTable;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Abilities)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "GAS | Essential Abilities")
 		class UP4GameplayAbilitySet* EssentialAbilities;
 	
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = Abilities)
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "GAS | Essential GE's")
 		TArray<TSubclassOf<class UGameplayEffect>> StartupEffects;
 
+	/* BP -> C++ variable interface for weapon equip GE (overrides main hand interval attribute) */
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "GAS | Essential GE's")
+		TSubclassOf<UGameplayEffect> EquipWeaponMainGameplayEffect;
+
+	/* BP -> C++ variable interface for weapon equip GE (overrides off hand interval attribute) */
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "GAS | Essential GE's")
+		TSubclassOf<UGameplayEffect> EquipWeaponOffameplayEffect;
+
+	FActiveGameplayEffectHandle WeaponMainActiveGE;
+	FActiveGameplayEffectHandle WeaponOffActiveGE;
 
 	// Called on actorspawn ONLY servers need to call this and startupeffects
 	virtual	void GiveEssentialAbilities();

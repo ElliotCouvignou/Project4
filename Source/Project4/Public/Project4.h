@@ -16,6 +16,7 @@
 #define ABILITY_BLOCK_AMOUNT 10
 #define ABILITY_INPUT_OFFSET 3
 
+
 // location of this struct might need to be moved if necessary
 // ONLY CREATE A NEW ENUM IF: you want to bind an enum to a NEW inputAction event DisplayName
 UENUM(BlueprintType)

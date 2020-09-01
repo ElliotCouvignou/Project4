@@ -187,19 +187,34 @@ public:
 		UFUNCTION()
 		void OnRep_MagicPower(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, MagicPower, Previous); }
 
-	/* Interval of main hand (right hand) auto attack */
-	UPROPERTY(Category = "Player Attributes | Offensive", EditAnywhere, ReplicatedUsing = OnRep_RightHandAttackInterval, BlueprintReadWrite)
-		FGameplayAttributeData RightHandAttackInterval;
-	ATTRIBUTE_ACCESSORS(UP4BaseAttributeSet, RightHandAttackInterval)
+
+	/* Independent Weapon of main hand (Main hand) auto Weapon (so main hand AA damage isnt equal to offhand)  */
+	UPROPERTY(Category = "Player Attributes | Offensive", EditAnywhere, ReplicatedUsing = OnRep_MainHandWeaponPower, BlueprintReadWrite)
+		FGameplayAttributeData MainHandWeaponPower;
+	ATTRIBUTE_ACCESSORS(UP4BaseAttributeSet, MainHandWeaponPower)
 		UFUNCTION()
-		void OnRep_RightHandAttackInterval(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, RightHandAttackInterval, Previous); }
+		void OnRep_MainHandWeaponPower(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, MainHandWeaponPower, Previous); }
+
+	/* Interval of main hand (Main hand) auto attack */
+	UPROPERTY(Category = "Player Attributes | Offensive", EditAnywhere, ReplicatedUsing = OnRep_MainHandAttackInterval, BlueprintReadWrite)
+		FGameplayAttributeData MainHandAttackInterval;
+	ATTRIBUTE_ACCESSORS(UP4BaseAttributeSet, MainHandAttackInterval)
+		UFUNCTION()
+		void OnRep_MainHandAttackInterval(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, MainHandAttackInterval, Previous); }
 
 	/* */
-	UPROPERTY(Category = "Player Attributes | Leftensive", EditAnywhere, ReplicatedUsing = OnRep_LeftHandAttackInterval, BlueprintReadWrite)
-		FGameplayAttributeData LeftHandAttackInterval;
-	ATTRIBUTE_ACCESSORS(UP4BaseAttributeSet, LeftHandAttackInterval)
+	UPROPERTY(Category = "Player Attributes | Offensive", EditAnywhere, ReplicatedUsing = OnRep_OffHandWeaponPower, BlueprintReadWrite)
+		FGameplayAttributeData OffHandWeaponPower;
+	ATTRIBUTE_ACCESSORS(UP4BaseAttributeSet, OffHandWeaponPower)
 		UFUNCTION()
-		void OnRep_LeftHandAttackInterval(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, LeftHandAttackInterval, Previous); }
+		void OnRep_OffHandWeaponPower(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, OffHandWeaponPower, Previous); }
+
+	/* */
+	UPROPERTY(Category = "Player Attributes | Offensive", EditAnywhere, ReplicatedUsing = OnRep_OffHandAttackInterval, BlueprintReadWrite)
+		FGameplayAttributeData OffHandAttackInterval;
+	ATTRIBUTE_ACCESSORS(UP4BaseAttributeSet, OffHandAttackInterval)
+		UFUNCTION()
+		void OnRep_OffHandAttackInterval(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, OffHandAttackInterval, Previous); }
 
 
 	/* % decimal measurement for increase attack speed (e.g 0.3 = 30%), applied to weapon attack interval for total auto attack rate */

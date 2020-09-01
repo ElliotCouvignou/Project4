@@ -1,7 +1,7 @@
 // Project4 Copyright (Elliot Couvignou) Dont steal this mayne :(
 
 
-#include "AbilitySystem/EquipItemGameplayEffect.h"
+#include "AbilitySystem/GameplayEffects/EquipItemGameplayEffect.h"
 
 #define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Green,text)
 

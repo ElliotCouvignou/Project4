@@ -46,6 +46,9 @@ AP4PlayerCharacterBase::AP4PlayerCharacterBase(const class FObjectInitializer& O
 
 	// Create Player Inventory Component
 	InventoryBagComponent = CreateDefaultSubobject<UP4InventoryBagComponent>(TEXT("InventoryBagComponent"));
+	InventoryBagComponent->SetIsReplicated(true);
+	
+
 }
 
 void AP4PlayerCharacterBase::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)

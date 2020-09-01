@@ -20,6 +20,7 @@
 #include "UI/FloatingStatusBarWidget.h"
 
 #include "GameplayAbilitySpec.h"
+#include "GameplayEffect.h"
 #include "AbilitySystemComponent.h"
 #include "AbilitySystemGlobals.h"
 #include "AbilitySystem/P4GameplayAbility.h"
@@ -194,36 +195,103 @@ UFloatingStatusBarWidget* AProject4Character::GetFloatingStatusBarWidget()
 
 void AProject4Character::SetRightHandWeaponInfo(const UItemWeaponDataAsset* WeaponDataAsset)
 {
-	if (WeaponDataAsset && HasAuthority())
+	if (HasAuthority())
 	{
-		if (MeshRH)
+		if (WeaponDataAsset)
 		{
-			USkeletalMesh* SM = WeaponDataAsset->WeaponSkeletalMesh;
-			if (SM)
+			MulticastSetWeaponSkeletalMesh(true, WeaponDataAsset->WeaponSkeletalMesh);
+			
+			// Apply Equip weapon GE for attack interval
+			FGameplayEffectContextHandle EffectContext = AbilitySystemComponent->MakeEffectContext();
+			FGameplayEffectSpecHandle NewHandle = AbilitySystemComponent->MakeOutgoingSpec(EquipWeaponMainGameplayEffect, 1, EffectContext);
+
+			// set by caller with weapon interval to correct attribute, leave other as is 
+			if (NewHandle.IsValid())
 			{
-				MeshRH->SetSkeletalMesh(SM);
+				FGameplayEffectSpec* GESpec = NewHandle.Data.Get();
+				// set interval attribute
+				FGameplayTag RightHandIntervalTag = FGameplayTag::RequestGameplayTag(FName("Data.Attribute.MainHandAttackInterval"));
+				GESpec->SetSetByCallerMagnitude(RightHandIntervalTag, WeaponDataAsset->AttackInterval);
+				// set weapon power attribute
+				FGameplayTag RightHandWeaponPowerTag = FGameplayTag::RequestGameplayTag(FName("Data.Attribute.MainHandWeaponPower"));
+				GESpec->SetSetByCallerMagnitude(RightHandWeaponPowerTag, WeaponDataAsset->WeaponPower);
+
+				WeaponMainActiveGE = AbilitySystemComponent->ApplyGameplayEffectSpecToTarget(*NewHandle.Data.Get(), AbilitySystemComponent.Get());
 			}
 		}
-		GetAttributeSet()->SetRightHandAttackInterval(WeaponDataAsset->AttackInterval);
+		else
+		{
+			MulticastSetWeaponSkeletalMesh(true, nullptr);
+			AbilitySystemComponent->RemoveActiveEffectsWithTags(FGameplayTagContainer(FGameplayTag::RequestGameplayTag("Equippment.Weapon.MainHand")));
+		}
 	}
+	
+	
 }
 
 void AProject4Character::SetLeftHandWeaponInfo(const UItemWeaponDataAsset* WeaponDataAsset)
 {
-	if (WeaponDataAsset && HasAuthority())
+	if (HasAuthority())
 	{
-		if (MeshLH)
+		if (WeaponDataAsset)
 		{
-			USkeletalMesh* SM = WeaponDataAsset->WeaponSkeletalMesh;
-			if (SM)
-			{
-				MeshLH->SetSkeletalMesh(SM);
-			}
+			MulticastSetWeaponSkeletalMesh(false, WeaponDataAsset->WeaponSkeletalMesh);
 
+			// Apply Equip weapon GE for attack interval
+			FGameplayEffectContextHandle EffectContext = AbilitySystemComponent->MakeEffectContext();
+			FGameplayEffectSpecHandle NewHandle = AbilitySystemComponent->MakeOutgoingSpec(EquipWeaponOffameplayEffect, 1, EffectContext);
+
+			// set by caller with weapon interval to correct attribute, leave other as is 
+			if (NewHandle.IsValid())
+			{
+				FGameplayEffectSpec* GESpec = NewHandle.Data.Get();
+				FGameplayTag LeftHandIntervalTag = FGameplayTag::RequestGameplayTag(FName("Data.Attribute.OffHandAttackInterval"));
+				GESpec->SetSetByCallerMagnitude(LeftHandIntervalTag, WeaponDataAsset->AttackInterval);
+
+				FGameplayTag LeftHandWeaponPowerTag = FGameplayTag::RequestGameplayTag(FName("Data.Attribute.OffHandWeaponPower"));
+				GESpec->SetSetByCallerMagnitude(LeftHandWeaponPowerTag, WeaponDataAsset->WeaponPower);
+
+				WeaponOffActiveGE = AbilitySystemComponent->ApplyGameplayEffectSpecToTarget(*NewHandle.Data.Get(), AbilitySystemComponent.Get());
+			}
 		}
-		GetAttributeSet()->SetLeftHandAttackInterval(WeaponDataAsset->AttackInterval);
+		else
+		{
+			MulticastSetWeaponSkeletalMesh(false, nullptr);
+			AbilitySystemComponent->RemoveActiveEffectsWithTags(FGameplayTagContainer(FGameplayTag::RequestGameplayTag("Equippment.Weapon.OffHand")));
+		}
 	}
 	
+}
+
+void AProject4Character::MulticastSetWeaponSkeletalMesh_Implementation(bool IsRightHand, USkeletalMesh* SkeletalMesh)
+{
+	if (SkeletalMesh)
+	{
+		print(FString("Real weapon set"));
+		if (IsRightHand)
+		{
+			MeshRH->SetVisibility(true, true);
+			MeshRH->SetSkeletalMesh(SkeletalMesh);
+		}
+		else
+		{
+			MeshLH->SetVisibility(true, true);
+			MeshLH->SetSkeletalMesh(SkeletalMesh);
+		}
+	}
+	else
+	{
+		print(FString("null weapon set"));
+		if (IsRightHand)
+		{
+			MeshRH->SetVisibility(false, true);
+		}
+		else
+		{
+			MeshLH->SetVisibility(false, true);
+		}
+	}
+
 }
 
 void AProject4Character::PlayStunnedAnimationMontage()
