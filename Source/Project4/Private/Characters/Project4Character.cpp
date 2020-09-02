@@ -200,7 +200,7 @@ void AProject4Character::SetRightHandWeaponInfo(const UItemWeaponDataAsset* Weap
 		if (WeaponDataAsset)
 		{
 			MulticastSetWeaponSkeletalMesh(true, WeaponDataAsset->WeaponSkeletalMesh);
-			
+
 			// Apply Equip weapon GE for attack interval
 			FGameplayEffectContextHandle EffectContext = AbilitySystemComponent->MakeEffectContext();
 			FGameplayEffectSpecHandle NewHandle = AbilitySystemComponent->MakeOutgoingSpec(EquipWeaponMainGameplayEffect, 1, EffectContext);
@@ -216,17 +216,11 @@ void AProject4Character::SetRightHandWeaponInfo(const UItemWeaponDataAsset* Weap
 				FGameplayTag RightHandWeaponPowerTag = FGameplayTag::RequestGameplayTag(FName("Data.Attribute.MainHandWeaponPower"));
 				GESpec->SetSetByCallerMagnitude(RightHandWeaponPowerTag, WeaponDataAsset->WeaponPower);
 
+
 				WeaponMainActiveGE = AbilitySystemComponent->ApplyGameplayEffectSpecToTarget(*NewHandle.Data.Get(), AbilitySystemComponent.Get());
 			}
 		}
-		else
-		{
-			MulticastSetWeaponSkeletalMesh(true, nullptr);
-			AbilitySystemComponent->RemoveActiveEffectsWithTags(FGameplayTagContainer(FGameplayTag::RequestGameplayTag("Equippment.Weapon.MainHand")));
-		}
 	}
-	
-	
 }
 
 void AProject4Character::SetLeftHandWeaponInfo(const UItemWeaponDataAsset* WeaponDataAsset)
@@ -254,20 +248,27 @@ void AProject4Character::SetLeftHandWeaponInfo(const UItemWeaponDataAsset* Weapo
 				WeaponOffActiveGE = AbilitySystemComponent->ApplyGameplayEffectSpecToTarget(*NewHandle.Data.Get(), AbilitySystemComponent.Get());
 			}
 		}
-		else
-		{
-			MulticastSetWeaponSkeletalMesh(false, nullptr);
-			AbilitySystemComponent->RemoveActiveEffectsWithTags(FGameplayTagContainer(FGameplayTag::RequestGameplayTag("Equippment.Weapon.OffHand")));
-		}
 	}
-	
+}
+
+void AProject4Character::ResetRightHandWeaponInfo()
+{
+	MulticastSetWeaponSkeletalMesh(true, nullptr);
+	AbilitySystemComponent->RemoveActiveGameplayEffect(WeaponMainActiveGE, 1);
+	//AbilitySystemComponent->RemoveActiveEffectsWithTags(FGameplayTagContainer(FGameplayTag::RequestGameplayTag("Equippment.Weapon.MainHand")));
+}
+
+void AProject4Character::ResetLeftHandWeaponInfo()
+{
+	MulticastSetWeaponSkeletalMesh(false, nullptr);
+	AbilitySystemComponent->RemoveActiveGameplayEffect(WeaponOffActiveGE, 1);
+	//AbilitySystemComponent->RemoveActiveEffectsWithTags(FGameplayTagContainer(FGameplayTag::RequestGameplayTag("Equippment.Weapon.OffHand")));
 }
 
 void AProject4Character::MulticastSetWeaponSkeletalMesh_Implementation(bool IsRightHand, USkeletalMesh* SkeletalMesh)
 {
 	if (SkeletalMesh)
 	{
-		print(FString("Real weapon set"));
 		if (IsRightHand)
 		{
 			MeshRH->SetVisibility(true, true);
@@ -281,7 +282,6 @@ void AProject4Character::MulticastSetWeaponSkeletalMesh_Implementation(bool IsRi
 	}
 	else
 	{
-		print(FString("null weapon set"));
 		if (IsRightHand)
 		{
 			MeshRH->SetVisibility(false, true);

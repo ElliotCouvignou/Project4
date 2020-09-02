@@ -113,6 +113,10 @@ public:
 		void SetRightHandWeaponInfo(const UItemWeaponDataAsset* WeaponDataAsset);
 	UFUNCTION(BlueprintCallable, Category = "Utility | Server")
 		void SetLeftHandWeaponInfo(const UItemWeaponDataAsset* WeaponDataAsset);
+	UFUNCTION(BlueprintCallable, Category = "Utility | Server")
+		void ResetRightHandWeaponInfo();
+	UFUNCTION(BlueprintCallable, Category = "Utility | Server")
+		void ResetLeftHandWeaponInfo();
 
 	UFUNCTION(BlueprintCallable, NetMulticast, Reliable, WithValidation, Category = "Utility | Multicast")
 		void MulticastSetWeaponSkeletalMesh(bool IsRightHand, USkeletalMesh* SkeletalMesh);

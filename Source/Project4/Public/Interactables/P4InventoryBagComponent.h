@@ -50,12 +50,16 @@ struct FInventoryItemStruct
 		ItemBaseDataAsset = InputItemBaseAsset;
 	}
 
-	FInventoryItemStruct(FInventoryItemStruct* InputInventoryItemStruct)
+	FInventoryItemStruct(const FInventoryItemStruct& InputInventoryItemStruct)
 	{
-		bIsEmpty = false;
-		StackCount = InputInventoryItemStruct->StackCount;
-		ItemBaseDataAsset = InputInventoryItemStruct->ItemBaseDataAsset;
-		ItemBaseDataAsset->ItemInfo = FItemBaseInfoStruct(InputInventoryItemStruct->ItemBaseDataAsset->ItemInfo);
+		bIsEmpty = InputInventoryItemStruct.bIsEmpty;
+		StackCount = InputInventoryItemStruct.StackCount;
+		ItemBaseDataAsset = InputInventoryItemStruct.ItemBaseDataAsset;
+		if (InputInventoryItemStruct.ItemBaseDataAsset)
+		{
+			ItemBaseDataAsset->ItemInfo = FItemBaseInfoStruct(InputInventoryItemStruct.ItemBaseDataAsset->ItemInfo);
+		}
+			
 	}
 };
 
@@ -178,8 +182,8 @@ struct FEquippedItemsStruct
 		BeltSlot = FEquippmentSlotStruct(EEquipSlotType::Belt);
 		LegsSlot = FEquippmentSlotStruct(EEquipSlotType::Legs);
 		BootsSlot = FEquippmentSlotStruct(EEquipSlotType::Boots);
-		RingRightSlot = FEquippmentSlotStruct(EEquipSlotType::RingLeft);
-		RingLeftSlot = FEquippmentSlotStruct(EEquipSlotType::RingRight);
+		RingRightSlot = FEquippmentSlotStruct(EEquipSlotType::RingRight);
+		RingLeftSlot = FEquippmentSlotStruct(EEquipSlotType::RingLeft);
 		BagSlot = FEquippmentSlotStruct(EEquipSlotType::Bag);
 		WeaponLeftSlot = FEquippmentSlotStruct(EEquipSlotType::WeaponLeft);
 		WeaponRightSlot = FEquippmentSlotStruct(EEquipSlotType::WeaponRight);
@@ -344,8 +348,7 @@ public:
 
 	/* Server Helper funciton for doing weapontype Equip */
 	void EquipWeaponItemFromInventory(int InventoryIndex, bool IsRightHand, FInventoryItemStruct& Item);
-
-
+	
 
 
 
