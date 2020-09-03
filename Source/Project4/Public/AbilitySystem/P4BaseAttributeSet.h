@@ -71,6 +71,22 @@ public:
 	ATTRIBUTE_ACCESSORS(UP4BaseAttributeSet, Level) // Macro greates GetLevelAttribute() and GetLevel() which returns attribute and float value respectively
 		UFUNCTION()
 		void OnRep_Level(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, Level, Previous); }
+	
+	/* to be referenced in Inventory component, current weight stored in component */
+	UPROPERTY(Category = "Player Attributes | Progression", EditAnywhere, ReplicatedUsing = OnRep_CarryWeight, BlueprintReadWrite)
+		FGameplayAttributeData CarryWeight;
+	ATTRIBUTE_ACCESSORS(UP4BaseAttributeSet, CarryWeight)
+		UFUNCTION()
+		void OnRep_CarryWeight(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, CarryWeight, Previous); }
+
+
+	/* to be referenced in Inventory component, current weight stored in component */
+	UPROPERTY(Category = "Player Attributes | Progression", EditAnywhere, ReplicatedUsing = OnRep_MaxCarryWeight, BlueprintReadWrite)
+		FGameplayAttributeData MaxCarryWeight;
+	ATTRIBUTE_ACCESSORS(UP4BaseAttributeSet, MaxCarryWeight)
+		UFUNCTION()
+		void OnRep_MaxCarryWeight(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, MaxCarryWeight, Previous); }
+
 
 	////////////////////////////////////
 	/*         Resource Stats        */

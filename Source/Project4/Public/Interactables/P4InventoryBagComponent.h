@@ -1,9 +1,10 @@
-// Project4 Copyright (Elliot Couvignou) Dont steal this mayne :(
+﻿// Project4 Copyright (Elliot Couvignou) Dont steal this mayne :(
 
 #pragma once
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "GameplayEffectTypes.h"
 #include "Interactables/ItemBaseDataAsset.h"
 #include "Interactables/ItemArmorDataAsset.h"
 #include "Interactables/ItemWeaponDataAsset.h"
@@ -36,6 +37,10 @@ struct FInventoryItemStruct
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Essentials")
 		UItemBaseDataAsset* ItemBaseDataAsset;
 
+	/* Holds Active GE for pickup (Adds weight to carryweight player-attribute) */
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Essentials")
+		FActiveGameplayEffectHandle ActiveGE;
+
 	FInventoryItemStruct()
 	{
 		bIsEmpty = true;
@@ -55,6 +60,7 @@ struct FInventoryItemStruct
 		bIsEmpty = InputInventoryItemStruct.bIsEmpty;
 		StackCount = InputInventoryItemStruct.StackCount;
 		ItemBaseDataAsset = InputInventoryItemStruct.ItemBaseDataAsset;
+		ActiveGE = FActiveGameplayEffectHandle(InputInventoryItemStruct.ActiveGE);
 		if (InputInventoryItemStruct.ItemBaseDataAsset)
 		{
 			ItemBaseDataAsset->ItemInfo = FItemBaseInfoStruct(InputInventoryItemStruct.ItemBaseDataAsset->ItemInfo);
@@ -207,9 +213,6 @@ class PROJECT4_API UP4InventoryBagComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-	/* On item removed from inventory */
-	//DECLARE_MULTICAST_DELEGATE_TwoParams(FOnItemRemoved, UItemBaseDataAsset* /* NewItemInfo */, int /* InventoryIndex */);
-
 public:	
 	// Sets default values for this component's properties
 	UP4InventoryBagComponent(const class FObjectInitializer& ObjectInitializer);
@@ -217,6 +220,16 @@ public:
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
+
+	// References to player and their ASC, helpful so server doesn't have to keep trying to find these values
+	// when they are always the same for each IBC
+	UPROPERTY()
+		class AProject4Character* PlayerRef;
+	UPROPERTY()
+		class UAbilitySystemComponent* PlayerASC;
+
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Essential")
+		TSubclassOf<UGameplayEffect> ItemPickupOrDropGE;
 
 	/* in Kg */
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
@@ -236,6 +249,11 @@ protected:
 	/*******************/
 	/*     Utility     */
 	/*******************/
+
+	// gets and sets playerref and playerASC varaibles when they go missing
+	UFUNCTION(Category = "Utility")
+		void GetSetPlayerRefAndASC();
+
 	// Utility codes are bulky and so are shoved to the bottom of .cpp
 	UFUNCTION(Category = "Utility")
 		EEquipSlotType ArmorTypeToEquipSlotType(EArmorType ArmorType, bool IsRightFinger);

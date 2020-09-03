@@ -6,6 +6,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Containers/Array.h"
 
+#include "AbilitySystem/PlayerAttributeSet.h"
 #include "Characters/Project4Character.h"
 #include "Interactables/P4ItemBaseActor.h"
 #include "Interactables/ItemArmorDataAsset.h"
@@ -30,7 +31,24 @@ void UP4InventoryBagComponent::BeginPlay()
 
 	InitializeEmptyInventory();
 	InitializeEmptyEquippment();
+
+	// might not work cause race cond. but why not
+	GetSetPlayerRefAndASC();
 }
+
+void UP4InventoryBagComponent::GetSetPlayerRefAndASC()
+{
+	// try get Player and ASC
+	if (!PlayerRef)
+	{
+		PlayerRef = Cast<AProject4Character>(GetOwner());
+	}
+	if (!PlayerASC)
+	{
+		PlayerASC = Cast<UAbilitySystemComponent>(PlayerRef->GetAbilitySystemComponent());
+	}
+}
+
 
 void UP4InventoryBagComponent::FindFirstEmptySpot(bool& WasSuccessful, int& Index)
 {
@@ -66,11 +84,6 @@ void UP4InventoryBagComponent::InitializeEmptyEquippment()
 	EquippmentSlots = FEquippedItemsStruct();
 
 	WeaponStance = EWeaponStanceType::MeleeDualWield; // unarmed i guess 
-
-	// TODO: push empty weps here
-	//EquippmentArray.Push(FEquippmentSlotStruct(EArmorType::Helmet));
-	//EquippmentArray.Push(FEquippmentSlotStruct(EArmorType::Helmet));
-
 }
 
 
@@ -122,6 +135,10 @@ void UP4InventoryBagComponent::ClientBroadcastEquippmentUpdateDelegate_Implement
 void UP4InventoryBagComponent::ServerAddItemToInventory_Implementation(const FInventoryItemStruct& NewItem, AActor* Instigator)
 {
 	bool WasSucessful;
+	if (!PlayerRef || !PlayerASC)
+	{
+		GetSetPlayerRefAndASC();
+	}
 
 	if (NewItem.ItemBaseDataAsset && NewItem.ItemBaseDataAsset->ItemInfo.bIsStackable)
 	{
@@ -138,6 +155,8 @@ void UP4InventoryBagComponent::ServerAddItemToInventory_Implementation(const FIn
 				InventoryArray[idx].StackCount += StacksToFill;
 				OnInventorySlotUpdated.Broadcast(NewItem, idx);
 				ClientBroadcastInventoryUpdateDelegate(NewItem, idx);
+
+				// TODO: add weight, maybe fix this bit as it doesnt really make sense intuitively 
 
 				// Check overflow
 				if (InventoryArray[idx].StackCount > InventoryArray[idx].ItemBaseDataAsset->ItemInfo.MaxStackCount)
@@ -159,12 +178,23 @@ void UP4InventoryBagComponent::ServerAddItemToInventory_Implementation(const FIn
 		FindFirstEmptySpot(WasSucessful, Index);
 		if (WasSucessful)
 		{
-			InventoryArray.Insert(NewItem, Index);
-			OnInventorySlotUpdated.Broadcast(NewItem, Index);
-			ClientBroadcastInventoryUpdateDelegate(NewItem, Index);
+			// add weight
+			FGameplayEffectSpecHandle PickupEffectSpec = PlayerASC->MakeOutgoingSpec(ItemPickupOrDropGE, 1, PlayerASC->MakeEffectContext());
+			if (PickupEffectSpec.IsValid())
+			{
+				FGameplayEffectSpec* GESpec = PickupEffectSpec.Data.Get();
+				FGameplayTag CarryWeight = FGameplayTag::RequestGameplayTag(FName("Data.Attribute.CarryWeight"));
+				GESpec->SetSetByCallerMagnitude(CarryWeight, NewItem.ItemBaseDataAsset->ItemInfo.ItemWeight);
 
-			// delete item
-			Instigator->Destroy();
+				InventoryArray.Insert(NewItem, Index);
+				OnInventorySlotUpdated.Broadcast(NewItem, Index);
+				ClientBroadcastInventoryUpdateDelegate(NewItem, Index);
+
+				InventoryArray[Index].ActiveGE = PlayerASC->ApplyGameplayEffectSpecToTarget(*PickupEffectSpec.Data.Get(), PlayerASC);
+
+				// delete item
+				Instigator->Destroy();
+			}
 		}
 	}
 }
@@ -173,6 +203,10 @@ void UP4InventoryBagComponent::ServerAddItemToInventory_Implementation(const FIn
 void UP4InventoryBagComponent::ServerDropItemFromInventory_Implementation(int InventoryIndex)
 {
 	FInventoryItemStruct Item = InventoryArray[InventoryIndex];
+	if (!PlayerRef || !PlayerASC)
+	{
+		GetSetPlayerRefAndASC();
+	}
 	
 	if (!Item.bIsEmpty && Item.ItemBaseDataAsset)
 	{
@@ -196,15 +230,16 @@ void UP4InventoryBagComponent::ServerDropItemFromInventory_Implementation(int In
 					// Spawn Actor
 					UGameplayStatics::FinishSpawningActor(ItemBase, GetOwner()->GetTransform());
 
+					// remove added weight GE
+					PlayerASC->RemoveActiveGameplayEffect(InventoryArray[InventoryIndex].ActiveGE, 1);
+
 					InventoryArray[InventoryIndex] = FInventoryItemStruct();
 					OnInventorySlotUpdated.Broadcast(FInventoryItemStruct(), InventoryIndex);
 					ClientBroadcastInventoryUpdateDelegate(FInventoryItemStruct(), InventoryIndex);
 				}
 			}
-		}
-		
+		}	
 	}
-	
 }
 
 
@@ -215,6 +250,11 @@ void UP4InventoryBagComponent::ServerEquipItemFromInventory_Implementation(int I
 
 	if (!Item.bIsEmpty && Item.ItemBaseDataAsset)
 	{
+		if (!PlayerRef || !PlayerASC)
+		{
+			GetSetPlayerRefAndASC();
+		}
+
 		if (Item.ItemBaseDataAsset->ItemInfo.ItemType == EItemType::Armor)
 		{
 			EquipArmorItemFromInventory(InventoryIndex, IsRightSide, Item);
@@ -236,35 +276,27 @@ void UP4InventoryBagComponent::EquipArmorItemFromInventory(int InventoryIndex, b
 		EEquipSlotType EquipSlotType = ArmorTypeToEquipSlotType(ArmorItem->ArmorType, IsRightFinger);
 		if (GetEquipSlotInfo(EquipSlotType, EquipSlot))
 		{
-			AProject4Character* P4Char = Cast<AProject4Character>(GetOwner());
-			if (P4Char)
+			// Check for swap case, place equipped item in inventory
+			InventoryArray[InventoryIndex] = FInventoryItemStruct();
+			if (!EquipSlot.InventoryItemStruct.bIsEmpty)
 			{
-				UAbilitySystemComponent* ASC = P4Char->GetAbilitySystemComponent();
-				if (ASC)
-				{
-					// Check for swap case, place equipped item in inventory
-					InventoryArray[InventoryIndex] = FInventoryItemStruct();
-					if (!EquipSlot.InventoryItemStruct.bIsEmpty)
-					{
-						ASC->RemoveActiveGameplayEffect(EquipSlot.EqippedEffectHandle);						
-						InventoryArray[InventoryIndex] = FInventoryItemStruct(EquipSlot.InventoryItemStruct);
-					}
+				PlayerASC->RemoveActiveGameplayEffect(EquipSlot.EqippedEffectHandle);
+				InventoryArray[InventoryIndex] = FInventoryItemStruct(EquipSlot.InventoryItemStruct);
+			}
 
-					// Apply GE and set equip slot info, if both succeed then broadcast
-					FActiveGameplayEffectHandle EqippedEffectHandle = ASC->BP_ApplyGameplayEffectToSelf(ArmorItem->EquippedGameplayEffect, 1, ASC->MakeEffectContext());
-					if (EqippedEffectHandle.WasSuccessfullyApplied() && SetEquipSlotInfo(EquipSlotType, Item, EqippedEffectHandle))
-					{
-						OnInventorySlotUpdated.Broadcast(InventoryArray[InventoryIndex], InventoryIndex);
-						ClientBroadcastInventoryUpdateDelegate(InventoryArray[InventoryIndex], InventoryIndex);
+			// Apply GE and set equip slot info, if both succeed then broadcast
+			FActiveGameplayEffectHandle EqippedEffectHandle = PlayerASC->BP_ApplyGameplayEffectToSelf(ArmorItem->EquippedGameplayEffect, 1, PlayerASC->MakeEffectContext());
+			if (EqippedEffectHandle.WasSuccessfullyApplied() && SetEquipSlotInfo(EquipSlotType, Item, EqippedEffectHandle))
+			{
+				OnInventorySlotUpdated.Broadcast(InventoryArray[InventoryIndex], InventoryIndex);
+				ClientBroadcastInventoryUpdateDelegate(InventoryArray[InventoryIndex], InventoryIndex);
 
-						// done here
-						return;
-					}
-					else
-					{
-						print(FString("Failed equip armor GE"));
-					}
-				}
+				// done here
+				return;
+			}
+			else
+			{
+				print(FString("Failed equip armor GE"));
 			}
 		}
 	}
@@ -284,117 +316,108 @@ void UP4InventoryBagComponent::EquipWeaponItemFromInventory(int InventoryIndex, 
 			UItemWeaponDataAsset* MainWep = Cast<UItemWeaponDataAsset>(MainHandEquipSlot.InventoryItemStruct.ItemBaseDataAsset);
 			UItemWeaponDataAsset* OffWep = Cast<UItemWeaponDataAsset>(OffHandEquipSlot.InventoryItemStruct.ItemBaseDataAsset);
 
-			AProject4Character* P4Char = Cast<AProject4Character>(GetOwner());
-			if (P4Char)
+			/*     UNEQUIP Weapons that are in the way..     */
+
+			// place empty inventory spot, if we swap then this will be overwritten before delegate broadcast
+			InventoryArray[InventoryIndex] = FInventoryItemStruct();
+
+			// checks and does swap depending on item handtype
+			if (WeaponStance == EWeaponStanceType::MeleeDualWield || WeaponStance == EWeaponStanceType::RangedDualWield)
 			{
-				UAbilitySystemComponent* ASC = P4Char->GetAbilitySystemComponent();
-				if (ASC)
+				//  if equipping 2h then remove both, else remove desired
+				if (WeaponItem->WeaponHandType == EWeaponHandType::BothHands)
 				{
-					/*     UNEQUIP Weapons that are in the way..     */
-
-					// place empty inventory spot, if we swap then this will be overwritten before delegate broadcast
-					InventoryArray[InventoryIndex] = FInventoryItemStruct();
-
-					// checks and does swap depending on item handtype
-					if (WeaponStance == EWeaponStanceType::MeleeDualWield || WeaponStance == EWeaponStanceType::RangedDualWield)
+					// Unequip both items
+					if (MainWep && PlayerASC->RemoveActiveGameplayEffect(MainHandEquipSlot.EqippedEffectHandle))
 					{
-						//  if equipping 2h then remove both, else remove desired
-						if (WeaponItem->WeaponHandType == EWeaponHandType::BothHands)
+						PlayerRef->ResetRightHandWeaponInfo();
+						InventoryArray[InventoryIndex] = FInventoryItemStruct(MainHandEquipSlot.InventoryItemStruct);
+
+						bool success; int index;
+						FindFirstEmptySpot(success, index);
+						if (OffWep && success)
 						{
-							// Unequip both items
-							if (MainWep && ASC->RemoveActiveGameplayEffect(MainHandEquipSlot.EqippedEffectHandle))
+							// here if need to unequip both weapons
+							if (PlayerASC->RemoveActiveGameplayEffect(OffHandEquipSlot.EqippedEffectHandle))
 							{
-								P4Char->ResetRightHandWeaponInfo();
-								InventoryArray[InventoryIndex] = FInventoryItemStruct(MainHandEquipSlot.InventoryItemStruct);
+								PlayerRef->ResetLeftHandWeaponInfo();
 
-								bool success; int index;
-								FindFirstEmptySpot(success, index);
-								if (OffWep && success)
-								{
-									// here if need to unequip both weapons
-									if (ASC->RemoveActiveGameplayEffect(OffHandEquipSlot.EqippedEffectHandle))
-									{
-										P4Char->ResetLeftHandWeaponInfo();
+								// broadcast changes since only time another index is relevant
+								InventoryArray[index] = FInventoryItemStruct(OffHandEquipSlot.InventoryItemStruct);
+								OnInventorySlotUpdated.Broadcast(InventoryArray[index], index);
+								ClientBroadcastInventoryUpdateDelegate(InventoryArray[index], index);
 
-										// broadcast changes since only time another index is relevant
-										InventoryArray[index] = FInventoryItemStruct(OffHandEquipSlot.InventoryItemStruct);
-										OnInventorySlotUpdated.Broadcast(InventoryArray[index], index);
-										ClientBroadcastInventoryUpdateDelegate(InventoryArray[index], index);
-
-										SetEquipSlotInfo(EEquipSlotType::WeaponLeft, FInventoryItemStruct(), FActiveGameplayEffectHandle());
-									}
-								}
-							}
-							else if (OffWep && ASC->RemoveActiveGameplayEffect(OffHandEquipSlot.EqippedEffectHandle))
-							{
-								P4Char->ResetRightHandWeaponInfo();
-								InventoryArray[InventoryIndex] = FInventoryItemStruct(OffHandEquipSlot.InventoryItemStruct);
-							}
-						}
-						else {
-							if (IsRightHand && MainWep)
-							{
-								if (ASC->RemoveActiveGameplayEffect(MainHandEquipSlot.EqippedEffectHandle)) {
-									P4Char->ResetRightHandWeaponInfo();
-									InventoryArray[InventoryIndex] = FInventoryItemStruct(MainHandEquipSlot.InventoryItemStruct);
-								}
-							}
-							else if (!IsRightHand && OffWep)
-							{
-								if(ASC->RemoveActiveGameplayEffect(OffHandEquipSlot.EqippedEffectHandle)) {
-									P4Char->ResetLeftHandWeaponInfo();
-									InventoryArray[InventoryIndex] = FInventoryItemStruct(OffHandEquipSlot.InventoryItemStruct);
-								}
+								SetEquipSlotInfo(EEquipSlotType::WeaponLeft, FInventoryItemStruct(), FActiveGameplayEffectHandle());
 							}
 						}
 					}
-					else if ((MainWep) && (WeaponStance == EWeaponStanceType::MeleeMainHandOnly || WeaponStance == EWeaponStanceType::RangedMainHandOnly))
+					else if (OffWep && PlayerASC->RemoveActiveGameplayEffect(OffHandEquipSlot.EqippedEffectHandle))
 					{
-						// just remove mainhand, do unique check for quiver equip onto bow/crossbow
-						if (!((WeaponItem->WeaponType == EWeaponType::Quiver) && (MainWep->WeaponType == EWeaponType::Bow || MainWep->WeaponType == EWeaponType::Crossbow)))
-						{
-							if (ASC->RemoveActiveGameplayEffect(MainHandEquipSlot.EqippedEffectHandle))
-							{
-								// remove Attribute GE
-								P4Char->ResetRightHandWeaponInfo();
-								if (!IsRightHand)
-								{
-									// empty mainhand slot if set some offhander to undo 2h
-									SetEquipSlotInfo(EEquipSlotType::WeaponRight, FInventoryItemStruct(), FActiveGameplayEffectHandle());
-								}
-								InventoryArray[InventoryIndex] = FInventoryItemStruct(MainHandEquipSlot.InventoryItemStruct);
-							}
-						}
-					}
-
-
-					/*     Equip Inputted Weapon     */
-					FActiveGameplayEffectHandle EqippedEffectHandle = ASC->BP_ApplyGameplayEffectToSelf(WeaponItem->EquippedGameplayEffect, 1, ASC->MakeEffectContext());
-					if (EqippedEffectHandle.WasSuccessfullyApplied())
-					{
-						if (IsRightHand)
-							SetEquipSlotInfo(EEquipSlotType::WeaponRight, Item, EqippedEffectHandle);
-						else
-							SetEquipSlotInfo(EEquipSlotType::WeaponLeft, Item, EqippedEffectHandle);
-
-						SetNewWeaponStanceFromWeapon(WeaponItem);
-
-						if (IsRightHand)
-							P4Char->SetRightHandWeaponInfo(WeaponItem);
-						else
-							P4Char->SetLeftHandWeaponInfo(WeaponItem);
-
-						OnInventorySlotUpdated.Broadcast(InventoryArray[InventoryIndex], InventoryIndex);
-						ClientBroadcastInventoryUpdateDelegate(InventoryArray[InventoryIndex], InventoryIndex);
-
-						// done here
-						return;
-					}
-					else
-					{
-						print(FString("Invalid GE equip applying :(0"));
+						PlayerRef->ResetRightHandWeaponInfo();
+						InventoryArray[InventoryIndex] = FInventoryItemStruct(OffHandEquipSlot.InventoryItemStruct);
 					}
 				}
+				else {
+					if (IsRightHand && MainWep)
+					{
+						if (PlayerASC->RemoveActiveGameplayEffect(MainHandEquipSlot.EqippedEffectHandle)) {
+							PlayerRef->ResetRightHandWeaponInfo();
+							InventoryArray[InventoryIndex] = FInventoryItemStruct(MainHandEquipSlot.InventoryItemStruct);
+						}
+					}
+					else if (!IsRightHand && OffWep)
+					{
+						if(PlayerASC->RemoveActiveGameplayEffect(OffHandEquipSlot.EqippedEffectHandle)) {
+							PlayerRef->ResetLeftHandWeaponInfo();
+							InventoryArray[InventoryIndex] = FInventoryItemStruct(OffHandEquipSlot.InventoryItemStruct);
+						}
+					}
+				}
+			}
+			else if ((MainWep) && (WeaponStance == EWeaponStanceType::MeleeMainHandOnly || WeaponStance == EWeaponStanceType::RangedMainHandOnly))
+			{
+				// just remove mainhand, do unique check for quiver equip onto bow/crossbow
+				if (!((WeaponItem->WeaponType == EWeaponType::Quiver) && (MainWep->WeaponType == EWeaponType::Bow || MainWep->WeaponType == EWeaponType::Crossbow)))
+				{
+					if (PlayerASC->RemoveActiveGameplayEffect(MainHandEquipSlot.EqippedEffectHandle))
+					{
+						// remove Attribute GE
+						PlayerRef->ResetRightHandWeaponInfo();
+						if (!IsRightHand)
+						{
+							// empty mainhand slot if set some offhander to undo 2h
+							SetEquipSlotInfo(EEquipSlotType::WeaponRight, FInventoryItemStruct(), FActiveGameplayEffectHandle());
+						}
+						InventoryArray[InventoryIndex] = FInventoryItemStruct(MainHandEquipSlot.InventoryItemStruct);
+					}
+				}
+			}
+
+
+			/*     Equip Inputted Weapon     */
+			FActiveGameplayEffectHandle EqippedEffectHandle = PlayerASC->BP_ApplyGameplayEffectToSelf(WeaponItem->EquippedGameplayEffect, 1, PlayerASC->MakeEffectContext());
+			if (EqippedEffectHandle.WasSuccessfullyApplied())
+			{
+				if (IsRightHand)
+					SetEquipSlotInfo(EEquipSlotType::WeaponRight, Item, EqippedEffectHandle);
+				else
+					SetEquipSlotInfo(EEquipSlotType::WeaponLeft, Item, EqippedEffectHandle);
+
+				SetNewWeaponStanceFromWeapon(WeaponItem);
+
+				if (IsRightHand)
+					PlayerRef->SetRightHandWeaponInfo(WeaponItem);
+				else
+					PlayerRef->SetLeftHandWeaponInfo(WeaponItem);
+
+				OnInventorySlotUpdated.Broadcast(InventoryArray[InventoryIndex], InventoryIndex);
+				ClientBroadcastInventoryUpdateDelegate(InventoryArray[InventoryIndex], InventoryIndex);
+				// done here
+				return;
+			}
+			else
+			{
+				print(FString("Invalid GE equip applying :(0"));
 			}
 		}
 	}
@@ -415,35 +438,32 @@ void UP4InventoryBagComponent::ServerUnEquipItemFromInventory_Implementation(EEq
 			FindFirstEmptySpot(success, Index);
 			if (success)
 			{
-				AProject4Character* P4Char = Cast<AProject4Character>(GetOwner());
-				if (P4Char)
+				if (!PlayerRef || !PlayerASC)
 				{
-					UAbilitySystemComponent* ASC = P4Char->GetAbilitySystemComponent();
-					if (ASC)
-					{
-						// remove only one stack since we could wear two rings of same type
-						if (ASC->RemoveActiveGameplayEffect(EquipSlot.EqippedEffectHandle, 1))
-						{
-							// place empty inventory spot
-							InventoryArray[Index] = FInventoryItemStruct(EquipSlot.InventoryItemStruct);
-							OnInventorySlotUpdated.Broadcast(InventoryArray[Index], Index);
-							ClientBroadcastInventoryUpdateDelegate(InventoryArray[Index], Index);
+					GetSetPlayerRefAndASC();
+				}
+				
+				// remove only one stack since we could wear two rings of same type
+				if (PlayerASC->RemoveActiveGameplayEffect(EquipSlot.EqippedEffectHandle, 1))
+				{
+					// place empty inventory spot
+					InventoryArray[Index] = FInventoryItemStruct(EquipSlot.InventoryItemStruct);
+					OnInventorySlotUpdated.Broadcast(InventoryArray[Index], Index);
+					ClientBroadcastInventoryUpdateDelegate(InventoryArray[Index], Index);
 
-							SetEquipSlotInfo(EquipSlotType, FInventoryItemStruct(), FActiveGameplayEffectHandle());
+					SetEquipSlotInfo(EquipSlotType, FInventoryItemStruct(), FActiveGameplayEffectHandle());
 
-							if (EquipSlotType == EEquipSlotType::WeaponRight)
-								P4Char->ResetRightHandWeaponInfo();
-							else if (EquipSlotType == EEquipSlotType::WeaponLeft)
-								P4Char->ResetLeftHandWeaponInfo();
+					if (EquipSlotType == EEquipSlotType::WeaponRight)
+						PlayerRef->ResetRightHandWeaponInfo();
+					else if (EquipSlotType == EEquipSlotType::WeaponLeft)
+						PlayerRef->ResetLeftHandWeaponInfo();
 
-							// done here
-							return;
-						}
-						else
-						{
-							print(FString("failed to remove active GE on unequip :("));
-						}
-					}
+					// done here
+					return;
+				}
+				else
+				{
+					print(FString("failed to remove active GE on unequip :("));
 				}
 			}
 			else
@@ -538,6 +558,7 @@ void UP4InventoryBagComponent::SetNewWeaponStanceFromWeapon(const UItemWeaponDat
 	}
 
 }
+
 
 EEquipSlotType UP4InventoryBagComponent::ArmorTypeToEquipSlotType(EArmorType ArmorType, bool IsRightFinger)
 {

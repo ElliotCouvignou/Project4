@@ -23,7 +23,7 @@ AProject4PlayerState::AProject4PlayerState()
 	AbilitySystemComponent = CreateDefaultSubobject<UP4AbilitySystemComponent>(TEXT("AbilitySystem"));
     AbilitySystemComponent->SetIsReplicated(true);
     AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
-    
+
     AttributeSet = CreateDefaultSubobject<UPlayerAttributeSet>(TEXT("AttributeSet"));
 
 	NetUpdateFrequency = 10.f;
@@ -80,6 +80,11 @@ void AProject4PlayerState::BindAbilityDelegates()
 		EnduranceRegenChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetEnduranceRegenAttribute()).AddUObject(this, &AProject4PlayerState::EnduranceRegenChanged);
 
 		/* following Delegates are UI ONLY, dont waste server's time */
+		/*   Progression Stat Bindings   */
+		LevelChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetLevelAttribute()).AddUObject(this, &AProject4PlayerState::LevelChanged);
+		CarryWeightChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetCarryWeightAttribute()).AddUObject(this, &AProject4PlayerState::CarryWeightChanged);
+		MaxCarryWeightChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetMaxCarryWeightAttribute()).AddUObject(this, &AProject4PlayerState::MaxCarryWeightChanged);
+
 		/*   Base Stat Bindings   */
 		StrengthChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetStrengthAttribute()).AddUObject(this, &AProject4PlayerState::StrengthChanged);
 		DexterityChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetDexterityAttribute()).AddUObject(this, &AProject4PlayerState::DexterityChanged);
@@ -210,6 +215,44 @@ void AProject4PlayerState::OnBuffGameplayEffectStackChanged(FActiveGameplayEffec
 	}
 }
 
+void AProject4PlayerState::CarryWeightChanged(const FOnAttributeChangeData& Data)
+{
+	AProject4Controller* PC = Cast<AProject4Controller>(GetOwner());
+	if (PC)
+	{
+		UGameplayHudWidget* HUD = PC->GetMainHUDWidget();
+		if (HUD)
+		{	
+			HUD->UpdateCurrentCarryWeight(Data.NewValue);
+		}
+	}
+}
+
+void AProject4PlayerState::MaxCarryWeightChanged(const FOnAttributeChangeData& Data)
+{
+	AProject4Controller* PC = Cast<AProject4Controller>(GetOwner());
+	if (PC)
+	{
+		UGameplayHudWidget* HUD = PC->GetMainHUDWidget();
+		if (HUD)
+		{
+			HUD->UpdateMaxCarryWeight(Data.NewValue);
+		}
+	}
+}
+
+void AProject4PlayerState::LevelChanged(const FOnAttributeChangeData& Data)
+{
+	AProject4Controller* PC = Cast<AProject4Controller>(GetOwner());
+	if (PC)
+	{
+		UGameplayHudWidget* HUD = PC->GetMainHUDWidget();
+		if (HUD)
+		{
+			HUD->UpdatePlayerLevel(Data.NewValue);
+		}
+	}
+}
 
 void AProject4PlayerState::StrengthChanged(const FOnAttributeChangeData& Data)
 {

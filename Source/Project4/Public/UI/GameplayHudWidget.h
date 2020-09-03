@@ -27,6 +27,9 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Crosshair")
 		float CrosshairScreenYOffset;
 
+	UFUNCTION(Category = Attributes)
+		void UpdatePlayerName(const FString& NewName);
+
 	/***********************/
 	/*     Progression     */
 	/***********************/
@@ -37,10 +40,9 @@ public:
 		void UpdateMaxXP(float NewMaxXP);
 	UFUNCTION(Category = Attributes)
 		void UpdatePlayerLevel(float NewLevel);
-
-
 	UFUNCTION(Category = Attributes)
-		void UpdatePlayerName(const FString& NewName);
+		void UpdateMaxCarryWeight(float NewValue);
+
 
 
 	/********************/
@@ -118,6 +120,7 @@ public:
 	/* Blueprint implementable functions, for widgets that dont 
 		need a special class made for them in c++ so let BP's 
 		handle from here (only need 1 function for this widget) */
+
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 		void SetRespawnCountdown(float Duration);
 
@@ -137,15 +140,20 @@ public:
 		void RemoveBuffIconFromUI(const FGameplayTag& BuffTag);
 
 
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Input Menus")
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Input Menus | Inventory")
 		void OpenCharacterInfoWidget();
 
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Input Menus")
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Input Menus | Inventory")
 		void OpenInventoryBagWidget();
 
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Input Menus")
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Input Menus | Inventory")
 		void OpenSkillsWidget();
 
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Input Menus | Inventory")
+		void InventoryUpdateMaxCarryWeight(float NewValue);
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Input Menus | Inventory")
+		void UpdateCurrentCarryWeight(float NewValue);
 
 protected:
 

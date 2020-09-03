@@ -157,6 +157,11 @@ void UGameplayHudWidget::UpdatePlayerLevel(float NewLevel)
 	}
 }
 
+void UGameplayHudWidget::UpdateMaxCarryWeight(float NewValue)
+{
+	InventoryUpdateMaxCarryWeight(NewValue);
+}
+
 void UGameplayHudWidget::UpdateStrength(float NewValue)
 {
 	if (CharacterInfoWidget)
