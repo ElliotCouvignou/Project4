@@ -18,6 +18,8 @@ class PROJECT4_API AP4MobCharacterBase : public AProject4Character
 public:
 	AP4MobCharacterBase(const class FObjectInitializer& ObjectInitializer);
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "AI | Patrol ")
+		TArray<FVector> PatrolPoints;
 
 protected:
 

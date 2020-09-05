@@ -110,7 +110,7 @@ bool AProject4Character::IsAlive() const
 void AProject4Character::Die()
 {
 	// Stop player and remove collisions, freeze in air
-	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	//GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	//GetCharacterMovement()->GravityScale = 0;
 	//GetCharacterMovement()->Velocity = FVector(0);
 
@@ -128,7 +128,9 @@ void AProject4Character::Die()
 	// play death montage if set, else play ALS ragdoll with manual delay
 	if (DeathMontage)
 	{
+		print(FString("Play death montage"));
 		PlayAnimMontage(DeathMontage);
+		GetWorld()->GetTimerManager().SetTimer(RadgollDeathHandle, this, &AProject4Character::FinishDying, DeathMontage->GetPlayLength(), false);
 	}
 	else
 	{
@@ -179,7 +181,7 @@ void AProject4Character::InitFloatingStatusBarWidget()
 
 					// Setup the floating status bar
 					UIFloatingStatusBar->SetHealthPercentage(AttributeSet->GetHealth() / AttributeSet->GetHealthMax());
-
+					UIFloatingStatusBar->SetCharacterName(CharacterName);
 					// TODO: set real character name in floating bar
 					//UIFloatingStatusBar->SetCharacterName(CharacterName);
 				}
@@ -273,6 +275,7 @@ void AProject4Character::MulticastSetWeaponSkeletalMesh_Implementation(bool IsRi
 		{
 			MeshRH->SetVisibility(true, true);
 			MeshRH->SetSkeletalMesh(SkeletalMesh);
+			
 		}
 		else
 		{
