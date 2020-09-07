@@ -201,7 +201,7 @@ void AProject4Character::SetRightHandWeaponInfo(const UItemWeaponDataAsset* Weap
 	{
 		if (WeaponDataAsset)
 		{
-			MulticastSetWeaponSkeletalMesh(true, WeaponDataAsset->WeaponSkeletalMesh);
+			MulticastSetWeaponSkeletalMesh(true, WeaponDataAsset->WeaponSkeletalMesh, WeaponDataAsset->MainHandAttatchTransform);
 
 			// Apply Equip weapon GE for attack interval
 			FGameplayEffectContextHandle EffectContext = AbilitySystemComponent->MakeEffectContext();
@@ -231,7 +231,7 @@ void AProject4Character::SetLeftHandWeaponInfo(const UItemWeaponDataAsset* Weapo
 	{
 		if (WeaponDataAsset)
 		{
-			MulticastSetWeaponSkeletalMesh(false, WeaponDataAsset->WeaponSkeletalMesh);
+			MulticastSetWeaponSkeletalMesh(false, WeaponDataAsset->WeaponSkeletalMesh, WeaponDataAsset->OffHandAttatchTransform);
 
 			// Apply Equip weapon GE for attack interval
 			FGameplayEffectContextHandle EffectContext = AbilitySystemComponent->MakeEffectContext();
@@ -255,19 +255,19 @@ void AProject4Character::SetLeftHandWeaponInfo(const UItemWeaponDataAsset* Weapo
 
 void AProject4Character::ResetRightHandWeaponInfo()
 {
-	MulticastSetWeaponSkeletalMesh(true, nullptr);
+	MulticastSetWeaponSkeletalMesh(true, nullptr, FTransform());
 	AbilitySystemComponent->RemoveActiveGameplayEffect(WeaponMainActiveGE, 1);
 	//AbilitySystemComponent->RemoveActiveEffectsWithTags(FGameplayTagContainer(FGameplayTag::RequestGameplayTag("Equippment.Weapon.MainHand")));
 }
 
 void AProject4Character::ResetLeftHandWeaponInfo()
 {
-	MulticastSetWeaponSkeletalMesh(false, nullptr);
+	MulticastSetWeaponSkeletalMesh(false, nullptr, FTransform());
 	AbilitySystemComponent->RemoveActiveGameplayEffect(WeaponOffActiveGE, 1);
 	//AbilitySystemComponent->RemoveActiveEffectsWithTags(FGameplayTagContainer(FGameplayTag::RequestGameplayTag("Equippment.Weapon.OffHand")));
 }
 
-void AProject4Character::MulticastSetWeaponSkeletalMesh_Implementation(bool IsRightHand, USkeletalMesh* SkeletalMesh)
+void AProject4Character::MulticastSetWeaponSkeletalMesh_Implementation(bool IsRightHand, USkeletalMesh* SkeletalMesh, const FTransform& Transform)
 {
 	if (SkeletalMesh)
 	{
@@ -275,12 +275,13 @@ void AProject4Character::MulticastSetWeaponSkeletalMesh_Implementation(bool IsRi
 		{
 			MeshRH->SetVisibility(true, true);
 			MeshRH->SetSkeletalMesh(SkeletalMesh);
-			
+			MeshRH->SetRelativeTransform(Transform);
 		}
 		else
 		{
 			MeshLH->SetVisibility(true, true);
 			MeshLH->SetSkeletalMesh(SkeletalMesh);
+			MeshLH->SetRelativeTransform(Transform);
 		}
 	}
 	else

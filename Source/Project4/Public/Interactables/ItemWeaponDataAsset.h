@@ -58,26 +58,34 @@ public:
 	UItemWeaponDataAsset();
 
 	// Not much addon just more specific on what armor type the armor item is
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Item | Weapon")
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Weapon")
 		EWeaponType WeaponType;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Item | Weapon")
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Weapon")
 		EWeaponHandType WeaponHandType;
 
 	/* Visual mesh (Not the appearence when dropped) */
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Item | Weapon")
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Weapon")
 		USkeletalMesh* WeaponSkeletalMesh;
 
 	/* Although this goes into attributes it cannot go into the GE since it will need to know which attribute (main or off) to addon to */
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Item | Weapon")
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Weapon | Stats")
 		float AttackInterval;
 
 	/* Goes into independent weapon attack power for auto attacks */
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Item | Weapon")
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Weapon | Stats")
 		float WeaponPower;
 
+	/* Goes into independent weapon attack power for auto attacks */
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Weapon | Stats")
+		FTransform MainHandAttatchTransform;
+
+	/* Goes into independent weapon attack power for auto attacks */
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Weapon | Stats")
+		FTransform OffHandAttatchTransform;
+
 	/* Use a gameplay effect to fill out attribute buffs to reduce serverload at cost of game memory size (not that much hopefully) */
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Item | Weapon")
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Weapon")
 		TSubclassOf<UGameplayEffect> EquippedGameplayEffect;
 
 

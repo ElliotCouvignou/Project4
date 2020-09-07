@@ -353,7 +353,7 @@ void UP4InventoryBagComponent::EquipWeaponItemFromInventory(int InventoryIndex, 
 					}
 					else if (OffWep && PlayerASC->RemoveActiveGameplayEffect(OffHandEquipSlot.EqippedEffectHandle))
 					{
-						PlayerRef->ResetRightHandWeaponInfo();
+						PlayerRef->ResetLeftHandWeaponInfo();
 						InventoryArray[InventoryIndex] = FInventoryItemStruct(OffHandEquipSlot.InventoryItemStruct);
 					}
 				}

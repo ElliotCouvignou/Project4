@@ -119,9 +119,9 @@ public:
 		void ResetLeftHandWeaponInfo();
 
 	UFUNCTION(BlueprintCallable, NetMulticast, Reliable, WithValidation, Category = "Utility | Multicast")
-		void MulticastSetWeaponSkeletalMesh(bool IsRightHand, USkeletalMesh* SkeletalMesh);
-	void MulticastSetWeaponSkeletalMesh_Implementation(bool IsRightHand, USkeletalMesh* SkeletalMesh);
-	bool MulticastSetWeaponSkeletalMesh_Validate(bool IsRightHand, USkeletalMesh* SkeletalMesh) {  return true;  }
+		void MulticastSetWeaponSkeletalMesh(bool IsRightHand, USkeletalMesh* SkeletalMesh, const FTransform& Transform);
+	void MulticastSetWeaponSkeletalMesh_Implementation(bool IsRightHand, USkeletalMesh* SkeletalMesh, const FTransform& Transform);
+	bool MulticastSetWeaponSkeletalMesh_Validate(bool IsRightHand, USkeletalMesh* SkeletalMesh, const FTransform& Transform) {  return true;  }
 
 	void PlayStunnedAnimationMontage();
 
