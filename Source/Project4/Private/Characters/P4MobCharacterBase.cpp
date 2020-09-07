@@ -2,6 +2,7 @@
 
 
 #include "Characters/P4MobCharacterBase.h"
+#include "Characters/PatrolPointsActor.h"
 
 #include "AbilitySystemComponent.h"
 #include "AbilitySystem/PlayerAttributeSet.h"
@@ -38,6 +39,11 @@ void AP4MobCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
 
+	// Try get patrol points
+	if (PatrolPointsActor)
+	{
+		PatrolPointsActor->GetPatrolPointsInWorldSpace(PatrolPoints);
+	}
 
 	if (AbilitySystemComponent.IsValid())
 	{

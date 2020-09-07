@@ -17,8 +17,14 @@ class PROJECT4_API AP4MobCharacterBase : public AProject4Character
 	
 public:
 	AP4MobCharacterBase(const class FObjectInitializer& ObjectInitializer);
-
+	
+	
+	/* Use patrol point actor if you want to visually set markers, you can still fill this out
+	   Yourself if needed*/
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "AI | Patrol ")
+		class APatrolPointsActor* PatrolPointsActor;
+	/* filled out if there is a PatrolPointActor */
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "AI | Patrol ", Meta = (MakeEditWidget = true))
 		TArray<FVector> PatrolPoints;
 
 protected:
