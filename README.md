@@ -3,6 +3,8 @@
 Developed with Unreal Engine 4.25+ by:
 - Elliot Couvignou (Programmer)
 - Nick Hand (Artist)
+ 
+
 ![Test Image 1](https://cdn.discordapp.com/attachments/140582294950903809/746611723737497700/Rough_BaseChar.jpg)
 
 This passion project is quite far from done. We have already learned a ton about game design workflows and general concepts about optimization, performance, and "just" having good, stable systems to build off of for large scale development. This game has very high ambitions but we hope to finish the basic systems soon and then build on those to reach the game we dreamed about long ago.
@@ -14,7 +16,7 @@ This passion project is quite far from done. We have already learned a ton about
 - Player freedom over how they want to build/upgrade their abilities via items and skill trees. 
 
 # How To Play (WIP):
-- Currently trying to create a release branch with our most stable 
+- Currently trying to create a release branch with our most stable build.
 
 Important: *This game runs on dedicated servers hosted on AWS Gamelift, if you cannot get into the game then the servers most likely aren't up.*
 
