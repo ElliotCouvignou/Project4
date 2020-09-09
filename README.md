@@ -24,45 +24,45 @@ Important: *This game runs on dedicated servers hosted on AWS Gamelift, if you c
 As stated before the goal is to create the foundation of each major system and then build on those to eventaully create the game we want. With that said most of these features below will still be worked on but are listed as features that were worked on to the point of reaching that "base" level. 
 
 - Ability System using Epic's "Gameplay Ability System" plugin.
--- Prebuilt system for creating and editing player attribute sets in multiplayer setting.
--- Allows local prediction and rollback.
+    - Prebuilt system for creating and editing player attribute sets in multiplayer setting.
+    - Allows local prediction and rollback.
 
 - Inventory, Equippment and Weapons
--- Players can pickup items into their inventory to carry with them.
--- Armor and Weapons can be equipped, granting bonus attribute stats.
--- Weight system included although no check and penalty for going overweight. (to be determined)
+    - Players can pickup items into their inventory to carry with them.
+    - Armor and Weapons can be equipped, granting bonus attribute stats.
+    - Weight system included although no check and penalty for going overweight. (to be determined)
 
 - AI/NPC Behavior
 -- NPC can patrol predetermined points or walk around randomly.
 -- Upon seeing players they will begin to chase the player and attack when in range.
 
 - Dedicated Server hosting
--- Uses AWS Gamelift Service for hosting services
--- More on this later on for seamless travel, SQL data storage, etc.
+    - Uses AWS Gamelift Service for hosting services
+    - More on this later on for seamless travel, SQL data storage, etc.
 
 
 ![Test Image 2](https://media.discordapp.net/attachments/140582294950903809/751672646969852015/screenshot080.png?width=1911&height=1075)
 # Features to Implement:
 
 - Abilities
--- More abilities for skill trees.
--- Skill Trees
--- Polish animations by using our own.
+    - More abilities for skill trees.
+    - Skill Trees
+    - Polish animations by using our own.
 
 - Inventory and Items:
--- Currency item(s) and collection in inventory.
--- Consumable items (e.g. Health/Mana Potions).
--- Spawn items on mob death.
--- More Items.
+    - Currency item(s) and collection in inventory.
+    - Consumable items (e.g. Health/Mana Potions).
+    - Spawn items on mob death.
+    - More Items.
 
 - AI/NPC Behavior:
--- Overall more polish and responsiveness.
--- Increase "Intelligence" through bigger and/or smarter behavior trees.
+    - Overall more polish and responsiveness.
+    - Increase "Intelligence" through bigger and/or smarter behavior trees.
 
 - Server Stuff:
--- Save/Load Player info into SQL Database (AWS Dynamo DB).
--- Server travel between 
+    - Save/Load Player info into SQL Database (AWS Dynamo DB).
+    - Server travel between 
 
 - General:
--- Add Main Menu (need to fix error on joining game session bug)
--- Fix bugs lmao.
+    - Add Main Menu (need to fix error on joining game session bug)
+    - Fix bugs lmao.
