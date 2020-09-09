@@ -5,7 +5,7 @@ Developed with Unreal Engine 4.25+ by:
 - Nick Hand (Artist)
  
 
-![Test Image 1](https://cdn.discordapp.com/attachments/140582294950903809/746611723737497700/Rough_BaseChar.jpg)
+![Test Image 1](https://media.discordapp.net/attachments/140582294950903809/753352645917278228/KL_GemColor_Exploration.jpg)
 
 This passion project is quite far from done. We have already learned a ton about game design workflows and general concepts about optimization, performance, and "just" having good, stable systems to build off of for large scale development. This game has very high ambitions but we hope to finish the basic systems soon and then build on those to reach the game we dreamed about long ago.
 
