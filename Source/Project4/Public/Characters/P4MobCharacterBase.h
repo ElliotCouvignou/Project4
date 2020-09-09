@@ -27,6 +27,11 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "AI | Patrol ", Meta = (MakeEditWidget = true))
 		TArray<FVector> PatrolPoints;
 
+
+	/* Used in AI behavior tree to tell if we are in range to attack, this represents range for both melee and ranged */
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "AI | Stats ")
+		float AttackRange;
+
 protected:
 
 	// Hard refs of ASC and AS, unique names to not conflict with base class

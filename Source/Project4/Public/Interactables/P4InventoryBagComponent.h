@@ -91,19 +91,7 @@ enum class EEquipSlotType : uint8
 	WeaponRight		UMETA(DisplayName = "WeaponRight")
 };
 
-/* Represents type of auto attacks we should use (dual weild, 2h, ranged, etc) */
-// Item Type (axe,sword,etc) will be determined through gameplayt
-UENUM(BlueprintType)
-enum class EWeaponStanceType : uint8
-{
-	// 0 None
-	None					UMETA(DisplayName = "None"),  // "None"
-	MeleeDualWield			UMETA(DisplayName = "Melee Dual Wield"),
-	MeleeMainHandOnly		UMETA(DisplayName = "Melee Main Hand Only"),   // 2h type
-	RangedDualWield			UMETA(DisplayName = "Ranged Dual Wield"),
-	RangedMainHandOnly		UMETA(DisplayName = "Ranged Main Hand Only")
 
-};
 
 USTRUCT(BlueprintType)
 struct FEquippmentSlotStruct
@@ -275,9 +263,7 @@ public:
 	UPROPERTY(BlueprintReadWrite, Replicated, EditAnywhere)
 		FEquippedItemsStruct EquippmentSlots;
 
-	/* weapon stance (dual-weild, 2h, etc.) for auto attack context */
-	UPROPERTY(BlueprintReadWrite, Replicated, EditAnywhere)
-		EWeaponStanceType WeaponStance;
+
 
 	/*******************/
 	/*    Delegates    */

@@ -1,7 +1,7 @@
 // Project4 Copyright (Elliot Couvignou) Dont steal this mayne :(
 
 
-#include "AbilitySystem/P4BaseAttributeSet.h"
+#include "AbilitySystem/AttributeSets/P4BaseAttributeSet.h"
 #include "GameplayEffect.h"
 #include "GameplayEffectExtension.h"
 #include "AbilitySystemComponent.h"

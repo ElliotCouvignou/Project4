@@ -2,7 +2,7 @@
 
 
 #include "AbilitySystem/ExecutionCalculations/HealingCalculation.h"
-#include "AbilitySystem/PlayerAttributeSet.h"
+#include "AbilitySystem/AttributeSets/PlayerAttributeSet.h"
 
 struct HealAttStruct
 {

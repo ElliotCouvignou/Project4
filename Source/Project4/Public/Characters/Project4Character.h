@@ -10,6 +10,20 @@
 #include "Project4Character.generated.h"
 
 
+/* Represents type of auto attacks we should use (dual weild, 2h, ranged, etc) */
+// Item Type (axe,sword,etc) will be determined through gameplayt
+UENUM(BlueprintType)
+enum class EWeaponStanceType : uint8
+{
+	// 0 None
+	None					UMETA(DisplayName = "None"),  // "None"
+	MeleeDualWield			UMETA(DisplayName = "Melee Dual Wield"),
+	MeleeMainHandOnly		UMETA(DisplayName = "Melee Main Hand Only"),   // 2h type
+	RangedDualWield			UMETA(DisplayName = "Ranged Dual Wield"),
+	RangedMainHandOnly		UMETA(DisplayName = "Ranged Main Hand Only")
+
+};
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FCharacterDiedDelegate, AProject4Character*, Character);
 
 /**
@@ -53,6 +67,19 @@ public:
 		FCharacterDiedDelegate OnCharacterDied;
 
 	/***************************/
+	/*    Public Animations    */
+	/***************************/
+
+	/* used by GA_AutoAttack */
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Animations | AutoAttack")
+		UAnimMontage* MeleeRightHandAuto;
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Animations | AutoAttack")
+		UAnimMontage* MeleeLeftHandAuto;
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Animations | AutoAttack")
+		UAnimMontage* MeleeBothHandsAuto;
+
+
+	/***************************/
 	/* Gameplay Ability system */  
 	/***************************/
 
@@ -62,8 +89,9 @@ public:
 	UFUNCTION(BlueprintPure, Category = Ability, meta = (DefaultToSelf = Target))
 		class UPlayerAttributeSet* GetAttributeSet() const;
 
-
-
+	/* weapon stance (dual-weild, 2h, etc.) for auto attack context */
+	UPROPERTY(BlueprintReadWrite, Replicated, EditDefaultsOnly, Category = "Weapons")
+		EWeaponStanceType WeaponStance;
 
 	/***************************/
 	/*          Death          */
@@ -144,11 +172,11 @@ protected:
 		TArray<TSubclassOf<class UGameplayEffect>> StartupEffects;
 
 	/* BP -> C++ variable interface for weapon equip GE (overrides main hand interval attribute) */
-	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "GAS | Essential GE's")
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Weapons | Essential GE's")
 		TSubclassOf<UGameplayEffect> EquipWeaponMainGameplayEffect;
 
 	/* BP -> C++ variable interface for weapon equip GE (overrides off hand interval attribute) */
-	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "GAS | Essential GE's")
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Weapons | Essential GE's")
 		TSubclassOf<UGameplayEffect> EquipWeaponOffameplayEffect;
 
 	FActiveGameplayEffectHandle WeaponMainActiveGE;

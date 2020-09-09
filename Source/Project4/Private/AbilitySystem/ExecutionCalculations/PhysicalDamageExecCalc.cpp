@@ -2,7 +2,7 @@
 
 
 #include "AbilitySystem/ExecutionCalculations/PhysicalDamageExecCalc.h"
-#include "AbilitySystem/PlayerAttributeSet.h"
+#include "AbilitySystem/AttributeSets/PlayerAttributeSet.h"
 
 #define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Green,text)
 

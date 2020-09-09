@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
 #include "Engine/DataTable.h"
-#include "AbilitySystem/P4BaseAttributeSet.h"
+#include "AbilitySystem/AttributeSets/P4BaseAttributeSet.h"
 #include "ItemBaseDataAsset.generated.h"
 
 

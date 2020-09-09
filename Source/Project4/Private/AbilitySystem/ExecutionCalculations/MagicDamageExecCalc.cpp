@@ -2,7 +2,7 @@
 
 
 #include "AbilitySystem/ExecutionCalculations/MagicDamageExecCalc.h"
-#include "AbilitySystem/PlayerAttributeSet.h"
+#include "AbilitySystem/AttributeSets/PlayerAttributeSet.h"
 
 
 struct FMagicDamageAttStruct

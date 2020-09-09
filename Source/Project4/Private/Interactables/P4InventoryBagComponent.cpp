@@ -6,7 +6,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Containers/Array.h"
 
-#include "AbilitySystem/PlayerAttributeSet.h"
+#include "AbilitySystem/AttributeSets/PlayerAttributeSet.h"
 #include "Characters/Project4Character.h"
 #include "Interactables/P4ItemBaseActor.h"
 #include "Interactables/ItemArmorDataAsset.h"
@@ -81,9 +81,7 @@ void UP4InventoryBagComponent::InitializeEmptyInventory()
 
 void UP4InventoryBagComponent::InitializeEmptyEquippment()
 {
-	EquippmentSlots = FEquippedItemsStruct();
-
-	WeaponStance = EWeaponStanceType::MeleeDualWield; // unarmed i guess 
+	EquippmentSlots = FEquippedItemsStruct(); 
 }
 
 
@@ -322,6 +320,7 @@ void UP4InventoryBagComponent::EquipWeaponItemFromInventory(int InventoryIndex, 
 			InventoryArray[InventoryIndex] = FInventoryItemStruct();
 
 			// checks and does swap depending on item handtype
+			EWeaponStanceType& WeaponStance = PlayerRef->WeaponStance;
 			if (WeaponStance == EWeaponStanceType::MeleeDualWield || WeaponStance == EWeaponStanceType::RangedDualWield)
 			{
 				//  if equipping 2h then remove both, else remove desired
@@ -491,13 +490,13 @@ void UP4InventoryBagComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProper
 	//DOREPLIFETIME(AProject4Character, AttributeSet);
 	DOREPLIFETIME(UP4InventoryBagComponent, InventoryArray);
 	DOREPLIFETIME(UP4InventoryBagComponent, EquippmentSlots);
-	DOREPLIFETIME(UP4InventoryBagComponent, WeaponStance);
 }
 
 
 
 void UP4InventoryBagComponent::SetNewWeaponStanceFromWeapon(const UItemWeaponDataAsset* WeaponItem)
 {
+	EWeaponStanceType& WeaponStance = PlayerRef->WeaponStance;
 	if (WeaponItem)
 	{
 		// query weapon types before hand types, check handtypes for types that could be multiple handtypes

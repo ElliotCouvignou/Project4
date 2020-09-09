@@ -7,7 +7,7 @@
 #include "GameplayEffectExtension.h"
 #include "Net/UnrealNetwork.h"
 #include "AbilitySystemComponent.h"
-#include "AbilitySystem/P4BaseAttributeSet.h"
+#include "AbilitySystem/AttributeSets/P4BaseAttributeSet.h"
 #include "PlayerAttributeSet.generated.h"
 
 // Uses macros from AttributeSet.h

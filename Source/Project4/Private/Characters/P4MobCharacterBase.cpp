@@ -5,7 +5,7 @@
 #include "Characters/PatrolPointsActor.h"
 
 #include "AbilitySystemComponent.h"
-#include "AbilitySystem/PlayerAttributeSet.h"
+#include "AbilitySystem/AttributeSets/PlayerAttributeSet.h"
 #include "AbilitySystem/P4AbilitySystemComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "UI/FloatingStatusBarWidget.h"

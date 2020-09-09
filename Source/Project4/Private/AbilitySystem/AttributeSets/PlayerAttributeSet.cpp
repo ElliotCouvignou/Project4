@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "AbilitySystem/PlayerAttributeSet.h"
+#include "AbilitySystem/AttributeSets/PlayerAttributeSet.h"
 #include "GameplayEffect.h"
 #include "GameplayEffectExtension.h"
 #include "AbilitySystemComponent.h"
@@ -204,7 +204,8 @@ void UPlayerAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCall
 				
 				if (NewHealth < 0.f) {
 					// target died, give xp and generate loots
-					if (SourceCharacter && (SourceController != TargetController))
+					// check if source PC exists in case an npc killed something
+					if (SourceCharacter && SourcePC && (SourceController != TargetController))
 					{
 						UPlayerAttributeSet* SourceAS = SourceCharacter->GetAttributeSet();
 						float NewSourceXp = SourceAS->GetExperience() + GetExperienceBounty();

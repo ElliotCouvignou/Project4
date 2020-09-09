@@ -2,7 +2,7 @@
 
 
 #include "AbilitySystem/ExecutionCalculations/LacerationExecutionCalculation.h"
-#include "AbilitySystem/PlayerAttributeSet.h"
+#include "AbilitySystem/AttributeSets/PlayerAttributeSet.h"
 #include "AbilitySystem/P4AbilitySystemComponent.h"
 
 

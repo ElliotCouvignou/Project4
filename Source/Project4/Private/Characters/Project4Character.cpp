@@ -24,7 +24,7 @@
 #include "AbilitySystemComponent.h"
 #include "AbilitySystemGlobals.h"
 #include "AbilitySystem/P4GameplayAbility.h"
-#include "AbilitySystem/PlayerAttributeSet.h"
+#include "AbilitySystem/AttributeSets/PlayerAttributeSet.h"
 #include "AbilitySystem/P4GameplayAbilitySet.h"
 #include "AbilitySystem/P4AbilitySystemComponent.h"
 
@@ -365,6 +365,7 @@ void AProject4Character::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& O
 
 	//DOREPLIFETIME(AProject4Character, AttributeSet);
 	DOREPLIFETIME(AProject4Character, SelectedTarget);
+	DOREPLIFETIME(AProject4Character, WeaponStance);
 }
 
 
