@@ -44,11 +44,11 @@ UPhysicalDamageExecCalc::UPhysicalDamageExecCalc(const FObjectInitializer& Objec
 	//However, an attribute added here on top of being added in RelevantAttributesToCapture will still be captured, but will not be shown for potential in-function modifiers in the GameplayEffect blueprint, more on that later.
    // 
 	RelevantAttributesToCapture.Add(Attributes.CritChanceDef);
-	InvalidScopedModifierAttributes.Add(Attributes.CritChanceDef);
+	//InvalidScopedModifierAttributes.Add(Attributes.CritChanceDef);
 	RelevantAttributesToCapture.Add(Attributes.CritDamageDef);
-	InvalidScopedModifierAttributes.Add(Attributes.CritDamageDef);
+	//InvalidScopedModifierAttributes.Add(Attributes.CritDamageDef);
 	RelevantAttributesToCapture.Add(Attributes.ArmorDef);
-	InvalidScopedModifierAttributes.Add(Attributes.ArmorDef);
+	//InvalidScopedModifierAttributes.Add(Attributes.ArmorDef);
 
 }
 

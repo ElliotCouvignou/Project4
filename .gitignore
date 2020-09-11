@@ -46,6 +46,7 @@ SourceArt/**/*.png
 SourceArt/**/*.tga
 
 # Binary Files
+!Plugins/GameLiftServerSDK/ThirdParty/Win64
 Binaries/*
 Plugins/*/Binaries/*
 
@@ -78,5 +79,5 @@ DerivedDataCache/*
 enc_temp_folder/
 
 # Ignore GameliftSDK Plugins
-Plugins/GameLiftClientSDK/*
-plugins/GameLiftServerSDK/*
+#Plugins/GameLiftClientSDK/*
+#Plugins/GameLiftServerSDK/*
