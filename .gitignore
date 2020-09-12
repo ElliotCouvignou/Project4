@@ -14,7 +14,7 @@
 # Compiled Dynamic libraries
 *.so
 *.dylib
-*.dll
+#*.dll
 
 # Fortran module files
 *.mod
@@ -23,7 +23,7 @@
 *.lai
 *.la
 *.a
-*.lib
+#*.lib
 
 # Executables
 *.exe
@@ -46,7 +46,6 @@ SourceArt/**/*.png
 SourceArt/**/*.tga
 
 # Binary Files
-!Plugins/GameLiftServerSDK/ThirdParty/Win64
 Binaries/*
 Plugins/*/Binaries/*
 
