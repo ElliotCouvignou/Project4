@@ -21,7 +21,13 @@ public class Project4 : ModuleRules
 			"GameplayAbilities",
 			"GameplayTasks",
 			"GameLiftServerSDK", 
-			"GameLiftClientSDK" 
+			"UMG",
+			"SlateCore",
+			"Http",
+			"Json",
+			"JsonUtilities",
+			"WebBrowserWidget",
+			"GameLiftClientSDK" // removing this plugin soon
 			}
 		);
 
