@@ -23,7 +23,7 @@
 		},
 		{
 			"Name": "GameLiftClientSDK",
-			"Enabled": true
+			"Enabled": false
 		},
 		{
 			"Name": "GameplayAbilities",
@@ -31,11 +31,23 @@
 		},
 		{
 			"Name": "StaticMeshEditorExtension",
-			"Enabled": true
+			"Enabled": false
 		},
 		{
 			"Name": "NiagaraExtras",
 			"Enabled": true
+		},
+		{
+			"Name": "WebBrowserWidget",
+			"Enabled": true
+		},
+		{
+			"Name": "OculusVR",
+			"Enabled": false
+		},
+		{
+			"Name": "SteamVR",
+			"Enabled": false
 		}
 	]
 }

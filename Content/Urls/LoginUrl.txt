@@ -1,0 +1,1 @@
+https://project4.auth.us-west-2.amazoncognito.com/login?client_id=s9j9m23riqev5u1mjvl6ad5vl&response_type=code&scope=Project4.api/access+aws.cognito.signin.user.admin+email+openid+phone+profile&redirect_uri=https://bhjifqbl56.execute-api.us-west-2.amazonaws.com/P4Test/GetSignInResult

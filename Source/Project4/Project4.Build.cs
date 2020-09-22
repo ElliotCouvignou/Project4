@@ -1,6 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 using UnrealBuildTool;
+using System.IO;
 
 public class Project4 : ModuleRules
 {
@@ -20,17 +21,20 @@ public class Project4 : ModuleRules
 			"GameplayTags",
 			"GameplayAbilities",
 			"GameplayTasks",
-			"GameLiftServerSDK", 
+			"GameLiftServerSDK",
 			"UMG",
 			"SlateCore",
 			"Http",
 			"Json",
 			"JsonUtilities",
 			"WebBrowserWidget",
-			"GameLiftClientSDK" // removing this plugin soon
 			}
 		);
 
+		// some forum post said this might help with some warnings...
+		//PublicIncludePaths.Add(Path.Combine("../Plugins/GameLiftServerSDK/Source/GameLiftServerSDK", "Public"));
+		//PrivateIncludePaths.Add(Path.Combine("../Plugins/GameLiftServerSDK/Source/GameLiftServerSDK", "Private"));
+		
 		/* Gameplay Ability System w/related plugins */
 		//PrivateDependencyModuleNames.AddRange(new string[] { 
 		//	"GameplayAbilities",

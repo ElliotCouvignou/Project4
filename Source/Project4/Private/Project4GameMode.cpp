@@ -82,12 +82,11 @@ void AProject4GameMode::BeginPlay()
 {
 	Super::BeginPlay();
 	//print(FString(TEXT("ALLO")));
+	UE_LOG(LogTemp, Warning, TEXT("GameliftServer::BeginPlay() start, WITH_GAMELIFT=%i"), WITH_GAMELIFT);
 
 // run on server only (do some diagnostic checks and handle issues w/force quit //
 #if WITH_GAMELIFT
 	auto InitSDKOutcome = Aws::GameLift::Server::InitSDK();
-
-
 
 	if (InitSDKOutcome.IsSuccess()) {
 		auto OnStartGameSession = [](Aws::GameLift::Server::Model::GameSession GameSessionObj, void* Params)
