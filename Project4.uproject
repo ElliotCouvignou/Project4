@@ -22,10 +22,6 @@
 			"Enabled": true
 		},
 		{
-			"Name": "GameLiftClientSDK",
-			"Enabled": false
-		},
-		{
 			"Name": "GameplayAbilities",
 			"Enabled": true
 		},

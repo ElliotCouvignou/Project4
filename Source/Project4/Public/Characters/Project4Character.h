@@ -214,7 +214,6 @@ protected:
 	FGameplayTag RespawnTag;
 	FGameplayTag StunnedTag;
 
-
 	/***************************/
 	/*           UI            */
 	/***************************/
