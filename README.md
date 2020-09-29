@@ -16,11 +16,10 @@ This passion project is quite far from done. We have already learned a ton about
 - Player freedom over how they want to build/upgrade their abilities via items and skill trees. 
 
 # How To Play (WIP):
-- Currently trying to create a release branch with our most stable build.
+Since installers are pretty new to us the simplest way to distribute is through a zipped folder until our game size becomes too large. Below is the link to download the .zip.
+There are curerntly two "modes" to play upon visiting the main menu. The "Find Game" button looks for AWS Gamelift servers to make a match between other players also trying to find games. The "Host Listen Server" is the single-player alternative of the same game as gamelift servers requires at least two players actively searching for a game. Connecting to already active listen servers will be added in a later update.
 
-Important: *This game runs on dedicated servers hosted on AWS Gamelift, if you cannot get into the game then the servers most likely aren't up.*
-
-
+Link to .zip: https://drive.google.com/file/d/14Z1laCJC4ir3_rEEIN0ToYmju6uE22VW/view?usp=sharing
 
 # Implemented Features:
 As stated before the goal is to create the foundation of each major system and then build on those to eventaully create the game we want. With that said most of these features below will still be worked on but are listed as features that were worked on to the point of reaching that "base" level. 
