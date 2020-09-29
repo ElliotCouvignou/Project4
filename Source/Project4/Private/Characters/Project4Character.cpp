@@ -268,12 +268,14 @@ void AProject4Character::ResetRightHandWeaponInfo()
 	
 	MulticastSetWeaponSkeletalMesh(true, nullptr, FTransform());
 	AbilitySystemComponent->RemoveActiveGameplayEffect(WeaponMainActiveGE, 1);
+	MeshRH->ResetRelativeTransform();
 	//AbilitySystemComponent->RemoveActiveEffectsWithTags(FGameplayTagContainer(FGameplayTag::RequestGameplayTag("Equippment.Weapon.MainHand")));
 }
 
 void AProject4Character::ResetLeftHandWeaponInfo()
 {
 	MulticastSetWeaponSkeletalMesh(false, nullptr, FTransform());
+	MeshLH->ResetRelativeTransform();
 	AbilitySystemComponent->RemoveActiveGameplayEffect(WeaponOffActiveGE, 1);
 	//AbilitySystemComponent->RemoveActiveEffectsWithTags(FGameplayTagContainer(FGameplayTag::RequestGameplayTag("Equippment.Weapon.OffHand")));
 }
