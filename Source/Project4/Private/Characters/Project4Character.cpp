@@ -201,8 +201,17 @@ void AProject4Character::SetRightHandWeaponInfo(const UItemWeaponDataAsset* Weap
 	{
 		if (WeaponDataAsset)
 		{
-			MulticastSetWeaponSkeletalMesh(true, WeaponDataAsset->WeaponSkeletalMesh, WeaponDataAsset->MainHandAttatchTransform);
-
+			MainHandWeaponType = WeaponDataAsset->WeaponType;
+			if (MainHandWeaponType == EWeaponType::Bow)
+			{
+				// unique case where you use your main hand to pull bow strings back, therefore attach to offhand
+				MulticastSetWeaponSkeletalMesh(false, WeaponDataAsset->WeaponSkeletalMesh, WeaponDataAsset->MainHandAttatchTransform);
+			}
+			else
+			{
+				MulticastSetWeaponSkeletalMesh(true, WeaponDataAsset->WeaponSkeletalMesh, WeaponDataAsset->MainHandAttatchTransform);
+			}
+			
 			// Apply Equip weapon GE for attack interval
 			FGameplayEffectContextHandle EffectContext = AbilitySystemComponent->MakeEffectContext();
 			FGameplayEffectSpecHandle NewHandle = AbilitySystemComponent->MakeOutgoingSpec(EquipWeaponMainGameplayEffect, 1, EffectContext);
@@ -231,6 +240,7 @@ void AProject4Character::SetLeftHandWeaponInfo(const UItemWeaponDataAsset* Weapo
 	{
 		if (WeaponDataAsset)
 		{
+			OffHandWeaponType = WeaponDataAsset->WeaponType;
 			MulticastSetWeaponSkeletalMesh(false, WeaponDataAsset->WeaponSkeletalMesh, WeaponDataAsset->OffHandAttatchTransform);
 
 			// Apply Equip weapon GE for attack interval
@@ -255,6 +265,7 @@ void AProject4Character::SetLeftHandWeaponInfo(const UItemWeaponDataAsset* Weapo
 
 void AProject4Character::ResetRightHandWeaponInfo()
 {
+	
 	MulticastSetWeaponSkeletalMesh(true, nullptr, FTransform());
 	AbilitySystemComponent->RemoveActiveGameplayEffect(WeaponMainActiveGE, 1);
 	//AbilitySystemComponent->RemoveActiveEffectsWithTags(FGameplayTagContainer(FGameplayTag::RequestGameplayTag("Equippment.Weapon.MainHand")));
@@ -269,6 +280,8 @@ void AProject4Character::ResetLeftHandWeaponInfo()
 
 void AProject4Character::MulticastSetWeaponSkeletalMesh_Implementation(bool IsRightHand, USkeletalMesh* SkeletalMesh, const FTransform& Transform)
 {
+	UpdateAnimationOverlay(); // TODO: move this to own multicast or on_rep_notify on weapon type changes
+
 	if (SkeletalMesh)
 	{
 		if (IsRightHand)
@@ -366,6 +379,8 @@ void AProject4Character::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& O
 	//DOREPLIFETIME(AProject4Character, AttributeSet);
 	DOREPLIFETIME(AProject4Character, SelectedTarget);
 	DOREPLIFETIME(AProject4Character, WeaponStance);
+	DOREPLIFETIME(AProject4Character, MainHandWeaponType);
+	DOREPLIFETIME(AProject4Character, OffHandWeaponType);
 }
 
 

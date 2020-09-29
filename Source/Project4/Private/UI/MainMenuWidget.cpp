@@ -403,8 +403,6 @@ void UMainMenuWidget::OnStopMatchmakingResponseRecieved(FHttpRequestPtr Request,
 
 void UMainMenuWidget::OnPollMatchmakingResponseRecieved(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
 {
-	print(FString("OnPollMatchmakingResponseRecieved"));
-
 	if (bWasSuccessful && SearchingForGame)
 	{
 		TSharedPtr<FJsonObject> JsonObject;
@@ -419,7 +417,6 @@ void UMainMenuWidget::OnPollMatchmakingResponseRecieved(FHttpRequestPtr Request,
 
 				if (TicketType.Len() > 0)
 				{
-					print(FString("HasTicketField && Len() > 0"));
 					GetWorld()->GetTimerManager().ClearTimer(PollMatchmakingHandle);
 					SearchingForGame = false;
 

@@ -7,6 +7,7 @@
 #include "Characters/Project4Character.h"
 #include "GameplayTagContainer.h"
 #include "UI/GameplayHudWidget.h"
+#include "Kismet/GameplayStatics.h"
 
 
 #define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Green,text)
@@ -55,6 +56,5 @@ void UP4GameplayAbility::SendTargetDataToServer_Implementation(UP4GameplayAbilit
 	AbilityRef->TargetDataLocation = FVector(HitLocation);
 	print(FString(AbilityRef->TargetDataLocation.ToString()));
 }
-
 
 

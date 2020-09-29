@@ -69,6 +69,9 @@ public:
 	/***************************/
 	/*    Public Animations    */
 	/***************************/
+	/* sets animation overlay enum based on current weaponstance and weapon types */
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Animations | Utility")
+		void UpdateAnimationOverlay();
 
 	/* used by GA_AutoAttack */
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Animations | AutoAttack")
@@ -92,6 +95,12 @@ public:
 	/* weapon stance (dual-weild, 2h, etc.) for auto attack context */
 	UPROPERTY(BlueprintReadWrite, Replicated, EditDefaultsOnly, Category = "Weapons")
 		EWeaponStanceType WeaponStance;
+
+	UPROPERTY(BlueprintReadWrite, Replicated, EditDefaultsOnly, Category = "Weapons")
+		EWeaponType MainHandWeaponType;
+
+	UPROPERTY(BlueprintReadWrite, Replicated, EditDefaultsOnly, Category = "Weapons")
+		EWeaponType OffHandWeaponType;
 
 	/***************************/
 	/*          Death          */
