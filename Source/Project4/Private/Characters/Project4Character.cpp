@@ -73,7 +73,6 @@ AProject4Character::AProject4Character(const class FObjectInitializer& ObjectIni
 
 	UIFloatingStatusBarComponent = CreateDefaultSubobject<UWidgetComponent>(FName("UIFloatingStatusBarComponent"));
 	UIFloatingStatusBarComponent->SetupAttachment(RootComponent);
-	UIFloatingStatusBarComponent->SetRelativeLocation(FVector(0, 0, 120));
 	UIFloatingStatusBarComponent->SetWidgetSpace(EWidgetSpace::Screen);
 	UIFloatingStatusBarComponent->SetDrawSize(FVector2D(500, 500));
 
@@ -128,7 +127,7 @@ void AProject4Character::Die()
 	// play death montage if set, else play ALS ragdoll with manual delay
 	if (DeathMontage)
 	{
-		print(FString("Play death montage"));
+
 		PlayAnimMontage(DeathMontage);
 		GetWorld()->GetTimerManager().SetTimer(RadgollDeathHandle, this, &AProject4Character::FinishDying, DeathMontage->GetPlayLength(), false);
 	}
@@ -168,6 +167,7 @@ void AProject4Character::InitFloatingStatusBarWidget()
 	if (AbilitySystemComponent.IsValid())
 	{
 		// Setup FloatingStatusBar UI for Locally Owned Players only but exclude your own FSB
+		// Skip Init when no pc is present (NPC's dont need to see hp bars)
 		APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 		if (PC && PC->IsLocalPlayerController() && !IsLocallyControlled())
 		{
@@ -178,12 +178,11 @@ void AProject4Character::InitFloatingStatusBarWidget()
 				{
 					UIFloatingStatusBarComponent->SetWidget(UIFloatingStatusBar);
 					UIFloatingStatusBarComponent->SetDrawSize(UIFloatingStatusBar->GetDesiredSize());
-
+					UIFloatingStatusBarComponent->SetRelativeLocation(FVector(0, 0, GetCapsuleComponent()->GetScaledCapsuleHalfHeight()* FloatingStatusBarHeightCoeff));
+					
 					// Setup the floating status bar
 					UIFloatingStatusBar->SetHealthPercentage(AttributeSet->GetHealth() / AttributeSet->GetHealthMax());
 					UIFloatingStatusBar->SetCharacterName(CharacterName);
-					// TODO: set real character name in floating bar
-					//UIFloatingStatusBar->SetCharacterName(CharacterName);
 				}
 			}
 		}
