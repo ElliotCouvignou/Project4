@@ -28,6 +28,18 @@ AP4MobCharacterBase::AP4MobCharacterBase(const class FObjectInitializer& ObjectI
 
 }
 
+
+void AP4MobCharacterBase::Die()
+{
+	if (HasAuthority())
+	{
+		TArray<TTuple<UItemBaseDataAsset*, int>> ItemsToDrop = DropTable.RollItemDrops();
+
+	}
+	
+}
+
+
 void AP4MobCharacterBase::FinishDying()
 {
 	Super::FinishDying();
@@ -74,6 +86,8 @@ void AP4MobCharacterBase::BeginPlay()
 /******************/
 /* Delegate Stuff */
 /******************/
+
+
 
 void AP4MobCharacterBase::BindDelegates()
 {
@@ -130,3 +144,59 @@ void AP4MobCharacterBase::OnStunTagChanged(const FGameplayTag CallbackTag, int32
 
 	}
 }
+
+
+/* ************************* */
+/* ************************* */   
+/* Item Drop Table Functions */
+/* ************************* */
+/* ************************* */
+
+
+TTuple<UItemBaseDataAsset*, int> FDependentItemDropPool::RollDependentDropPool()
+{
+	int TotalPoints = 0;
+	for (FDependentItemDrop& DropStruct : DependentDropPool)
+	{
+		TotalPoints += DropStruct.PointCount;
+	}
+	int Points = FMath::RandRange(0, TotalPoints);
+	for (FDependentItemDrop& DropStruct : DependentDropPool)
+	{
+		Points -= DropStruct.PointCount;
+		if (Points <= 0)
+		{
+			int StackCount = FMath::RandRange(0.f, 1.f) * (DropStruct.StackCountMax - DropStruct.StackCountMin) + DropStruct.StackCountMin;
+			return TTuple<UItemBaseDataAsset*, int>(DropStruct.Item, StackCount);
+		}
+	}
+	return TTuple<UItemBaseDataAsset*, int>(nullptr, 0);
+}
+
+
+TArray<TTuple<UItemBaseDataAsset*, int>> FDropTableStruct::RollItemDrops()
+{
+	TArray<TTuple<UItemBaseDataAsset*, int>> Ret;
+
+	for (FIndependentItemDrop& DropStruct : IndependentDrops)
+	{
+		TTuple<UItemBaseDataAsset*, int> Item = DropStruct.RollIndependentItem();
+		if (Item.Key)
+		{
+			Ret.Add(Item);
+		}
+	}
+
+	for (FDependentItemDropPool& DropPool : DependentDrops)
+	{
+		TTuple<UItemBaseDataAsset*, int> PoolItem = DropPool.RollDependentDropPool();
+		if (PoolItem.Key)
+		{
+			Ret.Add(PoolItem);
+		}
+	}
+
+	return Ret;
+}
+
+

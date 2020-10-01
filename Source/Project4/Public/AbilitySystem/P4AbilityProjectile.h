@@ -11,6 +11,12 @@
 #include "Components/CapsuleComponent.h"
 #include "P4AbilityProjectile.generated.h"
 
+class AProject4Character;
+
+//TODO: make another one of these for multiple people hit (return dynamic multicast of array of characters)
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFirstCharacterHit, class AProject4Character*, Character);
+
+
 UCLASS()
 class PROJECT4_API AP4AbilityProjectile : public AActor
 {
@@ -50,10 +56,14 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 		FTimerHandle DestroyActorTimerHandle;
 
+	UPROPERTY(BlueprintAssignable, Category = "Delegates")
+		FOnFirstCharacterHit OnFirstCharacterHitDelegate;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	/* this function is default bound to OnComponentBeginOverlap for hitbox */
 	UFUNCTION(BlueprintNativeEvent)
 		void OnHitboxBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 		virtual void OnHitboxBeginOverlap_Implementation(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);

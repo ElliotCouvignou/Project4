@@ -145,7 +145,7 @@ struct FAttributeDataUIStruct
 
 
 /**
- * 
+ * Base level of items in data, do not use this as an item ONLY use the subclasses of this
  */
 UCLASS(BlueprintType)
 class PROJECT4_API UItemBaseDataAsset : public UDataAsset
@@ -158,10 +158,4 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Item")
 		FItemBaseInfoStruct	ItemInfo;
-
-
-	/* Attribute Set Data Table for Attribute Bonuses
-		Can Be left empty */
-	//UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Attributes)
-	//	UDataTable* AttrDataTable;
 };

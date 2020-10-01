@@ -120,7 +120,6 @@ void AProject4Character::Die()
 	{
 		// stop all abilitites regardless of tags (not GE's)
 		AbilitySystemComponent->CancelAllAbilities();
-
 		AbilitySystemComponent->AddLooseGameplayTag(DeadTag);
 	}
 
