@@ -23,5 +23,5 @@ public:
 		TSubclassOf<class AP4AbilityProjectile> BowProjectileClass;
 
 	UFUNCTION(BlueprintCallable)
-		void SpawnBowProjectile(const FTransform& Transform, const FGameplayEffectSpecHandle& GameplayEffect, const TSubclassOf<class AP4AbilityProjectile> Class, const float Range, const float InitialSpeed);
+		void SpawnBowProjectile(const FTransform& Transform, const FGameplayEffectSpecHandle& GameplayEffect, const TSubclassOf<class AP4AbilityProjectile> Class, const float Range, const float InitialSpeed, AP4AbilityProjectile* SpawnedActor);
 };
