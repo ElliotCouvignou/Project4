@@ -168,7 +168,7 @@ void AProject4Character::InitFloatingStatusBarWidget()
 		// Setup FloatingStatusBar UI for Locally Owned Players only but exclude your own FSB
 		// Skip Init when no pc is present (NPC's dont need to see hp bars)
 		APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-		if (PC && PC->IsLocalPlayerController() && !IsLocallyControlled())
+		if (PC && PC->IsLocalPlayerController() && PC != GetController<APlayerController>())
 		{
 			if (UIFloatingStatusBarClass)
 			{

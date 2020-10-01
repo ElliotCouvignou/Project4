@@ -3,14 +3,15 @@
 
 #include "Characters/P4MobCharacterBase.h"
 #include "Characters/PatrolPointsActor.h"
-
+#include "Interactables/P4InventoryBagComponent.h"
 #include "AbilitySystemComponent.h"
 #include "AbilitySystem/AttributeSets/PlayerAttributeSet.h"
 #include "AbilitySystem/P4AbilitySystemComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "UI/FloatingStatusBarWidget.h"
+#include "Interactables/P4ItemBaseActor.h"
 
-
+#define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Green,text)
 
 AP4MobCharacterBase::AP4MobCharacterBase(const class FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -33,10 +34,27 @@ void AP4MobCharacterBase::Die()
 {
 	if (HasAuthority())
 	{
+		// Server Roll Drop table and spawn rolled items nearby
 		TArray<TTuple<UItemBaseDataAsset*, int>> ItemsToDrop = DropTable.RollItemDrops();
 
+		for (TTuple<UItemBaseDataAsset*, int> ItemDrop : ItemsToDrop)
+		{
+			if (ItemDrop.Key && ItemDrop.Value > 0)
+			{
+				// create FInventoryItemStruct and ItemActor, then spawn
+				AP4ItemBaseActor* ItemActor = Cast<AP4ItemBaseActor>(GetWorld()->SpawnActorDeferred<AActor>(AP4ItemBaseActor::StaticClass(), GetActorTransform(), this, (APawn*)this, ESpawnActorCollisionHandlingMethod::AlwaysSpawn));
+				if (ItemActor)
+				{
+					ItemActor->SetInventoryItemStruct(FInventoryItemStruct(ItemDrop.Key, ItemDrop.Value));
+					FTransform Transform = GetActorTransform();
+					Transform.AddToTranslation(FVector(FMath::RandRange(-100.f, 100.f), FMath::RandRange(-100.f, 100.f), 0.f));
+					ItemActor->FinishSpawning(Transform);
+				}
+			}
+		}
 	}
 	
+	Super::Die();
 }
 
 

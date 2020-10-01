@@ -53,6 +53,10 @@ struct FInventoryItemStruct
 		bIsEmpty = false;
 		StackCount = StackCount;
 		ItemBaseDataAsset = InputItemBaseAsset;
+		if (ItemBaseDataAsset)
+		{
+			ItemBaseDataAsset->ItemInfo = FItemBaseInfoStruct(InputItemBaseAsset->ItemInfo);
+		}
 	}
 
 	FInventoryItemStruct(const FInventoryItemStruct& InputInventoryItemStruct)

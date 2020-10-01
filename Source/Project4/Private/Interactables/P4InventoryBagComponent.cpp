@@ -212,7 +212,7 @@ void UP4InventoryBagComponent::ServerDropItemFromInventory_Implementation(int In
 
 		if (ItemClass)
 		{
-			const FVector Location = FVector(GetOwner()->GetActorLocation());
+			const FVector Location = FVector(GetOwner()->GetActorLocation()); 
 			const FRotator Rotation = FRotator(GetOwner()->GetActorRotation());
 			const FActorSpawnParameters SpawnInfo;
 			
@@ -224,9 +224,9 @@ void UP4InventoryBagComponent::ServerDropItemFromInventory_Implementation(int In
 				if(ItemBase)
 				{
 					// Setup Mesh to spawn from item info
-					ItemBase->SetItemStructAndStaticMesh(Item);
+					ItemBase->SetInventoryItemStruct(Item);
 					// Spawn Actor
-					UGameplayStatics::FinishSpawningActor(ItemBase, GetOwner()->GetTransform());
+					ItemBase->FinishSpawning(GetOwner()->GetTransform());
 
 					// remove added weight GE
 					PlayerASC->RemoveActiveGameplayEffect(InventoryArray[InventoryIndex].ActiveGE, 1);

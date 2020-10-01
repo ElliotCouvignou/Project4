@@ -35,6 +35,13 @@ protected:
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Essentials")
 		TSubclassOf<class UItemActorNameWidget> ItemNameWidgetClass;
 
+	UFUNCTION()
+		void SetWidgetName();
+
+	// in case the item gets spawn midair, move it to the ground
+	UFUNCTION()
+		void MoveToGround();
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
@@ -48,21 +55,15 @@ public:
 	/* OnInteract == Pickup item */
 		virtual void OnInteract(const AP4PlayerCharacterBase* SourceActor, bool& Result) override;
 
-	/* Used on actor spawn to set visuals and item info */
+
 	UFUNCTION(BlueprintCallable)
-		void SetItemStructAndStaticMesh(const FInventoryItemStruct& InputInventoryItemStruct);
+		void SetInventoryItemStruct(FInventoryItemStruct InputItemStruct) { InventoryItemStruct = InputItemStruct; }
 
 	UFUNCTION(BlueprintCallable)
 		FInventoryItemStruct& GetInventoryItemStructt() { return InventoryItemStruct; }
 
 	UFUNCTION(BlueprintCallable)
 		void UpdateInventoryItemStruct(const FInventoryItemStruct& InputIventoryItemStruct) { InventoryItemStruct = InputIventoryItemStruct; }
-
-
-	UFUNCTION(NetMultiCast, Reliable, WithValidation, BlueprintCallable, Category = "RPC | Multicast")
-		void MultiCastWidgetTextName(const FString& Name, EItemRank ItemRank);
-	void MultiCastWidgetTextName_Implementation(const FString& Name, EItemRank ItemRank);
-	bool MultiCastWidgetTextName_Validate(const FString& Name, EItemRank ItemRank) { return true; }
 
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
