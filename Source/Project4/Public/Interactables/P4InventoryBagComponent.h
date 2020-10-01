@@ -33,7 +33,7 @@ struct FInventoryItemStruct
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Essentials")
 		int StackCount;
 
-	/* Stack Count for this item drop/stack */
+	/* Data Asset */
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Essentials")
 		UItemBaseDataAsset* ItemBaseDataAsset;
 
