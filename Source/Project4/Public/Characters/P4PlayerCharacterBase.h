@@ -101,6 +101,11 @@ protected:
 	// TODO expose this to grant learned (but not bound) abilities
 	virtual void AddAllCharacterAbilities();
 
+
+	/* Helper used in SetupPlayerInputComponent to set binds to ability hotbar container */
+	UFUNCTION(Category = "Utility")
+		void BindInputsToAbilityHotbar();
+
 	void BindASCInput();
 	bool bASCInputBound = false;
 
