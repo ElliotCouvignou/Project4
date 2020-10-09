@@ -6,7 +6,6 @@
 #include "Project4Character.h"
 #include "AbilitySystemComponent.h"
 #include "AbilitySystemInterface.h"
-#include "Interactables/P4InventoryBagComponent.h"
 #include "P4PlayerCharacterBase.generated.h"
 
 /**
@@ -25,8 +24,11 @@ class PROJECT4_API AP4PlayerCharacterBase : public AProject4Character
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 		class UCameraComponent* FollowCamera;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Inventory" , meta = (AllowPrivateAccess = "true"))
 		class UP4InventoryBagComponent* InventoryBagComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Skill Tree", meta = (AllowPrivateAccess = "true"))
+		class USkillTreeComponent* SkillTreeComponent;
 
 
 public:
@@ -42,6 +44,10 @@ public:
 	/* Gameplay Ability system */
 	/***************************/
 	
+	/* Levels up player, giving xp, more base stats and some extra points to choose */
+	/* Only use this from server */
+	UFUNCTION(Category = Abilities)
+		void GainExperience(int XpGained);
 
 	// Called on new hotbar ability assignment, can change input bindings and replace
 	// Abilities with new bindings. Does remove old abilities in spot if exists

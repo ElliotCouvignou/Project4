@@ -12,6 +12,7 @@ float UP4AbilitySystemComponent::PlayMontage(UGameplayAbility* AnimatingAbility,
 	return ret;
 }
 
+
 void UP4AbilitySystemComponent::BroadcastAutoAttackResults(const TArray<AProject4Character*>& HitArray)
 {
 	// Check size , if 0 then no hit -> no broadcast

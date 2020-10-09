@@ -10,6 +10,7 @@
 #include "Project4Controller.h"
 #include "Project4.h"
 #include "Characters/Project4Character.h"
+#include "Characters/P4PlayerCharacterBase.h"
 
 #define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Green,text)
 
@@ -67,6 +68,21 @@ void UPlayerAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute
 	}
 	else if (Attribute == GetAttackSpeedAttribute()) {
 		NewValue = FMath::Clamp(NewValue, 0.0f, 100.f);
+	}
+	else if (Attribute == GetExperienceAttribute())
+	{
+		AProject4Controller* PC = Cast<AProject4Controller>(GetActorInfo()->PlayerController);
+		PC->UpdateUICurrentXP(NewValue);
+	}
+	else if (Attribute == GetExperienceMaxAttribute())
+	{
+		AProject4Controller* PC = Cast<AProject4Controller>(GetActorInfo()->PlayerController);
+		PC->UpdateUIMaxXP(NewValue);
+	}
+	else if (Attribute == GetLevelAttribute())
+	{
+		AProject4Controller* PC = Cast<AProject4Controller>(GetActorInfo()->PlayerController);
+		PC->UpdateUILevel(NewValue);
 	}
 
 	// max value clampers, makes sure health/maxhealth % stays same 
@@ -207,27 +223,30 @@ void UPlayerAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCall
 					// check if source PC exists in case an npc killed something
 					if (SourceCharacter && SourcePC && (SourceController != TargetController))
 					{
-						UPlayerAttributeSet* SourceAS = SourceCharacter->GetAttributeSet();
-						float NewSourceXp = SourceAS->GetExperience() + GetExperienceBounty();
+						AP4PlayerCharacterBase* PlayerChar = Cast<AP4PlayerCharacterBase>(SourceCharacter);
+						PlayerChar->GainExperience(GetExperienceBounty());
 
-						// Check Character Levelup
-						if (NewSourceXp > SourceAS->GetExperienceMax()) {
-							// Call level up VFX Handler
-							NewSourceXp -= SourceAS->GetExperienceMax();
-							
-							// +1 Level, Send to UI							
-							const float NewLevel = SourceAS->GetLevel() + 1.f;
-							SourceAS->SetLevel(NewLevel);
-							SourcePC->UpdateUILevel(NewLevel);
-
-							// ^ MaxXP, Send to UI
-							const float NewMaxXP = SourceAS->GetExperienceMax() * 2.5f;
-							SourceAS->SetExperienceMax(NewMaxXP);
-							SourcePC->UpdateUIMaxXP(NewMaxXP);
-						}
-						// Add XP
-						SourceAS->SetExperience(NewSourceXp);
-						SourcePC->UpdateUICurrentXP(NewSourceXp);
+						//UPlayerAttributeSet* SourceAS = SourceCharacter->GetAttributeSet();
+						//float NewSourceXp = SourceAS->GetExperience() + GetExperienceBounty();
+						//
+						//// Check Character Levelup
+						//if (NewSourceXp > SourceAS->GetExperienceMax()) {
+						//	// Call level up VFX Handler
+						//	NewSourceXp -= SourceAS->GetExperienceMax();
+						//	
+						//	// +1 Level, Send to UI							
+						//	const float NewLevel = SourceAS->GetLevel() + 1.f;
+						//	SourceAS->SetLevel(NewLevel);
+						//	SourcePC->UpdateUILevel(NewLevel);
+						//
+						//	// ^ MaxXP, Send to UI
+						//	const float NewMaxXP = SourceAS->GetExperienceMax() * 2.5f;
+						//	SourceAS->SetExperienceMax(NewMaxXP);
+						//	SourcePC->UpdateUIMaxXP(NewMaxXP);
+						//}
+						//// Add XP
+						//SourceAS->SetExperience(NewSourceXp);
+						//SourcePC->UpdateUICurrentXP(NewSourceXp);
 						
 					}
 				}

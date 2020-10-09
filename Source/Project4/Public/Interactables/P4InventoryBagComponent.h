@@ -78,17 +78,17 @@ UENUM(BlueprintType)
 enum class EEquipSlotType : uint8
 {
 	// 0 None
-	None			UMETA(DisplayName = "None"),  // "None" for empty slots (this shouldnt be necessary at this depth)
+	None				UMETA(DisplayName = "None"),  // "None" for empty slots (this shouldnt be necessary at this depth)
 	Helmet			UMETA(DispalyName = "Helmet"),
-	Necklace		UMETA(DispalyName = "Necklace"),
-	Shoulder		UMETA(DispalyName = "Shoulder"),
+	Necklace			UMETA(DispalyName = "Necklace"),
+	Shoulder			UMETA(DispalyName = "Shoulder"),
 	Chest			UMETA(DispalyName = "Chest"),
-	Back			UMETA(DispalyName = "Back"),
+	Back				UMETA(DispalyName = "Back"),
 	Gloves			UMETA(DispalyName = "Gloves"),
-	Belt			UMETA(DispalyName = "Belt"),
-	Legs			UMETA(DispalyName = "Legs"),
+	Belt				UMETA(DispalyName = "Belt"),
+	Legs				UMETA(DispalyName = "Legs"),
 	Boots			UMETA(DispalyName = "Boots"),
-	RingLeft		UMETA(DispalyName = "RingLeft"),
+	RingLeft			UMETA(DispalyName = "RingLeft"),
 	RingRight		UMETA(DispalyName = "RingRight"),
 	Bag				UMETA(DispalyName = "Bag"),
 	WeaponLeft		UMETA(DisplayName = "WeaponLeft"),
@@ -191,7 +191,7 @@ struct FEquippedItemsStruct
 
 /* On item added to inventory */
 /* Dynamic due to custom struct*/
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnInventorySlotUpdated, const FInventoryItemStruct&, NewitemInfo, int, Index);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnInventorySlotUpdated, int, Index, const FInventoryItemStruct&, ItemInfoStruct);
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEquippmentSlotUpdated, const FEquippmentSlotStruct&, NewEquippmentInfo);
 
@@ -267,8 +267,6 @@ public:
 	UPROPERTY(BlueprintReadWrite, Replicated, EditAnywhere)
 		FEquippedItemsStruct EquippmentSlots;
 
-
-
 	/*******************/
 	/*    Delegates    */
 	/*******************/
@@ -307,9 +305,9 @@ public:
 
 	/* From server broadcast update inventory delegate to client */
 	UFUNCTION(BlueprintCallable, Client, Reliable, WithValidation, Category = "Utility")
-		void ClientBroadcastInventoryUpdateDelegate(const FInventoryItemStruct& NewItemInfo, int Index);
-	void ClientBroadcastInventoryUpdateDelegate_Implementation(const FInventoryItemStruct& NewItemInfo, int Index);
-	bool ClientBroadcastInventoryUpdateDelegate_Validate(const FInventoryItemStruct& NewItemInfo, int Index) { return true; }
+		void ClientBroadcastInventoryUpdateDelegate(int Index, const FInventoryItemStruct& ItemInfoStruct);
+	void ClientBroadcastInventoryUpdateDelegate_Implementation(int Index, const FInventoryItemStruct& ItemInfoStruct);
+	bool ClientBroadcastInventoryUpdateDelegate_Validate(int Index, const FInventoryItemStruct& ItemInfoStruct) { return true; }
 
 	/* From server broadcast update equippment delegate to client */
 	UFUNCTION(BlueprintCallable, Client, Reliable, WithValidation, Category = "Utility")
@@ -346,6 +344,12 @@ public:
 	void ServerEquipItemFromInventory_Implementation(int InventoryIndex, bool IsRightSide);
 	bool ServerEquipItemFromInventory_Validate(int InventoryIndex, bool IsRightSide) { return true; }
 
+
+	/* On Client Request swap items in inventory */
+	UFUNCTION(BlueprintCallable, Server, Reliable, WithValidation, Category = "Utility")
+		void ServerSwapInventoryItems(int DragStartIndex, int DragEndIndex);
+	void ServerSwapInventoryItems_Implementation(int DragStartIndex, int DragEndIndex);
+	bool ServerSwapInventoryItems_Validate(int DragStartIndex, int DragEndIndex) { return true; }
 
 	/************************/
 	/*    Equip Helpers     */

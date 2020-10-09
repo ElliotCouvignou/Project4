@@ -158,4 +158,5 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Item")
 		FItemBaseInfoStruct	ItemInfo;
+
 };

@@ -120,9 +120,9 @@ void UP4InventoryBagComponent::GetWeaponTypes(EWeaponType& MainWeaponType, EWeap
 }
 
 
-void UP4InventoryBagComponent::ClientBroadcastInventoryUpdateDelegate_Implementation(const FInventoryItemStruct& NewItemInfo, int Index)
+void UP4InventoryBagComponent::ClientBroadcastInventoryUpdateDelegate_Implementation(int Index, const FInventoryItemStruct& ItemInfoStruct)
 {
-	OnInventorySlotUpdated.Broadcast(NewItemInfo, Index);
+	OnInventorySlotUpdated.Broadcast(Index, ItemInfoStruct);
 }
 
 void UP4InventoryBagComponent::ClientBroadcastEquippmentUpdateDelegate_Implementation(const FEquippmentSlotStruct& NewEquippmentInfo)
@@ -151,8 +151,8 @@ void UP4InventoryBagComponent::ServerAddItemToInventory_Implementation(const FIn
 			{
 				//Stack Items
 				InventoryArray[idx].StackCount += StacksToFill;
-				OnInventorySlotUpdated.Broadcast(NewItem, idx);
-				ClientBroadcastInventoryUpdateDelegate(NewItem, idx);
+				OnInventorySlotUpdated.Broadcast(idx, InventoryArray[idx]);
+				ClientBroadcastInventoryUpdateDelegate(idx, InventoryArray[idx]);
 
 				// TODO: add weight, maybe fix this bit as it doesnt really make sense intuitively 
 
@@ -169,7 +169,7 @@ void UP4InventoryBagComponent::ServerAddItemToInventory_Implementation(const FIn
 			Instigator->Destroy();
 		}
 	}
-	else
+	else if (NewItem.ItemBaseDataAsset)
 	{
 		// not stackable, place in first available slot, else return unsuccessful
 		int Index; 
@@ -185,8 +185,8 @@ void UP4InventoryBagComponent::ServerAddItemToInventory_Implementation(const FIn
 				GESpec->SetSetByCallerMagnitude(CarryWeight, NewItem.ItemBaseDataAsset->ItemInfo.ItemWeight);
 
 				InventoryArray.Insert(NewItem, Index);
-				OnInventorySlotUpdated.Broadcast(NewItem, Index);
-				ClientBroadcastInventoryUpdateDelegate(NewItem, Index);
+				OnInventorySlotUpdated.Broadcast(Index, NewItem);
+				ClientBroadcastInventoryUpdateDelegate(Index, NewItem);
 
 				InventoryArray[Index].ActiveGE = PlayerASC->ApplyGameplayEffectSpecToTarget(*PickupEffectSpec.Data.Get(), PlayerASC);
 
@@ -232,8 +232,8 @@ void UP4InventoryBagComponent::ServerDropItemFromInventory_Implementation(int In
 					PlayerASC->RemoveActiveGameplayEffect(InventoryArray[InventoryIndex].ActiveGE, 1);
 
 					InventoryArray[InventoryIndex] = FInventoryItemStruct();
-					OnInventorySlotUpdated.Broadcast(FInventoryItemStruct(), InventoryIndex);
-					ClientBroadcastInventoryUpdateDelegate(FInventoryItemStruct(), InventoryIndex);
+					OnInventorySlotUpdated.Broadcast(InventoryIndex, InventoryArray[InventoryIndex]);
+					ClientBroadcastInventoryUpdateDelegate(InventoryIndex, InventoryArray[InventoryIndex]);
 				}
 			}
 		}	
@@ -264,6 +264,21 @@ void UP4InventoryBagComponent::ServerEquipItemFromInventory_Implementation(int I
 	}
 }
 
+void UP4InventoryBagComponent::ServerSwapInventoryItems_Implementation(int DragStartIndex, int DragEndIndex)
+{
+	FInventoryItemStruct& StartItem = InventoryArray[DragStartIndex];
+	FInventoryItemStruct& EndItem = InventoryArray[DragEndIndex];
+
+	if (!StartItem.bIsEmpty)
+	{
+		FInventoryItemStruct temp = StartItem;
+		StartItem = EndItem;
+		EndItem = temp;
+		ClientBroadcastInventoryUpdateDelegate(DragStartIndex, InventoryArray[DragStartIndex]);
+		ClientBroadcastInventoryUpdateDelegate(DragEndIndex, InventoryArray[DragEndIndex]);
+	}
+}
+
 void UP4InventoryBagComponent::EquipArmorItemFromInventory(int InventoryIndex, bool IsRightFinger, FInventoryItemStruct& Item)
 {
 	// figure out what slot this goes to 
@@ -286,8 +301,8 @@ void UP4InventoryBagComponent::EquipArmorItemFromInventory(int InventoryIndex, b
 			FActiveGameplayEffectHandle EqippedEffectHandle = PlayerASC->BP_ApplyGameplayEffectToSelf(ArmorItem->EquippedGameplayEffect, 1, PlayerASC->MakeEffectContext());
 			if (EqippedEffectHandle.WasSuccessfullyApplied() && SetEquipSlotInfo(EquipSlotType, Item, EqippedEffectHandle))
 			{
-				OnInventorySlotUpdated.Broadcast(InventoryArray[InventoryIndex], InventoryIndex);
-				ClientBroadcastInventoryUpdateDelegate(InventoryArray[InventoryIndex], InventoryIndex);
+				OnInventorySlotUpdated.Broadcast(InventoryIndex, InventoryArray[InventoryIndex]);
+				ClientBroadcastInventoryUpdateDelegate(InventoryIndex, InventoryArray[InventoryIndex]);
 
 				// done here
 				return;
@@ -343,8 +358,8 @@ void UP4InventoryBagComponent::EquipWeaponItemFromInventory(int InventoryIndex, 
 
 								// broadcast changes since only time another index is relevant
 								InventoryArray[index] = FInventoryItemStruct(OffHandEquipSlot.InventoryItemStruct);
-								OnInventorySlotUpdated.Broadcast(InventoryArray[index], index);
-								ClientBroadcastInventoryUpdateDelegate(InventoryArray[index], index);
+								OnInventorySlotUpdated.Broadcast(index, InventoryArray[index]);
+								ClientBroadcastInventoryUpdateDelegate(index, InventoryArray[index]);
 
 								SetEquipSlotInfo(EEquipSlotType::WeaponLeft, FInventoryItemStruct(), FActiveGameplayEffectHandle());
 							}
@@ -409,8 +424,8 @@ void UP4InventoryBagComponent::EquipWeaponItemFromInventory(int InventoryIndex, 
 				else
 					PlayerRef->SetLeftHandWeaponInfo(WeaponItem);
 
-				OnInventorySlotUpdated.Broadcast(InventoryArray[InventoryIndex], InventoryIndex);
-				ClientBroadcastInventoryUpdateDelegate(InventoryArray[InventoryIndex], InventoryIndex);
+				OnInventorySlotUpdated.Broadcast(InventoryIndex, InventoryArray[InventoryIndex]);
+				ClientBroadcastInventoryUpdateDelegate(InventoryIndex, InventoryArray[InventoryIndex]);
 				// done here
 				return;
 			}
@@ -447,8 +462,8 @@ void UP4InventoryBagComponent::ServerUnEquipItemFromInventory_Implementation(EEq
 				{
 					// place empty inventory spot
 					InventoryArray[Index] = FInventoryItemStruct(EquipSlot.InventoryItemStruct);
-					OnInventorySlotUpdated.Broadcast(InventoryArray[Index], Index);
-					ClientBroadcastInventoryUpdateDelegate(InventoryArray[Index], Index);
+					OnInventorySlotUpdated.Broadcast(Index, InventoryArray[Index]);
+					ClientBroadcastInventoryUpdateDelegate(Index, InventoryArray[Index]);
 
 					SetEquipSlotInfo(EquipSlotType, FInventoryItemStruct(), FActiveGameplayEffectHandle());
 
@@ -488,8 +503,8 @@ void UP4InventoryBagComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProper
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	//DOREPLIFETIME(AProject4Character, AttributeSet);
-	DOREPLIFETIME(UP4InventoryBagComponent, InventoryArray);
-	DOREPLIFETIME(UP4InventoryBagComponent, EquippmentSlots);
+	DOREPLIFETIME_CONDITION(UP4InventoryBagComponent, InventoryArray, COND_OwnerOnly);
+	DOREPLIFETIME_CONDITION(UP4InventoryBagComponent, EquippmentSlots, COND_OwnerOnly);
 }
 
 

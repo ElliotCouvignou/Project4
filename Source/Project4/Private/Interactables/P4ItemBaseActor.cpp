@@ -7,8 +7,7 @@
 #include "UI/ItemActorNameWidget.cpp"
 
 
-
-#define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Green,text)
+#define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Green,text)
 
 
 AP4ItemBaseActor::AP4ItemBaseActor() : Super()

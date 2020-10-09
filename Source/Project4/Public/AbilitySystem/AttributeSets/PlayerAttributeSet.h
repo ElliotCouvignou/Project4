@@ -27,7 +27,6 @@ class PROJECT4_API UPlayerAttributeSet : public UP4BaseAttributeSet
 	GENERATED_BODY()
 
 
-
 private:
 
 	/* class vars so we dont remake each post exec */

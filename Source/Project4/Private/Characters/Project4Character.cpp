@@ -178,7 +178,8 @@ void AProject4Character::InitFloatingStatusBarWidget()
 					UIFloatingStatusBarComponent->SetWidget(UIFloatingStatusBar);
 					UIFloatingStatusBarComponent->SetDrawSize(UIFloatingStatusBar->GetDesiredSize());
 					UIFloatingStatusBarComponent->SetRelativeLocation(FVector(0, 0, GetCapsuleComponent()->GetScaledCapsuleHalfHeight()* FloatingStatusBarHeightCoeff));
-					
+					UIFloatingStatusBarComponent->SetCullDistance(FloatingStatusBarCullDistance);
+
 					// Setup the floating status bar
 					UIFloatingStatusBar->SetHealthPercentage(AttributeSet->GetHealth() / AttributeSet->GetHealthMax());
 					UIFloatingStatusBar->SetCharacterName(CharacterName);

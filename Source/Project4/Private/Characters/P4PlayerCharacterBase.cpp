@@ -21,6 +21,9 @@
 #include "AbilitySystem/P4GameplayAbility.h"
 #include "AbilitySystem/AttributeSets/PlayerAttributeSet.h"
 
+#include "Interactables/P4InventoryBagComponent.h"
+#include "Characters/SkillTreeComponent.h"
+
 #include "UI/GameplayHudWidget.h"
 
 
@@ -47,6 +50,9 @@ AP4PlayerCharacterBase::AP4PlayerCharacterBase(const class FObjectInitializer& O
 	// Create Player Inventory Component
 	InventoryBagComponent = CreateDefaultSubobject<UP4InventoryBagComponent>(TEXT("InventoryBagComponent"));
 	InventoryBagComponent->SetIsReplicated(true);
+
+	SkillTreeComponent = CreateDefaultSubobject<USkillTreeComponent>(TEXT("SkillTreeComponent"));
+	SkillTreeComponent->SetIsReplicated(true);
 	
 
 }
@@ -93,6 +99,29 @@ void AP4PlayerCharacterBase::FinishDying()
 }
 
 
+void AP4PlayerCharacterBase::GainExperience(int XpGained)
+{
+	if (!HasAuthority())
+	{
+		return;
+	}
+	UPlayerAttributeSet* AS = GetAttributeSet();
+
+	float NewXp = AS->GetExperience() + XpGained;
+	if (NewXp >= AS->GetExperienceMax())
+	{
+		// Player Level Up
+		NewXp -= AS->GetExperienceMax();
+		float NewLevel = AS->GetLevel() + 1.f;
+		AS->SetLevel(NewLevel);
+
+		// TODO: finalize max xp formula
+		float NewMaxXP = FMath::Square(AS->GetLevel()) / 4.f + 10.f*AS->GetLevel() + 150.f;
+		AS->SetExperienceMax(NewMaxXP);
+	}
+	AS->SetExperience(NewXp);
+}
+
 void AP4PlayerCharacterBase::BindAbilityToHotbarBlock(int32 BlockIndex, TSubclassOf<class UP4GameplayAbility> Ability)
 {
 	if (IsLocallyControlled())
@@ -134,11 +163,11 @@ void AP4PlayerCharacterBase::BindAbilityToHotbarInput_Implementation(AP4PlayerCh
 
 void AP4PlayerCharacterBase::InitBoundAbilityArrays_Implementation(AP4PlayerCharacterBase* TargetActor)
 {
-	TargetActor->BoundAbilities.SetNum(ABILITY_BLOCK_AMOUNT);
 	TargetActor->BoundAbilities.Reset();
-
-	TargetActor->AbilitySpecHandles.SetNum(ABILITY_BLOCK_AMOUNT);
+	TargetActor->BoundAbilities.SetNum(ABILITY_BLOCK_AMOUNT);
+	
 	TargetActor->AbilitySpecHandles.Reset();
+	TargetActor->AbilitySpecHandles.SetNum(ABILITY_BLOCK_AMOUNT);
 }
 
 void AP4PlayerCharacterBase::AddAllCharacterAbilities()

@@ -235,8 +235,11 @@ protected:
 		FText CharacterName;
 
 	// Height of FloatingStatusBar = <CapsulehalfHeight> * <this Coeff> 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-		float FloatingStatusBarHeightCoeff = 1.25f;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Floating Status Bar | Height")
+		float FloatingStatusBarHeightCoeff = 1.5f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Floating Status Bar | Cull Distance")
+		float FloatingStatusBarCullDistance = 52.5f * 50.f;
 
 public:
 	/* Virtual Overrides */
