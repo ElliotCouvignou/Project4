@@ -18,6 +18,5 @@ void AMainMenuGameMode::BeginPlay()
 		PlayerController->bShowMouseCursor = true;
 		PlayerController->bEnableClickEvents = true;
 		PlayerController->bEnableMouseOverEvents = true;
-		print(FString("Show Mouse Cursor"));
 	}
 }

@@ -49,7 +49,7 @@ enum class EP4AbilityInputID : uint8
 	RAbility			UMETA(DisplayName = "RAbility"),
 	TabTarget       UMETA(DisplayName = "TabTarget"),
 	ShowMouse		UMETA(DisplayName = "ShowMouse"),	
-	ChangeWeapon	UMETA(DisplayName = "ChangeWeapon"),
+	ChangeWeapon		UMETA(DisplayName = "ChangeWeapon"),
 	Sprint			UMETA(DisplayName = "Sprint")
 	
 
