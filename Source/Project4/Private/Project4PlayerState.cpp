@@ -82,6 +82,8 @@ void AProject4PlayerState::BindAbilityDelegates()
 		/* following Delegates are UI ONLY, dont waste server's time */
 		/*   Progression Stat Bindings   */
 		LevelChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetLevelAttribute()).AddUObject(this, &AProject4PlayerState::LevelChanged);
+		CurrentExperienceDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetExperienceAttribute()).AddUObject(this, &AProject4PlayerState::CurrentExperienceChanged);
+		MaxExperienceDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetExperienceMaxAttribute()).AddUObject(this, &AProject4PlayerState::MaxExperienceChanged);
 		CarryWeightChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetCarryWeightAttribute()).AddUObject(this, &AProject4PlayerState::CarryWeightChanged);
 		MaxCarryWeightChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetMaxCarryWeightAttribute()).AddUObject(this, &AProject4PlayerState::MaxCarryWeightChanged);
 
@@ -250,6 +252,40 @@ void AProject4PlayerState::LevelChanged(const FOnAttributeChangeData& Data)
 		if (HUD)
 		{
 			HUD->UpdatePlayerLevel(Data.NewValue);
+		}
+	}
+}
+
+void AProject4PlayerState::CurrentExperienceChanged(const FOnAttributeChangeData& Data)
+{
+	AProject4Controller* PC = Cast<AProject4Controller>(GetOwner());
+	if (PC)
+	{
+		UGameplayHudWidget* HUD = PC->GetMainHUDWidget();
+		if (HUD)
+		{
+			UXPBarWidget* XPWidget = HUD->GetXPBarWidget();
+			if (XPWidget)
+			{
+				XPWidget->UpdateCurrentXP(Data.NewValue);
+			}
+		}		
+	}
+}
+
+void AProject4PlayerState::MaxExperienceChanged(const FOnAttributeChangeData& Data)
+{
+	AProject4Controller* PC = Cast<AProject4Controller>(GetOwner());
+	if (PC)
+	{
+		UGameplayHudWidget* HUD = PC->GetMainHUDWidget();
+		if (HUD)
+		{
+			UXPBarWidget* XPWidget = HUD->GetXPBarWidget();
+			if (XPWidget)
+			{
+				XPWidget->UpdateMaxXP(Data.NewValue);
+			}
 		}
 	}
 }

@@ -139,6 +139,17 @@ void USkillTreeComponent::GetAssetNodeStruct(const int NodeIndex, const bool IsM
 	DataAssetNodeStruct = UseableSkillTrees[ActiveIndex]->SkillTreeNodes[NodeIndex];
 }
 
+void USkillTreeComponent::GrantSkillPointsFromLevelUp(int NewLevel)
+{
+	// Currently each level grants a main skill point, every 5 is a secondary
+	// Rewards are yet to be finalized
+	MainSkillTreePoints++;
+	if (NewLevel % 5 == 0)
+	{
+		SecondarySkillTreePoints++;
+	}
+}
+
 void USkillTreeComponent::InitSkillTreeFromDataAsset()
 {
 	AP4PlayerCharacterBase* Char = Cast<AP4PlayerCharacterBase>(GetOwner());

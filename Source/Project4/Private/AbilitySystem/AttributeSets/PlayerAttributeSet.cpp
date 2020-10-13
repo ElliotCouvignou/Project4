@@ -69,21 +69,6 @@ void UPlayerAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute
 	else if (Attribute == GetAttackSpeedAttribute()) {
 		NewValue = FMath::Clamp(NewValue, 0.0f, 100.f);
 	}
-	else if (Attribute == GetExperienceAttribute())
-	{
-		AProject4Controller* PC = Cast<AProject4Controller>(GetActorInfo()->PlayerController);
-		PC->UpdateUICurrentXP(NewValue);
-	}
-	else if (Attribute == GetExperienceMaxAttribute())
-	{
-		AProject4Controller* PC = Cast<AProject4Controller>(GetActorInfo()->PlayerController);
-		PC->UpdateUIMaxXP(NewValue);
-	}
-	else if (Attribute == GetLevelAttribute())
-	{
-		AProject4Controller* PC = Cast<AProject4Controller>(GetActorInfo()->PlayerController);
-		PC->UpdateUILevel(NewValue);
-	}
 
 	// max value clampers, makes sure health/maxhealth % stays same 
 	else if (Attribute == GetHealthMaxAttribute())

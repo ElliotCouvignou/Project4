@@ -31,6 +31,7 @@
 #define CAMERA_ZOOM_MAX 750.f
 #define CAMERA_ZOOM_GRANULARITY 50.f
 
+#define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::Green,text)
 
 
 AP4PlayerCharacterBase::AP4PlayerCharacterBase(const class FObjectInitializer& ObjectInitializer)
@@ -108,16 +109,20 @@ void AP4PlayerCharacterBase::GainExperience(int XpGained)
 
 	// Check for Level Up
 	float NewXp = AS->GetExperience() + XpGained;
-	if (NewXp >= AS->GetExperienceMax())
+	float MaxXP = AS->GetExperienceMax();
+	while (NewXp >= MaxXP)
 	{
 		// Player Level Up
-		NewXp -= AS->GetExperienceMax();
+		//NewXp -= AS->GetExperienceMax();
 		float NewLevel = AS->GetLevel() + 1.f;
 		AS->SetLevel(NewLevel);
+		
+		// Give Talent Points
+		SkillTreeComponent->GrantSkillPointsFromLevelUp(NewLevel);
 
 		// TODO: finalize max xp formula
-		float NewMaxXP = FMath::Square(AS->GetLevel()) / 4.f + 10.f*AS->GetLevel() + 150.f;
-		AS->SetExperienceMax(NewMaxXP);
+		MaxXP = 100 * AS->GetLevel() * (1 + AS->GetLevel());
+		AS->SetExperienceMax(MaxXP);
 	}
 	AS->SetExperience(NewXp);
 }

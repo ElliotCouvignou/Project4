@@ -129,22 +129,6 @@ public:
 	bool DisplayHealNumber_Validate(float HealValue, AProject4Character* TargetCharacter) { return true; }
 
 	UFUNCTION(Client, Reliable, WithValidation)
-		void UpdateUICurrentXP(float NewXP);
-	void UpdateUICurrentXP_Implementation(float NewXP);
-	bool UpdateUICurrentXP_Validate(float NewXP) { return true; }
-
-	UFUNCTION(Client, Reliable, WithValidation)
-		void UpdateUIMaxXP(float NewMaxXP);
-	void UpdateUIMaxXP_Implementation(float NewMaxXP);
-	bool UpdateUIMaxXP_Validate(float NewMaxXP) { return true; }
-
-	// Called on Ding! Gratz
-	UFUNCTION(Client, Reliable, WithValidation)
-		void UpdateUILevel(float NewLevel);
-	void UpdateUILevel_Implementation(float NewLevel);
-	bool UpdateUILevel_Validate(float NewLevel) { return true; }
-
-	UFUNCTION(Client, Reliable, WithValidation)
 		void SetUIRespawnCountdown(float Duration);
 	void SetUIRespawnCountdown_Implementation(float Duration);
 	bool SetUIRespawnCountdown_Validate(float Duration) { return true; }

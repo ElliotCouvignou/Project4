@@ -58,6 +58,8 @@ protected:
 
 	/*   Progression Stat Bindings   */
 	FDelegateHandle LevelChangedDelegateHandle;
+	FDelegateHandle CurrentExperienceDelegateHandle;
+	FDelegateHandle MaxExperienceDelegateHandle;
 	FDelegateHandle CarryWeightChangedDelegateHandle;
 	FDelegateHandle MaxCarryWeightChangedDelegateHandle;
 
@@ -109,6 +111,8 @@ protected:
 	virtual void MaxCarryWeightChanged(const FOnAttributeChangeData& Data);
 	virtual void CarryWeightChanged(const FOnAttributeChangeData& Data);
 	virtual void LevelChanged(const FOnAttributeChangeData& Data);
+	virtual void CurrentExperienceChanged(const FOnAttributeChangeData& Data);
+	virtual void MaxExperienceChanged(const FOnAttributeChangeData& Data);
 
 	/*   Base Stat Callback   */
 	virtual void StrengthChanged(const FOnAttributeChangeData& Data);

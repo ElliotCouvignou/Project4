@@ -104,21 +104,6 @@ void AProject4Controller::DisplayHealNumber_Implementation(float HealValue, APro
 	DamageText->SetHealText(HealValue);
 }
 
-void AProject4Controller::UpdateUICurrentXP_Implementation(float NewXP)
-{
-	GameplayHUDWidget->UpdateCurrentXP(NewXP);
-}
-
-void AProject4Controller::UpdateUIMaxXP_Implementation(float NewMaxXP)
-{
-	GameplayHUDWidget->UpdateMaxXP(NewMaxXP);
-}
-
-void AProject4Controller::UpdateUILevel_Implementation(float NewLevel)
-{
-	GameplayHUDWidget->UpdatePlayerLevel(NewLevel);
-}
-
 void AProject4Controller::SetUIRespawnCountdown_Implementation(float Duration)
 {
 	GameplayHUDWidget->SetRespawnCountdown(Duration);

@@ -88,6 +88,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Utility")
 		TArray<class USkillTreeDataAsset*>& GetUseableSkillTrees() { return UseableSkillTrees; }
 
+	/* If weapon skill tree comes around this should probably involve */
+	UFUNCTION()
+		void GrantSkillPointsFromLevelUp(int NewLevel);
+
 protected:
 
 	/* Inits skill tree array from data asset, all ranks will be 0 

@@ -40,17 +40,16 @@ enum class EP4AbilityInputID : uint8
 	UseAbility9		UMETA(DisplayName = "UseAbility9"),
 	UseAbility10		UMETA(DisplayName = "UseAbility10"),
 
-	// Essential Player abilities (e.g weapon swap, sprint, etc.) i.e used among all classes
-	InteractAbility	UMETA(DisplayName = "InteractAbility"),
-	WeaponAttack    UMETA(DisplayName = "WeaponAttack"), // LMB "Auto Attack" bind
 	SpecialAttack   UMETA(DisplayName = "SpecialAttack"), // RMB bind
 	QAbility			UMETA(DisplayName = "QAbility"),
 	EAbility			UMETA(DisplayName = "EAbility"),
 	RAbility			UMETA(DisplayName = "RAbility"),
+
+	// Essential Player abilities (e.g weapon swap, sprint, etc.) i.e used among all classes
+	WeaponAttack    UMETA(DisplayName = "WeaponAttack"), // LMB "Auto Attack" bind
+	InteractAbility	UMETA(DisplayName = "InteractAbility"),
 	TabTarget       UMETA(DisplayName = "TabTarget"),
 	ShowMouse		UMETA(DisplayName = "ShowMouse"),	
 	ChangeWeapon		UMETA(DisplayName = "ChangeWeapon"),
 	Sprint			UMETA(DisplayName = "Sprint")
-	
-
 };

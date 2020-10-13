@@ -7,6 +7,9 @@
 #include "Project4Controller.h"
 #include "GameplayTagContainer.h"
 #include "GameplayEffect.h"
+
+#include "UI/XPBarWidget.h"
+
 #include "GameplayHudWidget.generated.h"
 
 /**
@@ -154,6 +157,12 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Input Menus | Inventory")
 		void UpdateCurrentCarryWeight(float NewValue);
+
+
+
+	// Getter fucntions
+	UFUNCTION()
+		UXPBarWidget* GetXPBarWidget() { return XPBarWidget;  }
 
 protected:
 

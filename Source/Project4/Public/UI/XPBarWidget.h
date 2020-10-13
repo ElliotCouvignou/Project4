@@ -19,5 +19,15 @@ public:
 		void UpdateCurrentXP(float NewXP);
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
-		void UpdateMaxXP(float NewMaxXP);	
+		void UpdateMaxXP(float NewMaxXP);
+
+	UFUNCTION()
+		void SetStartingXP(float value) { StartingXP = value; }
+
+protected: 
+
+	// Xp to level on last level, since xp isnt reset on level we must track the xp 
+	// threshold of last levelup
+	UPROPERTY(BlueprintReadWrite)
+		float StartingXP;
 };
