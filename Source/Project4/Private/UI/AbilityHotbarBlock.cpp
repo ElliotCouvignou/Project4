@@ -14,3 +14,4 @@ void UAbilityHotbarBlock::NativeConstruct()
 	Super::NativeConstruct();
 
 }
+

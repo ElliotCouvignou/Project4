@@ -54,7 +54,7 @@ AP4PlayerCharacterBase::AP4PlayerCharacterBase(const class FObjectInitializer& O
 	SkillTreeComponent = CreateDefaultSubobject<USkillTreeComponent>(TEXT("SkillTreeComponent"));
 	SkillTreeComponent->SetIsReplicated(true);
 	
-
+	BoundAbilities.SetNum(ABILITY_BLOCK_AMOUNT);
 }
 
 void AP4PlayerCharacterBase::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
@@ -62,7 +62,6 @@ void AP4PlayerCharacterBase::SetupPlayerInputComponent(class UInputComponent* Pl
 	// Set up gameplay key bindings
 	check(PlayerInputComponent);
 	PlayerInputComponent->BindAxis("CameraZoom", this, &AP4PlayerCharacterBase::CameraZoom);
-
 
 	// Bind ASC Input
 	BindASCInput();
@@ -107,6 +106,7 @@ void AP4PlayerCharacterBase::GainExperience(int XpGained)
 	}
 	UPlayerAttributeSet* AS = GetAttributeSet();
 
+	// Check for Level Up
 	float NewXp = AS->GetExperience() + XpGained;
 	if (NewXp >= AS->GetExperienceMax())
 	{
@@ -130,61 +130,11 @@ void AP4PlayerCharacterBase::BindAbilityToHotbarBlock(int32 BlockIndex, TSubclas
 		if (PC)
 		{
 			PC->SetupUIAbilityToHotBarBlock(BlockIndex, Ability);
-		}
-		BindAbilityToHotbarInput(this, BlockIndex, Ability);
-	}
-}
-
-void AP4PlayerCharacterBase::BindAbilityToHotbarInput_Implementation(AP4PlayerCharacterBase* TargetActor, int32 BlockIndex, TSubclassOf<class UP4GameplayAbility> Ability)
-{
-	UAbilitySystemComponent* ASC = TargetActor->GetAbilitySystemComponent();
-	if (ASC) {
-		// check current block, if ability is bound then clear
-		if (TargetActor->AbilitySpecHandles.IsValidIndex(BlockIndex) && (TargetActor->AbilitySpecHandles[BlockIndex].IsValid())) {
-			ASC->ClearAbility(AbilitySpecHandles[BlockIndex]);
-		}
-
-		// Bind ability if it isnt nullptr
-		if (Ability)
-		{
-			TargetActor->BoundAbilities.Insert(Ability, BlockIndex);
-			FGameplayAbilitySpecHandle NewAbilityHandle = ASC->GiveAbility(
-				FGameplayAbilitySpec(Ability, 1, ABILITY_INPUT_OFFSET + BlockIndex, TargetActor));
-			TargetActor->AbilitySpecHandles.Insert(NewAbilityHandle, BlockIndex);
-		}
-		else
-		{
-			// Set block to nothing
-			TargetActor->BoundAbilities.Insert(nullptr, BlockIndex);
-			TargetActor->AbilitySpecHandles.Insert(FGameplayAbilitySpecHandle(), BlockIndex);
+			BoundAbilities[BlockIndex] = Ability;
 		}
 	}
 }
 
-void AP4PlayerCharacterBase::InitBoundAbilityArrays_Implementation(AP4PlayerCharacterBase* TargetActor)
-{
-	TargetActor->BoundAbilities.Reset();
-	TargetActor->BoundAbilities.SetNum(ABILITY_BLOCK_AMOUNT);
-	
-	TargetActor->AbilitySpecHandles.Reset();
-	TargetActor->AbilitySpecHandles.SetNum(ABILITY_BLOCK_AMOUNT);
-}
-
-void AP4PlayerCharacterBase::AddAllCharacterAbilities()
-{
-	if (!HasAuthority() || !GetAbilitySystemComponent()) {
-		return;
-	}
-
-	int idx = 0;
-	for (TSubclassOf<UP4GameplayAbility>& StartupAbility : BoundAbilities) {
-		if (StartupAbility) {
-			AbilitySpecHandles[idx] = GetAbilitySystemComponent()->GiveAbility(
-				FGameplayAbilitySpec(StartupAbility, 1, ABILITY_INPUT_OFFSET + idx, this));
-		}
-		idx += 1;
-	}
-}
 
 /***************************/
 /*    Targeting system     */
@@ -238,14 +188,12 @@ void AP4PlayerCharacterBase::CameraZoom(float Value)
 }
 
 // ovveride replciation with replication variables
-void AP4PlayerCharacterBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const {
-
-	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-
-	//DOREPLIFETIME_CONDITION_NOTIFY(UPlayerAttributeSet, Health, COND_None, REPNOTIFY_Always);
-	DOREPLIFETIME(AP4PlayerCharacterBase, BoundAbilities);
-	DOREPLIFETIME(AP4PlayerCharacterBase, AbilitySpecHandles);
-}
+//void AP4PlayerCharacterBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const {
+//
+//	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+//
+//	//DOREPLIFETIME_CONDITION_NOTIFY(UPlayerAttributeSet, Health, COND_None, REPNOTIFY_Always);
+//}
 
 
 

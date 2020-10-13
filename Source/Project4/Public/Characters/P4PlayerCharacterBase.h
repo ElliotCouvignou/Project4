@@ -56,18 +56,6 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void BindAbilityToHotbarBlock(int32 BlockIndex, TSubclassOf<class UP4GameplayAbility> Ability);
 	
-	// helper for above, calls on ASC from server to do input bindings based on hotbar bindings
-	UFUNCTION(Server, Reliable, WithValidation, Category = Abilities)
-		void BindAbilityToHotbarInput(AP4PlayerCharacterBase* TargetActor, int32 BlockIndex, TSubclassOf<class UP4GameplayAbility> Ability);
-	virtual bool BindAbilityToHotbarInput_Validate(AP4PlayerCharacterBase* TargetActor, int32 BlockIndex, TSubclassOf<class UP4GameplayAbility> Ability) { return true; }
-	virtual void BindAbilityToHotbarInput_Implementation(AP4PlayerCharacterBase* TargetActor, int32 BlockIndex, TSubclassOf<class UP4GameplayAbility> Ability);
-
-	
-	// sets array sizes to # ability blocks and then resets array values
-	UFUNCTION(BlueprintCallable, Server, Reliable, WithValidation, Category = Abilities)
-		void InitBoundAbilityArrays(AP4PlayerCharacterBase* TargetActor);
-	virtual bool InitBoundAbilityArrays_Validate(AP4PlayerCharacterBase* TargetActor) { return true; }
-	virtual void InitBoundAbilityArrays_Implementation(AP4PlayerCharacterBase* TargetActor);
 
 	/***************************/
 	/*      Camera system      */
@@ -89,22 +77,10 @@ protected:
 	/* Gameplay Ability system */
 	/***************************/
 
-	// 'sorted' Array to hold all bound abilities, Index 0 = UseAbility1, 9 = UseAbility0. 
-	UPROPERTY(BlueprintReadOnly, Replicated, VisibleAnywhere, Category = GAS)
+	/* Array of bound ability classes to hotbar, on input ppress try activate ability through class
+		This is only saved on the client */
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = GAS)
 		TArray<TSubclassOf<class UP4GameplayAbility>> BoundAbilities;
-
-	// 'sorted' in same fashion above, this is essential
-	UPROPERTY(BlueprintReadOnly, Replicated, VisibleAnywhere, Category = GAS)
-		TArray<FGameplayAbilitySpecHandle> AbilitySpecHandles;
-
-	// grants and binds binds hotbar abilitites 
-	// TODO expose this to grant learned (but not bound) abilities
-	virtual void AddAllCharacterAbilities();
-
-
-	/* Helper used in SetupPlayerInputComponent to set binds to ability hotbar container */
-	UFUNCTION(Category = "Utility")
-		void BindInputsToAbilityHotbar();
 
 	void BindASCInput();
 	bool bASCInputBound = false;

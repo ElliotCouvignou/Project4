@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Project4.h"
 #include "Blueprint/UserWidget.h"
 #include "AbilityHotbar.generated.h"
 
@@ -28,6 +29,10 @@ public:
 	// ATM this gets set in bliueprint construct, Cant find equivalent in c++
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Ability)
 		class AP4PlayerCharacterBase* PlayerRef;
+
+	/* Magic number for BP's to read */
+	UPROPERTY(BlueprintReadOnly)
+		int AbilityInputOffsetToHotBar = ABILITY_INPUT_OFFSET;
 
 	// give player ability to block #
 	//UFUNCTION(BlueprintCallable, Category = Abilities)

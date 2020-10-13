@@ -47,7 +47,6 @@ void USkillTreeComponent::ServerTryRankUpSkill_Implementation(int SkillTreeIndex
 			if (CurNode.CurrentRank == 0)
 			{
 				// Learn Ability
-				print(FString("Learn Ability"));
 				CurNode.SpecHandle = ASC->GiveAbility(FGameplayAbilitySpec(CurNodeAsset.AbilityClass, 1));
 				successful = true;
 			}
@@ -65,7 +64,11 @@ void USkillTreeComponent::ServerTryRankUpSkill_Implementation(int SkillTreeIndex
 			{
 				CurNode.CurrentRank += 1;
 				PointsToSpend -= 1;
-				//ChangedIndexesArray.Add(SkillTreeIndex);
+				
+				// TODO: find way to detect if we are in listen server and host wants to rank up
+				//			as this array delegation is only meant for this case
+				TArray<int> ForListenHostCase = { SkillTreeIndex };
+				(IsMainTree) ? OnMainTreeNodeUpdated.Broadcast(ForListenHostCase) : OnSecondaryTreeNodeUpdated.Broadcast(ForListenHostCase);
 				ClientSkillTreeNodeUpdateDelegate(SkillTreeIndex, IsMainTree);
 			}
 		}
@@ -97,7 +100,6 @@ void USkillTreeComponent::ServerTryRankDownSkill_Implementation(int SkillTreeInd
 			if (CurNode.CurrentRank == 1)
 			{
 				// Unlearn Ability
-				print(FString("UnLearn Ability"));
 				ASC->ClearAbility(CurNode.SpecHandle);
 				successful = true;
 			}
@@ -115,7 +117,11 @@ void USkillTreeComponent::ServerTryRankDownSkill_Implementation(int SkillTreeInd
 			{
 				CurNode.CurrentRank -= 1;
 				PointsToSpend += 1;
-				//ChangedIndexesArray.Add(SkillTreeIndex);
+
+				// TODO: find way to detect if we are in listen server and host wants to rank up
+				//			as this array delegation is only meant for this case
+				TArray<int> ForListenHostCase = {SkillTreeIndex};
+				(IsMainTree) ? OnMainTreeNodeUpdated.Broadcast(ForListenHostCase) : OnSecondaryTreeNodeUpdated.Broadcast(ForListenHostCase);
 				ClientSkillTreeNodeUpdateDelegate(SkillTreeIndex, IsMainTree);
 			}
 		}

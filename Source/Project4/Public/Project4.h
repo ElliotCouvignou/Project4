@@ -28,7 +28,7 @@ enum class EP4AbilityInputID : uint8
 	Confirm			UMETA(DisplayName = "ConfirmAbility"),
 	// 2 Cancel
 	Cancel			UMETA(DisplayName = "CancelAbility"),
-	// Hotbar binding enums
+	// Hotbar binding enums Currently used in BP as a reference to names, not used in GAS ability bindings like other enums
 	UseAbility1		UMETA(DisplayName = "UseAbility1"),
 	UseAbility2		UMETA(DisplayName = "UseAbility2"),
 	UseAbility3		UMETA(DisplayName = "UseAbility3"),
@@ -38,11 +38,15 @@ enum class EP4AbilityInputID : uint8
 	UseAbility7		UMETA(DisplayName = "UseAbility7"),
 	UseAbility8		UMETA(DisplayName = "UseAbility8"),
 	UseAbility9		UMETA(DisplayName = "UseAbility9"),
+	UseAbility10		UMETA(DisplayName = "UseAbility10"),
 
 	// Essential Player abilities (e.g weapon swap, sprint, etc.) i.e used among all classes
 	InteractAbility	UMETA(DisplayName = "InteractAbility"),
 	WeaponAttack    UMETA(DisplayName = "WeaponAttack"), // LMB "Auto Attack" bind
 	SpecialAttack   UMETA(DisplayName = "SpecialAttack"), // RMB bind
+	QAbility			UMETA(DisplayName = "QAbility"),
+	EAbility			UMETA(DisplayName = "EAbility"),
+	RAbility			UMETA(DisplayName = "RAbility"),
 	TabTarget       UMETA(DisplayName = "TabTarget"),
 	ShowMouse		UMETA(DisplayName = "ShowMouse"),	
 	ChangeWeapon	UMETA(DisplayName = "ChangeWeapon"),

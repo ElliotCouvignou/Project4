@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Project4.h"
 #include "Blueprint/UserWidget.h"
 #include "GameplayTagContainer.h"
 #include "AbilitySystem/P4GameplayAbility.h"
@@ -27,6 +28,9 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Ability)
 		TSubclassOf<class UP4GameplayAbility> Ability;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Binding", Meta = (ExposeOnSpawn = true))
+		EP4AbilityInputID InputBind;
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 		void BindAbilityToBlock(TSubclassOf<class UP4GameplayAbility> NewAbility);
