@@ -12,7 +12,7 @@ enum class ESkillTreeBranchState : uint8
 {
 	Unreachable		UMETA(DisplayName = "Unreachable"),
 	Reachable		UMETA(DisplayName = "Reachable"),
-	Reached			UMETA(DisplayName = "Reached")
+	Reached			UMETA(DisplayName = "Reached") // currently unused as it requires alot of work for something minor in aesthetics
 };
 
 /**

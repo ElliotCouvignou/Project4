@@ -15,8 +15,6 @@ USkillTreeComponent::USkillTreeComponent()
 	PrimaryComponentTick.bCanEverTick = false;
 
 	// ...
-	ActiveSecondarySkillTreeIndex = 0;
-	ActiveMainSkillTreeIndex = 0;
 }
 
 
@@ -26,7 +24,6 @@ void USkillTreeComponent::ServerTryRankUpSkill_Implementation(int SkillTreeIndex
 	// Get Stuff based on bool param
 	TArray<FSkillTreeNodeStruct>& SkillTree = (IsMainTree) ? MainSkillTree : SecondarySkillTree;
 	int& PointsToSpend = (IsMainTree) ? MainSkillTreePoints : SecondarySkillTreePoints;
-	int ActiveIndex = (IsMainTree) ? ActiveMainSkillTreeIndex : ActiveSecondarySkillTreeIndex;
 	TArray<int>& ChangedIndexesArray = (IsMainTree) ? ChangedMainSkillTreeNodes : ChangedSecondarySkillTreeNodes;
 	
 	// Check: Valid data asset, valid index, and has any points to spend
@@ -34,9 +31,13 @@ void USkillTreeComponent::ServerTryRankUpSkill_Implementation(int SkillTreeIndex
 	{
 		bool successful = false;
 		FSkillTreeNodeStruct& CurNode = SkillTree[SkillTreeIndex];
-		FSkillTreeNodeDataAssetStruct& CurNodeAsset = UseableSkillTrees[ActiveIndex]->SkillTreeNodes[SkillTreeIndex];
+		FSkillTreeNodeDataAssetStruct& CurNodeAsset = (IsMainTree) ? MainSkillTreeDataAsset->SkillTreeNodes[SkillTreeIndex] : SecondarySkillTreeDataAsset->SkillTreeNodes[SkillTreeIndex];
 	
-		if (CurNode.CurrentRank < CurNodeAsset.MaxRank)
+		// Although clients do check ahead of sending request, we can never fully trust them
+		bool bSatisfiesParents;
+		CanRankUpNode(IsMainTree, SkillTreeIndex, bSatisfiesParents);
+
+		if (CurNode.CurrentRank < CurNodeAsset.MaxRank && bSatisfiesParents)
 		{
 			AP4PlayerCharacterBase* Char = Cast<AP4PlayerCharacterBase>(GetOwner());
 			UAbilitySystemComponent* ASC = (Char) ? Char->GetAbilitySystemComponent() : nullptr;
@@ -64,7 +65,7 @@ void USkillTreeComponent::ServerTryRankUpSkill_Implementation(int SkillTreeIndex
 			{
 				CurNode.CurrentRank += 1;
 				PointsToSpend -= 1;
-				
+
 				// TODO: find way to detect if we are in listen server and host wants to rank up
 				//			as this array delegation is only meant for this case
 				TArray<int> ForListenHostCase = { SkillTreeIndex };
@@ -80,11 +81,10 @@ void USkillTreeComponent::ServerTryRankDownSkill_Implementation(int SkillTreeInd
 	// Get Stuff based on bool param
 	TArray<FSkillTreeNodeStruct>& SkillTree = (IsMainTree) ? MainSkillTree : SecondarySkillTree;
 	int& PointsToSpend = (IsMainTree) ? MainSkillTreePoints : SecondarySkillTreePoints;
-	int ActiveIndex = (IsMainTree) ? ActiveMainSkillTreeIndex : ActiveSecondarySkillTreeIndex;
 	TArray<int>& ChangedIndexesArray = (IsMainTree) ? ChangedMainSkillTreeNodes : ChangedSecondarySkillTreeNodes;
-	
-	// Check: Valid data asset, valid index, and has any points to spend
-	if (SkillTree.Num() > SkillTreeIndex && PointsToSpend > 0)
+
+	// Check: Valid data asset, valid index
+	if (SkillTree.Num() > SkillTreeIndex)
 	{
 		bool successful = false;
 		FSkillTreeNodeStruct& CurNode = SkillTree[SkillTreeIndex];
@@ -96,7 +96,7 @@ void USkillTreeComponent::ServerTryRankDownSkill_Implementation(int SkillTreeInd
 			if (!ASC) {
 				return;
 			}
-	
+
 			if (CurNode.CurrentRank == 1)
 			{
 				// Unlearn Ability
@@ -120,7 +120,7 @@ void USkillTreeComponent::ServerTryRankDownSkill_Implementation(int SkillTreeInd
 
 				// TODO: find way to detect if we are in listen server and host wants to rank up
 				//			as this array delegation is only meant for this case
-				TArray<int> ForListenHostCase = {SkillTreeIndex};
+				TArray<int> ForListenHostCase = { SkillTreeIndex };
 				(IsMainTree) ? OnMainTreeNodeUpdated.Broadcast(ForListenHostCase) : OnSecondaryTreeNodeUpdated.Broadcast(ForListenHostCase);
 				ClientSkillTreeNodeUpdateDelegate(SkillTreeIndex, IsMainTree);
 			}
@@ -133,10 +133,51 @@ void USkillTreeComponent::ClientSkillTreeNodeUpdateDelegate_Implementation(int I
 	(IsMainTree) ? ChangedMainSkillTreeNodes.Add(Index) : ChangedSecondarySkillTreeNodes.Add(Index);
 }
 
-void USkillTreeComponent::GetAssetNodeStruct(const int NodeIndex, const bool IsMainTree, FSkillTreeNodeDataAssetStruct& DataAssetNodeStruct)
+void USkillTreeComponent::GetDataAssetNodeStruct(const int NodeIndex, const bool IsMainTree, FSkillTreeNodeDataAssetStruct& DataAssetNodeStruct)
 {
-	int ActiveIndex = (IsMainTree) ? ActiveMainSkillTreeIndex : ActiveSecondarySkillTreeIndex;
-	DataAssetNodeStruct = UseableSkillTrees[ActiveIndex]->SkillTreeNodes[NodeIndex];
+	DataAssetNodeStruct = (IsMainTree) ? MainSkillTreeDataAsset->SkillTreeNodes[NodeIndex] : SecondarySkillTreeDataAsset->SkillTreeNodes[NodeIndex];
+}
+
+
+void USkillTreeComponent::GetSkillTreeNodeStruct(const int NodeIndex, const bool IsMainTree, FSkillTreeNodeStruct& NodeStruct)
+{
+	NodeStruct = (IsMainTree) ? MainSkillTree[NodeIndex] : SecondarySkillTree[NodeIndex];
+}
+
+void USkillTreeComponent::CanRankUpNode(bool IsMainTree, int Index, bool& CanRankUp)
+{
+	FSkillTreeNodeStruct NodeStruct;
+	FSkillTreeNodeDataAssetStruct NodeDataAssetStruct;
+	GetDataAssetNodeStruct(Index, IsMainTree, NodeDataAssetStruct);
+	GetSkillTreeNodeStruct(Index, IsMainTree, NodeStruct);
+
+	// TODO: add palyer level or used skill point spent requirement
+	if (NodeStruct.CurrentRank >= NodeDataAssetStruct.MaxRank)
+	{
+		CanRankUp = false;
+		return;
+	}
+
+	CanRankUp = true;
+	for (int ParentIndex : NodeDataAssetStruct.Parents)
+	{
+		FSkillTreeNodeStruct ParentNodeStruct;
+		GetSkillTreeNodeStruct(ParentIndex, IsMainTree, ParentNodeStruct);
+
+		if (ParentNodeStruct.CurrentRank > 0)
+		{
+			if (!NodeDataAssetStruct.RequiresAllParents)
+			{
+				CanRankUp = true;
+				return;
+			}
+		}
+		else if (NodeDataAssetStruct.RequiresAllParents)
+		{
+			CanRankUp = false;
+			return;
+		}
+	}
 }
 
 void USkillTreeComponent::GrantSkillPointsFromLevelUp(int NewLevel)
@@ -147,6 +188,26 @@ void USkillTreeComponent::GrantSkillPointsFromLevelUp(int NewLevel)
 	if (NewLevel % 5 == 0)
 	{
 		SecondarySkillTreePoints++;
+	}
+}
+
+void USkillTreeComponent::ServerResetSkillTree_Implementation(bool IsMainTree)
+{
+	TArray<FSkillTreeNodeStruct>& SkillTreeArray = (IsMainTree) ? MainSkillTree : SecondarySkillTree;
+	int& PointCounter = (IsMainTree) ? MainSkillTreePoints : SecondarySkillTreePoints;
+
+	int idx = 0;
+	for (FSkillTreeNodeStruct& NodeStruct : SkillTreeArray)
+	{
+		if (NodeStruct.CurrentRank != 0)
+		{
+			PointCounter += NodeStruct.CurrentRank;
+			NodeStruct.CurrentRank = 0;
+			TArray<int> ForListenHostCase = { idx };
+			(IsMainTree) ? OnMainTreeNodeUpdated.Broadcast(ForListenHostCase) : OnSecondaryTreeNodeUpdated.Broadcast(ForListenHostCase);
+			ClientSkillTreeNodeUpdateDelegate(idx, IsMainTree);
+		}
+		idx++;
 	}
 }
 
@@ -206,6 +267,17 @@ void USkillTreeComponent::ClearChangedSkillTreeNodes()
 	ChangedSecondarySkillTreeNodes.Empty();
 }
 
+
+void USkillTreeComponent::OnRep_MainSkillTreePoints()
+{
+	OnMainTreePointsUpdated.Broadcast(MainSkillTreePoints);
+}
+
+void USkillTreeComponent::OnRep_SecondarySkillTreePoints()
+{
+	OnSecondaryTreePointsUpdated.Broadcast(SecondarySkillTreePoints);
+}
+
 void USkillTreeComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
@@ -216,7 +288,5 @@ void USkillTreeComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& 
 	DOREPLIFETIME_CONDITION(USkillTreeComponent, MainSkillTree, COND_OwnerOnly);
 	DOREPLIFETIME_CONDITION(USkillTreeComponent, SecondarySkillTree, COND_OwnerOnly);
 
-	DOREPLIFETIME_CONDITION(USkillTreeComponent, ActiveMainSkillTreeIndex, COND_OwnerOnly);
-	DOREPLIFETIME_CONDITION(USkillTreeComponent, ActiveSecondarySkillTreeIndex, COND_OwnerOnly);
 
 }

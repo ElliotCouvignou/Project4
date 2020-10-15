@@ -31,7 +31,6 @@
 #define CAMERA_ZOOM_MAX 750.f
 #define CAMERA_ZOOM_GRANULARITY 50.f
 
-#define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 1.5, FColor::Green,text)
 
 
 AP4PlayerCharacterBase::AP4PlayerCharacterBase(const class FObjectInitializer& ObjectInitializer)

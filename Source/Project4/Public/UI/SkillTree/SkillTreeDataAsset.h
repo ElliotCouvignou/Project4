@@ -6,14 +6,74 @@
 #include "Engine/DataAsset.h"
 #include "SkillTreeDataAsset.generated.h"
 
+
+
+/* each enum represents type of branch (straight, turn, etc.) */
+UENUM(BlueprintType)
+enum class ESkillTreeBranchType : uint8
+{
+	Vertical			UMETA(DisplayName = "Vertical"),
+	Horizontal		UMETA(DisplayName = "Horizontal"),
+	LTurnVtoR		UMETA(DisplayName = "LTurnVtoR"),
+	LTurnRtoV		UMETA(DisplayName = "LTurnRtoV"),
+	LTurnLtoV		UMETA(DisplayName = "LTurnLtoV"),
+	LTurnVtoL		UMETA(DisplayName = "LTurnVtoL")
+};
+
+USTRUCT(BlueprintType)
+struct FSkillTreeBranchDataAssetStruct
+{
+
+	GENERATED_USTRUCT_BODY()
+
+	///* Index into SkillTreeNodes array of parent to this branch, node branch comes from */
+	//UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Branch | UI | Parents")
+	//	int ParentNodeIndex;
+	//
+	///* index of SkillTreeBranches array conencting branch towards parent */
+	//UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Branch | UI | Parents")
+	//	int ParentBranchIndex;
+	//
+	///* Index into SkillTreeNodes array of parent to this branch, node branch goes to*/
+	//UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Branch | UI | Children")
+	//	int ChildNodeIndex;
+	//
+	///* index of SkillTreeBranches array  connecting branch towards child */
+	//UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Branch | UI | Children")
+	//	int ChildBranchIndex;
+
+	/* visual representation of branch (straight, horizontal, curved to direction) */
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Branch | UI | Type")
+		ESkillTreeBranchType BranchType;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Branch | UI | Grid Position")
+		int GridRow;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Branch | UI | Grid Position")
+		int GridCol;
+
+	FSkillTreeBranchDataAssetStruct()
+	{
+		//ParentNodeIndex = -1;
+		//ParentBranchIndex = -1;
+		//ChildNodeIndex = -1;
+		//ChildBranchIndex = -1;
+
+		BranchType = ESkillTreeBranchType::Vertical;
+		GridRow = 0;
+		GridCol = 0;
+	}
+
+};
+
 USTRUCT(BlueprintType)
 struct FSkillTreeNodeDataAssetStruct
 {
 
 	GENERATED_USTRUCT_BODY()
-	
-	/* Empty array is interpreted as parent */
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Parents")
+
+		/* Empty array is interpreted as parent */
+		UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Parents")
 		TArray<int>  Parents;
 
 	/* Index of skilltree data asset array of children
@@ -30,6 +90,10 @@ struct FSkillTreeNodeDataAssetStruct
 		else only one parent is needed to be filled*/
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Node | Parents")
 		bool RequiresAllParents;
+
+	/* Branches from this node to connecting children */
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Node | Branches")
+		TArray<FSkillTreeBranchDataAssetStruct> SkillTreeBranches;
 
 	/* Max Rank */
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Node | Rank")
@@ -77,8 +141,6 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Name")
 		FString SkillTreeName;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "UI Widget")
-		TSubclassOf<class USkillTreeWidget> SkillTreeWidget;
 };
 
 

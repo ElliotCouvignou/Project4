@@ -41,6 +41,9 @@ struct FSkillTreeNodeStruct
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSkillTreeNodeUpdate, const TArray<int>&, ChangedArrayIndexes);
 
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSkillTreePointsUpdated, int, NewCount);
+
 //DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSkillTreePointsUpdate, int, NewPoints);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -76,21 +79,31 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "Delegates | Secondary Tree")
 		FOnSkillTreeNodeUpdate OnSecondaryTreeNodeUpdated;
 
-	//UPROPERTY(BlueprintAssignable, Category = "Delegates | MainTree")
-	//	FOnSkillTreePointsUpdate OnMainTreePointsUpdated;
-	//
-	//UPROPERTY(BlueprintAssignable, Category = "Delegates | Secondary Tree")
-	//	FOnSkillTreePointsUpdate OnSecondaryTreePointsUpdated;
+	UPROPERTY(BlueprintAssignable, Category = "Delegates | MainTree")
+		FOnSkillTreePointsUpdated OnMainTreePointsUpdated;
+
+	UPROPERTY(BlueprintAssignable, Category = "Delegates | Secondary Tree")
+		FOnSkillTreePointsUpdated OnSecondaryTreePointsUpdated;
 
 	UFUNCTION(BlueprintCallable, Category = "Utility")
-		void GetAssetNodeStruct(const int NodeIndex, const bool IsMainTree, FSkillTreeNodeDataAssetStruct& DataAssetNodeStruct);
+		void GetDataAssetNodeStruct(const int NodeIndex, const bool IsMainTree, FSkillTreeNodeDataAssetStruct& DataAssetNodeStruct);
 
 	UFUNCTION(BlueprintCallable, Category = "Utility")
-		TArray<class USkillTreeDataAsset*>& GetUseableSkillTrees() { return UseableSkillTrees; }
+		void GetSkillTreeNodeStruct(const int NodeIndex, const bool IsMainTree, FSkillTreeNodeStruct& NodeStruct);
+
+	/* Determines if local tree at node can be ranked up according to requirements */
+	UFUNCTION(BlueprintCallable, Category = "Utility")
+		void CanRankUpNode(bool IsMainTree, int Index, bool& CanRankUp);
 
 	/* If weapon skill tree comes around this should probably involve */
 	UFUNCTION()
 		void GrantSkillPointsFromLevelUp(int NewLevel);
+
+	UFUNCTION(BlueprintCallable, Server, Reliable, WithValidation, Category = "Skill Tree | Points")
+		void ServerResetSkillTree(bool IsMainTree);
+	void ServerResetSkillTree_Implementation(bool IsMainTree);
+	bool ServerResetSkillTree_Validate(bool IsMainTree) { return true; }
+
 
 protected:
 
@@ -100,11 +113,11 @@ protected:
 		void InitSkillTreeFromDataAsset();
 
 	/* Skill Points to spend in tree */
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated, Category = "Skill Tree | Points")
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, ReplicatedUsing=OnRep_MainSkillTreePoints, Category = "Skill Tree | Points")
 		int	MainSkillTreePoints;
 
 	/* Skill Points to spend in tree */
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated, Category = "Skill Tree | Points")
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, ReplicatedUsing=OnRep_SecondarySkillTreePoints, Category = "Skill Tree | Points")
 		int	SecondarySkillTreePoints;
 
 	/* Used by client and populated by server to store queued changes into dynamic skill tree node array */
@@ -130,19 +143,14 @@ protected:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Skill Tree | Data Asset")
 		class USkillTreeDataAsset* SecondarySkillTreeDataAsset;
 
-	/* Current selected main Tree index into useable skill trees */
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated, Category = "Skill Tree | Active Tree Index")
-		int ActiveMainSkillTreeIndex;
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated, Category = "Skill Tree | Active Tree Index")
-		int ActiveSecondarySkillTreeIndex;
-
-	/* All useable skill trees to interchange from (Read by UI) */
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Skill Tree Node | Data Asset", Meta = (ExposeOnSpawn = true))
-		TArray<class USkillTreeDataAsset*> UseableSkillTrees;
-
 	UFUNCTION(Category = "Utility")
 		void ClearChangedSkillTreeNodes();
+
+	UFUNCTION()
+		void OnRep_MainSkillTreePoints();
+
+	UFUNCTION()
+		void OnRep_SecondarySkillTreePoints();
 
 	UFUNCTION()
 		void OnRep_MainSkillTree();
