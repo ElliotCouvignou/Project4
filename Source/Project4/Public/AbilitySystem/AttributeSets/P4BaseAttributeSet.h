@@ -27,7 +27,14 @@ class PROJECT4_API UP4BaseAttributeSet : public UAttributeSet
 {
 	GENERATED_BODY()
 	
+private:
 
+	/* class vars so we dont remake each post exec */
+	FGameplayTag CritTag;
+	FGameplayTag PhysicalDamageTag;
+	FGameplayTag MagicDamageTag;
+
+	FGameplayTagContainer DamageNumberContainerFilter;
 
 public:
 
@@ -72,26 +79,36 @@ public:
 		UFUNCTION()
 		void OnRep_Level(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, Level, Previous); }
 	
-	/* to be referenced in Inventory component, current weight stored in component */
-	UPROPERTY(Category = "Player Attributes | Progression", EditAnywhere, ReplicatedUsing = OnRep_CarryWeight, BlueprintReadWrite)
-		FGameplayAttributeData CarryWeight;
-	ATTRIBUTE_ACCESSORS(UP4BaseAttributeSet, CarryWeight)
+	UPROPERTY(Category = "Player Attributes | Progression", EditAnywhere, ReplicatedUsing = OnRep_ExperienceBounty, BlueprintReadWrite)
+		FGameplayAttributeData ExperienceBounty; // Xp granted to to source on kill. Mobs need this filled out 
+	ATTRIBUTE_ACCESSORS(UP4BaseAttributeSet, ExperienceBounty)
 		UFUNCTION()
-		void OnRep_CarryWeight(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, CarryWeight, Previous); }
-
-
-	/* to be referenced in Inventory component, current weight stored in component */
-	UPROPERTY(Category = "Player Attributes | Progression", EditAnywhere, ReplicatedUsing = OnRep_MaxCarryWeight, BlueprintReadWrite)
-		FGameplayAttributeData MaxCarryWeight;
-	ATTRIBUTE_ACCESSORS(UP4BaseAttributeSet, MaxCarryWeight)
-		UFUNCTION()
-		void OnRep_MaxCarryWeight(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, MaxCarryWeight, Previous); }
-
+		void OnRep_ExperienceBounty(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, ExperienceBounty, Previous); }
 
 	////////////////////////////////////
 	/*         Resource Stats        */
 	////////////////////////////////////
 	
+	/* Basic Health/HitPoints */
+	UPROPERTY(Category = "Player Attributes | Resource", EditAnywhere, ReplicatedUsing = OnRep_Health, BlueprintReadWrite)
+		FGameplayAttributeData Health;
+	ATTRIBUTE_ACCESSORS(UP4BaseAttributeSet, Health) // Macro greates GetHealthAttribute() and GetHealth() which returns attribute and float value respectively
+		UFUNCTION()
+		void OnRep_Health(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, Health, Previous); }
+
+	/* Basic Mana */
+	UPROPERTY(Category = "Player Attributes | Resource", EditAnywhere, ReplicatedUsing = OnRep_Mana, BlueprintReadWrite)
+		FGameplayAttributeData Mana;
+	ATTRIBUTE_ACCESSORS(UP4BaseAttributeSet, Mana)
+		UFUNCTION()
+		void OnRep_Mana(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, Mana, Previous); }
+
+	UPROPERTY(Category = "Player Attributes | Resource", EditAnywhere, ReplicatedUsing = OnRep_Endurance, BlueprintReadWrite)
+		FGameplayAttributeData Endurance;
+	ATTRIBUTE_ACCESSORS(UP4BaseAttributeSet, Endurance)
+		UFUNCTION()
+		void OnRep_Endurance(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, Endurance, Previous); }
+
 	/* Bonus health for items, Current Health for Players */
 	UPROPERTY(Category = "Player Attributes | Resource", EditAnywhere, ReplicatedUsing = OnRep_HealthMax, BlueprintReadWrite)
 		FGameplayAttributeData HealthMax;
@@ -254,4 +271,18 @@ public:
 		UFUNCTION()
 		void OnRep_CritDamage(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, CritDamage, Previous); }
 
+	////////////////////////////////////
+	/*           Meta Stats           */
+	////////////////////////////////////
+	
+	// This is more of a handoff/meta data variable for damage display back to damage source
+	// Since damage from abilities is server-side, this variable need not to be replicated
+	UPROPERTY(Category = "Player Attributes | Meta", EditAnywhere, BlueprintReadWrite)
+		FGameplayAttributeData Damage;
+	ATTRIBUTE_ACCESSORS(UP4BaseAttributeSet, Damage)
+
+		// same as above but for healing
+		UPROPERTY(Category = "Player Attributes | Meta", EditAnywhere, BlueprintReadWrite)
+		FGameplayAttributeData Heal;
+	ATTRIBUTE_ACCESSORS(UP4BaseAttributeSet, Heal)
 };

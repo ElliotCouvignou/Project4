@@ -76,6 +76,9 @@ AProject4Character::AProject4Character(const class FObjectInitializer& ObjectIni
 	UIFloatingStatusBarComponent->SetWidgetSpace(EWidgetSpace::Screen);
 	UIFloatingStatusBarComponent->SetDrawSize(FVector2D(500, 500));
 
+	NiagaraComponent = CreateDefaultSubobject<UNiagaraComponent>(FName("NiagaraComponent"));
+	NiagaraComponent->SetupAttachment(RootComponent);
+
 	DeadTag = FGameplayTag::RequestGameplayTag(FName("State.Dead"));
 	StunnedTag = FGameplayTag::RequestGameplayTag(FName("Buffs.Negative.Stunned"));
 
@@ -88,7 +91,7 @@ UAbilitySystemComponent* AProject4Character::GetAbilitySystemComponent() const
 }
 
 
-UPlayerAttributeSet* AProject4Character::GetAttributeSet() const
+UP4BaseAttributeSet* AProject4Character::GetAttributeSet() const
 {
 	return AttributeSet.Get();
 }
@@ -325,6 +328,13 @@ void AProject4Character::BeginPlay()
 {
 	Super::BeginPlay();
 
+	// HACK: set all visibility to false, let render dist sphere collision set vis to true when needed
+	// Only do this to actors that player isnt locally controlling
+	APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	if (PC && PC->IsLocalPlayerController() && PC != GetController<APlayerController>())
+	{
+		RootComponent->SetVisibility(false, true);
+	}
 }
 
 
@@ -366,7 +376,7 @@ void AProject4Character::InitializeAttributeSet()
 {
 	if (AbilitySystemComponent.IsValid())
 	{
-		AbilitySystemComponent->InitStats(UPlayerAttributeSet::StaticClass(), AttrDataTable);
+		AbilitySystemComponent->InitStats(UP4BaseAttributeSet::StaticClass(), AttrDataTable);
 	}
 
 }

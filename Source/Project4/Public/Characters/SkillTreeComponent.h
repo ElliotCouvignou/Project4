@@ -65,6 +65,10 @@ public:
 	void ServerTryRankDownSkill_Implementation(int SkillTreeIndex, bool IsMainTree);
 	bool ServerTryRankDownSkill_Validate(int SkillTreeIndex, bool IsMainTree) { return true; }
 
+	UFUNCTION(BlueprintCallable, Server, Reliable, WithValidation, Category = "Skill Tree | Points")
+		void ServerResetSkillTree(bool IsMainTree);
+	void ServerResetSkillTree_Implementation(bool IsMainTree);
+	bool ServerResetSkillTree_Validate(bool IsMainTree) { return true; }
 
 	UFUNCTION(BlueprintCallable, Client, Reliable, WithValidation, Category = "RPC | Client")
 		void ClientSkillTreeNodeUpdateDelegate(int Index, bool IsMainTree);
@@ -99,13 +103,18 @@ public:
 	UFUNCTION()
 		void GrantSkillPointsFromLevelUp(int NewLevel);
 
-	UFUNCTION(BlueprintCallable, Server, Reliable, WithValidation, Category = "Skill Tree | Points")
-		void ServerResetSkillTree(bool IsMainTree);
-	void ServerResetSkillTree_Implementation(bool IsMainTree);
-	bool ServerResetSkillTree_Validate(bool IsMainTree) { return true; }
+
+	UFUNCTION(BlueprintCallable, Category = "Utility")
+		void GetSetPlayerAndASCRef();
 
 
 protected:
+
+	UPROPERTY()
+		class AP4PlayerCharacterBase* P4PlayerChar;
+
+	UPROPERTY()
+		class UAbilitySystemComponent* PlayerASC;
 
 	/* Inits skill tree array from data asset, all ranks will be 0 
 		TODO: add read to SQL server or local saves */
@@ -142,9 +151,6 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Skill Tree | Data Asset")
 		class USkillTreeDataAsset* SecondarySkillTreeDataAsset;
-
-	UFUNCTION(Category = "Utility")
-		void ClearChangedSkillTreeNodes();
 
 	UFUNCTION()
 		void OnRep_MainSkillTreePoints();

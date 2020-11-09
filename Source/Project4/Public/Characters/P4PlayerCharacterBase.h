@@ -77,6 +77,9 @@ protected:
 	/* Gameplay Ability system */
 	/***************************/
 
+		// Init playerAttributes with .csv
+	virtual void InitializeAttributeSet() override;
+
 	/* Array of bound ability classes to hotbar, on input ppress try activate ability through class
 		This is only saved on the client */
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = GAS)
@@ -112,6 +115,12 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
 		float CameraSensitivity = 3.f;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
+		float CameraBoomMaxHeightOffset = 250.f;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
+		float CameraBoomMinHeightOffset = 90.f;
 
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }

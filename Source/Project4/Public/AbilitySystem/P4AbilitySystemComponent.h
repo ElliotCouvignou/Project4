@@ -51,6 +51,10 @@ public:
 	/*   BP Exposed Functions   */
 	/****************************/
 	
+	/* Calls Parent FindAbilitySpecFromClass function, level = 0 when class isn't found */
+	UFUNCTION(BlueprintCallable, Category = "BP Exposed")
+		void FindAbilityLevelFromClass(TSubclassOf<UGameplayAbility> InAbilityClass, int& Level);
+
 	/** Checks if the ability system is currently blocking InputID. Returns true if InputID is blocked, false otherwise.  */
 	UFUNCTION(BlueprintCallable, Category = "BP Exposed")
 		bool IsAbilityInputBlocked_BP(int32 InputID) const { return IsAbilityInputBlocked(InputID); }

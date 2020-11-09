@@ -133,10 +133,10 @@ void UP4InventoryBagComponent::ClientBroadcastEquippmentUpdateDelegate_Implement
 void UP4InventoryBagComponent::ServerAddItemToInventory_Implementation(const FInventoryItemStruct& NewItem, AActor* Instigator)
 {
 	bool WasSucessful;
-	if (!PlayerRef || !PlayerASC)
-	{
-		GetSetPlayerRefAndASC();
-	}
+	//if (!PlayerRef || !PlayerASC)
+	//{
+	//	GetSetPlayerRefAndASC();
+	//}
 
 	if (NewItem.ItemBaseDataAsset && NewItem.ItemBaseDataAsset->ItemInfo.bIsStackable)
 	{
@@ -201,10 +201,10 @@ void UP4InventoryBagComponent::ServerAddItemToInventory_Implementation(const FIn
 void UP4InventoryBagComponent::ServerDropItemFromInventory_Implementation(int InventoryIndex)
 {
 	FInventoryItemStruct Item = InventoryArray[InventoryIndex];
-	if (!PlayerRef || !PlayerASC)
-	{
-		GetSetPlayerRefAndASC();
-	}
+	//if (!PlayerRef || !PlayerASC)
+	//{
+	//	GetSetPlayerRefAndASC();
+	//}
 	
 	if (!Item.bIsEmpty && Item.ItemBaseDataAsset)
 	{
@@ -248,10 +248,10 @@ void UP4InventoryBagComponent::ServerEquipItemFromInventory_Implementation(int I
 
 	if (!Item.bIsEmpty && Item.ItemBaseDataAsset)
 	{
-		if (!PlayerRef || !PlayerASC)
-		{
-			GetSetPlayerRefAndASC();
-		}
+		//if (!PlayerRef || !PlayerASC)
+		//{
+		//	GetSetPlayerRefAndASC();
+		//}
 
 		if (Item.ItemBaseDataAsset->ItemInfo.ItemType == EItemType::Armor)
 		{
@@ -452,10 +452,10 @@ void UP4InventoryBagComponent::ServerUnEquipItemFromInventory_Implementation(EEq
 			FindFirstEmptySpot(success, Index);
 			if (success)
 			{
-				if (!PlayerRef || !PlayerASC)
-				{
-					GetSetPlayerRefAndASC();
-				}
+				//if (!PlayerRef || !PlayerASC)
+				//{
+				//	GetSetPlayerRefAndASC();
+				//}
 				
 				// remove only one stack since we could wear two rings of same type
 				if (PlayerASC->RemoveActiveGameplayEffect(EquipSlot.EqippedEffectHandle, 1))

@@ -153,8 +153,12 @@ protected:
 	// Hard refs of ASC and AS, unique names to not conflict with base class
 	UPROPERTY()
 	class UAbilitySystemComponent* AbilitySystemComponentHardRef;
+
 	UPROPERTY()
-	class UPlayerAttributeSet* AttributeSetHardRef;
+	class UMobBaseAttributeSet* AttributeSetHardRef;
+
+	// Init playerAttributes with .csv
+	virtual void InitializeAttributeSet() override;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Drops | Drop Table")
 		FDropTableStruct DropTable;

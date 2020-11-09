@@ -38,27 +38,22 @@ void USkillTreeComponent::ServerTryRankUpSkill_Implementation(int SkillTreeIndex
 		CanRankUpNode(IsMainTree, SkillTreeIndex, bSatisfiesParents);
 
 		if (CurNode.CurrentRank < CurNodeAsset.MaxRank && bSatisfiesParents)
-		{
-			AP4PlayerCharacterBase* Char = Cast<AP4PlayerCharacterBase>(GetOwner());
-			UAbilitySystemComponent* ASC = (Char) ? Char->GetAbilitySystemComponent() : nullptr;
-			if (!ASC) {
-				return;
-			}
-	
+		{	
 			if (CurNode.CurrentRank == 0)
 			{
 				// Learn Ability
-				CurNode.SpecHandle = ASC->GiveAbility(FGameplayAbilitySpec(CurNodeAsset.AbilityClass, 1));
+				CurNode.SpecHandle = PlayerASC->GiveAbility(FGameplayAbilitySpec(CurNodeAsset.AbilityClass, 1));
 				successful = true;
 			}
 			else
 			{
 				// rank up ability
-				FGameplayAbilitySpec* Spec = ASC->FindAbilitySpecFromHandle(CurNode.SpecHandle);
+				FGameplayAbilitySpec* Spec = PlayerASC->FindAbilitySpecFromHandle(CurNode.SpecHandle);
 				if (Spec)
 				{
 					Spec->Level += 1;
 					successful = true;
+					PlayerASC->MarkAbilitySpecDirty(*Spec);
 				}
 			}
 			if (successful)
@@ -91,26 +86,22 @@ void USkillTreeComponent::ServerTryRankDownSkill_Implementation(int SkillTreeInd
 
 		if (CurNode.CurrentRank > 0)
 		{
-			AP4PlayerCharacterBase* Char = Cast<AP4PlayerCharacterBase>(GetOwner());
-			UAbilitySystemComponent* ASC = (Char) ? Char->GetAbilitySystemComponent() : nullptr;
-			if (!ASC) {
-				return;
-			}
-
 			if (CurNode.CurrentRank == 1)
 			{
 				// Unlearn Ability
-				ASC->ClearAbility(CurNode.SpecHandle);
+				PlayerASC->CancelAbilityHandle(CurNode.SpecHandle);
+				PlayerASC->ClearAbility(CurNode.SpecHandle);
 				successful = true;
 			}
 			else
 			{
 				// rank up ability
-				FGameplayAbilitySpec* Spec = ASC->FindAbilitySpecFromHandle(CurNode.SpecHandle);
+				FGameplayAbilitySpec* Spec = PlayerASC->FindAbilitySpecFromHandle(CurNode.SpecHandle);
 				if (Spec)
 				{
 					Spec->Level -= 1;
 					successful = true;
+					PlayerASC->MarkAbilitySpecDirty(*Spec);
 				}
 			}
 			if (successful)
@@ -128,10 +119,35 @@ void USkillTreeComponent::ServerTryRankDownSkill_Implementation(int SkillTreeInd
 	}
 }
 
+void USkillTreeComponent::ServerResetSkillTree_Implementation(bool IsMainTree)
+{
+	TArray<FSkillTreeNodeStruct>& SkillTreeArray = (IsMainTree) ? MainSkillTree : SecondarySkillTree;
+	int& PointCounter = (IsMainTree) ? MainSkillTreePoints : SecondarySkillTreePoints;
+
+	int idx = 0;
+	for (FSkillTreeNodeStruct& NodeStruct : SkillTreeArray)
+	{
+		if (NodeStruct.CurrentRank != 0)
+		{
+			PointCounter += NodeStruct.CurrentRank;
+			NodeStruct.CurrentRank = 0;
+			PlayerASC->CancelAbilityHandle(NodeStruct.SpecHandle);
+			PlayerASC->ClearAbility(NodeStruct.SpecHandle);
+
+
+			TArray<int> ForListenHostCase = { idx };
+			(IsMainTree) ? OnMainTreeNodeUpdated.Broadcast(ForListenHostCase) : OnSecondaryTreeNodeUpdated.Broadcast(ForListenHostCase);
+			ClientSkillTreeNodeUpdateDelegate(idx, IsMainTree);
+		}
+		idx++;
+	}
+}
+
 void USkillTreeComponent::ClientSkillTreeNodeUpdateDelegate_Implementation(int Index, bool IsMainTree)
 {
 	(IsMainTree) ? ChangedMainSkillTreeNodes.Add(Index) : ChangedSecondarySkillTreeNodes.Add(Index);
 }
+
 
 void USkillTreeComponent::GetDataAssetNodeStruct(const int NodeIndex, const bool IsMainTree, FSkillTreeNodeDataAssetStruct& DataAssetNodeStruct)
 {
@@ -191,24 +207,12 @@ void USkillTreeComponent::GrantSkillPointsFromLevelUp(int NewLevel)
 	}
 }
 
-void USkillTreeComponent::ServerResetSkillTree_Implementation(bool IsMainTree)
-{
-	TArray<FSkillTreeNodeStruct>& SkillTreeArray = (IsMainTree) ? MainSkillTree : SecondarySkillTree;
-	int& PointCounter = (IsMainTree) ? MainSkillTreePoints : SecondarySkillTreePoints;
 
-	int idx = 0;
-	for (FSkillTreeNodeStruct& NodeStruct : SkillTreeArray)
-	{
-		if (NodeStruct.CurrentRank != 0)
-		{
-			PointCounter += NodeStruct.CurrentRank;
-			NodeStruct.CurrentRank = 0;
-			TArray<int> ForListenHostCase = { idx };
-			(IsMainTree) ? OnMainTreeNodeUpdated.Broadcast(ForListenHostCase) : OnSecondaryTreeNodeUpdated.Broadcast(ForListenHostCase);
-			ClientSkillTreeNodeUpdateDelegate(idx, IsMainTree);
-		}
-		idx++;
-	}
+
+void USkillTreeComponent::GetSetPlayerAndASCRef()
+{
+	P4PlayerChar = Cast<AP4PlayerCharacterBase>(GetOwner());
+	PlayerASC = (P4PlayerChar) ? P4PlayerChar->GetAbilitySystemComponent() : nullptr;
 }
 
 void USkillTreeComponent::InitSkillTreeFromDataAsset()
@@ -259,12 +263,6 @@ void USkillTreeComponent::BeginPlay()
 
 	// ...
 	InitSkillTreeFromDataAsset();
-}
-
-void USkillTreeComponent::ClearChangedSkillTreeNodes()
-{
-	ChangedMainSkillTreeNodes.Empty();
-	ChangedSecondarySkillTreeNodes.Empty();
 }
 
 

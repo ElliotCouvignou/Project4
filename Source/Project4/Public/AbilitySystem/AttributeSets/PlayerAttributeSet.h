@@ -27,14 +27,7 @@ class PROJECT4_API UPlayerAttributeSet : public UP4BaseAttributeSet
 	GENERATED_BODY()
 
 
-private:
 
-	/* class vars so we dont remake each post exec */
-	FGameplayTag CritTag;
-	FGameplayTag PhysicalDamageTag;
-	FGameplayTag MagicDamageTag;
-
-	FGameplayTagContainer DamageNumberContainerFilter;
 
 public:
 
@@ -59,10 +52,6 @@ public:
 	// For Replicaiton 
 	virtual void GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const override;
 
-	// Adjusts current valued attributes when max valued attributes changes so that % stay constant
-	// This is the same idea Dota2 Uses for Health/Mana
-	virtual void AdjustAttributeForMaxChange(FGameplayAttributeData& AffectedAttribute, const FGameplayAttributeData& MaxAttribute, float NewMaxValue, const FGameplayAttribute& AffectedAttributeProperty) override;
-	
 	// all attributes are essentially floats, can still have int behavior thought
 
 	////////////////////////////////////
@@ -81,52 +70,21 @@ public:
 		UFUNCTION()
 		void OnRep_ExperienceMax(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UPlayerAttributeSet, ExperienceMax, Previous); }
 
-	UPROPERTY(Category = "Player Attributes | Progression", EditAnywhere, ReplicatedUsing = OnRep_ExperienceBounty, BlueprintReadWrite)
-		FGameplayAttributeData ExperienceBounty; // Xp granted to to source on kill. Mobs need this filled out 
-	ATTRIBUTE_ACCESSORS(UPlayerAttributeSet, ExperienceBounty) 
+
+	/* to be referenced in Inventory component, current weight stored in component */
+	UPROPERTY(Category = "Player Attributes | Progression", EditAnywhere, ReplicatedUsing = OnRep_CarryWeight, BlueprintReadWrite)
+		FGameplayAttributeData CarryWeight;
+	ATTRIBUTE_ACCESSORS(UPlayerAttributeSet, CarryWeight)
 		UFUNCTION()
-		void OnRep_ExperienceBounty(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UPlayerAttributeSet, ExperienceBounty, Previous); }
+		void OnRep_CarryWeight(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UPlayerAttributeSet, CarryWeight, Previous); }
 
 
-	////////////////////////////////////
-	/*         Resource Stats        */
-	////////////////////////////////////
-
-	/* Basic Health/HitPoints */
-	UPROPERTY(Category = "Player Attributes | Resource", EditAnywhere, ReplicatedUsing = OnRep_Health, BlueprintReadWrite)
-		FGameplayAttributeData Health;
-	ATTRIBUTE_ACCESSORS(UPlayerAttributeSet, Health) // Macro greates GetHealthAttribute() and GetHealth() which returns attribute and float value respectively
-	UFUNCTION()
-		void OnRep_Health(const FGameplayAttributeData& Previous)	{ GAMEPLAYATTRIBUTE_REPNOTIFY(UPlayerAttributeSet, Health, Previous); }
-
-	/* Basic Mana */
-	UPROPERTY(Category = "Player Attributes | Resource", EditAnywhere, ReplicatedUsing = OnRep_Mana, BlueprintReadWrite)
-		FGameplayAttributeData Mana;
-	ATTRIBUTE_ACCESSORS(UPlayerAttributeSet, Mana)
-	UFUNCTION()
-		void OnRep_Mana(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UPlayerAttributeSet, Mana, Previous); }
-
-	UPROPERTY(Category = "Player Attributes | Resource", EditAnywhere, ReplicatedUsing = OnRep_Endurance, BlueprintReadWrite)
-		FGameplayAttributeData Endurance;
-	ATTRIBUTE_ACCESSORS(UPlayerAttributeSet, Endurance)
+	/* to be referenced in Inventory component, current weight stored in component */
+	UPROPERTY(Category = "Player Attributes | Progression", EditAnywhere, ReplicatedUsing = OnRep_MaxCarryWeight, BlueprintReadWrite)
+		FGameplayAttributeData MaxCarryWeight;
+	ATTRIBUTE_ACCESSORS(UPlayerAttributeSet, MaxCarryWeight)
 		UFUNCTION()
-		void OnRep_Endurance(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UPlayerAttributeSet, Endurance, Previous); }
-	
-
-	////////////////////////////////////
-	/*           Meta Stats           */
-	////////////////////////////////////
-
-	// This is more of a handoff/meta data variable for damage display back to damage source
-	// Since damage from abilities is server-side, this variable need not to be replicated
-	UPROPERTY(Category = "Player Attributes | Meta", EditAnywhere, BlueprintReadWrite)
-		FGameplayAttributeData Damage;
-	ATTRIBUTE_ACCESSORS(UPlayerAttributeSet, Damage)
-
-		// same as above but for healing
-	UPROPERTY(Category = "Player Attributes | Meta", EditAnywhere, BlueprintReadWrite)
-		FGameplayAttributeData Heal;
-	ATTRIBUTE_ACCESSORS(UPlayerAttributeSet, Heal)
+		void OnRep_MaxCarryWeight(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UPlayerAttributeSet, MaxCarryWeight, Previous); }
 
 };
 

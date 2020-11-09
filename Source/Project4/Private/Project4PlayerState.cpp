@@ -63,6 +63,7 @@ void AProject4PlayerState::BindAbilityDelegates()
 {
 	if (AbilitySystemComponent && AttributeSet)
 	{
+		print(FString("bindAbilityDegelates()"));
 		AbilitySystemComponent->OnActiveGameplayEffectAddedDelegateToSelf.AddUObject(this, &AProject4PlayerState::OnActiveGameplayEffectApplied);
 		//AbilitySystemComponent->RegisterGameplayTagEvent(BuffDebuffTag).AddUObject(this, &AProject4PlayerState::OnBuffTagChanged);
 
@@ -429,6 +430,7 @@ void AProject4PlayerState::HealthRegenChanged(const FOnAttributeChangeData& Data
 void AProject4PlayerState::ManaChanged(const FOnAttributeChangeData& Data)
 {
 	float Mana = Data.NewValue;
+	print(FString("ManaChanged()"));
 
 	AP4PlayerCharacterBase* PChar = Cast<AP4PlayerCharacterBase>(GetPawn());
 
@@ -439,6 +441,7 @@ void AProject4PlayerState::ManaChanged(const FOnAttributeChangeData& Data)
 		if (FSBWidget && AttributeSet)
 		{
 			FSBWidget->SetManaPercentage(Mana / AttributeSet->GetManaMax());
+			print(FString("SetManaPercentage: " + FString::SanitizeFloat(Mana / AttributeSet->GetManaMax(), 2)));
 		}
 	}
 

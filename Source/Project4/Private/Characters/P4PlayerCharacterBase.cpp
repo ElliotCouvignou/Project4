@@ -67,6 +67,14 @@ void AP4PlayerCharacterBase::SetupPlayerInputComponent(class UInputComponent* Pl
 	BindASCInput();
 }
 
+void AP4PlayerCharacterBase::InitializeAttributeSet()
+{
+	if (AbilitySystemComponent.IsValid())
+	{
+		AbilitySystemComponent->InitStats(UPlayerAttributeSet::StaticClass(), AttrDataTable);
+	}
+}
+
 void AP4PlayerCharacterBase::BindASCInput()
 {
 	UAbilitySystemComponent* ASC = GetAbilitySystemComponent();
@@ -104,26 +112,28 @@ void AP4PlayerCharacterBase::GainExperience(int XpGained)
 	{
 		return;
 	}
-	UPlayerAttributeSet* AS = GetAttributeSet();
-
-	// Check for Level Up
-	float NewXp = AS->GetExperience() + XpGained;
-	float MaxXP = AS->GetExperienceMax();
-	while (NewXp >= MaxXP)
+	UPlayerAttributeSet* AS = (UPlayerAttributeSet*)GetAttributeSet();
+	if (AS)
 	{
-		// Player Level Up
-		//NewXp -= AS->GetExperienceMax();
-		float NewLevel = AS->GetLevel() + 1.f;
-		AS->SetLevel(NewLevel);
-		
-		// Give Talent Points
-		SkillTreeComponent->GrantSkillPointsFromLevelUp(NewLevel);
+		// Check for Level Up
+		float NewXp = AS->GetExperience() + XpGained;
+		float MaxXP = AS->GetExperienceMax();
+		while (NewXp >= MaxXP)
+		{
+			// Player Level Up
+			//NewXp -= AS->GetExperienceMax();
+			float NewLevel = AS->GetLevel() + 1.f;
+			AS->SetLevel(NewLevel);
 
-		// TODO: finalize max xp formula
-		MaxXP = 100 * AS->GetLevel() * (1 + AS->GetLevel());
-		AS->SetExperienceMax(MaxXP);
+			// Give Talent Points
+			SkillTreeComponent->GrantSkillPointsFromLevelUp(NewLevel);
+
+			// TODO: finalize max xp formula
+			MaxXP = 100 * AS->GetLevel() * (1 + AS->GetLevel());
+			AS->SetExperienceMax(MaxXP);
+		}
+		AS->SetExperience(NewXp);
 	}
-	AS->SetExperience(NewXp);
 }
 
 void AP4PlayerCharacterBase::BindAbilityToHotbarBlock(int32 BlockIndex, TSubclassOf<class UP4GameplayAbility> Ability)
@@ -189,6 +199,9 @@ void AP4PlayerCharacterBase::ServerSetSelectedTarget_Implementation(AP4PlayerCha
 void AP4PlayerCharacterBase::CameraZoom(float Value)
 {
 	CameraBoom->TargetArmLength = FMath::Clamp(Value * CAMERA_ZOOM_GRANULARITY + CameraBoom->TargetArmLength, CAMERA_ZOOM_MIN, CAMERA_ZOOM_MAX);
+	FVector location = CameraBoom->GetRelativeLocation();
+	location.Z = CameraBoomMinHeightOffset + ((CameraBoom->TargetArmLength - CAMERA_ZOOM_MIN) / CAMERA_ZOOM_MAX) * (CameraBoomMaxHeightOffset - CameraBoomMinHeightOffset);
+	CameraBoom->SetRelativeLocation(FVector(location.X, location.Y, location.Z));
 }
 
 // ovveride replciation with replication variables
@@ -258,6 +271,9 @@ void AP4PlayerCharacterBase::PossessedBy(AController* NewController)
 		{
 			PC->CreateMainHUDWidget();
 		}
+
+		SkillTreeComponent->GetSetPlayerAndASCRef();
+		InventoryBagComponent->GetSetPlayerRefAndASC();
 
 		GiveEssentialAbilities();
 

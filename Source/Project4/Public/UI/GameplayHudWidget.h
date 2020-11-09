@@ -143,13 +143,13 @@ public:
 		void RemoveBuffIconFromUI(const FGameplayTag& BuffTag);
 
 
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Input Menus | Inventory")
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Input Menus | Character Info")
 		void OpenCharacterInfoWidget();
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Input Menus | Inventory")
 		void OpenInventoryBagWidget();
 
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Input Menus | Inventory")
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Input Menus | Skill Tree")
 		void OpenSkillsWidget();
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Input Menus | Inventory")
@@ -157,6 +157,12 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Input Menus | Inventory")
 		void UpdateCurrentCarryWeight(float NewValue);
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Input Menus | Abilities")
+		void ShowAbilityTooltip(TSubclassOf<class UP4GameplayAbility> AbilityClass, const FVector2D ViewportLocation);
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Input Menus | Abilities")
+		void HideAbilityTooltip();
 
 
 

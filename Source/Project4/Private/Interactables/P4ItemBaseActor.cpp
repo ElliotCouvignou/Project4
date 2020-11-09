@@ -50,6 +50,9 @@ void AP4ItemBaseActor::BeginPlay()
 		StaticMesh->SetStaticMesh(SM);
 	}
 
+	// HACK: set all visibility to false, let render dist sphere collision set vis to true when needed
+	RootComponent->SetVisibility(false, true);
+
 	MoveToGround();
 	SetWidgetName();
 }

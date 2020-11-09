@@ -12,7 +12,8 @@
 				"UMG",
 				"Engine",
 				"GameplayAbilities",
-				"GameplayTasks"
+				"GameplayTasks",
+				"AIModule"
 			]
 		}
 	],
@@ -44,6 +45,11 @@
 		{
 			"Name": "SteamVR",
 			"Enabled": false
+		},
+		{
+			"Name": "CircularDependenciesDetector",
+			"Enabled": true,
+			"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/product/698a2106995e41cb934ada3bb0088a5f"
 		}
 	]
 }

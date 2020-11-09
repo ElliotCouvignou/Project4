@@ -24,6 +24,19 @@ void UP4AbilitySystemComponent::BroadcastAutoAttackResults(const TArray<AProject
 	}
 }
 
+void UP4AbilitySystemComponent::FindAbilityLevelFromClass(TSubclassOf<UGameplayAbility> InAbilityClass, int& Level)
+{
+	FGameplayAbilitySpec* FoundSpecPtr = FindAbilitySpecFromClass(InAbilityClass);
+	if (FoundSpecPtr)
+	{
+		Level = FoundSpecPtr->Level;
+	}
+	else
+	{
+		Level = 0;
+	}
+}
+
 bool UP4AbilitySystemComponent::SetGameplayEffectDurationWithHandle(const FActiveGameplayEffectHandle& Handle, float NewDuration)
 {
 	if (!Handle.IsValid())

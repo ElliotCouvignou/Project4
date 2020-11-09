@@ -65,6 +65,7 @@ void UPhysicalDamageExecCalc::Execute_Implementation(const FGameplayEffectCustom
 	AActor* SourceActor = SourceAbilitySystemComponent ? SourceAbilitySystemComponent->AvatarActor : nullptr; //If our AbilitySystemComponents are valid, we get each their owning actors and put them in variables. This is mostly to prevent crashing by trying to get the AvatarActor variable from
 	AActor* TargetActor = TargetAbilitySystemComponent ? TargetAbilitySystemComponent->AvatarActor : nullptr; //a null pointer.
 
+	
 	const FGameplayEffectSpec& Spec = ExecutionParams.GetOwningSpec();
 
 	// Some more helper variables: Spec is the spec this execution originated from,
@@ -115,7 +116,7 @@ void UPhysicalDamageExecCalc::Execute_Implementation(const FGameplayEffectCustom
 	// Relay damage val to meta attribute, will be handled by attribute class
 	if (DamageDone > 0.f)
 	{
-		OutExecutionOutput.AddOutputModifier(FGameplayModifierEvaluatedData(PhysicalDamage().DamageProperty, EGameplayModOp::Additive, DamageDone));
+		OutExecutionOutput.AddOutputModifier(FGameplayModifierEvaluatedData(PhysicalDamage().DamageProperty, EGameplayModOp::Additive, DamageDone));		
 	}
 
 	//Congratulations, your damage calculation is complete!

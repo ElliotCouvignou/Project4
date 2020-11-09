@@ -7,7 +7,14 @@
 #include "Project4.h"
 #include "Project4Controller.h"
 #include "GameplayTagContainer.h"
+
+#include "UI/AbilityTooltipWidget.h"
+
 #include "P4GameplayAbility.generated.h"
+
+
+
+
 
 /**
  *   This builds off the base Gameplay Ability class to allow for further functionality 
@@ -40,7 +47,7 @@ public:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Ability")
 		UTexture2D* AbilityIcon;
 
-	/* tooltip text to show when on ability hotbar */
+	/* tooltip text to show when on ability hotbar */ // TODO: remove this
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Ability")
 		FText AbilityToolTipText;
 
@@ -51,7 +58,9 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		FVector TargetDataLocation;
 
-
+	/* Name of row to access ability descriptions for UI from description table */
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Ability | Tooltip")
+		FName AbilityDescriptionDataTableRowName;
 	
 	/*************************/
 	/*       Utilities       */

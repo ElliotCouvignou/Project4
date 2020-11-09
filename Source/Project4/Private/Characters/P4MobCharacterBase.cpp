@@ -5,7 +5,7 @@
 #include "Characters/PatrolPointsActor.h"
 #include "Interactables/P4InventoryBagComponent.h"
 #include "AbilitySystemComponent.h"
-#include "AbilitySystem/AttributeSets/PlayerAttributeSet.h"
+#include "AbilitySystem/AttributeSets/MobBaseAttributeSet.h"
 #include "AbilitySystem/P4AbilitySystemComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "UI/FloatingStatusBarWidget.h"
@@ -23,7 +23,7 @@ AP4MobCharacterBase::AP4MobCharacterBase(const class FObjectInitializer& ObjectI
 
 	AbilitySystemComponent = AbilitySystemComponentHardRef;
 
-	AttributeSetHardRef = CreateDefaultSubobject<UPlayerAttributeSet>(TEXT("AttributeSetHardRef"));
+	AttributeSetHardRef = CreateDefaultSubobject<UMobBaseAttributeSet>(TEXT("AttributeSetHardRef"));
 
 	AttributeSet = AttributeSetHardRef;
 
@@ -106,6 +106,14 @@ void AP4MobCharacterBase::BeginPlay()
 /******************/
 
 
+
+void AP4MobCharacterBase::InitializeAttributeSet()
+{
+	if (AbilitySystemComponent.IsValid())
+	{
+		AbilitySystemComponent->InitStats(UMobBaseAttributeSet::StaticClass(), AttrDataTable);
+	}
+}
 
 void AP4MobCharacterBase::BindDelegates()
 {

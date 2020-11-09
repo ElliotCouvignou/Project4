@@ -7,6 +7,7 @@
 #include "AbilitySystemComponent.h"
 #include "AbilitySystemInterface.h"
 #include "Interactables/ItemWeaponDataAsset.h"
+#include "NiagaraComponent.h"
 #include "Project4Character.generated.h"
 
 
@@ -45,7 +46,7 @@ protected:
 	// Character ASC, this is shared  players and mob classes
 	// No UPROPERTY for these, makes their UObject references go stale when out of scope
 	TWeakObjectPtr<class UAbilitySystemComponent> AbilitySystemComponent;
-	TWeakObjectPtr<class UPlayerAttributeSet> AttributeSet;
+	TWeakObjectPtr<class UP4BaseAttributeSet> AttributeSet;
 
 	/** The main skeletal mesh associated with this Character (optional sub-object). */
 	UPROPERTY(Category = Abilities, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
@@ -59,6 +60,9 @@ protected:
 		class UFloatingStatusBarWidget* UIFloatingStatusBar;
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "UI")
 		class UWidgetComponent* UIFloatingStatusBarComponent;
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "VFX")
+		UNiagaraComponent* NiagaraComponent;
+
 
 public:
 	AProject4Character(const class FObjectInitializer& ObjectInitializer);
@@ -90,7 +94,7 @@ public:
 	virtual class UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
 	UFUNCTION(BlueprintPure, Category = Ability, meta = (DefaultToSelf = Target))
-		class UPlayerAttributeSet* GetAttributeSet() const;
+		class UP4BaseAttributeSet* GetAttributeSet() const;
 
 	/* weapon stance (dual-weild, 2h, etc.) for auto attack context */
 	UPROPERTY(BlueprintReadWrite, Replicated, EditDefaultsOnly, Category = "Weapons")
@@ -198,7 +202,7 @@ protected:
 	virtual void AddAllStartupEffects();
 
 	// Init playerAttributes with .csv
-	void InitializeAttributeSet();
+	virtual void InitializeAttributeSet();
 
 	/***************************/
 	/*          Death          */
@@ -239,7 +243,7 @@ protected:
 		float FloatingStatusBarHeightCoeff = 1.5f;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Floating Status Bar | Cull Distance")
-		float FloatingStatusBarCullDistance = 52.5f * 50.f;
+		float FloatingStatusBarCullDistance = 100.f;
 
 public:
 	/* Virtual Overrides */

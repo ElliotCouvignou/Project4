@@ -242,9 +242,7 @@ protected:
 	/*     Utility     */
 	/*******************/
 
-	// gets and sets playerref and playerASC varaibles when they go missing
-	UFUNCTION(Category = "Utility")
-		void GetSetPlayerRefAndASC();
+
 
 	// Utility codes are bulky and so are shoved to the bottom of .cpp
 	UFUNCTION(Category = "Utility")
@@ -259,6 +257,10 @@ protected:
 		bool SetEquipSlotInfo(EEquipSlotType EquipSlotType, FInventoryItemStruct ItemStruct, FActiveGameplayEffectHandle ActiveGEHandle);
 
 public:	
+
+	// gets and sets playerref and playerASC varaibles when they go missing
+	UFUNCTION(Category = "Utility")
+		void GetSetPlayerRefAndASC();
 
 	/* Items stored in Row-major order (topleft is lowest, bottom right is highest) */
 	UPROPERTY(BlueprintReadWrite, Replicated, EditAnywhere)
