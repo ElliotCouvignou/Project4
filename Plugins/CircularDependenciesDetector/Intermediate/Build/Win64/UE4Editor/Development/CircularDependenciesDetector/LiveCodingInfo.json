@@ -1,0 +1,15 @@
+{
+	"RemapUnityFiles": 
+	{
+		"Module.CircularDependenciesDetector.cpp.obj": [
+			"CircularDependenciesDetector.cpp.obj",
+			"CircularDependenciesLib.cpp.obj"
+		],
+		"Module.CircularDependenciesDetector.gen.cpp.obj": [
+			"CircularDependenciesDetector.init.gen.cpp.obj",
+			"CircularDependenciesLib.gen.cpp.obj",
+			"CircularInvolvedAssetItem.gen.cpp.obj",
+			"NamePair.gen.cpp.obj"
+		]
+	}
+}

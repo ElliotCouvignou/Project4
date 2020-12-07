@@ -70,6 +70,7 @@ Saved/*
 Intermediate/*
 Plugins/*/Intermediate/*
 Plugins/*/*/Intermediate/*
+#!Plugins/CircularDependenciesDetector/*
 
 # Cache files for the editor to use
 DerivedDataCache/*
@@ -78,5 +79,4 @@ DerivedDataCache/*
 enc_temp_folder/
 
 # Ignore GameliftSDK Plugins
-#Plugins/GameLiftClientSDK/*
 #Plugins/GameLiftServerSDK/*

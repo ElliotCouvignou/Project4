@@ -63,7 +63,6 @@ void AProject4PlayerState::BindAbilityDelegates()
 {
 	if (AbilitySystemComponent && AttributeSet)
 	{
-		print(FString("bindAbilityDegelates()"));
 		AbilitySystemComponent->OnActiveGameplayEffectAddedDelegateToSelf.AddUObject(this, &AProject4PlayerState::OnActiveGameplayEffectApplied);
 		//AbilitySystemComponent->RegisterGameplayTagEvent(BuffDebuffTag).AddUObject(this, &AProject4PlayerState::OnBuffTagChanged);
 
@@ -83,10 +82,10 @@ void AProject4PlayerState::BindAbilityDelegates()
 		/* following Delegates are UI ONLY, dont waste server's time */
 		/*   Progression Stat Bindings   */
 		LevelChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetLevelAttribute()).AddUObject(this, &AProject4PlayerState::LevelChanged);
-		CurrentExperienceDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetExperienceAttribute()).AddUObject(this, &AProject4PlayerState::CurrentExperienceChanged);
-		MaxExperienceDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetExperienceMaxAttribute()).AddUObject(this, &AProject4PlayerState::MaxExperienceChanged);
-		CarryWeightChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetCarryWeightAttribute()).AddUObject(this, &AProject4PlayerState::CarryWeightChanged);
-		MaxCarryWeightChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetMaxCarryWeightAttribute()).AddUObject(this, &AProject4PlayerState::MaxCarryWeightChanged);
+		//CurrentExperienceDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetExperienceAttribute()).AddUObject(this, &AProject4PlayerState::CurrentExperienceChanged);
+		//MaxExperienceDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetExperienceMaxAttribute()).AddUObject(this, &AProject4PlayerState::MaxExperienceChanged);
+		//CarryWeightChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetCarryWeightAttribute()).AddUObject(this, &AProject4PlayerState::CarryWeightChanged);
+		//MaxCarryWeightChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetMaxCarryWeightAttribute()).AddUObject(this, &AProject4PlayerState::MaxCarryWeightChanged);
 
 		/*   Base Stat Bindings   */
 		StrengthChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetStrengthAttribute()).AddUObject(this, &AProject4PlayerState::StrengthChanged);
@@ -430,7 +429,6 @@ void AProject4PlayerState::HealthRegenChanged(const FOnAttributeChangeData& Data
 void AProject4PlayerState::ManaChanged(const FOnAttributeChangeData& Data)
 {
 	float Mana = Data.NewValue;
-	print(FString("ManaChanged()"));
 
 	AP4PlayerCharacterBase* PChar = Cast<AP4PlayerCharacterBase>(GetPawn());
 
@@ -441,7 +439,6 @@ void AProject4PlayerState::ManaChanged(const FOnAttributeChangeData& Data)
 		if (FSBWidget && AttributeSet)
 		{
 			FSBWidget->SetManaPercentage(Mana / AttributeSet->GetManaMax());
-			print(FString("SetManaPercentage: " + FString::SanitizeFloat(Mana / AttributeSet->GetManaMax(), 2)));
 		}
 	}
 

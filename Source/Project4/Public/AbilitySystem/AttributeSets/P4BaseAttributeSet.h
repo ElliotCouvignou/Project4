@@ -77,13 +77,13 @@ public:
 		FGameplayAttributeData Level;
 	ATTRIBUTE_ACCESSORS(UP4BaseAttributeSet, Level) // Macro greates GetLevelAttribute() and GetLevel() which returns attribute and float value respectively
 		UFUNCTION()
-		void OnRep_Level(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, Level, Previous); }
+		virtual void OnRep_Level(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, Level, Previous); }
 	
 	UPROPERTY(Category = "Player Attributes | Progression", EditAnywhere, ReplicatedUsing = OnRep_ExperienceBounty, BlueprintReadWrite)
 		FGameplayAttributeData ExperienceBounty; // Xp granted to to source on kill. Mobs need this filled out 
 	ATTRIBUTE_ACCESSORS(UP4BaseAttributeSet, ExperienceBounty)
 		UFUNCTION()
-		void OnRep_ExperienceBounty(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, ExperienceBounty, Previous); }
+		virtual void OnRep_ExperienceBounty(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, ExperienceBounty, Previous); }
 
 	////////////////////////////////////
 	/*         Resource Stats        */
@@ -94,59 +94,59 @@ public:
 		FGameplayAttributeData Health;
 	ATTRIBUTE_ACCESSORS(UP4BaseAttributeSet, Health) // Macro greates GetHealthAttribute() and GetHealth() which returns attribute and float value respectively
 		UFUNCTION()
-		void OnRep_Health(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, Health, Previous); }
+		virtual void OnRep_Health(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, Health, Previous); }
 
 	/* Basic Mana */
 	UPROPERTY(Category = "Player Attributes | Resource", EditAnywhere, ReplicatedUsing = OnRep_Mana, BlueprintReadWrite)
 		FGameplayAttributeData Mana;
 	ATTRIBUTE_ACCESSORS(UP4BaseAttributeSet, Mana)
 		UFUNCTION()
-		void OnRep_Mana(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, Mana, Previous); }
+		virtual void OnRep_Mana(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, Mana, Previous); }
 
 	UPROPERTY(Category = "Player Attributes | Resource", EditAnywhere, ReplicatedUsing = OnRep_Endurance, BlueprintReadWrite)
 		FGameplayAttributeData Endurance;
 	ATTRIBUTE_ACCESSORS(UP4BaseAttributeSet, Endurance)
 		UFUNCTION()
-		void OnRep_Endurance(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, Endurance, Previous); }
+		virtual void OnRep_Endurance(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, Endurance, Previous); }
 
 	/* Bonus health for items, Current Health for Players */
 	UPROPERTY(Category = "Player Attributes | Resource", EditAnywhere, ReplicatedUsing = OnRep_HealthMax, BlueprintReadWrite)
 		FGameplayAttributeData HealthMax;
 	ATTRIBUTE_ACCESSORS(UP4BaseAttributeSet, HealthMax)
 		UFUNCTION()
-		void OnRep_HealthMax(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, HealthMax, Previous); }
+		virtual void OnRep_HealthMax(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, HealthMax, Previous); }
 
 	/* Health Regeneration per second */
 	UPROPERTY(Category = "Player Attributes | Resource", EditAnywhere, ReplicatedUsing = OnRep_HealthRegen, BlueprintReadWrite)
 		FGameplayAttributeData HealthRegen;
 	ATTRIBUTE_ACCESSORS(UP4BaseAttributeSet, HealthRegen)
 		UFUNCTION()
-		void OnRep_HealthRegen(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, HealthRegen, Previous); }
+		virtual void OnRep_HealthRegen(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, HealthRegen, Previous); }
 
 	/* Basic Mana */
 	UPROPERTY(Category = "Player Attributes | Resource", EditAnywhere, ReplicatedUsing = OnRep_ManaMax, BlueprintReadWrite)
 		FGameplayAttributeData ManaMax;
 	ATTRIBUTE_ACCESSORS(UP4BaseAttributeSet, ManaMax)
 		UFUNCTION()
-		void OnRep_ManaMax(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, ManaMax, Previous); }
+		virtual void OnRep_ManaMax(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, ManaMax, Previous); }
 
 	UPROPERTY(Category = "Player Attributes | Resource", EditAnywhere, ReplicatedUsing = OnRep_ManaRegen, BlueprintReadWrite)
 		FGameplayAttributeData ManaRegen;
 	ATTRIBUTE_ACCESSORS(UP4BaseAttributeSet, ManaRegen)
 		UFUNCTION()
-		void OnRep_ManaRegen(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, ManaRegen, Previous); }
+		virtual void OnRep_ManaRegen(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, ManaRegen, Previous); }
 
 	UPROPERTY(Category = "Player Attributes | Resource", EditAnywhere, ReplicatedUsing = OnRep_EnduranceMax, BlueprintReadWrite)
 		FGameplayAttributeData EnduranceMax;
 	ATTRIBUTE_ACCESSORS(UP4BaseAttributeSet, EnduranceMax)
 		UFUNCTION()
-		void OnRep_EnduranceMax(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, EnduranceMax, Previous); }
+		virtual void OnRep_EnduranceMax(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, EnduranceMax, Previous); }
 
 	UPROPERTY(Category = "Player Attributes | Resource", EditAnywhere, ReplicatedUsing = OnRep_EnduranceRegen, BlueprintReadWrite)
 		FGameplayAttributeData EnduranceRegen;
 	ATTRIBUTE_ACCESSORS(UP4BaseAttributeSet, EnduranceRegen)
 		UFUNCTION()
-		void OnRep_EnduranceRegen(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, EnduranceRegen, Previous); }
+		virtual void OnRep_EnduranceRegen(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, EnduranceRegen, Previous); }
 
 	////////////////////////////////////
 	/*			Base Stats			  */
@@ -156,25 +156,25 @@ public:
 		FGameplayAttributeData Strength;
 	ATTRIBUTE_ACCESSORS(UP4BaseAttributeSet, Strength)
 		UFUNCTION()
-		void OnRep_Strength(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, Strength, Previous); }
+		virtual void OnRep_Strength(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, Strength, Previous); }
 
 	UPROPERTY(Category = "Player Attributes | Base", EditAnywhere, ReplicatedUsing = OnRep_Dexterity, BlueprintReadWrite)
 		FGameplayAttributeData Dexterity;
 	ATTRIBUTE_ACCESSORS(UP4BaseAttributeSet, Dexterity)
 		UFUNCTION()
-		void OnRep_Dexterity(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, Dexterity, Previous); }
+		virtual void OnRep_Dexterity(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, Dexterity, Previous); }
 
 	UPROPERTY(Category = "Player Attributes | Base", EditAnywhere, ReplicatedUsing = OnRep_Intelligence, BlueprintReadWrite)
 		FGameplayAttributeData Intelligence;
 	ATTRIBUTE_ACCESSORS(UP4BaseAttributeSet, Intelligence)
 		UFUNCTION()
-		void OnRep_Intelligence(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, Intelligence, Previous); }
+		virtual void OnRep_Intelligence(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, Intelligence, Previous); }
 
 	UPROPERTY(Category = "Player Attributes | Base", EditAnywhere, ReplicatedUsing = OnRep_Spirit, BlueprintReadWrite)
 		FGameplayAttributeData Spirit;
 	ATTRIBUTE_ACCESSORS(UP4BaseAttributeSet, Spirit)
 		UFUNCTION()
-		void OnRep_Spirit(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, Spirit, Previous); }
+		virtual void OnRep_Spirit(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, Spirit, Previous); }
 
 
 	////////////////////////////////////
@@ -186,21 +186,21 @@ public:
 		FGameplayAttributeData Armor;
 	ATTRIBUTE_ACCESSORS(UP4BaseAttributeSet, Armor)
 		UFUNCTION()
-		void OnRep_Armor(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, Armor, Previous); }
+		virtual void OnRep_Armor(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, Armor, Previous); }
 
 	/* Health Regeneration per second */
 	UPROPERTY(Category = "Player Attributes | Defensive", EditAnywhere, ReplicatedUsing = OnRep_MagicResistance, BlueprintReadWrite)
 		FGameplayAttributeData MagicResistance;
 	ATTRIBUTE_ACCESSORS(UP4BaseAttributeSet, MagicResistance)
 		UFUNCTION()
-		void OnRep_MagicResistance(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, MagicResistance, Previous); }
+		virtual void OnRep_MagicResistance(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, MagicResistance, Previous); }
 
 	/* For items only special ones will grant MS bonuses if any*/
 	UPROPERTY(Category = "Player Attributes | Resource", EditAnywhere, ReplicatedUsing = OnRep_MovementSpeed, BlueprintReadWrite)
 		FGameplayAttributeData MovementSpeed;
 	ATTRIBUTE_ACCESSORS(UP4BaseAttributeSet, MovementSpeed)
 		UFUNCTION()
-		void OnRep_MovementSpeed(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, MovementSpeed, Previous); }
+		virtual void OnRep_MovementSpeed(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, MovementSpeed, Previous); }
 
 	////////////////////////////////////
 	/*         Offensive Stats        */
@@ -211,14 +211,14 @@ public:
 		FGameplayAttributeData AttackPower;
 	ATTRIBUTE_ACCESSORS(UP4BaseAttributeSet, AttackPower)
 		UFUNCTION()
-		void OnRep_AttackPower(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, AttackPower, Previous); }
+		virtual void OnRep_AttackPower(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, AttackPower, Previous); }
 
 	/* Base magic dmg */
 	UPROPERTY(Category = "Player Attributes | Offensive", EditAnywhere, ReplicatedUsing = OnRep_MagicPower, BlueprintReadWrite)
 		FGameplayAttributeData MagicPower;
 	ATTRIBUTE_ACCESSORS(UP4BaseAttributeSet, MagicPower)
 		UFUNCTION()
-		void OnRep_MagicPower(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, MagicPower, Previous); }
+		virtual void OnRep_MagicPower(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, MagicPower, Previous); }
 
 
 	/* Independent Weapon of main hand (Main hand) auto Weapon (so main hand AA damage isnt equal to offhand)  */
@@ -226,28 +226,28 @@ public:
 		FGameplayAttributeData MainHandWeaponPower;
 	ATTRIBUTE_ACCESSORS(UP4BaseAttributeSet, MainHandWeaponPower)
 		UFUNCTION()
-		void OnRep_MainHandWeaponPower(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, MainHandWeaponPower, Previous); }
+		virtual void OnRep_MainHandWeaponPower(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, MainHandWeaponPower, Previous); }
 
 	/* Interval of main hand (Main hand) auto attack */
 	UPROPERTY(Category = "Player Attributes | Offensive", EditAnywhere, ReplicatedUsing = OnRep_MainHandAttackInterval, BlueprintReadWrite)
 		FGameplayAttributeData MainHandAttackInterval;
 	ATTRIBUTE_ACCESSORS(UP4BaseAttributeSet, MainHandAttackInterval)
 		UFUNCTION()
-		void OnRep_MainHandAttackInterval(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, MainHandAttackInterval, Previous); }
+		virtual void OnRep_MainHandAttackInterval(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, MainHandAttackInterval, Previous); }
 
 	/* */
 	UPROPERTY(Category = "Player Attributes | Offensive", EditAnywhere, ReplicatedUsing = OnRep_OffHandWeaponPower, BlueprintReadWrite)
 		FGameplayAttributeData OffHandWeaponPower;
 	ATTRIBUTE_ACCESSORS(UP4BaseAttributeSet, OffHandWeaponPower)
 		UFUNCTION()
-		void OnRep_OffHandWeaponPower(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, OffHandWeaponPower, Previous); }
+		virtual void OnRep_OffHandWeaponPower(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, OffHandWeaponPower, Previous); }
 
 	/* */
 	UPROPERTY(Category = "Player Attributes | Offensive", EditAnywhere, ReplicatedUsing = OnRep_OffHandAttackInterval, BlueprintReadWrite)
 		FGameplayAttributeData OffHandAttackInterval;
 	ATTRIBUTE_ACCESSORS(UP4BaseAttributeSet, OffHandAttackInterval)
 		UFUNCTION()
-		void OnRep_OffHandAttackInterval(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, OffHandAttackInterval, Previous); }
+		virtual void OnRep_OffHandAttackInterval(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, OffHandAttackInterval, Previous); }
 
 
 	/* % decimal measurement for increase attack speed (e.g 0.3 = 30%), applied to weapon attack interval for total auto attack rate */
@@ -255,21 +255,21 @@ public:
 		FGameplayAttributeData AttackSpeed;
 	ATTRIBUTE_ACCESSORS(UP4BaseAttributeSet, AttackSpeed)
 		UFUNCTION()
-		void OnRep_AttackSpeed(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, AttackSpeed, Previous); }
+		virtual void OnRep_AttackSpeed(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, AttackSpeed, Previous); }
 
 	/* % (0-1) measurement for Crit % chance MUST BE BETWEEN 0 and 1 */
 	UPROPERTY(Category = "Player Attributes | Offensive", EditAnywhere, ReplicatedUsing = OnRep_CritChance, BlueprintReadWrite)
 		FGameplayAttributeData CritChance;
 	ATTRIBUTE_ACCESSORS(UP4BaseAttributeSet, CritChance)
 		UFUNCTION()
-		void OnRep_CritChance(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, CritChance, Previous); }
+		virtual void OnRep_CritChance(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, CritChance, Previous); }
 
 	/* % Damage increase when crit applies  */
 	UPROPERTY(Category = "Player Attributes | Offensive", EditAnywhere, ReplicatedUsing = OnRep_CritDamage, BlueprintReadWrite)
 		FGameplayAttributeData CritDamage;
 	ATTRIBUTE_ACCESSORS(UP4BaseAttributeSet, CritDamage)
 		UFUNCTION()
-		void OnRep_CritDamage(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, CritDamage, Previous); }
+		virtual void OnRep_CritDamage(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, CritDamage, Previous); }
 
 	////////////////////////////////////
 	/*           Meta Stats           */

@@ -1,0 +1,447 @@
+C:/UnrealProjects/Project4/Plugins/GameLiftServerSDK/Intermediate/Build/Win64/UE4Editor/Development/GameLiftServerSDK/PCH.GameLiftServerSDK.h
+C:/UnrealProjects/Project4/Plugins/GameLiftServerSDK/Source/GameLiftServerSDK/Private/GameLiftServerSDKPrivatePCH.h
+C:\UnrealProjects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\GameLiftServerSDK.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Modules/ModuleManager.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\CoreTypes.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\HAL/Platform.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Misc/Build.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\HAL\PreprocessorHelpers.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Windows/WindowsPlatformCompilerPreSetup.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\GenericPlatform/GenericPlatformCompilerPreSetup.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\GenericPlatform/GenericPlatform.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Windows/WindowsPlatformCodeAnalysis.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Windows/WindowsPlatform.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\sal.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\concurrencysal.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\MSVC/MSVCPlatform.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Windows/WindowsPlatformCompilerSetup.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\ProfilingDebugging/UMemoryDefines.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Misc/CoreMiscDefines.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Misc/CoreDefines.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Misc/AssertionMacros.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\HAL/PlatformMisc.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\GenericPlatform/GenericPlatformMisc.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\CoreFwd.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Containers/ContainersFwd.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\UObject/UObjectHierarchyFwd.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\HAL/PlatformCrt.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\new
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\yvals_core.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\vcruntime.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\vadefs.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\xkeycheck.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\exception
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\yvals.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\ucrt\crtdbg.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\ucrt\corecrt.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\vcruntime_new_debug.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\vcruntime_new.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\crtdefs.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\use_ansi.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\type_traits
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\xstddef
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\cstddef
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\ucrt\stddef.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\xtr1common
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\cstdlib
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\ucrt\math.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\ucrt\corecrt_math.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\ucrt\stdlib.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\ucrt\corecrt_malloc.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\ucrt\corecrt_search.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\ucrt\corecrt_wstdlib.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\limits.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\initializer_list
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\ucrt\malloc.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\vcruntime_exception.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\eh.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\ucrt\corecrt_terminate.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\ucrt\wchar.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\ucrt\corecrt_memcpy_s.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\ucrt\errno.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\vcruntime_string.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\ucrt\corecrt_wconio.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\ucrt\corecrt_stdio_config.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\ucrt\corecrt_wctype.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\ucrt\corecrt_wdirect.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\ucrt\corecrt_wio.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\ucrt\corecrt_share.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\ucrt\corecrt_wprocess.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\ucrt\corecrt_wstdio.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\ucrt\corecrt_wstring.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\ucrt\corecrt_wtime.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\ucrt\sys/stat.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\ucrt\sys/types.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\ucrt\stdio.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\stdarg.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\ucrt\math.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\ucrt\float.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\ucrt\string.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\ucrt\corecrt_memory.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Misc/CompressionFlags.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Windows/WindowsPlatformMisc.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\HAL/PlatformMemory.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\GenericPlatform/GenericPlatformMemory.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Windows/WindowsPlatformMemory.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Windows/WindowsSystemIncludes.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Windows/MinimalWindowsApi.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\intrin.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\intrin0.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\setjmp.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\immintrin.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\wmmintrin.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\nmmintrin.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\smmintrin.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\tmmintrin.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\pmmintrin.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\emmintrin.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\xmmintrin.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\mmintrin.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\zmmintrin.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\ammintrin.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\stdint.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\ucrt\tchar.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\shared\intsafe.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\shared\winapifamily.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\shared\winpackagefamily.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\shared\specstrings.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\shared\specstrings_strict.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\shared\specstrings_undef.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\shared\driverspecs.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\shared\sdv_driverspecs.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\shared\strsafe.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\ProfilingDebugging/CpuProfilerTrace.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\TraceLog\Public\Trace/Config.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\TraceLog\Public\Trace/Detail/Channel.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\TraceLog\Public\Trace/Detail/Channel.inl
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Templates/AndOrNot.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Templates/EnableIf.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Templates/IsArrayOrRefOfType.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Templates/IsValidVariadicFunctionArg.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Templates\IsEnum.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Misc/VarArgs.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Templates/UnrealTemplate.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Templates/IsPointer.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\HAL/UnrealMemory.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\HAL/MemoryBase.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Misc/OutputDevice.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Logging/LogVerbosity.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\HAL/PlatformAtomics.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\GenericPlatform/GenericPlatformAtomics.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Windows/WindowsPlatformAtomics.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Misc/Exec.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Templates/Atomic.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\HAL/ThreadSafeCounter.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\HAL/ThreadSafeCounter64.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Templates/IsIntegral.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Templates/IsTrivial.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Templates/IsTriviallyDestructible.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Templates/IsTriviallyCopyConstructible.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Templates/IsTriviallyCopyAssignable.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Traits/IntType.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Templates/AreTypesEqual.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Templates/IsArithmetic.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Templates/UnrealTypeTraits.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Templates/RemoveCV.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Traits/IsVoidType.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Templates/Models.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Templates/Identity.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Templates/IsPODType.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Templates/RemoveReference.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Templates/TypeCompatibleBytes.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Traits/IsContiguousContainer.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Containers/Array.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Templates/IsSigned.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Containers/ContainerAllocationPolicies.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\HAL/PlatformMath.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\GenericPlatform/GenericPlatformMath.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Windows/WindowsPlatformMath.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Math/UnrealPlatformMathSSE4.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Math/UnrealPlatformMathSSE.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Templates/MemoryOps.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Math/NumericLimits.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Templates/IsPolymorphic.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Serialization/Archive.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Templates/IsEnumClass.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Templates/Function.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Templates/ChooseClass.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Templates/Decay.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Templates/Invoke.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Templates/PointerIsConvertibleFromTo.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Misc/StaticAssertCompleteType.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Templates/LosesQualifiersFromTo.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Templates/CopyQualifiersFromTo.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Templates/IsConstructible.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Templates/IsInvocable.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Templates/IsMemberPointer.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Math/UnrealMathUtility.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Templates/IsFloatingPoint.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\HAL/PlatformProperties.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\GenericPlatform/GenericPlatformProperties.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Windows/WindowsPlatformProperties.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Misc/EngineVersionBase.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Internationalization/TextNamespaceFwd.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Serialization/MemoryImageWriter.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Serialization/MemoryLayout.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Containers/EnumAsByte.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Templates/TypeHash.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Misc/Crc.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Misc/Char.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\ucrt\ctype.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\ucrt\wctype.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Misc/CString.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\HAL/PlatformString.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Windows/WindowsPlatformString.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\GenericPlatform/MicrosoftPlatformString.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\GenericPlatform/GenericPlatformString.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\GenericPlatform/GenericPlatformStricmp.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Templates/IsAbstract.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Misc/DelayedAutoRegister.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Algo/Heapify.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Algo/Impl/BinaryHeap.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Templates/ReversePredicate.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Templates/IdentityFunctor.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Templates/Less.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Algo/HeapSort.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Algo/IsHeap.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Templates/Sorting.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Algo/BinarySearch.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Algo/Sort.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Algo/IntroSort.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Templates/AlignmentTemplates.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Containers/UnrealString.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Templates/IsArray.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Containers/StringFwd.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Misc/StringFormatArg.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Containers/Map.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Algo/Reverse.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Containers/Set.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Misc/StructBuilder.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Containers/SparseArray.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Containers/ScriptArray.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Containers/BitArray.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Serialization/StructuredArchive.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Serialization/StructuredArchiveFormatter.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Serialization\Formatters/BinaryArchiveFormatter.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Misc/Optional.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Concepts/Insertable.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Serialization/ArchiveProxy.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Templates/UniqueObj.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Templates/UniquePtr.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Templates/RemoveExtent.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Templates/Tuple.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Delegates/IntegerSequence.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\UObject/NameTypes.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\HAL/CriticalSection.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Windows/WindowsCriticalSection.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Misc/Timespan.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Math/Interval.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Containers/StringConv.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\UObject/UnrealNames.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\UObject\UnrealNames.inl
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Templates/SharedPointer.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\CoreGlobals.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Logging/LogMacros.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Logging/LogCategory.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Logging/LogScopedCategoryAndVerbosityOverride.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Logging/LogTrace.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\ProfilingDebugging/FormatArgsTrace.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\HAL/PlatformTLS.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\GenericPlatform/GenericPlatformTLS.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Windows/WindowsPlatformTLS.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Templates/SharedPointerInternals.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Templates/SharedPointerTesting.inl
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Delegates/Delegate.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\UObject/WeakObjectPtrTemplates.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Delegates/MulticastDelegateBase.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Delegates/IDelegateInstance.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Delegates/DelegateSettings.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Delegates/DelegateBase.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Delegates/DelegateInstanceInterface.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Delegates/DelegateInstancesImpl.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Templates/TypeWrapper.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Delegates/DelegateSignatureImpl.inl
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\UObject/ScriptDelegates.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Templates/IsConst.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Delegates/DelegateCombinations.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Misc/CoreMisc.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Math/IntPoint.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\HAL/ThreadSingleton.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\HAL/TlsAutoCleanup.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Modules/ModuleInterface.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Modules/Boilerplate/ModuleBoilerplate.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Misc/EnumClassFlags.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Windows/AllowWindowsPlatformTypes.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Windows/WindowsHWrapper.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Windows/PreWindowsApi.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Windows/MinWindows.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um\Windows.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\shared\sdkddkver.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\excpt.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\shared\windef.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\shared\minwindef.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um\winnt.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\shared\kernelspecs.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\shared\basetsd.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\shared\guiddef.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\shared\pshpack4.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\shared\poppack.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\shared\pshpack4.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\shared\poppack.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\shared\pshpack4.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\shared\pshpack2.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\shared\poppack.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\shared\pshpack2.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\shared\pshpack2.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\shared\poppack.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\shared\poppack.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\shared\pshpack8.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\shared\poppack.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\shared\pshpack1.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\shared\poppack.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\shared\pshpack1.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\shared\poppack.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\shared\poppack.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\shared\apiset.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\shared\ktmtypes.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um\winbase.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\shared\apisetcconv.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um\minwinbase.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um\apiquery2.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um\processenv.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um\fileapifromapp.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um\fileapi.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um\debugapi.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um\utilapiset.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um\handleapi.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um\errhandlingapi.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um\fibersapi.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um\namedpipeapi.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um\profileapi.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um\heapapi.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um\ioapiset.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um\synchapi.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um\interlockedapi.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um\processthreadsapi.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um\sysinfoapi.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um\memoryapi.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um\enclaveapi.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um\threadpoollegacyapiset.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um\threadpoolapiset.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um\jobapi.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um\jobapi2.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um\wow64apiset.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um\libloaderapi.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um\securitybaseapi.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um\namespaceapi.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um\systemtopologyapi.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um\processtopologyapi.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um\securityappcontainer.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um\realtimeapiset.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\shared\winerror.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um\timezoneapi.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um\wingdi.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\shared\pshpack1.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\shared\poppack.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\shared\pshpack2.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\shared\poppack.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\shared\pshpack4.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\shared\poppack.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\shared\pshpack4.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\shared\poppack.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um\winuser.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\shared\pshpack2.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\shared\poppack.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\shared\tvout.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um\winnls.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um\datetimeapi.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um\stringapiset.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um\winnls.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um\wincon.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um\wincontypes.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um\consoleapi.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um\consoleapi2.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um\consoleapi3.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um\winver.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um\verrsrc.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um\winreg.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um\reason.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um\winnetwk.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\shared\wnnc.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\shared\stralign.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um\imm.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um\ime_cmodes.h
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Windows/PostWindowsApi.h
+C:\UnrealProjects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\aws/gamelift/common/Outcome.h
+C:\UnrealProjects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\aws/gamelift/common/GameLiftErrors.h
+C:\UnrealProjects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\aws/gamelift/common/GameLift_EXPORTS.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\string
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\xstring
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\iosfwd
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\cstdio
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\cstring
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\cwchar
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\xmemory
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\cstdint
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\limits
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\cfloat
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\climits
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\xatomic.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\xutility
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\utility
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\cctype
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\vector
+C:\UnrealProjects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\aws/gamelift/server/model/DescribePlayerSessionsResult.h
+C:\UnrealProjects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\aws/gamelift/server/model/PlayerSession.h
+C:\UnrealProjects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\aws/gamelift/server/model/PlayerSessionStatus.h
+C:\UnrealProjects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\aws/gamelift/server/model/StartMatchBackfillResult.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\future
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\chrono
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\ratio
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\ucrt\time.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\xtimec.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\condition_variable
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\memory
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\typeinfo
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\vcruntime_typeinfo.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\mutex
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\system_error
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\__msvc_system_error_abi.hpp
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\cerrno
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\stdexcept
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\xcall_once.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\xerrc.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\thread
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\ucrt\process.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\ucrt\corecrt_startup.h
+C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\ucrt\math.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\vcruntime_startup.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\tuple
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\xthreads.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\functional
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\ppltasks.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\pplwin.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\pplinterface.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\atomic
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\ppltaskscheduler.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\crtdefs.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\pplcancellation_token.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\algorithm
+C:\UnrealProjects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\aws/gamelift/server/GameLiftServerAPI.h
+C:\UnrealProjects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\aws/gamelift/server/model/DescribePlayerSessionsRequest.h
+C:\UnrealProjects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\aws/gamelift/server/model/StartMatchBackfillRequest.h
+C:\UnrealProjects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\aws/gamelift/server/model/Player.h
+C:\UnrealProjects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\aws/gamelift/server/model/AttributeValue.h
+C:\UnrealProjects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\aws/gamelift/server/model/StopMatchBackfillRequest.h
+C:\UnrealProjects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\aws/gamelift/server/ProcessParameters.h
+C:\UnrealProjects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\aws/gamelift/server/model/GameSession.h
+C:\UnrealProjects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\aws/gamelift/server/model/GameSessionStatus.h
+C:\UnrealProjects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\aws/gamelift/server/model/PlayerSessionCreationPolicy.h
+C:\UnrealProjects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\aws/gamelift/server/model/GameProperty.h
+C:\UnrealProjects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\aws/gamelift/server/model/UpdateGameSession.h
+C:\UnrealProjects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\aws/gamelift/server/model/UpdateReason.h
+C:\UnrealProjects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\aws/gamelift/server/LogParameters.h
+C:\UnrealProjects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\GameLiftServerSDKModels.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\map
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\xtree
+C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Windows/HideWindowsPlatformTypes.h
