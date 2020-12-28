@@ -102,7 +102,7 @@ public:
 		Similar function exists in P4GameplayAbility with a target actor
 				OUTDATED FUNCTION????										*/
 	UFUNCTION(BlueprintCallable)
-		virtual float PlayMontage(UGameplayAbility* AnimatingAbility, FGameplayAbilityActivationInfo ActivationInfo, UAnimMontage* Montage, float InPlayRate, FName StartSectionName = NAME_None) override;
+		virtual float PlayMontage(UGameplayAbility* AnimatingAbility, FGameplayAbilityActivationInfo ActivationInfo, UAnimMontage* Montage, float InPlayRate, FName StartSectionName = NAME_None, float StartTimeSeconds = 0.0f) override;
 
 	
 	

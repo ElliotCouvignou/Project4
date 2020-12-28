@@ -33,7 +33,7 @@ void UProject4GameInstance::Shutdown()
 			TSharedRef<TJsonWriter<>> Writer = TJsonWriterFactory<>::Create(&RequestBody);
 			if (FJsonSerializer::Serialize(RequestObj.ToSharedRef(), Writer))
 			{
-				TSharedRef<IHttpRequest> StopMatchmakingRequest = HttpModule->CreateRequest();
+				TSharedRef<IHttpRequest, ESPMode::ThreadSafe> StopMatchmakingRequest = HttpModule->CreateRequest();
 				StopMatchmakingRequest->SetURL(APIUrl + "/stopmatchmaking");
 				StopMatchmakingRequest->SetVerb("POST");
 				StopMatchmakingRequest->SetHeader("Content-Type", "application/json");
@@ -43,7 +43,7 @@ void UProject4GameInstance::Shutdown()
 			}
 		}
 
-		TSharedRef<IHttpRequest> InvalidateTokensRequest = HttpModule->CreateRequest();
+		TSharedRef<IHttpRequest, ESPMode::ThreadSafe> InvalidateTokensRequest = HttpModule->CreateRequest();
 		InvalidateTokensRequest->SetURL(APIUrl + "/invalidatetokens");
 		InvalidateTokensRequest->SetVerb("GET");
 		InvalidateTokensRequest->SetHeader("Content-Type", "application/json");
@@ -88,7 +88,7 @@ void UProject4GameInstance::RetrieveNewTokens()
 
 		if (FJsonSerializer::Serialize(RequestObj.ToSharedRef(), Writer))
 		{
-			TSharedRef<IHttpRequest> RetrieveNewTokensRequest = HttpModule->CreateRequest();
+			TSharedRef<IHttpRequest, ESPMode::ThreadSafe> RetrieveNewTokensRequest = HttpModule->CreateRequest();
 			RetrieveNewTokensRequest->OnProcessRequestComplete().BindUObject(this, &UProject4GameInstance::OnRetrieveNewTokensCallback);
 			RetrieveNewTokensRequest->SetURL(APIUrl + "/retrievenewtokens");
 			RetrieveNewTokensRequest->SetVerb("POST");
@@ -133,7 +133,7 @@ void UProject4GameInstance::OnRetrieveNewTokensCallback(FHttpRequestPtr Request,
 
 void UProject4GameInstance::GetLatencyTime()
 {
-	TSharedRef<IHttpRequest> GetLatencyTimeRequest = HttpModule->CreateRequest();
+	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> GetLatencyTimeRequest = HttpModule->CreateRequest();
 	GetLatencyTimeRequest->OnProcessRequestComplete().BindUObject(this, &UProject4GameInstance::OnGetLatencyTimeResponseRecieved);
 	GetLatencyTimeRequest->SetURL("https://gamelift." + RegionCode + ".amazonaws.com");
 	GetLatencyTimeRequest->SetVerb("GET");

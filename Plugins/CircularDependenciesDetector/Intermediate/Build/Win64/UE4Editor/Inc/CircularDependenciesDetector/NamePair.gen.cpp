@@ -45,13 +45,13 @@ static struct FScriptStruct_CircularDependenciesDetector_StaticRegisterNativesFN
 #endif
 		static void* NewStructOps();
 #if WITH_METADATA
-		static const UE4CodeGen_Private::FMetaDataPairParam NewProp_Name2_MetaData[];
-#endif
-		static const UE4CodeGen_Private::FNamePropertyParams NewProp_Name2;
-#if WITH_METADATA
 		static const UE4CodeGen_Private::FMetaDataPairParam NewProp_Name1_MetaData[];
 #endif
 		static const UE4CodeGen_Private::FNamePropertyParams NewProp_Name1;
+#if WITH_METADATA
+		static const UE4CodeGen_Private::FMetaDataPairParam NewProp_Name2_MetaData[];
+#endif
+		static const UE4CodeGen_Private::FNamePropertyParams NewProp_Name2;
 		static const UE4CodeGen_Private::FPropertyParamsBase* const PropPointers[];
 		static const UE4CodeGen_Private::FStructParams ReturnStructParams;
 	};
@@ -67,22 +67,22 @@ static struct FScriptStruct_CircularDependenciesDetector_StaticRegisterNativesFN
 		return (UScriptStruct::ICppStructOps*)new UScriptStruct::TCppStructOps<FNamePair>();
 	}
 #if WITH_METADATA
-	const UE4CodeGen_Private::FMetaDataPairParam Z_Construct_UScriptStruct_FNamePair_Statics::NewProp_Name2_MetaData[] = {
-		{ "Category", "Name Pair" },
-		{ "ModuleRelativePath", "Private/NamePair.h" },
-	};
-#endif
-	const UE4CodeGen_Private::FNamePropertyParams Z_Construct_UScriptStruct_FNamePair_Statics::NewProp_Name2 = { "Name2", nullptr, (EPropertyFlags)0x0010000000000004, UE4CodeGen_Private::EPropertyGenFlags::Name, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(FNamePair, Name2), METADATA_PARAMS(Z_Construct_UScriptStruct_FNamePair_Statics::NewProp_Name2_MetaData, UE_ARRAY_COUNT(Z_Construct_UScriptStruct_FNamePair_Statics::NewProp_Name2_MetaData)) };
-#if WITH_METADATA
 	const UE4CodeGen_Private::FMetaDataPairParam Z_Construct_UScriptStruct_FNamePair_Statics::NewProp_Name1_MetaData[] = {
 		{ "Category", "Name Pair" },
 		{ "ModuleRelativePath", "Private/NamePair.h" },
 	};
 #endif
 	const UE4CodeGen_Private::FNamePropertyParams Z_Construct_UScriptStruct_FNamePair_Statics::NewProp_Name1 = { "Name1", nullptr, (EPropertyFlags)0x0010000000000004, UE4CodeGen_Private::EPropertyGenFlags::Name, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(FNamePair, Name1), METADATA_PARAMS(Z_Construct_UScriptStruct_FNamePair_Statics::NewProp_Name1_MetaData, UE_ARRAY_COUNT(Z_Construct_UScriptStruct_FNamePair_Statics::NewProp_Name1_MetaData)) };
+#if WITH_METADATA
+	const UE4CodeGen_Private::FMetaDataPairParam Z_Construct_UScriptStruct_FNamePair_Statics::NewProp_Name2_MetaData[] = {
+		{ "Category", "Name Pair" },
+		{ "ModuleRelativePath", "Private/NamePair.h" },
+	};
+#endif
+	const UE4CodeGen_Private::FNamePropertyParams Z_Construct_UScriptStruct_FNamePair_Statics::NewProp_Name2 = { "Name2", nullptr, (EPropertyFlags)0x0010000000000004, UE4CodeGen_Private::EPropertyGenFlags::Name, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(FNamePair, Name2), METADATA_PARAMS(Z_Construct_UScriptStruct_FNamePair_Statics::NewProp_Name2_MetaData, UE_ARRAY_COUNT(Z_Construct_UScriptStruct_FNamePair_Statics::NewProp_Name2_MetaData)) };
 	const UE4CodeGen_Private::FPropertyParamsBase* const Z_Construct_UScriptStruct_FNamePair_Statics::PropPointers[] = {
-		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UScriptStruct_FNamePair_Statics::NewProp_Name2,
 		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UScriptStruct_FNamePair_Statics::NewProp_Name1,
+		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UScriptStruct_FNamePair_Statics::NewProp_Name2,
 	};
 	const UE4CodeGen_Private::FStructParams Z_Construct_UScriptStruct_FNamePair_Statics::ReturnStructParams = {
 		(UObject* (*)())Z_Construct_UPackage__Script_CircularDependenciesDetector,
@@ -112,7 +112,7 @@ static struct FScriptStruct_CircularDependenciesDetector_StaticRegisterNativesFN
 		}
 		return ReturnStruct;
 	}
-	uint32 Get_Z_Construct_UScriptStruct_FNamePair_Hash() { return 2544964118U; }
+	uint32 Get_Z_Construct_UScriptStruct_FNamePair_Hash() { return 2369755535U; }
 PRAGMA_ENABLE_DEPRECATION_WARNINGS
 #ifdef _MSC_VER
 #pragma warning (pop)

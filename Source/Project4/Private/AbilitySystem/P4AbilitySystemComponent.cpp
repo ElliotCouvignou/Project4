@@ -6,12 +6,6 @@
 
 
 
-float UP4AbilitySystemComponent::PlayMontage(UGameplayAbility* AnimatingAbility, FGameplayAbilityActivationInfo ActivationInfo, UAnimMontage* Montage, float InPlayRate, FName StartSectionName)
-{
-	float ret = Super::PlayMontage(AnimatingAbility, ActivationInfo, Montage, InPlayRate, StartSectionName);
-	return ret;
-}
-
 
 void UP4AbilitySystemComponent::BroadcastAutoAttackResults(const TArray<AProject4Character*>& HitArray)
 {
@@ -35,6 +29,12 @@ void UP4AbilitySystemComponent::FindAbilityLevelFromClass(TSubclassOf<UGameplayA
 	{
 		Level = 0;
 	}
+}
+
+float UP4AbilitySystemComponent::PlayMontage(UGameplayAbility* AnimatingAbility, FGameplayAbilityActivationInfo ActivationInfo, UAnimMontage* Montage, float InPlayRate, FName StartSectionName, float StartTimeSeconds)
+{
+	float ret = Super::PlayMontage(AnimatingAbility, ActivationInfo, Montage, InPlayRate, StartSectionName);
+	return ret;
 }
 
 bool UP4AbilitySystemComponent::SetGameplayEffectDurationWithHandle(const FActiveGameplayEffectHandle& Handle, float NewDuration)

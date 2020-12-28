@@ -1,5 +1,5 @@
 /MANIFEST:EMBED
-/MANIFESTINPUT:"C:\Unreal Engine\4.25.3\Engine\Build\Windows\Resources\Default-Win64.manifest"
+/MANIFESTINPUT:"C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Build\Windows\Resources\Default-Win64.manifest"
 /NOLOGO
 /DEBUG
 /errorReport:prompt
@@ -33,9 +33,11 @@
 /NODEFAULTLIB:"LIBCD"
 /NODEFAULTLIB:"LIBCPD"
 /FUNCTIONPADMIN
-"C:\Unreal Engine\4.25.3\Engine\Intermediate\Build\Win64\UE4Editor\Development\Core\SharedPCH.Core.ShadowErrors.h.obj"
-"C:\UnrealProjects\Project4\Plugins\GameLiftServerSDK\Intermediate\Build\Win64\UE4Editor\Development\GameLiftServerSDK\GameLiftServerSDK.cpp.obj"
-"C:\Unreal Engine\4.25.3\Engine\Intermediate\Build\Win64\UE4Editor\Development\Default.rc2.res"
+"C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Intermediate\Build\Win64\UE4Editor\Development\Core\SharedPCH.Core.ShadowErrors.h.obj"
+"C:\Unreal Engine Projects\Project4\Plugins\GameLiftServerSDK\Intermediate\Build\Win64\UE4Editor\Development\GameLiftServerSDK\GameLiftServerSDK.cpp.obj"
+"C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Intermediate\Build\Win64\UE4Editor\Development\Default.rc2.res"
+"C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Intermediate\Build\Win64\UE4Editor\Development\Core\UE4Editor-Core.lib"
+"C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Intermediate\Build\Win64\UE4Editor\Development\Projects\UE4Editor-Projects.lib"
 "delayimp.lib"
 "wininet.lib"
 "rpcrt4.lib"
@@ -60,10 +62,8 @@
 "setupapi.lib"
 "dwmapi.lib"
 "imm32.lib"
-"C:\Unreal Engine\4.25.3\Engine\Intermediate\Build\Win64\UE4Editor\Development\Core\UE4Editor-Core.lib"
-"C:\Unreal Engine\4.25.3\Engine\Intermediate\Build\Win64\UE4Editor\Development\Projects\UE4Editor-Projects.lib"
-/OUT:"C:\UnrealProjects\Project4\Plugins\GameLiftServerSDK\Binaries\Win64\UE4Editor-GameLiftServerSDK.dll"
-/IMPLIB:"C:\UnrealProjects\Project4\Plugins\GameLiftServerSDK\Intermediate\Build\Win64\UE4Editor\Development\GameLiftServerSDK\UE4Editor-GameLiftServerSDK.suppressed.lib"
-/PDB:"C:\UnrealProjects\Project4\Plugins\GameLiftServerSDK\Binaries\Win64\UE4Editor-GameLiftServerSDK.pdb"
+/OUT:"C:\Unreal Engine Projects\Project4\Plugins\GameLiftServerSDK\Binaries\Win64\UE4Editor-GameLiftServerSDK.dll"
+/IMPLIB:"C:\Unreal Engine Projects\Project4\Plugins\GameLiftServerSDK\Intermediate\Build\Win64\UE4Editor\Development\GameLiftServerSDK\UE4Editor-GameLiftServerSDK.suppressed.lib"
+/PDB:"C:\Unreal Engine Projects\Project4\Plugins\GameLiftServerSDK\Binaries\Win64\UE4Editor-GameLiftServerSDK.pdb"
 /ignore:4078
 /INCLUDE:IMPLEMENT_MODULE_GameLiftServerSDK

@@ -1,12 +1,12 @@
-C:\UnrealProjects\Project4\Plugins\GameLiftServerSDK\Intermediate\Build\Win64\UE4Editor\Development\GameLiftServerSDK\Definitions.GameLiftServerSDK.h
-C:\UnrealProjects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\GameLiftServerSDK.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Windows/AllowWindowsPlatformTypes.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Windows/WindowsHWrapper.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Windows/PreWindowsApi.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Windows/MinWindows.h
+C:\Unreal Engine Projects\Project4\Plugins\GameLiftServerSDK\Intermediate\Build\Win64\UE4Editor\Development\GameLiftServerSDK\Definitions.GameLiftServerSDK.h
+C:\Unreal Engine Projects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\GameLiftServerSDK.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Windows/AllowWindowsPlatformTypes.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Windows/WindowsHWrapper.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Windows/PreWindowsApi.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Windows/MinWindows.h
 C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um\Windows.h
 C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\shared\sdkddkver.h
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\excpt.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\INCLUDE\excpt.h
 C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\shared\windef.h
 C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\shared\minwindef.h
 C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um\winnt.h
@@ -100,187 +100,188 @@ C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\shared\wnnc.h
 C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\shared\stralign.h
 C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um\imm.h
 C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um\ime_cmodes.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Windows/PostWindowsApi.h
-C:\UnrealProjects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\aws/gamelift/common/Outcome.h
-C:\UnrealProjects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\aws/gamelift/common/GameLiftErrors.h
-C:\UnrealProjects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\aws/gamelift/common/GameLift_EXPORTS.h
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\string
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\xstring
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\iosfwd
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\cstdio
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\cstring
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\cwchar
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\xmemory
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\cstdint
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\limits
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\cfloat
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\climits
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\xatomic.h
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\xutility
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\utility
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\cctype
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\vector
-C:\UnrealProjects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\aws/gamelift/server/model/DescribePlayerSessionsResult.h
-C:\UnrealProjects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\aws/gamelift/server/model/PlayerSession.h
-C:\UnrealProjects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\aws/gamelift/server/model/PlayerSessionStatus.h
-C:\UnrealProjects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\aws/gamelift/server/model/StartMatchBackfillResult.h
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\future
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\chrono
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\ratio
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Windows/PostWindowsApi.h
+C:\Unreal Engine Projects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\aws/gamelift/common/Outcome.h
+C:\Unreal Engine Projects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\aws/gamelift/common/GameLiftErrors.h
+C:\Unreal Engine Projects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\aws/gamelift/common/GameLift_EXPORTS.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\INCLUDE\string
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\INCLUDE\xstring
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\INCLUDE\iosfwd
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\INCLUDE\cstdio
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\INCLUDE\cstring
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\INCLUDE\cwchar
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\INCLUDE\xmemory
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\INCLUDE\cstdint
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\INCLUDE\limits
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\INCLUDE\cfloat
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\INCLUDE\climits
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\INCLUDE\isa_availability.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\INCLUDE\xatomic.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\INCLUDE\xutility
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\INCLUDE\utility
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\INCLUDE\cctype
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\INCLUDE\vector
+C:\Unreal Engine Projects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\aws/gamelift/server/model/DescribePlayerSessionsResult.h
+C:\Unreal Engine Projects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\aws/gamelift/server/model/PlayerSession.h
+C:\Unreal Engine Projects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\aws/gamelift/server/model/PlayerSessionStatus.h
+C:\Unreal Engine Projects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\aws/gamelift/server/model/StartMatchBackfillResult.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\INCLUDE\future
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\INCLUDE\chrono
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\INCLUDE\ratio
 C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\ucrt\time.h
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\xtimec.h
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\condition_variable
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\memory
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\typeinfo
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\vcruntime_typeinfo.h
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\mutex
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\system_error
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\__msvc_system_error_abi.hpp
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\cerrno
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\stdexcept
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\xcall_once.h
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\xerrc.h
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\thread
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\INCLUDE\xtimec.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\INCLUDE\condition_variable
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\INCLUDE\memory
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\INCLUDE\typeinfo
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\INCLUDE\vcruntime_typeinfo.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\INCLUDE\mutex
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\INCLUDE\system_error
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\INCLUDE\__msvc_system_error_abi.hpp
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\INCLUDE\cerrno
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\INCLUDE\stdexcept
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\INCLUDE\xcall_once.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\INCLUDE\xerrc.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\INCLUDE\atomic
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\INCLUDE\xthreads.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\INCLUDE\thread
 C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\ucrt\process.h
 C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\ucrt\corecrt_startup.h
 C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\ucrt\math.h
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\vcruntime_startup.h
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\tuple
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\xthreads.h
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\functional
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\ppltasks.h
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\pplwin.h
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\pplinterface.h
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\atomic
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\ppltaskscheduler.h
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\crtdefs.h
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\pplcancellation_token.h
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\algorithm
-C:\UnrealProjects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\aws/gamelift/server/GameLiftServerAPI.h
-C:\UnrealProjects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\aws/gamelift/server/model/DescribePlayerSessionsRequest.h
-C:\UnrealProjects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\aws/gamelift/server/model/StartMatchBackfillRequest.h
-C:\UnrealProjects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\aws/gamelift/server/model/Player.h
-C:\UnrealProjects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\aws/gamelift/server/model/AttributeValue.h
-C:\UnrealProjects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\aws/gamelift/server/model/StopMatchBackfillRequest.h
-C:\UnrealProjects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\aws/gamelift/server/ProcessParameters.h
-C:\UnrealProjects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\aws/gamelift/server/model/GameSession.h
-C:\UnrealProjects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\aws/gamelift/server/model/GameSessionStatus.h
-C:\UnrealProjects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\aws/gamelift/server/model/PlayerSessionCreationPolicy.h
-C:\UnrealProjects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\aws/gamelift/server/model/GameProperty.h
-C:\UnrealProjects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\aws/gamelift/server/model/UpdateGameSession.h
-C:\UnrealProjects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\aws/gamelift/server/model/UpdateReason.h
-C:\UnrealProjects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\aws/gamelift/server/LogParameters.h
-C:\UnrealProjects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\GameLiftServerSDKModels.h
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\map
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\INCLUDE\xtree
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Windows/HideWindowsPlatformTypes.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Core.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Misc/MonolithicHeaderBoilerplate.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\GenericPlatform/GenericPlatformStackWalk.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\HAL/PlatformStackWalk.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Windows/WindowsPlatformStackWalk.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\GenericPlatform/GenericPlatformNamedPipe.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\HAL/PlatformNamedPipe.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Windows/WindowsPlatformNamedPipe.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\GenericPlatform/GenericPlatformCriticalSection.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\HAL/PlatformFile.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Windows/WindowsPlatformFile.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\HAL/PlatformAffinity.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Windows/WindowsPlatformAffinity.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\HAL/PlatformIncludes.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Misc/MonolithicHeaderBoilerplate.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\HAL/PlatformFilemanager.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Misc/MessageDialog.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\ProfilingDebugging/ScopedDebugInfo.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\ProfilingDebugging/ExternalProfiler.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Misc/StringUtility.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Serialization/NameAsStringProxyArchive.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Containers/MRUArray.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Containers/TransArray.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Misc/ITransaction.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Misc\Change.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Containers/ArrayBuilder.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Serialization/BitReader.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Serialization/BitArchive.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Serialization/BitWriter.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Misc/ScopedEvent.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\HAL/RunnableThread.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Misc/SingleThreadEvent.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Misc/SingleThreadRunnable.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\HAL/ThreadManager.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\HAL/ThreadSafeBool.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Containers/StaticBitArray.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Containers/MapBuilder.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Containers/ResourceArray.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Containers/DynamicRHIResourceArray.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Serialization/MemoryImage.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\HAL/ThreadingBase.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Internationalization/TextLocalizationManagerGlobals.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Internationalization/Culture.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Misc/NetworkGuid.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Math/SHMath.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Math/RandomStream.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Logging/LogSuppressionInterface.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\HAL/OutputDevices.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Logging/LogScopedVerbosityOverride.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Misc/OutputDeviceNull.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Misc/OutputDeviceMemory.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Misc/OutputDeviceFile.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Misc/OutputDeviceDebug.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Misc/OutputDeviceArchiveWrapper.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Misc/OutputDeviceError.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Misc/OutputDeviceAnsiError.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Misc/BufferedOutputDevice.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Stats/StatsMisc.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Misc/TimeGuard.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Serialization/LargeMemoryWriter.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Serialization/LargeMemoryData.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Serialization/LargeMemoryReader.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Serialization/BufferArchive.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Serialization/MemoryReader.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Serialization/ArrayReader.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Serialization/ArrayWriter.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Serialization/BufferWriter.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Misc/Variant.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Misc/WildcardString.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Containers/CircularBuffer.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Containers/CircularQueue.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\ProfilingDebugging/ProfilingHelpers.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Misc/OutputDeviceHelper.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Misc/ScopedSlowTask.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Misc/AutomationTest.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Async/Future.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Async/Async.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Internationalization/Regex.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Templates/ScopedCallback.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Misc/CallbackDevice.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Misc/ObjectThumbnail.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Misc/LocalTimestampDirectoryVisitor.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Serialization/CustomVersion.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\UObject/BlueprintsObjectVersion.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\UObject/BuildObjectVersion.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\UObject/CoreObjectVersion.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\UObject/EditorObjectVersion.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\UObject/FrameworkObjectVersion.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\UObject/MobileObjectVersion.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\UObject/NetworkingObjectVersion.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\UObject/OnlineObjectVersion.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\UObject/PhysicsObjectVersion.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\UObject/PlatformObjectVersion.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\UObject/RenderingObjectVersion.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\UObject/SequencerObjectVersion.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\UObject/VRObjectVersion.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Misc/OutputDeviceConsole.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Misc/MonitoredProcess.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Misc/Attribute.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Core\Public\Misc/EnumRange.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Projects\Public\Interfaces/IPluginManager.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Projects\Public\PluginDescriptor.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Projects\Public\ModuleDescriptor.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Json\Public\Serialization/JsonWriter.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Json\Public\Serialization/JsonTypes.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Json\Public\Policies/PrettyJsonPrintPolicy.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Json\Public\Policies/JsonPrintPolicy.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Projects\Public\CustomBuildSteps.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Projects\Public\LocalizationDescriptor.h
-C:\Unreal Engine\4.25.3\Engine\Source\Runtime\Projects\Public\PluginReferenceDescriptor.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\INCLUDE\vcruntime_startup.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\INCLUDE\tuple
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\INCLUDE\functional
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\INCLUDE\ppltasks.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\INCLUDE\pplwin.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\INCLUDE\pplinterface.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\INCLUDE\ppltaskscheduler.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\INCLUDE\crtdefs.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\INCLUDE\pplcancellation_token.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\INCLUDE\algorithm
+C:\Unreal Engine Projects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\aws/gamelift/server/GameLiftServerAPI.h
+C:\Unreal Engine Projects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\aws/gamelift/server/model/DescribePlayerSessionsRequest.h
+C:\Unreal Engine Projects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\aws/gamelift/server/model/StartMatchBackfillRequest.h
+C:\Unreal Engine Projects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\aws/gamelift/server/model/Player.h
+C:\Unreal Engine Projects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\aws/gamelift/server/model/AttributeValue.h
+C:\Unreal Engine Projects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\aws/gamelift/server/model/StopMatchBackfillRequest.h
+C:\Unreal Engine Projects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\aws/gamelift/server/ProcessParameters.h
+C:\Unreal Engine Projects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\aws/gamelift/server/model/GameSession.h
+C:\Unreal Engine Projects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\aws/gamelift/server/model/GameSessionStatus.h
+C:\Unreal Engine Projects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\aws/gamelift/server/model/PlayerSessionCreationPolicy.h
+C:\Unreal Engine Projects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\aws/gamelift/server/model/GameProperty.h
+C:\Unreal Engine Projects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\aws/gamelift/server/model/UpdateGameSession.h
+C:\Unreal Engine Projects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\aws/gamelift/server/model/UpdateReason.h
+C:\Unreal Engine Projects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\aws/gamelift/server/LogParameters.h
+C:\Unreal Engine Projects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public\GameLiftServerSDKModels.h
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\INCLUDE\map
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\INCLUDE\xtree
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Windows/HideWindowsPlatformTypes.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Core.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Misc/MonolithicHeaderBoilerplate.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\GenericPlatform/GenericPlatformStackWalk.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\HAL/PlatformStackWalk.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Windows/WindowsPlatformStackWalk.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\GenericPlatform/GenericPlatformNamedPipe.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\HAL/PlatformNamedPipe.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Windows/WindowsPlatformNamedPipe.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\GenericPlatform/GenericPlatformCriticalSection.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\HAL/PlatformFile.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Windows/WindowsPlatformFile.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\HAL/PlatformAffinity.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Windows/WindowsPlatformAffinity.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\HAL/PlatformIncludes.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Misc/MonolithicHeaderBoilerplate.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\HAL/PlatformFilemanager.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Misc/MessageDialog.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\ProfilingDebugging/ScopedDebugInfo.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\ProfilingDebugging/ExternalProfiler.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Misc/StringUtility.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Serialization/NameAsStringProxyArchive.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Containers/MRUArray.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Containers/TransArray.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Misc/ITransaction.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Misc\Change.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Containers/ArrayBuilder.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Serialization/BitReader.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Serialization/BitArchive.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Serialization/BitWriter.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Misc/ScopedEvent.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\HAL/RunnableThread.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Misc/SingleThreadEvent.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Misc/SingleThreadRunnable.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\HAL/ThreadManager.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\HAL/ThreadSafeBool.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Containers/StaticBitArray.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Containers/MapBuilder.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Containers/ResourceArray.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Containers/DynamicRHIResourceArray.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Serialization/MemoryImage.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\HAL/ThreadingBase.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Internationalization/TextLocalizationManagerGlobals.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Internationalization/Culture.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Misc/NetworkGuid.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Math/SHMath.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Math/RandomStream.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Logging/LogSuppressionInterface.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\HAL/OutputDevices.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Logging/LogScopedVerbosityOverride.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Misc/OutputDeviceNull.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Misc/OutputDeviceMemory.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Misc/OutputDeviceFile.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Misc/OutputDeviceDebug.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Misc/OutputDeviceArchiveWrapper.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Misc/OutputDeviceError.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Misc/OutputDeviceAnsiError.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Misc/BufferedOutputDevice.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Stats/StatsMisc.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Misc/TimeGuard.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Serialization/LargeMemoryWriter.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Serialization/LargeMemoryData.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Serialization/LargeMemoryReader.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Serialization/BufferArchive.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Serialization/MemoryReader.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Serialization/ArrayReader.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Serialization/ArrayWriter.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Serialization/BufferWriter.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Misc/Variant.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Misc/WildcardString.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Containers/CircularBuffer.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Containers/CircularQueue.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\ProfilingDebugging/ProfilingHelpers.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Misc/OutputDeviceHelper.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Misc/ScopedSlowTask.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Misc/AutomationTest.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Async/Future.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Async/Async.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Internationalization/Regex.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Templates/ScopedCallback.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Misc/CallbackDevice.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Misc/ObjectThumbnail.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Misc/LocalTimestampDirectoryVisitor.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Serialization/CustomVersion.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\UObject/BlueprintsObjectVersion.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\UObject/BuildObjectVersion.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\UObject/CoreObjectVersion.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\UObject/EditorObjectVersion.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\UObject/FrameworkObjectVersion.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\UObject/MobileObjectVersion.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\UObject/NetworkingObjectVersion.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\UObject/OnlineObjectVersion.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\UObject/PhysicsObjectVersion.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\UObject/PlatformObjectVersion.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\UObject/RenderingObjectVersion.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\UObject/SequencerObjectVersion.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\UObject/VRObjectVersion.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Misc/OutputDeviceConsole.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Misc/MonitoredProcess.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Misc/Attribute.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Core\Public\Misc/EnumRange.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Projects\Public\Interfaces/IPluginManager.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Projects\Public\PluginDescriptor.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Projects\Public\ModuleDescriptor.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Json\Public\Serialization/JsonWriter.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Json\Public\Serialization/JsonTypes.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Json\Public\Policies/PrettyJsonPrintPolicy.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Json\Public\Policies/JsonPrintPolicy.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Projects\Public\CustomBuildSteps.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Projects\Public\LocalizationDescriptor.h
+C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Source\Runtime\Projects\Public\PluginReferenceDescriptor.h

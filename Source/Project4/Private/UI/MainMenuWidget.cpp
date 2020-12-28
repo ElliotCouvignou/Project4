@@ -67,7 +67,7 @@ void UMainMenuWidget::NativeConstruct()
 	// pre-existing accesstoken on construct... try get player data
 	if (AccessToken.Len() > 0)
 	{
-		TSharedRef<IHttpRequest> GetPlayerDataRequest = HttpModule->CreateRequest();
+		TSharedRef<IHttpRequest, ESPMode::ThreadSafe> GetPlayerDataRequest = HttpModule->CreateRequest();
 		GetPlayerDataRequest->OnProcessRequestComplete().BindUObject(this, &UMainMenuWidget::OnGetPlayerDataResponseRecieved);
 		GetPlayerDataRequest->SetURL(APIUrl + "/getplayerdata");
 		GetPlayerDataRequest->SetVerb("GET");
@@ -132,7 +132,7 @@ void UMainMenuWidget::HandleLoginUrlChange()
 
 					if (FJsonSerializer::Serialize(RequestObj.ToSharedRef(), Writer))
 					{
-						TSharedRef<IHttpRequest> ExchangeCodeForTokensRequest = HttpModule->CreateRequest();
+						TSharedRef<IHttpRequest, ESPMode::ThreadSafe> ExchangeCodeForTokensRequest = HttpModule->CreateRequest();
 						ExchangeCodeForTokensRequest->OnProcessRequestComplete().BindUObject(this, &UMainMenuWidget::OnExchangeCodeForTokensResponseRecieved);
 						ExchangeCodeForTokensRequest->SetURL(APIUrl + "/exchangecodefortokens");
 						ExchangeCodeForTokensRequest->SetVerb("POST");
@@ -186,7 +186,7 @@ void UMainMenuWidget::OnFindGameButtonClicked()
 			TSharedRef<TJsonWriter<>> Writer = TJsonWriterFactory<>::Create(&RequestBody);
 			if (FJsonSerializer::Serialize(RequestObj.ToSharedRef(), Writer))
 			{
-				TSharedRef<IHttpRequest> StopMatchmakingRequest = HttpModule->CreateRequest();
+				TSharedRef<IHttpRequest, ESPMode::ThreadSafe> StopMatchmakingRequest = HttpModule->CreateRequest();
 				StopMatchmakingRequest->OnProcessRequestComplete().BindUObject(this, &UMainMenuWidget::OnStopMatchmakingResponseRecieved);
 				StopMatchmakingRequest->SetURL(APIUrl + "/stopmatchmaking");
 				StopMatchmakingRequest->SetVerb("POST");
@@ -231,7 +231,7 @@ void UMainMenuWidget::OnFindGameButtonClicked()
 			TSharedRef<TJsonWriter<>> Writer = TJsonWriterFactory<>::Create(&RequestBody);
 			if (FJsonSerializer::Serialize(RequestObj.ToSharedRef(), Writer))
 			{
-				TSharedRef<IHttpRequest> StartMatchmakingRequest = HttpModule->CreateRequest();
+				TSharedRef<IHttpRequest, ESPMode::ThreadSafe> StartMatchmakingRequest = HttpModule->CreateRequest();
 				StartMatchmakingRequest->OnProcessRequestComplete().BindUObject(this, &UMainMenuWidget::OnStartMatchmakingResponseRecieved);
 				StartMatchmakingRequest->SetURL(APIUrl + "/startmatchmaking");
 				StartMatchmakingRequest->SetVerb("POST");
@@ -273,7 +273,7 @@ void UMainMenuWidget::PollMatchmaking()
 		TSharedRef<TJsonWriter<>> Writer = TJsonWriterFactory<>::Create(&RequestBody);
 		if (FJsonSerializer::Serialize(RequestObj.ToSharedRef(), Writer))
 		{
-			TSharedRef<IHttpRequest> PollmatchmakingRequest = HttpModule->CreateRequest();
+			TSharedRef<IHttpRequest, ESPMode::ThreadSafe> PollmatchmakingRequest = HttpModule->CreateRequest();
 			PollmatchmakingRequest->OnProcessRequestComplete().BindUObject(this, &UMainMenuWidget::OnPollMatchmakingResponseRecieved);
 			PollmatchmakingRequest->SetURL(APIUrl + "/pollmatchmaking");
 			PollmatchmakingRequest->SetVerb("POST");
@@ -304,7 +304,7 @@ void UMainMenuWidget::OnExchangeCodeForTokensResponseRecieved(FHttpRequestPtr Re
 					FString RefreshToken = JsonObject->GetStringField("refresh_token");
 					P4GameInstance->SetCognitoTokens(AccessToken, IdToken, RefreshToken);
 					
-					TSharedRef<IHttpRequest> GetPlayerDataRequest = HttpModule->CreateRequest();
+					TSharedRef<IHttpRequest, ESPMode::ThreadSafe> GetPlayerDataRequest = HttpModule->CreateRequest();
 					GetPlayerDataRequest->OnProcessRequestComplete().BindUObject(this, &UMainMenuWidget::OnGetPlayerDataResponseRecieved);
 					GetPlayerDataRequest->SetURL(APIUrl + "/getplayerdata");
 					GetPlayerDataRequest->SetVerb("GET");

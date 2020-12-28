@@ -21,7 +21,7 @@ void EmptyLinkFunctionForGeneratedCodeCircularDependenciesDetector_init() {}
 				nullptr,
 				0,
 				PKG_CompiledIn | 0x00000040,
-				0x652655C4,
+				0xD3C2872B,
 				0x8DC1707E,
 				METADATA_PARAMS(nullptr, 0)
 			};
