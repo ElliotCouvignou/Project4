@@ -184,6 +184,9 @@ protected:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "GAS | Essential GE's")
 		TArray<TSubclassOf<class UGameplayEffect>> StartupEffects;
 
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "GAS | Essential GE's")
+		bool StartupEffectsApplied; 
+
 	/* BP -> C++ variable interface for weapon equip GE (overrides main hand interval attribute) */
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Weapons | Essential GE's")
 		TSubclassOf<UGameplayEffect> EquipWeaponMainGameplayEffect;
@@ -199,6 +202,7 @@ protected:
 	virtual	void GiveEssentialAbilities();
 
 	// Called on actorSpawn, GE's shouldn't be canceled unless we make skills to stop regen
+	UFUNCTION(BlueprintCallable)
 	virtual void AddAllStartupEffects();
 
 	// Init playerAttributes with .csv

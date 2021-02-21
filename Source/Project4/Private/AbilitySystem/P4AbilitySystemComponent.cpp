@@ -31,6 +31,20 @@ void UP4AbilitySystemComponent::FindAbilityLevelFromClass(TSubclassOf<UGameplayA
 	}
 }
 
+FGameplayTagContainer UP4AbilitySystemComponent::GetGameplayTagNames(const FGameplayTag& Tag)
+{
+	//FGameplayTagContainer OwnedTags;
+	//for (FGameplayTag OwnedTag : OwnedTags)
+	//{
+	//	if (OwnedTag.ToString().Contains(Tag.ToString()))
+	//	{
+	//
+	//	}
+	//}
+	
+	return FGameplayTagContainer();
+}
+
 float UP4AbilitySystemComponent::PlayMontage(UGameplayAbility* AnimatingAbility, FGameplayAbilityActivationInfo ActivationInfo, UAnimMontage* Montage, float InPlayRate, FName StartSectionName, float StartTimeSeconds)
 {
 	float ret = Super::PlayMontage(AnimatingAbility, ActivationInfo, Montage, InPlayRate, StartSectionName);

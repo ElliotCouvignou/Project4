@@ -23,6 +23,7 @@ UMobBaseAttributeSet::UMobBaseAttributeSet(const FObjectInitializer& ObjectIniti
 void UMobBaseAttributeSet::PreAttributeBaseChange(const FGameplayAttribute& Attribute, float& NewValue) const
 {
 	Super::PreAttributeBaseChange(Attribute, NewValue);
+
 }
 
 void UMobBaseAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)

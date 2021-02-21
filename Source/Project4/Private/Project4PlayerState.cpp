@@ -8,9 +8,11 @@
 #include "Project4Controller.h"
 
 #include "AbilitySystem/AttributeSets/PlayerAttributeSet.h"
+#include "AbilitySystem/AttributeSets/P4BaseAttributeSet.h"
 #include "AbilitySystem/P4AbilitySystemComponent.h"
 #include "AbilitySystem/P4GameplayAbility.h"
 #include "AbilitySystemComponent.h"
+
 
 #include "UI/GameplayHudWidget.h"
 #include "UI/FloatingStatusBarWidget.h"
@@ -20,7 +22,7 @@
 
 AProject4PlayerState::AProject4PlayerState()
 {
-	AbilitySystemComponent = CreateDefaultSubobject<UP4AbilitySystemComponent>(TEXT("AbilitySystem"));
+	AbilitySystemComponent = CreateDefaultSubobject<UP4AbilitySystemComponent>(TEXT("AbilitySystemComponent"));
     AbilitySystemComponent->SetIsReplicated(true);
     AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
 
@@ -37,7 +39,7 @@ UAbilitySystemComponent* AProject4PlayerState::GetAbilitySystemComponent() const
 	return AbilitySystemComponent;
 }
 
-UPlayerAttributeSet* AProject4PlayerState::GetAttributeSet() const
+UP4BaseAttributeSet* AProject4PlayerState::GetAttributeSet() const
 {
 	return AttributeSet;
 }
@@ -63,6 +65,7 @@ void AProject4PlayerState::BindAbilityDelegates()
 {
 	if (AbilitySystemComponent && AttributeSet)
 	{
+		
 		AbilitySystemComponent->OnActiveGameplayEffectAddedDelegateToSelf.AddUObject(this, &AProject4PlayerState::OnActiveGameplayEffectApplied);
 		//AbilitySystemComponent->RegisterGameplayTagEvent(BuffDebuffTag).AddUObject(this, &AProject4PlayerState::OnBuffTagChanged);
 
@@ -429,6 +432,8 @@ void AProject4PlayerState::HealthRegenChanged(const FOnAttributeChangeData& Data
 void AProject4PlayerState::ManaChanged(const FOnAttributeChangeData& Data)
 {
 	float Mana = Data.NewValue;
+
+	//print(FString("New mana: " + FString::SanitizeFloat(Mana, 2)));
 
 	AP4PlayerCharacterBase* PChar = Cast<AP4PlayerCharacterBase>(GetPawn());
 

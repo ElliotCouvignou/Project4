@@ -34,4 +34,7 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 		void BindAbilityToBlock(TSubclassOf<class UP4GameplayAbility> NewAbility);
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+		void BindAbilitySpecToBlock(FGameplayAbilitySpec NewAbilitySpec);
 };

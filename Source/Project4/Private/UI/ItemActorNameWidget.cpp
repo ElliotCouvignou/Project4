@@ -2,4 +2,4 @@
 
 
 #include "UI/ItemActorNameWidget.h"
-
+#include "..\..\Public\UI\ItemActorNameWidget.h"

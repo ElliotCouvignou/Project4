@@ -149,6 +149,22 @@ void AP4PlayerCharacterBase::BindAbilityToHotbarBlock(int32 BlockIndex, TSubclas
 	}
 }
 
+void AP4PlayerCharacterBase::BindAbilityToInputID_Implementation(EP4AbilityInputID InputID, TSubclassOf<class UP4GameplayAbility> Ability)
+{
+	if (HasAuthority())
+	{
+		// TODO: this and make sure we save abilityspec to change the inputid (for enum)
+		if (AbilitySystemComponent.IsValid())
+		{
+			FGameplayAbilitySpec* Spec = AbilitySystemComponent->FindAbilitySpecFromClass(Ability);
+			if (Spec)
+			{
+				AbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(Spec->Ability, Spec->Level, static_cast<int32>(InputID), this));
+			}
+		}
+	}
+}
+
 
 /***************************/
 /*    Targeting system     */
@@ -255,14 +271,15 @@ void AP4PlayerCharacterBase::PossessedBy(AController* NewController)
 		// Tell PS to bind delegates before init
 		PS->BindAbilityDelegates();
 
-
 		// Init playerAttributes with .csv
 		InitializeAttributeSet();
 
-		BindASCInput();
-
 		// do startuf effects and essential ability setup
 		AddAllStartupEffects();
+
+		BindASCInput();
+
+		
 
 		// For edge cases where the PlayerState is repped before the Hero is possessed.
 		// Maybe dont use this for servers? some might still need a ref for some reason

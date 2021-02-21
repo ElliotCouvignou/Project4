@@ -12,6 +12,7 @@
 #define ISSTANDALONE (GEngine->GetNetMode(GetWorld()) == NM_Standalone)
 #define ISCLIENT (GEngine->GetNetMode(GetWorld()) == NM_Client)
 
+#define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Green,text)
 
 #define ABILITY_BLOCK_AMOUNT 10
 #define ABILITY_INPUT_OFFSET 3

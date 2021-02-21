@@ -55,7 +55,7 @@ void AP4AbilityProjectile::BeginPlay()
 
 void AP4AbilityProjectile::OnHitboxBeginOverlap_Implementation(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	print(FString("IN Native OverlapBegin"));
+	
 }
 
 // Called every frame

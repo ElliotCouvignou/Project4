@@ -8,7 +8,9 @@
 #include "GameplayTagContainer.h"
 #include "UI/GameplayHudWidget.h"
 #include "Kismet/GameplayStatics.h"
-
+#include "Kismet/KismetMathLibrary.h"
+#include "Engine/World.h"
+#include "DrawDebugHelpers.h"
 
 #define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Green,text)
 
@@ -55,6 +57,31 @@ void UP4GameplayAbility::SendTargetDataToServer_Implementation(UP4GameplayAbilit
 	//FGameplayAbilityTargetDataHandle TargetRef = FGameplayAbilityTargetDataHandle(DataHandle);
 	AbilityRef->TargetDataLocation = FVector(HitLocation);
 	print(FString(AbilityRef->TargetDataLocation.ToString()));
+}
+
+FRotator UP4GameplayAbility::GetLookatRotation(float Range, FVector SourceLocation)
+{
+	// TODO: maybe expand this for case of AI casting spells to reuse spells
+	FVector OutLocation;
+	FRotator OutRotation;
+	Cast<AProject4Controller>(GetActorInfo().PlayerController)->GetPlayerViewPoint(OutLocation, OutRotation);
+
+	FRotator ShootRotation = UKismetMathLibrary::FindLookAtRotation(SourceLocation, UKismetMathLibrary::GetForwardVector(OutRotation) * Range + OutLocation);
+
+	// try Hit test for floor to see if we should reduce rannge for angle changes (e.g aiming at floor offsets angle)
+	FHitResult Result;
+	FCollisionQueryParams CollisionParam;
+	CollisionParam.AddIgnoredActor(GetOwningActorFromActorInfo());
+	//DrawDebugLine(GetWorld(), OutLocation, OutLocation + UKismetMathLibrary::GetForwardVector(OutRotation) * Range, FColor::Green, true, 2.f, false, 4.f);
+	GetWorld()->LineTraceSingleByProfile(Result, OutLocation, OutLocation + UKismetMathLibrary::GetForwardVector(OutRotation)*Range, FName("TargetActorGroundLocation"), CollisionParam);
+
+	//if (Result.bBlockingHit)
+	//{
+	//	print("Blocking Hit!");
+	//	DrawDebugLine(GetWorld(), SourceLocation, Result.Location, FColor::Red, true, 2.f, false, 4.f);
+	//}
+
+	return (Result.bBlockingHit) ? UKismetMathLibrary::FindLookAtRotation(SourceLocation, Result.Location) : ShootRotation;
 }
 
 

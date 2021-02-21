@@ -5,6 +5,8 @@
 #include "Characters/P4PlayerCharacterBase.h"
 #include "AbilitySystem/P4GameplayAbility.h"
 
+#define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Green,text)
+
 void UAbilityCooldownContainerWidget::NativeConstruct()
 {
 	// look for player ASC and bind to on cooldown delegate
@@ -30,6 +32,7 @@ void UAbilityCooldownContainerWidget::OnAbilityCooldownCommited(UGameplayAbility
 		UP4GameplayAbility* P4Ability = Cast<UP4GameplayAbility>(Ability);
 		if (P4Ability)
 		{
+			
 			OnNewAbilityCooldown(P4Ability->GetClass());
 		}
 	}

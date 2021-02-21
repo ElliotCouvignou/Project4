@@ -12,7 +12,7 @@
 
 AP4ItemBaseActor::AP4ItemBaseActor() : Super()
 {
-	static ConstructorHelpers::FClassFinder<UItemActorNameWidget> NameWidgetClass(TEXT("/Game/Project4/UI/Gameplay/GeneratedUI/BP_ItemActorName"));
+	static ConstructorHelpers::FClassFinder<UItemActorNameWidget> NameWidgetClass(TEXT("/Game/Project4/UI/Gameplay/MainUI/GeneratedUI/BP_ItemActorName"));
 	if (NameWidgetClass.Class)
 	{
 		ItemNameWidgetClass = NameWidgetClass.Class;
@@ -94,6 +94,7 @@ void AP4ItemBaseActor::OnInteract(const AP4PlayerCharacterBase* SourceActor, boo
 		UP4InventoryBagComponent* IBC = SourceActor->GetInventoryBagComponent();
 		if (IBC)
 		{
+			print("Call add item to inventory");
 			IBC->ServerAddItemToInventory(InventoryItemStruct, this);
 		}
 	}

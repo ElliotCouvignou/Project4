@@ -133,6 +133,11 @@ public:
 	void SetUIRespawnCountdown_Implementation(float Duration);
 	bool SetUIRespawnCountdown_Validate(float Duration) { return true; }
 
+	UFUNCTION(Client, Reliable, WithValidation, BlueprintCallable)
+		void ClientDisplayWidgetToViewport(TSubclassOf<UUserWidget> WidgetClass);
+	void ClientDisplayWidgetToViewport_Implementation(TSubclassOf<UUserWidget> WidgetClass);
+	bool ClientDisplayWidgetToViewport_Validate(TSubclassOf<UUserWidget> WidgetClass) { return true; }
+
 	// Called on Ability Error (e.g. Out of range, Out of mana, etc.)
 	// doesn't need client RPC since ability error texts occurs during
 	// ability try activate which is done by owning clients too

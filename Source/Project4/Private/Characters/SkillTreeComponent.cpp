@@ -3,6 +3,8 @@
 
 #include "Characters/SkillTreeComponent.h"
 #include "Characters/P4PlayerCharacterBase.h"
+#include "Project4Controller.h"
+#include "UI/GameplayHudWidget.h"
 #include "AbilitySystem/P4GameplayAbility.h"
 
 #define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Green,text)
@@ -148,6 +150,35 @@ void USkillTreeComponent::ClientSkillTreeNodeUpdateDelegate_Implementation(int I
 	(IsMainTree) ? ChangedMainSkillTreeNodes.Add(Index) : ChangedSecondarySkillTreeNodes.Add(Index);
 }
 
+void USkillTreeComponent::ClientReinitializeSkillTreeWidget_Implementation(bool IsMainTree)
+{
+	AProject4Controller* PC = Cast<AProject4Controller>(GetWorld()->GetFirstPlayerController());
+	if (PC)
+	{
+		PC->GetMainHUDWidget()->ReinitializeSkillTreeWidget(IsMainTree);
+	}
+}
+
+void USkillTreeComponent::ServerRequestNewSkillTree_Implementation(USkillTreeDataAsset* NewSkillTree, bool IsMainTree)
+{
+	if (NewSkillTree)
+	{
+		if (IsMainTree)
+		{
+			MainSkillTreeDataAsset = NewSkillTree;
+			InitSkillTreeFromDataAsset(true);
+		}
+		else
+		{
+			SecondarySkillTreeDataAsset = NewSkillTree;
+			InitSkillTreeFromDataAsset(false);
+		}
+		
+		ServerResetSkillTree(IsMainTree);
+		ClientReinitializeSkillTreeWidget(IsMainTree);
+	}
+}
+
 
 void USkillTreeComponent::GetDataAssetNodeStruct(const int NodeIndex, const bool IsMainTree, FSkillTreeNodeDataAssetStruct& DataAssetNodeStruct)
 {
@@ -215,7 +246,7 @@ void USkillTreeComponent::GetSetPlayerAndASCRef()
 	PlayerASC = (P4PlayerChar) ? P4PlayerChar->GetAbilitySystemComponent() : nullptr;
 }
 
-void USkillTreeComponent::InitSkillTreeFromDataAsset()
+void USkillTreeComponent::InitSkillTreeFromDataAsset(bool IsMainTree)
 {
 	AP4PlayerCharacterBase* Char = Cast<AP4PlayerCharacterBase>(GetOwner());
 
@@ -256,13 +287,24 @@ void USkillTreeComponent::OnRep_SecondarySkillTree()
 	ChangedSecondarySkillTreeNodes.Empty();
 }
 
+void USkillTreeComponent::OnRep_MainSkillTreeDataAsset()
+{
+	OnMainTreeDataAssetUpdated.Broadcast(MainSkillTreeDataAsset);
+}
+
+void USkillTreeComponent::OnRep_SecondarySkillTreeDataAsset()
+{
+	OnSecondaryTreeDataAssetUpdated.Broadcast(SecondarySkillTreeDataAsset);
+}
+
 // Called when the game starts
 void USkillTreeComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
 	// ...
-	InitSkillTreeFromDataAsset();
+	InitSkillTreeFromDataAsset(true);
+	InitSkillTreeFromDataAsset(false);
 }
 
 
@@ -286,5 +328,8 @@ void USkillTreeComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& 
 	DOREPLIFETIME_CONDITION(USkillTreeComponent, MainSkillTree, COND_OwnerOnly);
 	DOREPLIFETIME_CONDITION(USkillTreeComponent, SecondarySkillTree, COND_OwnerOnly);
 
-
+	//DOREPLIFETIME_CONDITION(USkillTreeComponent, MainSkillTreeDataAsset, COND_OwnerOnly);
+	//DOREPLIFETIME_CONDITION(USkillTreeComponent, SecondarySkillTreeDataAsset, COND_OwnerOnly);
+	DOREPLIFETIME(USkillTreeComponent, MainSkillTreeDataAsset);
+	DOREPLIFETIME(USkillTreeComponent, SecondarySkillTreeDataAsset);
 }

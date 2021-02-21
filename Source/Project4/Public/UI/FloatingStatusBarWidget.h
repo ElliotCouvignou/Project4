@@ -24,4 +24,7 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 		void SetCharacterName(const FText& NewName);
+
+	UPROPERTY(BlueprintReadWrite)
+		AActor* Owner;
 };

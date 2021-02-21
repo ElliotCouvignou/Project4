@@ -184,8 +184,13 @@ void AProject4Character::InitFloatingStatusBarWidget()
 					UIFloatingStatusBarComponent->SetCullDistance(FloatingStatusBarCullDistance);
 
 					// Setup the floating status bar
-					UIFloatingStatusBar->SetHealthPercentage(AttributeSet->GetHealth() / AttributeSet->GetHealthMax());
-					UIFloatingStatusBar->SetCharacterName(CharacterName);
+					if (AttributeSet.IsValid())
+					{
+						UIFloatingStatusBar->SetHealthPercentage(AttributeSet->GetHealth() / AttributeSet->GetHealthMax());
+						UIFloatingStatusBar->SetCharacterName(CharacterName);
+						UIFloatingStatusBar->Owner = this;
+					}
+					
 				}
 			}
 		}
@@ -328,13 +333,13 @@ void AProject4Character::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// HACK: set all visibility to false, let render dist sphere collision set vis to true when needed
+	// FIXME: set all visibility to false, let render dist sphere collision set vis to true when needed
 	// Only do this to actors that player isnt locally controlling
-	APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-	if (PC && PC->IsLocalPlayerController() && PC != GetController<APlayerController>())
-	{
-		RootComponent->SetVisibility(false, true);
-	}
+	//APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	//if (PC && PC->IsLocalPlayerController() && PC != GetController<APlayerController>())
+	//{
+	//	RootComponent->SetVisibility(false, true);
+	//}
 }
 
 
@@ -354,22 +359,21 @@ void AProject4Character::GiveEssentialAbilities()
 
 void AProject4Character::AddAllStartupEffects()
 {
-	if (!HasAuthority()|| !AbilitySystemComponent.IsValid())
-	{
-		return;
-	}
+	if (HasAuthority() && AbilitySystemComponent.IsValid() && !StartupEffectsApplied)	{
+		FGameplayEffectContextHandle EffectContext = AbilitySystemComponent->MakeEffectContext();
+		EffectContext.AddSourceObject(this);
 
-	FGameplayEffectContextHandle EffectContext = AbilitySystemComponent->MakeEffectContext();
-	EffectContext.AddSourceObject(this);
-
-	for (TSubclassOf<UGameplayEffect> GameplayEffect : StartupEffects)
-	{
-		FGameplayEffectSpecHandle NewHandle = AbilitySystemComponent->MakeOutgoingSpec(GameplayEffect, 1, EffectContext);
-		if (NewHandle.IsValid())
+		for (TSubclassOf<UGameplayEffect> GameplayEffect : StartupEffects)
 		{
-			FActiveGameplayEffectHandle ActiveGEHandle = AbilitySystemComponent->ApplyGameplayEffectSpecToTarget(*NewHandle.Data.Get(), AbilitySystemComponent.Get());
+			FGameplayEffectSpecHandle NewHandle = AbilitySystemComponent->MakeOutgoingSpec(GameplayEffect, 1, EffectContext);
+			if (NewHandle.IsValid())
+			{
+				FActiveGameplayEffectHandle ActiveGEHandle = AbilitySystemComponent->ApplyGameplayEffectSpecToTarget(*NewHandle.Data.Get(), AbilitySystemComponent.Get());
+			}
 		}
-	}
+
+		StartupEffectsApplied = true;
+	}	
 }
 
 void AProject4Character::InitializeAttributeSet()

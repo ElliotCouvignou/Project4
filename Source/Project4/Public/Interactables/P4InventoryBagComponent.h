@@ -229,7 +229,7 @@ protected:
 
 	/* number of slots or amount of unique items to store in bag */
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
-		int NumInventorySlots = 20;
+		int NumInventorySlots = 40;
 	
 	/* main currency count */
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)

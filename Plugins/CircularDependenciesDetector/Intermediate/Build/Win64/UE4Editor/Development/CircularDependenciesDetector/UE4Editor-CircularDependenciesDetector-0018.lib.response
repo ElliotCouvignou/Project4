@@ -6,9 +6,9 @@
 /NAME:"UE4Editor-CircularDependenciesDetector-0018.dll"
 /IGNORE:4221
 /NODEFAULTLIB
-"C:\Unreal Engine\4.25.3\Engine\Intermediate\Build\Win64\UE4Editor\Development\UnrealEd\SharedPCH.UnrealEd.ShadowErrors.h.obj"
-"C:\UnrealProjects\Project4\Plugins\CircularDependenciesDetector\Intermediate\Build\Win64\UE4Editor\Development\CircularDependenciesDetector\Module.CircularDependenciesDetector.cpp.obj"
-"C:\UnrealProjects\Project4\Plugins\CircularDependenciesDetector\Intermediate\Build\Win64\UE4Editor\Development\CircularDependenciesDetector\Module.CircularDependenciesDetector.gen.cpp.obj"
-"C:\Unreal Engine\4.25.3\Engine\Intermediate\Build\Win64\UE4Editor\Development\Default.rc2.res"
-/OUT:"C:\UnrealProjects\Project4\Plugins\CircularDependenciesDetector\Intermediate\Build\Win64\UE4Editor\Development\CircularDependenciesDetector\UE4Editor-CircularDependenciesDetector-0018.lib"
+"C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Intermediate\Build\Win64\UE4Editor\Development\UnrealEd\SharedPCH.UnrealEd.ShadowErrors.h.obj"
+"C:\Unreal Engine Projects\Project4\Plugins\CircularDependenciesDetector\Intermediate\Build\Win64\UE4Editor\Development\CircularDependenciesDetector\Module.CircularDependenciesDetector.cpp.obj"
+"C:\Unreal Engine Projects\Project4\Plugins\CircularDependenciesDetector\Intermediate\Build\Win64\UE4Editor\Development\CircularDependenciesDetector\Module.CircularDependenciesDetector.gen.cpp.obj"
+"C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Intermediate\Build\Win64\UE4Editor\Development\Default.rc2.res"
+/OUT:"C:\Unreal Engine Projects\Project4\Plugins\CircularDependenciesDetector\Intermediate\Build\Win64\UE4Editor\Development\CircularDependenciesDetector\UE4Editor-CircularDependenciesDetector-0018.lib"
 /INCLUDE:IMPLEMENT_MODULE_CircularDependenciesDetector

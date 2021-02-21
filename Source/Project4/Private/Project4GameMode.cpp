@@ -16,7 +16,7 @@ AProject4GameMode::AProject4GameMode()
 	bUseSeamlessTravel = true;
 
 	// set default pawn class to our Blueprinted character
-	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/Project4/Characters/Player/BP_ALS_PlayerBase"));
+	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/Project4/Characters/Player/P4ALSPlayerChar"));
 	if (PlayerPawnBPClass.Class != NULL)
 	{
 		DefaultPawnClass = PlayerPawnBPClass.Class;

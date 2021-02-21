@@ -37,5 +37,4 @@ public:
 
 	// For Replicaiton 
 	virtual void GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const;
-
 };

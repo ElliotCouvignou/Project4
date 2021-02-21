@@ -137,13 +137,11 @@ void UP4InventoryBagComponent::ServerAddItemToInventory_Implementation(const FIn
 	//{
 	//	GetSetPlayerRefAndASC();
 	//}
-
 	if (NewItem.ItemBaseDataAsset && NewItem.ItemBaseDataAsset->ItemInfo.bIsStackable)
 	{
 		// Stackable, find locations that exists in inventory and stack (if max reached find next stack, if no stacks then do same approach as nonstackable (first available spot ))
 		TArray<int> FoundIdxes;
 		FindItemsFromItemData(NewItem, WasSucessful, FoundIdxes);
-
 		if (WasSucessful)
 		{
 			int StacksToFill = NewItem.StackCount;

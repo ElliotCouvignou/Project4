@@ -40,6 +40,15 @@ public:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Ability")
 		bool ActivateAbilityOnGranted = false;
 
+	// if true then this ability can have multiple charges that share cooldowns.
+	// Functionality for charges to have independent CD is yet to be made
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Ability")
+		bool bHasCharges = false;
+
+	// The max amount of charges if bHasCharges is true, else this is useless,
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Ability")
+		int MaxCharges = 0;
+
 	// Cooldown Tag UI widgets keep track of
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Ability")
 		FGameplayTag CooldownTag;
@@ -78,5 +87,8 @@ public:
 		void SendTargetDataToServer(UP4GameplayAbility* AbilityRef, const FVector& HitLocation);
 	void SendTargetDataToServer_Implementation(UP4GameplayAbility* AbilityRef, const FVector& HitLocation);
 	bool SendTargetDataToServer_Validate(UP4GameplayAbility* AbilityRef, const FVector& HitLocation) { return true; }
+
+	UFUNCTION(BlueprintCallable)
+		FRotator GetLookatRotation(float Range, FVector SourceLocation);
 
 };

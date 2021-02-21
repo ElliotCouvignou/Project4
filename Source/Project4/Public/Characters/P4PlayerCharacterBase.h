@@ -4,8 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "Project4Character.h"
+#include "Project4.h"
 #include "AbilitySystemComponent.h"
 #include "AbilitySystemInterface.h"
+#include "UI/SkillTree/SkillTreeDataAsset.h"
 #include "P4PlayerCharacterBase.generated.h"
 
 /**
@@ -56,6 +58,11 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void BindAbilityToHotbarBlock(int32 BlockIndex, TSubclassOf<class UP4GameplayAbility> Ability);
 	
+	UFUNCTION(Server, Reliable, WithValidation, BlueprintCallable)
+		void BindAbilityToInputID(EP4AbilityInputID InputID, TSubclassOf<class UP4GameplayAbility> Ability);
+	void BindAbilityToInputID_Implementation(EP4AbilityInputID InputID, TSubclassOf<class UP4GameplayAbility> Ability);
+	bool BindAbilityToInputID_Validate(EP4AbilityInputID InputID, TSubclassOf<class UP4GameplayAbility> Ability) { return true; }
+
 
 	/***************************/
 	/*      Camera system      */

@@ -6,6 +6,7 @@
 #include "GameFramework/PlayerState.h"
 #include "AbilitySystemInterface.h"
 #include "GameplayEffectTypes.h"
+#include "AbilitySystem/Tasks/AsyncTaskAttributeChanged.h"
 #include "Project4PlayerState.generated.h"
 
 /**
@@ -23,7 +24,7 @@ public:
 	virtual class UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
 	UFUNCTION(BlueprintPure, Category = Ability, meta = (DefaultToSelf = Target))
-		class UPlayerAttributeSet* GetAttributeSet() const;
+		class UP4BaseAttributeSet* GetAttributeSet() const;
 	
 	UFUNCTION(BlueprintCallable, Category = "PlayerState")
 		bool IsAlive() const;
@@ -45,7 +46,7 @@ protected:
 		class UAbilitySystemComponent* AbilitySystemComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Abilities, meta = (AllowPrivateAccess = "true"))
-		class UPlayerAttributeSet* AttributeSet;
+		class UP4BaseAttributeSet* AttributeSet;
 	
 
 

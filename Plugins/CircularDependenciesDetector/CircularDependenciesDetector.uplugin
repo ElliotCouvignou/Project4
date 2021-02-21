@@ -10,7 +10,7 @@
 	"DocsURL": "https://github.com/bstt/CircularDependenciesDetector",
 	"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/product/698a2106995e41cb934ada3bb0088a5f",
 	"SupportURL": "",
-	"EngineVersion": "4.25.0",
+	"EngineVersion": "4.26.0",
 	"CanContainContent": true,
 	"Installed": true,
 	"Modules": [

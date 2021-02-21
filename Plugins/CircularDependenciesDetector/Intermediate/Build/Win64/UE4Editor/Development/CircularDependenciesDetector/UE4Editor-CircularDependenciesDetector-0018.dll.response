@@ -1,5 +1,5 @@
 /MANIFEST:EMBED
-/MANIFESTINPUT:"C:\Unreal Engine\4.25.3\Engine\Build\Windows\Resources\Default-Win64.manifest"
+/MANIFESTINPUT:"C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Build\Windows\Resources\Default-Win64.manifest"
 /NOLOGO
 /DEBUG
 /errorReport:prompt
@@ -18,7 +18,7 @@
 /ignore:4099
 /DELAYLOAD:"d3d12.dll"
 /DELAYLOAD:"DBGHELP.DLL"
-/LIBPATH:"C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\lib\x64"
+/LIBPATH:"C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\lib\x64"
 /LIBPATH:"C:\Program Files (x86)\Windows Kits\NETFXSDK\4.8\lib\um\x64"
 /LIBPATH:"C:\Program Files (x86)\Windows Kits\10\lib\10.0.18362.0\ucrt\x64"
 /LIBPATH:"C:\Program Files (x86)\Windows Kits\10\lib\10.0.18362.0\um\x64"
@@ -33,10 +33,19 @@
 /NODEFAULTLIB:"LIBCD"
 /NODEFAULTLIB:"LIBCPD"
 /FUNCTIONPADMIN
-"C:\Unreal Engine\4.25.3\Engine\Intermediate\Build\Win64\UE4Editor\Development\UnrealEd\SharedPCH.UnrealEd.ShadowErrors.h.obj"
-"C:\UnrealProjects\Project4\Plugins\CircularDependenciesDetector\Intermediate\Build\Win64\UE4Editor\Development\CircularDependenciesDetector\Module.CircularDependenciesDetector.cpp.obj"
-"C:\UnrealProjects\Project4\Plugins\CircularDependenciesDetector\Intermediate\Build\Win64\UE4Editor\Development\CircularDependenciesDetector\Module.CircularDependenciesDetector.gen.cpp.obj"
-"C:\Unreal Engine\4.25.3\Engine\Intermediate\Build\Win64\UE4Editor\Development\Default.rc2.res"
+"C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Intermediate\Build\Win64\UE4Editor\Development\UnrealEd\SharedPCH.UnrealEd.ShadowErrors.h.obj"
+"C:\Unreal Engine Projects\Project4\Plugins\CircularDependenciesDetector\Intermediate\Build\Win64\UE4Editor\Development\CircularDependenciesDetector\Module.CircularDependenciesDetector.cpp.obj"
+"C:\Unreal Engine Projects\Project4\Plugins\CircularDependenciesDetector\Intermediate\Build\Win64\UE4Editor\Development\CircularDependenciesDetector\Module.CircularDependenciesDetector.gen.cpp.obj"
+"C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Intermediate\Build\Win64\UE4Editor\Development\Default.rc2.res"
+"C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Intermediate\Build\Win64\UE4Editor\Development\CoreUObject\UE4Editor-CoreUObject.lib"
+"C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Intermediate\Build\Win64\UE4Editor\Development\Engine\UE4Editor-Engine.lib"
+"C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Intermediate\Build\Win64\UE4Editor\Development\Kismet\UE4Editor-Kismet.lib"
+"C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Intermediate\Build\Win64\UE4Editor\Development\Slate\UE4Editor-Slate.lib"
+"C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Intermediate\Build\Win64\UE4Editor\Development\SlateCore\UE4Editor-SlateCore.lib"
+"C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Intermediate\Build\Win64\UE4Editor\Development\UnrealEd\UE4Editor-UnrealEd.lib"
+"C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Intermediate\Build\Win64\UE4Editor\Development\UMG\UE4Editor-UMG.lib"
+"C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Intermediate\Build\Win64\UE4Editor\Development\AssetRegistry\UE4Editor-AssetRegistry.lib"
+"C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Intermediate\Build\Win64\UE4Editor\Development\Core\UE4Editor-Core.lib"
 "delayimp.lib"
 "wininet.lib"
 "rpcrt4.lib"
@@ -61,17 +70,8 @@
 "setupapi.lib"
 "dwmapi.lib"
 "imm32.lib"
-"C:\Unreal Engine\4.25.3\Engine\Intermediate\Build\Win64\UE4Editor\Development\CoreUObject\UE4Editor-CoreUObject.lib"
-"C:\Unreal Engine\4.25.3\Engine\Intermediate\Build\Win64\UE4Editor\Development\Engine\UE4Editor-Engine.lib"
-"C:\Unreal Engine\4.25.3\Engine\Intermediate\Build\Win64\UE4Editor\Development\Kismet\UE4Editor-Kismet.lib"
-"C:\Unreal Engine\4.25.3\Engine\Intermediate\Build\Win64\UE4Editor\Development\Slate\UE4Editor-Slate.lib"
-"C:\Unreal Engine\4.25.3\Engine\Intermediate\Build\Win64\UE4Editor\Development\SlateCore\UE4Editor-SlateCore.lib"
-"C:\Unreal Engine\4.25.3\Engine\Intermediate\Build\Win64\UE4Editor\Development\UnrealEd\UE4Editor-UnrealEd.lib"
-"C:\Unreal Engine\4.25.3\Engine\Intermediate\Build\Win64\UE4Editor\Development\UMG\UE4Editor-UMG.lib"
-"C:\Unreal Engine\4.25.3\Engine\Intermediate\Build\Win64\UE4Editor\Development\AssetRegistry\UE4Editor-AssetRegistry.lib"
-"C:\Unreal Engine\4.25.3\Engine\Intermediate\Build\Win64\UE4Editor\Development\Core\UE4Editor-Core.lib"
-/OUT:"C:\UnrealProjects\Project4\Plugins\CircularDependenciesDetector\Binaries\Win64\UE4Editor-CircularDependenciesDetector-0018.dll"
-/IMPLIB:"C:\UnrealProjects\Project4\Plugins\CircularDependenciesDetector\Intermediate\Build\Win64\UE4Editor\Development\CircularDependenciesDetector\UE4Editor-CircularDependenciesDetector-0018.suppressed.lib"
-/PDB:"C:\UnrealProjects\Project4\Plugins\CircularDependenciesDetector\Binaries\Win64\UE4Editor-CircularDependenciesDetector-0018.pdb"
+/OUT:"C:\Unreal Engine Projects\Project4\Plugins\CircularDependenciesDetector\Binaries\Win64\UE4Editor-CircularDependenciesDetector-0018.dll"
+/IMPLIB:"C:\Unreal Engine Projects\Project4\Plugins\CircularDependenciesDetector\Intermediate\Build\Win64\UE4Editor\Development\CircularDependenciesDetector\UE4Editor-CircularDependenciesDetector-0018.suppressed.lib"
+/PDB:"C:\Unreal Engine Projects\Project4\Plugins\CircularDependenciesDetector\Binaries\Win64\UE4Editor-CircularDependenciesDetector-0018.pdb"
 /ignore:4078
 /INCLUDE:IMPLEMENT_MODULE_CircularDependenciesDetector

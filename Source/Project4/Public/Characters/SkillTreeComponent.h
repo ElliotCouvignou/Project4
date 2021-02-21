@@ -44,6 +44,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSkillTreeNodeUpdate, const TArray
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSkillTreePointsUpdated, int, NewCount);
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSkillTreeAssetUpdate, USkillTreeDataAsset*, NewAsset);
+
 //DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSkillTreePointsUpdate, int, NewPoints);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -69,22 +71,38 @@ public:
 		void ServerResetSkillTree(bool IsMainTree);
 	void ServerResetSkillTree_Implementation(bool IsMainTree);
 	bool ServerResetSkillTree_Validate(bool IsMainTree) { return true; }
+	
+	UFUNCTION(BlueprintCallable, Server, Reliable, WithValidation, Category = "RPC | Client")
+		void ServerRequestNewSkillTree(USkillTreeDataAsset* NewSkillTree, bool IsMainTree);
+	void ServerRequestNewSkillTree_Implementation(USkillTreeDataAsset* NewSkillTree, bool IsMainTree);
+	bool ServerRequestNewSkillTree_Validate(USkillTreeDataAsset* NewSkillTree, bool IsMainTree) { return true; }
+
 
 	UFUNCTION(BlueprintCallable, Client, Reliable, WithValidation, Category = "RPC | Client")
 		void ClientSkillTreeNodeUpdateDelegate(int Index, bool IsMainTree);
 	void ClientSkillTreeNodeUpdateDelegate_Implementation(int Index, bool IsMainTree);
 	bool ClientSkillTreeNodeUpdateDelegate_Validate(int Index, bool IsMainTree) { return true; }
-	
+
+	UFUNCTION(BlueprintCallable, Client, Reliable, WithValidation, Category = "RPC | Client")
+		void ClientReinitializeSkillTreeWidget(bool IsMainTree);
+	void ClientReinitializeSkillTreeWidget_Implementation(bool IsMainTree);
+	bool ClientReinitializeSkillTreeWidget_Validate(bool IsMainTree) { return true; }
 
 	/* Delegates, currently bound for UI updates */
 	UPROPERTY(BlueprintAssignable, Category = "Delegates | MainTree")
-		FOnSkillTreeNodeUpdate OnMainTreeNodeUpdated;
+		FOnSkillTreeAssetUpdate OnMainTreeDataAssetUpdated;
 
-	UPROPERTY(BlueprintAssignable, Category = "Delegates | Secondary Tree")
-		FOnSkillTreeNodeUpdate OnSecondaryTreeNodeUpdated;
+	UPROPERTY(BlueprintAssignable, Category = "Delegates | MainTree")
+		FOnSkillTreeNodeUpdate OnMainTreeNodeUpdated;
 
 	UPROPERTY(BlueprintAssignable, Category = "Delegates | MainTree")
 		FOnSkillTreePointsUpdated OnMainTreePointsUpdated;
+
+	UPROPERTY(BlueprintAssignable, Category = "Delegates | MainTree")
+		FOnSkillTreeAssetUpdate OnSecondaryTreeDataAssetUpdated;
+
+	UPROPERTY(BlueprintAssignable, Category = "Delegates | Secondary Tree")
+		FOnSkillTreeNodeUpdate OnSecondaryTreeNodeUpdated;	
 
 	UPROPERTY(BlueprintAssignable, Category = "Delegates | Secondary Tree")
 		FOnSkillTreePointsUpdated OnSecondaryTreePointsUpdated;
@@ -119,7 +137,7 @@ protected:
 	/* Inits skill tree array from data asset, all ranks will be 0 
 		TODO: add read to SQL server or local saves */
 	UFUNCTION()
-		void InitSkillTreeFromDataAsset();
+		void InitSkillTreeFromDataAsset(bool IsMainTree);
 
 	/* Skill Points to spend in tree */
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, ReplicatedUsing=OnRep_MainSkillTreePoints, Category = "Skill Tree | Points")
@@ -146,10 +164,10 @@ protected:
 		TArray<FSkillTreeNodeStruct> SecondarySkillTree;
 
 	/* Skill Tree based off data asset but adds on values relevant for this player only e.g Current rank */
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Skill Tree | Data Asset")
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, ReplicatedUsing=OnRep_MainSkillTreeDataAsset, Category = "Skill Tree | Data Asset")
 		class USkillTreeDataAsset* MainSkillTreeDataAsset;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Skill Tree | Data Asset")
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, ReplicatedUsing=OnRep_SecondarySkillTreeDataAsset, Category = "Skill Tree | Data Asset")
 		class USkillTreeDataAsset* SecondarySkillTreeDataAsset;
 
 	UFUNCTION()
@@ -163,6 +181,12 @@ protected:
 
 	UFUNCTION()
 		void OnRep_SecondarySkillTree();
+
+	UFUNCTION()
+		void OnRep_MainSkillTreeDataAsset();
+
+	UFUNCTION()
+		void OnRep_SecondarySkillTreeDataAsset();
 
 	// Called when the game starts
 	virtual void BeginPlay() override;

@@ -18,13 +18,7 @@
 UP4BaseAttributeSet::UP4BaseAttributeSet(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
-	CritTag = FGameplayTag::RequestGameplayTag(FName("Effect.Damage.Crit"));
-	PhysicalDamageTag = FGameplayTag::RequestGameplayTag(FName("Effect.Damage.Physical"));
-	MagicDamageTag = FGameplayTag::RequestGameplayTag(FName("Effect.Damage.Magic"));
-
-	DamageNumberContainerFilter = FGameplayTagContainer(CritTag);
-	DamageNumberContainerFilter.AddTagFast(PhysicalDamageTag);
-	DamageNumberContainerFilter.AddTagFast(MagicDamageTag);
+	
 }
 
 void UP4BaseAttributeSet::PreAttributeBaseChange(const FGameplayAttribute& Attribute, float& NewValue) const
@@ -63,7 +57,7 @@ void UP4BaseAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute
 	else if (Attribute.AttributeName == GetAttackSpeedAttribute().AttributeName) {
 		NewValue = FMath::Clamp(NewValue, 0.0f, 100.f);
 	}
-
+	
 	// max value clampers, makes sure health/maxhealth % stays same 
 	else if (Attribute.AttributeName == GetHealthMaxAttribute().AttributeName)
 	{
@@ -96,7 +90,7 @@ void UP4BaseAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCall
 	const FGameplayTagContainer& SourceTags = *Data.EffectSpec.CapturedSourceTags.GetAggregatedTags();
 	FGameplayTagContainer SpecAssetTags;
 	Data.EffectSpec.GetAllAssetTags(SpecAssetTags);
-
+	
 	// Get the Target actor, which should be our owner
 	AActor* TargetActor = nullptr;
 	AController* TargetController = nullptr;
@@ -107,7 +101,7 @@ void UP4BaseAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCall
 		TargetController = Data.Target.AbilityActorInfo->PlayerController.Get();
 		TargetCharacter = Cast<AProject4Character>(TargetActor);
 	}
-
+	
 	// Get the Source actor
 	AActor* SourceActor = nullptr;
 	AController* SourceController = nullptr;
@@ -123,7 +117,7 @@ void UP4BaseAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCall
 				SourceController = Pawn->GetController();
 			}
 		}
-
+	
 		// Use the controller to find the source pawn
 		if (SourceController)
 		{
@@ -133,47 +127,47 @@ void UP4BaseAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCall
 		{
 			SourceCharacter = Cast<AProject4Character>(SourceActor);
 		}
-
+	
 		// Set the causer actor based on context if it's set
 		if (Context.GetEffectCauser())
 		{
 			SourceActor = Context.GetEffectCauser();
 		}
 	}
-
+	
 	// Source and Target Info collected, onto the 'meat'
 	if (Data.EvaluatedData.Attribute == GetDamageAttribute()) {
-
+	
 		// Try to extract a hit result
 		FHitResult HitResult;
 		if (Context.GetHitResult())
 		{
 			HitResult = *Context.GetHitResult();
 		}
-
+	
 		const float DamageTaken = GetDamage();
 		SetDamage(0.f); // clear for next instance of damage
-
+	
 		if (DamageTaken > 0.f) {
 			bool WasAlive = true;
-
+	
 			if (TargetCharacter) {
 				// TODO: Function in character for isAlive bool into wasAlive
 				// WasAlive = TargetCharacter->IsAlive();
 			}
 			// Calculate new Health here for on-death transients
 			const float NewHealth = GetHealth() - DamageTaken;
-
+	
 			if (TargetCharacter && WasAlive) {
-
+	
 				const FHitResult* Hit = Data.EffectSpec.GetContext().GetHitResult();
 				if (Hit) {
 					// Trigger Animation on-hit Reactions here e.g flinch
 				}
-
+	
 				// Get source PC
 				AProject4Controller* SourcePC = Cast<AProject4Controller>(SourceController);
-
+	
 				// Show Damage numbers to source actor (ignore self-damage)
 				if (SourceActor != TargetActor) {
 					if (SourcePC)
@@ -181,18 +175,18 @@ void UP4BaseAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCall
 						FGameplayTagContainer DamageNumberTags;
 						Data.EffectSpec.GetAllAssetTags(DamageNumberTags);
 						DamageNumberTags = DamageNumberTags.Filter(DamageNumberContainerFilter);
-
+	
 						/* Look at dynamic asset tags for info about damage type */
 						if (Data.EffectSpec.DynamicAssetTags.HasTag(CritTag))
 						{
 							DamageNumberTags.AddTagFast(CritTag);
 						}
-
+	
 						/* Send collected damage data tags to client, let them do parse */
 						SourcePC->DisplayDamageNumber(FP4DamageNumber(DamageTaken, DamageNumberTags), TargetCharacter);
 					}
 				}
-
+	
 				if (NewHealth < 0.f) {
 					// target died, give xp and generate loots
 					// check if source PC exists in case an npc killed something
@@ -206,7 +200,7 @@ void UP4BaseAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCall
 			}
 		}
 	}
-
+	
 	if (Data.EvaluatedData.Attribute == GetHealAttribute()) {
 		// Try to extract a hit result
 		FHitResult HitResult;
@@ -214,17 +208,17 @@ void UP4BaseAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCall
 		{
 			HitResult = *Context.GetHitResult();
 		}
-
+	
 		const float HealingDone = GetHeal();
 		SetHeal(0.f);
-
+	
 		if (HealingDone > 0.f && GetHealth() != GetHealthMax()) {
 			// no testing for death transients here, Spell shouln't go off anyway if target is dead
 			// i.e check death before casting spell 
-
+	
 			const float NewHealth = GetHealth() + HealingDone;
 			SetHealth(FMath::Clamp(NewHealth, 0.f, GetHealthMax()));
-
+	
 			if (TargetCharacter) {
 				// show healing numbers to source actor (DONT IGNORE SELF-HEAL)
 				AProject4Controller* PController = Cast<AProject4Controller>(SourceController);
@@ -242,11 +236,11 @@ void UP4BaseAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& 
 
 	DOREPLIFETIME_CONDITION_NOTIFY(UP4BaseAttributeSet, Level, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UP4BaseAttributeSet, ExperienceBounty, COND_None, REPNOTIFY_Always);
-
+	
 	////////////////////////////////////
 	/*         Resource Stats        */
 	////////////////////////////////////
-
+	
 	DOREPLIFETIME_CONDITION_NOTIFY(UP4BaseAttributeSet, Health, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UP4BaseAttributeSet, HealthMax, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UP4BaseAttributeSet, HealthRegen, COND_None, REPNOTIFY_Always);
@@ -256,28 +250,28 @@ void UP4BaseAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& 
 	DOREPLIFETIME_CONDITION_NOTIFY(UP4BaseAttributeSet, Endurance, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UP4BaseAttributeSet, EnduranceMax, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UP4BaseAttributeSet, EnduranceRegen, COND_None, REPNOTIFY_Always);
-
+	
 	////////////////////////////////////
 	/*			Base Stats			  */
 	////////////////////////////////////
-
+	
 	DOREPLIFETIME_CONDITION_NOTIFY(UP4BaseAttributeSet, Strength, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UP4BaseAttributeSet, Dexterity, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UP4BaseAttributeSet, Intelligence, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UP4BaseAttributeSet, Spirit, COND_None, REPNOTIFY_Always);
-
+	
 	////////////////////////////////////
 	/*         Defensive Stats        */
 	////////////////////////////////////
-
+	
 	DOREPLIFETIME_CONDITION_NOTIFY(UP4BaseAttributeSet, Armor, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UP4BaseAttributeSet, MagicResistance, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UP4BaseAttributeSet, MovementSpeed, COND_None, REPNOTIFY_Always);
-
+	
 	////////////////////////////////////
 	/*         Offensive Stats        */
 	////////////////////////////////////
-
+	
 	DOREPLIFETIME_CONDITION_NOTIFY(UP4BaseAttributeSet, AttackPower, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UP4BaseAttributeSet, MagicPower, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UP4BaseAttributeSet, MainHandWeaponPower, COND_None, REPNOTIFY_Always);

@@ -164,6 +164,9 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Input Menus | Abilities")
 		void HideAbilityTooltip();
 
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Input Menus | Inventory")
+		void ReinitializeSkillTreeWidget(bool IsMainTree);
+
 
 
 	// Getter fucntions

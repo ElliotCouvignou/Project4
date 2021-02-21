@@ -71,6 +71,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "BP Exposed")
 		void UnBlockAbilitiesWithTags_BP(const FGameplayTagContainer& Tags) { UnBlockAbilitiesWithTags(Tags); }
 
+
+	/* use this to find the gameplay tags with the inputted substring
+	   used in castbar to find what ability is doing casting */
+	UFUNCTION(BlueprintCallable, Category = "BP Exposed")
+		FGameplayTagContainer GetGameplayTagNames(const FGameplayTag& Tag);
+
 	/** Checks if the ability system is currently blocking InputID. Returns true if InputID is blocked, false otherwise.  */
 //UFUNCTION(BlueprintCallable, Category = "BP Exposed")
 //	bool IsAbilityInputBlocked_BP(int32 InputID) const { return IsAbilityInputBlocked(InputID); }

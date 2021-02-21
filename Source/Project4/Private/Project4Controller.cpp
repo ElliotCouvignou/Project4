@@ -10,6 +10,7 @@
 #include "UI/FloatingTextWidgetComponent.h"
 #include "UI/GameplayHudWidget.h"
 #include "UI/BuffIconsWidget.h"
+#include "..\Public\Project4Controller.h"
 
 #define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Green,text)
 
@@ -107,6 +108,15 @@ void AProject4Controller::DisplayHealNumber_Implementation(float HealValue, APro
 void AProject4Controller::SetUIRespawnCountdown_Implementation(float Duration)
 {
 	GameplayHUDWidget->SetRespawnCountdown(Duration);
+}
+
+void AProject4Controller::ClientDisplayWidgetToViewport_Implementation(TSubclassOf<UUserWidget> WidgetClass)
+{
+	if (WidgetClass)
+	{
+		UUserWidget* widget = CreateWidget(this, WidgetClass);
+		widget->AddToViewport();
+	}
 }
 
 void AProject4Controller::SendUIAbilityError(EAbilityErrorText ErrorType)

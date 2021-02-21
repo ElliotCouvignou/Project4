@@ -26,7 +26,6 @@ AP4MobCharacterBase::AP4MobCharacterBase(const class FObjectInitializer& ObjectI
 	AttributeSetHardRef = CreateDefaultSubobject<UMobBaseAttributeSet>(TEXT("AttributeSetHardRef"));
 
 	AttributeSet = AttributeSetHardRef;
-
 }
 
 
@@ -77,7 +76,7 @@ void AP4MobCharacterBase::BeginPlay()
 
 	if (AbilitySystemComponent.IsValid())
 	{
-
+		
 		AbilitySystemComponent->InitAbilityActorInfo(this, this);
 
 		InitializeAttributeSet();
@@ -97,6 +96,7 @@ void AP4MobCharacterBase::BeginPlay()
 		BindDelegates();
 
 		InitFloatingStatusBarWidget();
+		print(FString("AP4MobCharacterBase::BeginPlay()"));
 	}
 }
 
@@ -130,7 +130,7 @@ void AP4MobCharacterBase::HealthChanged(const FOnAttributeChangeData& Data)
 	float Health = Data.NewValue;
 
 	// Update floating bar
-	if (UIFloatingStatusBar)
+	if (UIFloatingStatusBar && AttributeSet.IsValid())
 	{
 		UIFloatingStatusBar->SetHealthPercentage(AttributeSet->GetHealth() / AttributeSet->GetHealthMax());
 	}
@@ -147,7 +147,7 @@ void AP4MobCharacterBase::ManaChanged(const FOnAttributeChangeData& Data)
 	float Mana = Data.NewValue;
 
 	// Update floating bar
-	if (UIFloatingStatusBar)
+	if (UIFloatingStatusBar && AttributeSet.IsValid())
 	{
 		UIFloatingStatusBar->SetManaPercentage(AttributeSet->GetMana() / AttributeSet->GetManaMax());
 	}
