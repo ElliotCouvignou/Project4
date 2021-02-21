@@ -333,6 +333,8 @@ void AProject4Character::BeginPlay()
 {
 	Super::BeginPlay();
 
+
+	//AddAllStartupEffects();
 	// FIXME: set all visibility to false, let render dist sphere collision set vis to true when needed
 	// Only do this to actors that player isnt locally controlling
 	//APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
@@ -368,7 +370,7 @@ void AProject4Character::AddAllStartupEffects()
 			FGameplayEffectSpecHandle NewHandle = AbilitySystemComponent->MakeOutgoingSpec(GameplayEffect, 1, EffectContext);
 			if (NewHandle.IsValid())
 			{
-				FActiveGameplayEffectHandle ActiveGEHandle = AbilitySystemComponent->ApplyGameplayEffectSpecToTarget(*NewHandle.Data.Get(), AbilitySystemComponent.Get());
+				FActiveGameplayEffectHandle ActiveGEHandle = AbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*NewHandle.Data.Get());
 			}
 		}
 

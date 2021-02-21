@@ -28,9 +28,11 @@
 
 
 #define CAMERA_ZOOM_MIN 100.f
-#define CAMERA_ZOOM_MAX 750.f
+#define CAMERA_ZOOM_MAX 1250.f
 #define CAMERA_ZOOM_GRANULARITY 50.f
 
+
+#define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Green,text)
 
 
 AP4PlayerCharacterBase::AP4PlayerCharacterBase(const class FObjectInitializer& ObjectInitializer)
@@ -234,6 +236,8 @@ void AP4PlayerCharacterBase::CameraZoom(float Value)
 void AP4PlayerCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
+
+	//AddAllStartupEffects();
 	
 }
 
@@ -268,18 +272,17 @@ void AP4PlayerCharacterBase::PossessedBy(AController* NewController)
 		// Set AttributeSet
 		AttributeSet = PS->GetAttributeSet();
 		
+
 		// Tell PS to bind delegates before init
 		PS->BindAbilityDelegates();
 
 		// Init playerAttributes with .csv
 		InitializeAttributeSet();
 
-		// do startuf effects and essential ability setup
+		//print(FString("PossessedBy()"));
 		AddAllStartupEffects();
 
 		BindASCInput();
-
-		
 
 		// For edge cases where the PlayerState is repped before the Hero is possessed.
 		// Maybe dont use this for servers? some might still need a ref for some reason
@@ -321,10 +324,11 @@ void AP4PlayerCharacterBase::OnRep_PlayerState()
 		// Tell PS to bind delegates before init
 		PS->BindAbilityDelegates();
 
-
 		// Init playerAttributes with .csv
 		InitializeAttributeSet();
 
+		//print(FString("PossessedBy()"));
+		//AddAllStartupEffects();
 
 		// For edge cases where the PlayerState is repped before the Hero is possessed.
 		// Maybe dont use this for servers? some might still need a ref for some reason
@@ -335,6 +339,8 @@ void AP4PlayerCharacterBase::OnRep_PlayerState()
 		}
 
 		BindASCInput();
+
+
 
 		InitFloatingStatusBarWidget();
 	}

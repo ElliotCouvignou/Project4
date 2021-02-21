@@ -185,7 +185,7 @@ protected:
 		TArray<TSubclassOf<class UGameplayEffect>> StartupEffects;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "GAS | Essential GE's")
-		bool StartupEffectsApplied; 
+		bool StartupEffectsApplied = false; 
 
 	/* BP -> C++ variable interface for weapon equip GE (overrides main hand interval attribute) */
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Weapons | Essential GE's")

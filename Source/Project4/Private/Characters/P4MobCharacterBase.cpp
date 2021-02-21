@@ -80,7 +80,7 @@ void AP4MobCharacterBase::BeginPlay()
 		AbilitySystemComponent->InitAbilityActorInfo(this, this);
 
 		InitializeAttributeSet();
-		AddAllStartupEffects();
+
 		GiveEssentialAbilities();
 
 
@@ -96,7 +96,8 @@ void AP4MobCharacterBase::BeginPlay()
 		BindDelegates();
 
 		InitFloatingStatusBarWidget();
-		print(FString("AP4MobCharacterBase::BeginPlay()"));
+
+		AddAllStartupEffects();
 	}
 }
 
