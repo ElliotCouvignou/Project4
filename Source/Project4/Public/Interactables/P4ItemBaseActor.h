@@ -29,7 +29,7 @@ protected:
 
 
 	/* created on spawn for handoffs */
-	UPROPERTY(BlueprintReadOnly, Replicated, EditAnywhere)
+	UPROPERTY(BlueprintReadOnly, Replicated, EditAnywhere, Category = "A_ItemStruct")
 		FInventoryItemStruct InventoryItemStruct;
 
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Essentials")
