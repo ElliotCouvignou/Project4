@@ -12,10 +12,10 @@
 /D_DISABLE_EXTENDED_ALIGNED_STORAGE
 /source-charset:utf-8
 /execution-charset:utf-8
+/Ob2
 /Ox
 /Ot
 /GF
-/Ob2
 /errorReport:prompt
 /EHsc
 /Z7
@@ -28,13 +28,12 @@
 /we4458
 /we4459
 /wd4463
-/we4668
 /wd4244
 /wd4838
 /I .
-/I C:\UnrealProjects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Private
-/I C:\UnrealProjects\Project4\Plugins\GameLiftServerSDK\Source
-/I C:\UnrealProjects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public
+/I "C:\Unreal Engine Projects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Private"
+/I "C:\Unreal Engine Projects\Project4\Plugins\GameLiftServerSDK\Source"
+/I "C:\Unreal Engine Projects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Public"
 /I Runtime
 /I Runtime\TraceLog\Public
 /I Runtime\Core\Public
@@ -46,12 +45,12 @@
 /I "C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\shared"
 /I "C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um"
 /I "C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\winrt"
-/FI"C:\Unreal Engine\4.25.3\Engine\Intermediate\Build\Win64\UE4Editor\Development\Core\SharedPCH.Core.ShadowErrors.h"
-/Yu"C:\Unreal Engine\4.25.3\Engine\Intermediate\Build\Win64\UE4Editor\Development\Core\SharedPCH.Core.ShadowErrors.h"
-/Fp"C:\Unreal Engine\4.25.3\Engine\Intermediate\Build\Win64\UE4Editor\Development\Core\SharedPCH.Core.ShadowErrors.h.pch"
-"C:\UnrealProjects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Private\GameLiftServerSDK.cpp"
-/FI"C:\UnrealProjects\Project4\Plugins\GameLiftServerSDK\Intermediate\Build\Win64\UE4Editor\Development\GameLiftServerSDK\Definitions.GameLiftServerSDK.h"
-/Fo"C:\UnrealProjects\Project4\Plugins\GameLiftServerSDK\Intermediate\Build\Win64\UE4Editor\Development\GameLiftServerSDK\GameLiftServerSDK.cpp.obj"
+/FI"C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Intermediate\Build\Win64\UE4Editor\Development\Core\SharedPCH.Core.ShadowErrors.h"
+/Yu"C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Intermediate\Build\Win64\UE4Editor\Development\Core\SharedPCH.Core.ShadowErrors.h"
+/Fp"C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Intermediate\Build\Win64\UE4Editor\Development\Core\SharedPCH.Core.ShadowErrors.h.pch"
+"C:\Unreal Engine Projects\Project4\Plugins\GameLiftServerSDK\Source\GameLiftServerSDK\Private\GameLiftServerSDK.cpp"
+/FI"C:\Unreal Engine Projects\Project4\Plugins\GameLiftServerSDK\Intermediate\Build\Win64\UE4Editor\Development\GameLiftServerSDK\Definitions.GameLiftServerSDK.h"
+/Fo"C:\Unreal Engine Projects\Project4\Plugins\GameLiftServerSDK\Intermediate\Build\Win64\UE4Editor\Development\GameLiftServerSDK\GameLiftServerSDK.cpp.obj"
 /TP
 /GR-
 /W4

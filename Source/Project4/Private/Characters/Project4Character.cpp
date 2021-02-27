@@ -82,6 +82,8 @@ AProject4Character::AProject4Character(const class FObjectInitializer& ObjectIni
 	DeadTag = FGameplayTag::RequestGameplayTag(FName("State.Dead"));
 	StunnedTag = FGameplayTag::RequestGameplayTag(FName("Buffs.Negative.Stunned"));
 
+	RootComponent->SetVisibility(false, true);
+
 	//Respawn = FGameplayTag::RequestGameplayTag(FName(""));
 }
 

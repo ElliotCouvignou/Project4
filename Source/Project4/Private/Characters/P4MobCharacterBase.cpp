@@ -10,8 +10,10 @@
 #include "Kismet/GameplayStatics.h"
 #include "UI/FloatingStatusBarWidget.h"
 #include "Interactables/P4ItemBaseActor.h"
+#include "P4AIControllerBase.h"
 
 #define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Green,text)
+#define ISHOST (GEngine->GetNetMode(GetWorld()) == NM_DedicatedServer) || (GEngine->GetNetMode(GetWorld()) == NM_ListenServer)
 
 AP4MobCharacterBase::AP4MobCharacterBase(const class FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -135,6 +137,22 @@ void AP4MobCharacterBase::HealthChanged(const FOnAttributeChangeData& Data)
 	{
 		UIFloatingStatusBar->SetHealthPercentage(AttributeSet->GetHealth() / AttributeSet->GetHealthMax());
 	}
+
+	//  AP4AIControllerBase* AIC = Cast<AP4AIControllerBase>(GetController());
+	//  if (AIC && HasAuthority() && Data.GEModData)
+	//  {
+	//  	AActor* Source = Data.GEModData->EffectSpec.GetContext().GetInstigator();
+	//  	float DamageTaken = Data.OldValue - Data.NewValue;
+	//  	if (Source && DamageTaken > 0.f)
+	//  	{
+	//  		print(FString("MobTamageTaken"));
+	//  		AIC->MobDamageTaken(Source, DamageTaken);
+	//  	}
+	//  	if (!Source)
+	//  	{
+	//  		print(FString("Invalid Source"));
+	//  	}
+	//  }
 
 	// check ded
 	if (!IsAlive() && !AbilitySystemComponent->HasMatchingGameplayTag(DeadTag))

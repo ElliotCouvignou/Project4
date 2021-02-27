@@ -26,14 +26,22 @@ AP4ItemBaseActor::AP4ItemBaseActor() : Super()
 	WidgetComponent->SetupAttachment(StaticMesh);
 	WidgetComponent->SetWidgetSpace(EWidgetSpace::Screen);
 	WidgetComponent->SetDrawAtDesiredSize(true);
+	
+	auto Mesh = ConstructorHelpers::FObjectFinder<UStaticMesh>(TEXT("StaticMesh'/Game/AdvancedLocomotionV4/Props/Meshes/Barrel.Barrel'"));
+	if (Mesh.Object)
+	{
+		StaticMesh->SetStaticMesh(Mesh.Object);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Missing Defaulted staticmesh asset for AP4ItemBaseActor()"));
+	}
 
 	if (ItemNameWidgetClass)
 	{
 		WidgetComponent->SetWidgetClass(ItemNameWidgetClass);
 		WidgetComponent->UpdateWidget();
 	}
-	
-	
 }
 
 
@@ -45,8 +53,9 @@ void AP4ItemBaseActor::BeginPlay()
 	// try to set item Static mesh based on data asset parameter
 	//SetItemStructAndStaticMesh(InventoryItemStruct);	
 	UStaticMesh* SM = InventoryItemStruct.ItemBaseDataAsset->ItemInfo.ItemStaticMesh;
-	if (SM != nullptr && StaticMesh)
+	if (SM)
 	{
+		print(FString("Set New SM"));
 		StaticMesh->SetStaticMesh(SM);
 	}
 
@@ -94,7 +103,6 @@ void AP4ItemBaseActor::OnInteract(const AP4PlayerCharacterBase* SourceActor, boo
 		UP4InventoryBagComponent* IBC = SourceActor->GetInventoryBagComponent();
 		if (IBC)
 		{
-			print("Call add item to inventory");
 			IBC->ServerAddItemToInventory(InventoryItemStruct, this);
 		}
 	}

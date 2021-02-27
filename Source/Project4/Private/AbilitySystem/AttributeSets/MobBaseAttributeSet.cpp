@@ -10,6 +10,7 @@
 #include "AIController.h"
 #include "Perception/AIPerceptionComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "P4AIControllerBase.h"
 
 #define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Green,text)
 
@@ -98,10 +99,10 @@ void UMobBaseAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCal
 
 		if (DamageTaken > 0.f)
 		{
-			AAIController* AIC = Cast<AAIController>(TargetCharacter->GetController());
+			AP4AIControllerBase* AIC = Cast<AP4AIControllerBase>(TargetCharacter->GetController());
 			if (AIC)
 			{
-				AIC->TakeDamage(DamageTaken, FDamageEvent(), SourceController, SourceActor);
+				AIC->MobDamageTaken(SourceActor, DamageTaken);
 			}
 		}
 	}
