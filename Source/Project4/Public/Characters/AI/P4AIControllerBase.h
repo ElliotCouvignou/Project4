@@ -7,6 +7,7 @@
 #include "Perception/AIPerceptionComponent.h"
 #include "Characters/Project4Character.h"
 #include "Containers/SortedMap.h"
+#include "Tasks/AITask_MoveTo.h"
 #include "P4AIControllerBase.generated.h"
 
 
@@ -62,6 +63,9 @@ protected:
 	//	TMap<AProject4Character*, int> ThreatMap;
 
 public:
+
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Threat")
+		UAITask_MoveTo* ChaseTask;
 
 	/* returns highest threat in threatarray, if empty return nullptr */
 	UFUNCTION(BlueprintCallable, Category = "Threat")

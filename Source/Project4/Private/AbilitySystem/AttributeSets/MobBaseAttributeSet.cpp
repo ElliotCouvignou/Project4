@@ -7,10 +7,10 @@
 #include "Project4.h"
 #include "Characters/Project4Character.h"
 #include "Characters/P4PlayerCharacterBase.h"
-#include "AIController.h"
+#include "Characters/AI/P4AIControllerBase.h"
 #include "Perception/AIPerceptionComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "P4AIControllerBase.h"
+
 
 #define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Green,text)
 

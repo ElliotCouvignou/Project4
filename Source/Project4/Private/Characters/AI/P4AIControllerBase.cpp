@@ -1,7 +1,7 @@
 // Project4 Copyright (Elliot Couvignou) Dont steal this mayne :(
 
 
-#include "P4AIControllerBase.h"
+#include "Characters/AI/P4AIControllerBase.h"
 
 #define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Green,text)
 
