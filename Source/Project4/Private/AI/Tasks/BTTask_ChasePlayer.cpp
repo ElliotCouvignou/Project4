@@ -1,8 +1,8 @@
 // Project4 Copyright (Elliot Couvignou) Dont steal this mayne :(
 
 
-#include "Characters/AI/Tasks/BTTask_ChasePlayer.h"
-#include "Characters/AI/P4AIControllerBase.h"
+#include "AI/Tasks/BTTask_ChasePlayer.h"
+#include "AI/P4AIControllerBase.h"
 #include "Tasks/AITask_MoveTo.h"
 
 

@@ -10,7 +10,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "UI/FloatingStatusBarWidget.h"
 #include "Interactables/P4ItemBaseActor.h"
-#include "Characters/AI/P4AIControllerBase.h"
+#include "AI/P4AIControllerBase.h"
 
 #define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Green,text)
 #define ISHOST (GEngine->GetNetMode(GetWorld()) == NM_DedicatedServer) || (GEngine->GetNetMode(GetWorld()) == NM_ListenServer)
