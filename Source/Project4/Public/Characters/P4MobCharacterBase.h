@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Characters/Project4Character.h"
 #include "GameplayEffectTypes.h"
+#include "GameplayTagContainer.h"
 #include "Containers/Map.h"
 #include "P4MobCharacterBase.generated.h"
 
@@ -145,10 +146,17 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "AI | Stats ")
 		float AttackRange;
 
+	UFUNCTION(BlueprintCallable)
+		FGameplayTagContainer& GetCooldownContainer() { return CooldownContainer;  }
+
 	/* override to roll droptable and drop */
 	virtual void Die() override;
 
 protected:
+
+	/* container to hold all the spell cooldowns that this mob casts. */
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "AI | Cooldowns ")
+		FGameplayTagContainer CooldownContainer;
 
 	// Hard refs of ASC and AS, unique names to not conflict with base class
 	UPROPERTY()
