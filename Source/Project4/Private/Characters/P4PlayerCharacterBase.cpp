@@ -28,7 +28,7 @@
 
 
 #define CAMERA_ZOOM_MIN 100.f
-#define CAMERA_ZOOM_MAX 1250.f
+#define CAMERA_ZOOM_MAX 1750.f
 #define CAMERA_ZOOM_GRANULARITY 50.f
 
 

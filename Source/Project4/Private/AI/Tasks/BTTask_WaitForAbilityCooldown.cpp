@@ -28,7 +28,7 @@ EBTNodeResult::Type UBTTask_WaitForAbilityCooldown::ExecuteTask(UBehaviorTreeCom
 
 			FScriptDelegate OnCooldownEndDelegate;
 			OnCooldownEndDelegate.BindUFunction(this, "OnCooldownEnd");
-			CDChangedTask->OnCooldownEnd.Add(OnCooldownEndDelegate);
+			CDChangedTask->OnCooldownEnd.AddUnique(OnCooldownEndDelegate);
 
 			print(FString("Created listen Task"));
 
@@ -36,9 +36,9 @@ EBTNodeResult::Type UBTTask_WaitForAbilityCooldown::ExecuteTask(UBehaviorTreeCom
 		}
 		else
 		{
-			FString Name = AIC->GetName();
+			FName Name = AIC->StaticClass()->GetFName();
 			print(FString("IsEmpty"));
-			UE_LOG(LogTemp, Warning, TEXT("%s has empty tracked CooldownTagContainer"), &Name);
+			UE_LOG(LogTemp, Error, TEXT("%s has empty tracked CooldownTagContainer"), &Name);
 		}
 	}
 

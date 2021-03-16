@@ -52,7 +52,8 @@ public class Project4 : ModuleRules
 			"UMG",
 			"GameplayAbilities",
 			"GameplayTags",
-			"GameplayTasks"
+			"GameplayTasks",
+			"GenericGraphRuntime"
 			}
 		);
 

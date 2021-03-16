@@ -85,6 +85,13 @@ public:
 	UFUNCTION()
 		void RespawnPlayer(AController* Controller);
 
+	/****************************/
+	/*      Abiltiy Stuff       */
+	/****************************/
+
+
+
+
 
 private:
 

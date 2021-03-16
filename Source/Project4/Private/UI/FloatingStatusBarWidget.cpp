@@ -3,3 +3,8 @@
 
 #include "UI/FloatingStatusBarWidget.h"
 
+UFloatingStatusBarWidget::UFloatingStatusBarWidget(const class FObjectInitializer& ObjectInitializer) 
+	: Super(ObjectInitializer)
+{
+	
+}

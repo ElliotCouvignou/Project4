@@ -133,10 +133,6 @@ void UP4InventoryBagComponent::ClientBroadcastEquippmentUpdateDelegate_Implement
 void UP4InventoryBagComponent::ServerAddItemToInventory_Implementation(const FInventoryItemStruct& NewItem, AActor* Instigator)
 {
 	bool WasSucessful;
-	//if (!PlayerRef || !PlayerASC)
-	//{
-	//	GetSetPlayerRefAndASC();
-	//}
 	if (NewItem.ItemBaseDataAsset && NewItem.ItemBaseDataAsset->ItemInfo.bIsStackable)
 	{
 		// Stackable, find locations that exists in inventory and stack (if max reached find next stack, if no stacks then do same approach as nonstackable (first available spot ))
@@ -198,12 +194,7 @@ void UP4InventoryBagComponent::ServerAddItemToInventory_Implementation(const FIn
 
 void UP4InventoryBagComponent::ServerDropItemFromInventory_Implementation(int InventoryIndex)
 {
-	FInventoryItemStruct Item = InventoryArray[InventoryIndex];
-	//if (!PlayerRef || !PlayerASC)
-	//{
-	//	GetSetPlayerRefAndASC();
-	//}
-	
+	FInventoryItemStruct Item = InventoryArray[InventoryIndex];	
 	if (!Item.bIsEmpty && Item.ItemBaseDataAsset)
 	{
 		UClass* ItemClass =Item.ItemBaseDataAsset->ItemInfo.ItemClass;
@@ -246,11 +237,6 @@ void UP4InventoryBagComponent::ServerEquipItemFromInventory_Implementation(int I
 
 	if (!Item.bIsEmpty && Item.ItemBaseDataAsset)
 	{
-		//if (!PlayerRef || !PlayerASC)
-		//{
-		//	GetSetPlayerRefAndASC();
-		//}
-
 		if (Item.ItemBaseDataAsset->ItemInfo.ItemType == EItemType::Armor)
 		{
 			EquipArmorItemFromInventory(InventoryIndex, IsRightSide, Item);

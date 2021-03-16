@@ -13,9 +13,10 @@
 UCLASS()
 class PROJECT4_API UFloatingStatusBarWidget : public UUserWidget
 {
-	GENERATED_BODY()
+	GENERATED_UCLASS_BODY()
 	
 public: 
+
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 		void SetHealthPercentage(float HealthPercentage);
 
