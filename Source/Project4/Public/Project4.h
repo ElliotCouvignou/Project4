@@ -54,3 +54,21 @@ enum class EP4AbilityInputID : uint8
 	ChangeWeapon		UMETA(DisplayName = "ChangeWeapon"),
 	Sprint			UMETA(DisplayName = "Sprint")
 };
+
+
+
+// maybe move this an array somewhere else
+UENUM(BlueprintType)
+enum class EAbilityCategory: uint8
+{
+	Physical		UMETA(DisplayName = "Physical"),
+	Magical			UMETA(DisplayName = "Magical"),
+	Defensive		UMETA(DisplayName = "Defensive"),
+	Utility			UMETA(DisplayName = "Utility")
+};
+
+static TArray<EAbilityCategory> GeneralSkillCategoryPool = { \
+EAbilityCategory::Physical,
+EAbilityCategory::Magical,
+EAbilityCategory::Defensive,
+EAbilityCategory::Utility };

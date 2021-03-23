@@ -6,6 +6,7 @@
 #include "GameFramework/PlayerController.h"
 #include "GameplayTagContainer.h"
 #include "GameplayEffect.h"
+#include "Project4.h"
 #include "Project4Controller.generated.h"
 
 /* UNUSED ATM */
@@ -133,10 +134,21 @@ public:
 	void SetUIRespawnCountdown_Implementation(float Duration);
 	bool SetUIRespawnCountdown_Validate(float Duration) { return true; }
 
-	UFUNCTION(Client, Reliable, WithValidation, BlueprintCallable)
+	UFUNCTION(Client, Reliable, WithValidation, BlueprintCallable, Category = "Skill Drop")
 		void ClientDisplayWidgetToViewport(TSubclassOf<UUserWidget> WidgetClass);
 	void ClientDisplayWidgetToViewport_Implementation(TSubclassOf<UUserWidget> WidgetClass);
 	bool ClientDisplayWidgetToViewport_Validate(TSubclassOf<UUserWidget> WidgetClass) { return true; }
+
+	UFUNCTION(Client, Reliable, WithValidation, BlueprintCallable)
+		void Client_DisplaySkillDropGeneralPoolWidget(const TArray<EAbilityCategory>& Pools);
+	void Client_DisplaySkillDropGeneralPoolWidget_Implementation(const TArray<EAbilityCategory>& Pools);
+	bool Client_DisplaySkillDropGeneralPoolWidget_Validate(const TArray<EAbilityCategory>& Pools) { return true; }
+
+	UFUNCTION(Client, Reliable, WithValidation, BlueprintCallable)
+		void Client_DisplaypAbilityChoicesWidget(const TArray<TSubclassOf<UP4GameplayAbility>>& Abilities);
+	void Client_DisplaypAbilityChoicesWidget_Implementation(const TArray < TSubclassOf<UP4GameplayAbility>>& Abilities);
+	bool Client_DisplaypAbilityChoicesWidget_Validate(const TArray < TSubclassOf<UP4GameplayAbility>>& Abilities) { return true; }
+
 
 	// Called on Ability Error (e.g. Out of range, Out of mana, etc.)
 	// doesn't need client RPC since ability error texts occurs during
@@ -179,6 +191,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		void OpenSkillsMenu();
+
+	UFUNCTION(BlueprintCallable)
+		void OpenAbilityMenu();
 
 protected:
 

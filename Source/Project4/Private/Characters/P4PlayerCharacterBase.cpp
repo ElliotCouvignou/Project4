@@ -55,7 +55,7 @@ AP4PlayerCharacterBase::AP4PlayerCharacterBase(const class FObjectInitializer& O
 
 	SkillTreeComponent = CreateDefaultSubobject<USkillTreeComponent>(TEXT("SkillTreeComponent"));
 	SkillTreeComponent->SetIsReplicated(true);
-	
+
 	BoundAbilities.SetNum(ABILITY_BLOCK_AMOUNT);
 }
 
@@ -80,7 +80,7 @@ void AP4PlayerCharacterBase::InitializeAttributeSet()
 void AP4PlayerCharacterBase::BindASCInput()
 {
 	UAbilitySystemComponent* ASC = GetAbilitySystemComponent();
-	
+
 	if (!bASCInputBound && ASC && IsValid(InputComponent)) {
 		FGameplayAbilityInputBinds AbilityBinds("ConfirmAbility", "CancelAbility", "EP4AbilityInputID",
 			static_cast<int32>(EP4AbilityInputID::Confirm), static_cast<int32>(EP4AbilityInputID::Cancel));
@@ -106,7 +106,6 @@ void AP4PlayerCharacterBase::FinishDying()
 	// for a bit
 	Super::FinishDying();
 }
-
 
 void AP4PlayerCharacterBase::GainExperience(int XpGained)
 {
@@ -237,8 +236,17 @@ void AP4PlayerCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
 
+	// Move listener to character instead of camera (has weird stereo issues)
 	//AddAllStartupEffects();
-	
+	//if (IsLocallyControlled())
+	//{
+	//	AProject4Controller* PC = Cast<AProject4Controller>(GetController());
+	//	if (PC)
+	//	{
+	//		PC->SetAudioListenerOverride(RootComponent, FVector(0.f, 0.f, 0.f), FRotator(0.f, 0.f, 0.f));
+	//	}
+	//}
+
 }
 
 
@@ -271,7 +279,7 @@ void AP4PlayerCharacterBase::PossessedBy(AController* NewController)
 
 		// Set AttributeSet
 		AttributeSet = PS->GetAttributeSet();
-		
+
 
 		// Tell PS to bind delegates before init
 		PS->BindAbilityDelegates();
@@ -345,3 +353,4 @@ void AP4PlayerCharacterBase::OnRep_PlayerState()
 		InitFloatingStatusBarWidget();
 	}
 }
+

@@ -13,7 +13,9 @@
 				"Engine",
 				"GameplayAbilities",
 				"GameplayTasks",
-				"AIModule"
+				"AIModule",
+				"GenericGraphRuntime",
+				"UnrealEd"
 			]
 		}
 	],

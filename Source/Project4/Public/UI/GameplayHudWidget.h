@@ -149,6 +149,10 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Input Menus | Inventory")
 		void OpenInventoryBagWidget();
 
+	
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Input Menus | Ability Menu")
+		void OpenAbilityMenuWidget();
+
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Input Menus | Skill Tree")
 		void OpenSkillsWidget();
 
@@ -162,11 +166,19 @@ public:
 		void ShowAbilityTooltip(TSubclassOf<class UP4GameplayAbility> AbilityClass, const FVector2D ViewportLocation);
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Input Menus | Abilities")
+		void ShowAbilityTooltipFromWidget(TSubclassOf<class UP4GameplayAbility> AbilityClass, const UUserWidget* Widget);
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Input Menus | Abilities")
 		void HideAbilityTooltip();
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Input Menus | Inventory")
 		void ReinitializeSkillTreeWidget(bool IsMainTree);
 
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Skill Drops")
+		void SetupGeneralSkillPoolWidget(const TArray<EAbilityCategory>& Pools);
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Skill Drops")
+		void SetupAbilitySelectionWidget(const TArray<TSubclassOf<UP4GameplayAbility>>& Abilities);
 
 
 	// Getter fucntions

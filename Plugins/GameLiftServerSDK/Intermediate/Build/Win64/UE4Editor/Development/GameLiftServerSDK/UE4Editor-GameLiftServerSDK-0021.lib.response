@@ -6,8 +6,8 @@
 /NAME:"UE4Editor-GameLiftServerSDK-0021.dll"
 /IGNORE:4221
 /NODEFAULTLIB
-"C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Intermediate\Build\Win64\UE4Editor\Development\Core\SharedPCH.Core.ShadowErrors.h.obj"
+"C:\Unreal Engine\UE4.26.1\Engine\Intermediate\Build\Win64\UE4Editor\Development\Core\SharedPCH.Core.ShadowErrors.h.obj"
 "C:\Unreal Engine Projects\Project4\Plugins\GameLiftServerSDK\Intermediate\Build\Win64\UE4Editor\Development\GameLiftServerSDK\GameLiftServerSDK.cpp.obj"
-"C:\Unreal Engine\UnrealEngine_4.26.0\Engine\Intermediate\Build\Win64\UE4Editor\Development\Default.rc2.res"
+"C:\Unreal Engine\UE4.26.1\Engine\Intermediate\Build\Win64\UE4Editor\Development\Default.rc2.res"
 /OUT:"C:\Unreal Engine Projects\Project4\Plugins\GameLiftServerSDK\Intermediate\Build\Win64\UE4Editor\Development\GameLiftServerSDK\UE4Editor-GameLiftServerSDK-0021.lib"
 /INCLUDE:IMPLEMENT_MODULE_GameLiftServerSDK

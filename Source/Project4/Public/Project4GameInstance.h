@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
 #include "Runtime/Online/HTTP/Public/Http.h"
+#include "GenericGraph/Abilities/P4AbilityPoolGraph.h"
 #include "Project4GameInstance.generated.h"
 
 
@@ -49,6 +50,10 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		void SetCognitoTokens(FString NewAccessToken, FString NewIdToken, FString NewRefreshToken);
+
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Abilities | Pools")
+		UP4AbilityPoolGraph* GlobalAbilityPoolGraph;
 
 private:
 

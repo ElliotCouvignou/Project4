@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "GameLiftServerSDK.h"
 #include "GameFramework/GameModeBase.h"
+#include "Interactables/SkillDropActor.h"
+#include "GenericGraph/Abilities/P4AbilityPoolGraph.h"
 #include "Project4GameMode.generated.h"
 
 
@@ -85,12 +87,8 @@ public:
 	UFUNCTION()
 		void RespawnPlayer(AController* Controller);
 
-	/****************************/
-	/*      Abiltiy Stuff       */
-	/****************************/
-
-
-
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Abilities | Pools")
+		UP4AbilityPoolGraph* GlobalAbilityPoolGraph;
 
 
 private:

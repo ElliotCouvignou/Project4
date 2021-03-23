@@ -9,7 +9,7 @@
 
 #include "AbilitySystem/AttributeSets/PlayerAttributeSet.h"
 #include "AbilitySystem/AttributeSets/P4BaseAttributeSet.h"
-#include "AbilitySystem/P4AbilitySystemComponent.h"
+#include "AbilitySystem/P4PlayerAbilitySystemComponent.h"
 #include "AbilitySystem/P4GameplayAbility.h"
 #include "AbilitySystemComponent.h"
 
@@ -22,7 +22,7 @@
 
 AProject4PlayerState::AProject4PlayerState()
 {
-	AbilitySystemComponent = CreateDefaultSubobject<UP4AbilitySystemComponent>(TEXT("AbilitySystemComponent"));
+	AbilitySystemComponent = CreateDefaultSubobject<UP4PlayerAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
     AbilitySystemComponent->SetIsReplicated(true);
     AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
 

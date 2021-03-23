@@ -11,6 +11,9 @@
 #include "UObject/ConstructorHelpers.h"
 #include "Blueprint/WidgetBlueprintLibrary.h"
 
+
+#define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Green,text)
+
 AProject4GameMode::AProject4GameMode()
 {
 	bUseSeamlessTravel = true;
@@ -77,6 +80,10 @@ void AProject4GameMode::RespawnPlayer(AController* Controller)
 		// only do if we want bots of Players
 	}
 }
+
+
+
+
 
 void AProject4GameMode::BeginPlay()
 {

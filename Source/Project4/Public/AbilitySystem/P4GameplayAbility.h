@@ -7,9 +7,7 @@
 #include "Project4.h"
 #include "Project4Controller.h"
 #include "GameplayTagContainer.h"
-
-#include "UI/AbilityTooltipWidget.h"
-
+#include "UI/AbilityTooltipWidget.h" // for tooltip struct info
 #include "P4GameplayAbility.generated.h"
 
 
@@ -36,6 +34,10 @@ public:
 	//UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Ability")
 	//	EP4AbilityInputID AbilityID = EP4AbilityInputID::None;
 
+	/* Name of ability to be displayed to players */
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Essential")
+		FText AbilityName;
+
 	// when true fire off ability moment actor has it like some wort of Autocast
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Ability")
 		bool ActivateAbilityOnGranted = false;
@@ -55,10 +57,6 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Ability")
 		UTexture2D* AbilityIcon;
-
-	/* tooltip text to show when on ability hotbar */ // TODO: remove this
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Ability")
-		FText AbilityToolTipText;
 
 	// Only if ability applies buff GE, not required to fill out
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Ability")

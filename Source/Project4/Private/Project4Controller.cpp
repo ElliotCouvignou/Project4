@@ -3,9 +3,12 @@
 #include "Project4Controller.h"
 #include "Project4GameMode.h"
 #include "Characters/Project4Character.h"
+#include "AbilitySystem/P4AbilitySystemComponent.h"
 
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
+
+
 
 #include "UI/FloatingTextWidgetComponent.h"
 #include "UI/GameplayHudWidget.h"
@@ -119,6 +122,16 @@ void AProject4Controller::ClientDisplayWidgetToViewport_Implementation(TSubclass
 	}
 }
 
+void AProject4Controller::Client_DisplaySkillDropGeneralPoolWidget_Implementation(const TArray<EAbilityCategory>& Pools)
+{
+	GameplayHUDWidget->SetupGeneralSkillPoolWidget(Pools);
+}
+
+void AProject4Controller::Client_DisplaypAbilityChoicesWidget_Implementation(const TArray<TSubclassOf<UP4GameplayAbility>>& Abilities)
+{
+	GameplayHUDWidget->SetupAbilitySelectionWidget(Abilities);
+}
+
 void AProject4Controller::SendUIAbilityError(EAbilityErrorText ErrorType)
 {
 	GameplayHUDWidget->NewAbilityErrorMessage(ErrorType);
@@ -177,6 +190,15 @@ void AProject4Controller::OpenSkillsMenu()
 	}
 }
 
+void AProject4Controller::OpenAbilityMenu()
+{
+	if (GameplayHUDWidget)
+	{
+		GameplayHUDWidget->OpenAbilityMenuWidget();
+	}
+}
+
+
 void AProject4Controller::SetupInputComponent()
 {
 	Super::SetupInputComponent();
@@ -184,6 +206,7 @@ void AProject4Controller::SetupInputComponent()
 	InputComponent->BindAction("OpenCharacterInfoMenu", IE_Pressed, this, &AProject4Controller::OpenCharacterInfoMenu);
 	InputComponent->BindAction("OpenInventoryBagMenu", IE_Pressed, this, &AProject4Controller::OpenInventoryBagMenu);
 	InputComponent->BindAction("OpenSkillsMenu", IE_Pressed, this, &AProject4Controller::OpenSkillsMenu);
+	InputComponent->BindAction("OpenAbilityMenu", IE_Pressed, this, &AProject4Controller::OpenAbilityMenu);
 
 }
 

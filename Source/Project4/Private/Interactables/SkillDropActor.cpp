@@ -3,9 +3,14 @@
 
 #include "Interactables/SkillDropActor.h"
 #include "Project4GameMode.h"
+#include "Characters/P4PlayerCharacterBase.h"
+#include "AbilitySystem/P4PlayerAbilitySystemComponent.h"
+
+#define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Green,text)
 
 // Sets default values
-ASkillDropActor::ASkillDropActor() : Super()
+ASkillDropActor::ASkillDropActor() 
+	: Super()
 {
 	bReplicates = false;   // Each player gets their own drops so don't replicate
 }
@@ -17,18 +22,15 @@ void ASkillDropActor::BeginPlay()
 	
 }
 
-void ASkillDropActor::Server_OnPlayerSkillDropInteracted_Implementation(const AP4PlayerCharacterBase* Actor)
-{
-	// roll random abilities
-}
-
 void ASkillDropActor::OnInteract(const AP4PlayerCharacterBase* SourceActor, bool& Result)
 {
-	AProject4GameMode* GM = Cast<AProject4GameMode>(GetWorld()->GetAuthGameMode());
-	if (GM)
+	if (SourceActor)
 	{
-		Server_OnPlayerSkillDropInteracted(SourceActor);
-		Result = true;
+		UP4PlayerAbilitySystemComponent* ASC = Cast<UP4PlayerAbilitySystemComponent>(SourceActor->GetAbilitySystemComponent());
+		if (ASC)
+		{
+			ASC->Server_OnPlayerSkillDropInteracted();
+		}
 	}
 }
 

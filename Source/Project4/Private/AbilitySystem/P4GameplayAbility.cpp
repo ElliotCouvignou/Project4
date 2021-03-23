@@ -5,6 +5,7 @@
 #include "AbilitySystemComponent.h"
 #include "Project4Controller.h"
 #include "Characters/Project4Character.h"
+#include "UI/AbilityTooltipWidget.h"
 #include "GameplayTagContainer.h"
 #include "UI/GameplayHudWidget.h"
 #include "Kismet/GameplayStatics.h"

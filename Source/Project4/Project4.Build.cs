@@ -57,5 +57,12 @@ public class Project4 : ModuleRules
 			}
 		);
 
+		if (Target.bBuildEditor)
+		{
+			PublicIncludePaths.AddRange(new string[] { "Project4/Public" });
+
+			PrivateDependencyModuleNames.AddRange(new string[] { "UnrealEd", "GenericGraphRuntime"});
+		}
+
 	}
 }

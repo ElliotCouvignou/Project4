@@ -10,6 +10,7 @@
 #include "UI/SkillTree/SkillTreeDataAsset.h"
 #include "P4PlayerCharacterBase.generated.h"
 
+
 /**
  *  Base classe for playable characters, this should be instantiated and subclassed if needed
  */
@@ -45,6 +46,9 @@ public:
 	/***************************/
 	/* Gameplay Ability system */
 	/***************************/
+
+
+
 	
 	/* Levels up player, giving xp, more base stats and some extra points to choose */
 	/* Only use this from server */
@@ -75,6 +79,7 @@ public:
 	/***************************/
 
 	virtual void FinishDying() override;
+
 
 protected:
 	// APawn interface

@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "AbilitySystemComponent.h"
 #include "AbilitySystem/P4GameplayAbility.h"
-
 #include "P4AbilitySystemComponent.generated.h"
 
 class AProject4Character;
@@ -17,6 +16,7 @@ DECLARE_MULTICAST_DELEGATE_OneParam(FOnActiveGameplayEffectDurationChanged, cons
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAutoAttackHitTargets, const TArray<AProject4Character*>&, HitTargets);
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnAutoAttackHit);
+
 
 
 /**
@@ -76,6 +76,10 @@ public:
 	   used in castbar to find what ability is doing casting */
 	UFUNCTION(BlueprintCallable, Category = "BP Exposed")
 		FGameplayTagContainer GetGameplayTagNames(const FGameplayTag& Tag);
+
+	/****************************/
+	/*      Abiltiy Stuff       */
+	/****************************/
 
 	/** Checks if the ability system is currently blocking InputID. Returns true if InputID is blocked, false otherwise.  */
 //UFUNCTION(BlueprintCallable, Category = "BP Exposed")

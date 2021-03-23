@@ -62,6 +62,7 @@ void UProject4GameInstance::Init()
 
 	// set timer to calc player latency (set to every second)
 	GetWorld()->GetTimerManager().SetTimer(GetLatencyTimeLandleHandle, this, &UProject4GameInstance::GetLatencyTime, 1.f, true, 0.f);
+
 }
 
 void UProject4GameInstance::SetCognitoTokens(FString NewAccessToken, FString NewIdToken, FString NewRefreshToken)

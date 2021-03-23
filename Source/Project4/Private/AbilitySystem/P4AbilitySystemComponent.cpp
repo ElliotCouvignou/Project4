@@ -2,10 +2,13 @@
 
 
 #include "AbilitySystem/P4AbilitySystemComponent.h"
+#include "Characters/P4PlayerCharacterBase.h"
+
 //#include "GameplayEffectTypes.h"
 
 
 
+#define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Green,text)
 
 void UP4AbilitySystemComponent::BroadcastAutoAttackResults(const TArray<AProject4Character*>& HitArray)
 {
@@ -85,3 +88,5 @@ bool UP4AbilitySystemComponent::SetGameplayEffectDurationWithHandle(const FActiv
 
 	return true;
 }
+
+
