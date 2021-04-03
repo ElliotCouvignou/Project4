@@ -46,14 +46,12 @@ As stated before the goal is to create the foundation of each major system and t
 # Features to Implement:
 
 - Abilities
-    - More abilities for skill trees.
+    - More abilities.
     - Skill Trees
-    - Polish animations by using our own.
+    - Polish animations.
 
 - Inventory and Items:
-    - Currency item(s) and collection in inventory.
     - Consumable items (e.g. Health/Mana Potions).
-    - Spawn items on mob death.
     - More Items.
 
 - AI/NPC Behavior:
