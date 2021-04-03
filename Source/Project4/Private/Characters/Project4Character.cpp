@@ -336,6 +336,8 @@ void AProject4Character::BeginPlay()
 	Super::BeginPlay();
 
 
+	AbilitySystemComponent->SetOwnerActor(this);
+
 	//AddAllStartupEffects();
 	// FIXME: set all visibility to false, let render dist sphere collision set vis to true when needed
 	// Only do this to actors that player isnt locally controlling

@@ -3,6 +3,7 @@
 
 #include "MainMenuHUD.h"
 #include "Blueprint/UserWidget.h"
+#include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h" 
 
 
 

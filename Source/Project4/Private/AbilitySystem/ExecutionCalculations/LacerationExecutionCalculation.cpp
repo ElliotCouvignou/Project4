@@ -61,15 +61,15 @@ void ULacerationExecutionCalculation::Execute_Implementation(const FGameplayEffe
 	EvaluationParameters.SourceTags = SourceTags;
 	EvaluationParameters.TargetTags = TargetTags;
 
-
-	if (SourceActor && TargetActor && (SourceActor->GetDistanceTo(TargetActor) <= RefundDistance) )
+	if (SourceActor && TargetActor && (SourceActor->GetDistanceTo(TargetActor) <= RefundDistance))
 	{
 		// Refund Mana
 		SourceAbilitySystemComponent->ApplyModToAttribute(Attributes.ManaProperty, EGameplayModOp::Additive, ManaRefundAmount);
 		
 		// find CD tag, get duration and reapply with refunded cd
-		FGameplayTag LacerationCDTag = FGameplayTag::RequestGameplayTag(FName("Cooldown.Skill.Laceration"));
-		TArray<FActiveGameplayEffectHandle> CD_GEArray = SourceAbilitySystemComponent->GetActiveEffects(FGameplayEffectQuery::MakeQuery_MatchAnyOwningTags(FGameplayTagContainer(LacerationCDTag)));
+		FGameplayTag LacerationCDTag = FGameplayTag::RequestGameplayTag(FName("Cooldown.Skill.Berserker.Laceration"));
+		FGameplayEffectQuery Query = FGameplayEffectQuery::MakeQuery_MatchAnyOwningTags(FGameplayTagContainer(LacerationCDTag));
+		TArray<FActiveGameplayEffectHandle> CD_GEArray = SourceAbilitySystemComponent->GetActiveEffects(Query);
 		for (const FActiveGameplayEffectHandle& CD_GEHandle : CD_GEArray)
 		{
 			const FActiveGameplayEffect* ActiveGE = SourceAbilitySystemComponent->GetActiveGameplayEffect(CD_GEHandle);	

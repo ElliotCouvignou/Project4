@@ -25,6 +25,7 @@ AProject4PlayerState::AProject4PlayerState()
 	AbilitySystemComponent = CreateDefaultSubobject<UP4PlayerAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
     AbilitySystemComponent->SetIsReplicated(true);
     AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
+	
 
     AttributeSet = CreateDefaultSubobject<UPlayerAttributeSet>(TEXT("AttributeSet"));
 

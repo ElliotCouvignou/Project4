@@ -5,6 +5,7 @@
 #include "Characters/P4PlayerCharacterBase.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "UI/ItemActorNameWidget.cpp"
+#include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h" 
 
 
 #define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Green,text)

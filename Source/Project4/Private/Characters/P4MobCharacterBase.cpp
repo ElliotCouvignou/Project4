@@ -23,6 +23,7 @@ AP4MobCharacterBase::AP4MobCharacterBase(const class FObjectInitializer& ObjectI
 	AbilitySystemComponentHardRef->SetIsReplicated(true);
 	AbilitySystemComponentHardRef->SetReplicationMode(EGameplayEffectReplicationMode::Minimal);
 
+
 	AbilitySystemComponent = AbilitySystemComponentHardRef;
 
 	AttributeSetHardRef = CreateDefaultSubobject<UMobBaseAttributeSet>(TEXT("AttributeSetHardRef"));

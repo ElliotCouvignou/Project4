@@ -52,7 +52,7 @@ void UP4PlayerAbilitySystemComponent::Server_OnPlayerSkillDropInteracted_Impleme
 	AProject4GameMode* P4GM = Cast<AProject4GameMode>(GetWorld()->GetAuthGameMode());
 	if (P4GM)
 	{
-		AProject4Character* P4C = Cast<AProject4Character>(GetOwner());
+		AProject4Character* P4C = Cast<AProject4Character>(GetOwnerActor());
 		AProject4Controller* PC = (P4C) ? Cast<AProject4Controller>(P4C->GetController()) : nullptr;
 		if (PC)
 		{
@@ -69,6 +69,7 @@ void UP4PlayerAbilitySystemComponent::Server_OnPlayerSkillDropInteracted_Impleme
 			}
 
 			// send client UI to choose 
+			print(FString("Client display general pools"));
 			PC->Client_DisplaySkillDropGeneralPoolWidget(GeneratedGeneralPool);
 		}
 	}
@@ -76,6 +77,7 @@ void UP4PlayerAbilitySystemComponent::Server_OnPlayerSkillDropInteracted_Impleme
 
 void UP4PlayerAbilitySystemComponent::Server_OnGeneralSkillPoolSelected_Implementation(EAbilityCategory SelectedPool)
 {
+	print(FString("Server_OnGeneralSkillPoolSelected_Implementation"));
 	// pick from pools and send resulting abilities or more ui choices to player
 	TArray<UP4AbilityNode*> PoolHeadNodes;
 	AProject4GameMode* P4GM = Cast<AProject4GameMode>(GetWorld()->GetAuthGameMode());
@@ -84,18 +86,43 @@ void UP4PlayerAbilitySystemComponent::Server_OnGeneralSkillPoolSelected_Implemen
 		UP4AbilityPoolGraph* APG = P4GM->GlobalAbilityPoolGraph;
 		if (APG)
 		{
-			AProject4Character* P4C = Cast<AProject4Character>(GetOwner());
+			AProject4Character* P4C = Cast<AProject4Character>(GetOwnerActor());
 			AProject4Controller* PC = (P4C) ? Cast<AProject4Controller>(P4C->GetController()) : nullptr;
 			if (PC)
 			{
 				TArray<TSubclassOf<UP4GameplayAbility>> Abilities;
 				APG->GetAbilitiesFromPoolsAndCategory(AbilityPools, SelectedPool, Abilities);
+
+				TArray<TSubclassOf<UP4GameplayAbility>> LearnedAbilities;
+				GetLearnedPoolAbilities(LearnedAbilities);
+
+				// remove learnedailties from abilities
+				for (TSubclassOf<UP4GameplayAbility> Ability : LearnedAbilities)
+				{
+					Abilities.Remove(Ability);
+				}
+
+				int numAbilityChoices = 3;  // this can be opened up to other params
+				while (Abilities.Num() > numAbilityChoices)
+				{
+					Abilities.RemoveAt(FMath::Rand() % Abilities.Num());
+				}
+				
 				PC->Client_DisplaypAbilityChoicesWidget(Abilities);
 			}
 		} 
 	}
 
 
+}
+
+void UP4PlayerAbilitySystemComponent::Server_OnAbilityChoiceSelected_Implementation(TSubclassOf<UP4GameplayAbility> SelectedAbility)
+{
+	if (SelectedAbility)
+	{
+		print(FString("Gave ability"));
+		GiveAbility(FGameplayAbilitySpec(SelectedAbility, 1));
+	}
 }
 
 

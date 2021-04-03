@@ -18,6 +18,8 @@ UP4AbilityNode::UP4AbilityNode()
 #endif
 }
 
+
+
 void UP4AbilityNode::GetLeafNodes(TArray<UP4AbilityNode*>& Result)
 {
 	Result.Empty();
@@ -61,3 +63,5 @@ FLinearColor UP4AbilityNode::GetBackgroundColor() const
 }
 
 #endif
+
+#undef LOCTEXT_NAMESPACE
