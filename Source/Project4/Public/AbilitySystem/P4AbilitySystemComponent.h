@@ -71,6 +71,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "BP Exposed")
 		void UnBlockAbilitiesWithTags_BP(const FGameplayTagContainer& Tags) { UnBlockAbilitiesWithTags(Tags); }
 
+	UFUNCTION(BlueprintCallable, Category = "BP Exposed")
+		void BP_SetGameplayEffectDurationWithHandle(const FActiveGameplayEffectHandle& Handle, float NewDuration);
+
 
 	/* use this to find the gameplay tags with the inputted substring
 	   used in castbar to find what ability is doing casting */

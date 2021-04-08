@@ -34,6 +34,14 @@ void UP4AbilitySystemComponent::FindAbilityLevelFromClass(TSubclassOf<UGameplayA
 	}
 }
 
+void UP4AbilitySystemComponent::BP_SetGameplayEffectDurationWithHandle(const FActiveGameplayEffectHandle& Handle, float NewDuration)
+{
+	if (Handle.IsValid())
+	{
+		SetGameplayEffectDurationWithHandle(Handle, NewDuration);
+	}		
+}
+
 FGameplayTagContainer UP4AbilitySystemComponent::GetGameplayTagNames(const FGameplayTag& Tag)
 {
 	//FGameplayTagContainer OwnedTags;

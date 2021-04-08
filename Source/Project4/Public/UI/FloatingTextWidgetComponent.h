@@ -17,6 +17,9 @@ class PROJECT4_API UFloatingTextWidgetComponent : public UWidgetComponent
 	GENERATED_BODY()
 
 public:
+	UFloatingTextWidgetComponent();
+
+
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 		void SetDamageText(FP4DamageNumber Damage);
 

@@ -2,3 +2,10 @@
 
 
 #include "UI/FloatingTextWidgetComponent.h"
+
+
+UFloatingTextWidgetComponent::UFloatingTextWidgetComponent()
+	: Super()
+{
+	//SetTickMode(ETickMode::Disabled);
+}
