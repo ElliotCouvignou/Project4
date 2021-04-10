@@ -26,6 +26,51 @@ enum class EArmorType : uint8
 	Bag				UMETA(DispalyName = "Bag")
 };
 
+USTRUCT(BlueprintType)
+struct FItemArmorInfoStruct : public FItemBaseInfoStruct
+{
+	GENERATED_USTRUCT_BODY()
+
+	// Not much addon just more specific on what armor type the armor item is
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Item | Armor")
+		EArmorType ArmorType;
+
+	/* Use a gameplay effect to fill out attribute buffs to reduce serverload at cost of game memory size (not that much hopefully) */
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Item | Armor")
+		FGameplayEffectSpecHandle EquippedGameplayEffect;
+
+
+	/* Empty space 'item' data asset */
+	FItemArmorInfoStruct()
+		: Super()
+	{
+
+	}
+
+	FItemArmorInfoStruct(FItemBaseInfoStruct& other)
+		: Super(other)
+	{
+		
+	}
+
+	FItemArmorInfoStruct(FItemArmorInfoStruct& other)
+		: Super(other)
+	{
+		ArmorType = other.ArmorType;
+		EquippedGameplayEffect = other.EquippedGameplayEffect;
+	}
+
+	FItemArmorInfoStruct(EArmorType _ArmorType, FGameplayEffectSpecHandle& EquippedGE)
+	{
+		FItemArmorInfoStruct();
+		ArmorType = _ArmorType;
+		EquippedGameplayEffect = EquippedGE;
+
+	}
+
+};
+
+
 
 
 /**
@@ -49,11 +94,9 @@ public:
 		TSubclassOf<UGameplayEffect> EquippedGameplayEffect;
 
 
-
 	/*********************/
 	/* Utility Funcitons */
 	/*********************/
-	UFUNCTION(BlueprintCallable, Category = "Utility")
-		void GetAttributeNamesAndValuesFromGameplayEffect(TArray<FAttributeDataUIStruct>& OutDataArray);
+		virtual void GetAttributeNamesAndValuesFromGameplayEffect(TArray<FAttributeDataUIStruct>& OutDataArray) override;
 
 };

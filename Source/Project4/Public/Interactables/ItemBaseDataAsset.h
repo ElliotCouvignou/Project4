@@ -66,6 +66,11 @@ struct FItemBaseInfoStruct
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Essentials")
 		FString ItemName;
 
+	/* Use a gameplay effect applied to user when interacted (equip, consume, etc.). 
+		This is procedurally generated when enabled on mob drops */
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Item | Armor")
+		FGameplayEffectSpecHandle OnUseGameplayEffect;
+
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Essentials")
 		bool bIsStackable;
 
@@ -84,6 +89,7 @@ struct FItemBaseInfoStruct
 	/* Item ID for every item type (e.g all 'feathers' have same ItemID */
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Essentials")
 		int32 ItemID;
+
 
 	/* Empty space 'item' data asset */
 	FItemBaseInfoStruct()
@@ -117,6 +123,8 @@ struct FItemBaseInfoStruct
 		ItemID = Other.ItemID;
 	}
 };
+
+
 
 /* info used in inherited classes as BP readable struct on GE attr changes */
 USTRUCT(BlueprintType)
@@ -158,5 +166,8 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Item")
 		FItemBaseInfoStruct	ItemInfo;
+
+	UFUNCTION(BlueprintCallable, Category = "Utility")
+		virtual void GetAttributeNamesAndValuesFromGameplayEffect(TArray<FAttributeDataUIStruct>& OutDataArray);
 
 };

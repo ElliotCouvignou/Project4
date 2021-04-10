@@ -9,4 +9,6 @@ UItemBaseDataAsset::UItemBaseDataAsset()
 
 }
 
-
+void UItemBaseDataAsset::GetAttributeNamesAndValuesFromGameplayEffect(TArray<FAttributeDataUIStruct>& OutDataArray)
+{
+}

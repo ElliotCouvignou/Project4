@@ -93,8 +93,7 @@ public:
 	/*********************/
 	/* Utility Funcitons */
 	/*********************/
-	UFUNCTION(BlueprintCallable, Category = "Utility")
-		void GetAttributeNamesAndValuesFromGameplayEffect(TArray<FAttributeDataUIStruct>& OutDataArray);
+		virtual void GetAttributeNamesAndValuesFromGameplayEffect(TArray<FAttributeDataUIStruct>& OutDataArray) override;
 
 	
 };

@@ -133,7 +133,9 @@ void UP4InventoryBagComponent::ClientBroadcastEquippmentUpdateDelegate_Implement
 void UP4InventoryBagComponent::ServerAddItemToInventory_Implementation(const FInventoryItemStruct& NewItem, AActor* Instigator)
 {
 	bool WasSucessful;
-	if (NewItem.ItemBaseDataAsset && NewItem.ItemBaseDataAsset->ItemInfo.bIsStackable)
+	//UItemBaseDataAsset* ItemDataAsset = (NewItem.ItemBaseDataAsset) ? NewItem.ItemBaseDataAsset : NewItem.ItemInfoStruct.
+	const FItemBaseInfoStruct& ItemInfoStruct = (NewItem.ItemBaseDataAsset) ? NewItem.ItemBaseDataAsset->ItemInfo : NewItem.ItemInfoStruct;
+ 	if (ItemInfoStruct.bIsStackable)
 	{
 		// Stackable, find locations that exists in inventory and stack (if max reached find next stack, if no stacks then do same approach as nonstackable (first available spot ))
 		TArray<int> FoundIdxes;
@@ -163,7 +165,7 @@ void UP4InventoryBagComponent::ServerAddItemToInventory_Implementation(const FIn
 			Instigator->Destroy();
 		}
 	}
-	else if (NewItem.ItemBaseDataAsset)
+	else
 	{
 		// not stackable, place in first available slot, else return unsuccessful
 		int Index; 
@@ -176,10 +178,10 @@ void UP4InventoryBagComponent::ServerAddItemToInventory_Implementation(const FIn
 			{
 				FGameplayEffectSpec* GESpec = PickupEffectSpec.Data.Get();
 				FGameplayTag CarryWeight = FGameplayTag::RequestGameplayTag(FName("Data.Attribute.CarryWeight"));
-				GESpec->SetSetByCallerMagnitude(CarryWeight, NewItem.ItemBaseDataAsset->ItemInfo.ItemWeight);
+				GESpec->SetSetByCallerMagnitude(CarryWeight, ItemInfoStruct.ItemWeight);
 
 				InventoryArray.Insert(NewItem, Index);
-				OnInventorySlotUpdated.Broadcast(Index, NewItem);
+				//OnInventorySlotUpdated.Broadcast(Index, NewItem);
 				ClientBroadcastInventoryUpdateDelegate(Index, NewItem);
 
 				InventoryArray[Index].ActiveGE = PlayerASC->ApplyGameplayEffectSpecToTarget(*PickupEffectSpec.Data.Get(), PlayerASC);

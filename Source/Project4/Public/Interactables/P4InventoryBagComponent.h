@@ -33,12 +33,16 @@ struct FInventoryItemStruct
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Essentials")
 		int StackCount;
 
-	/* Data Asset */
+	/* Data Asset, holds info about the item's mesh and other things not procedurally generated */
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Essentials")
 		UItemBaseDataAsset* ItemBaseDataAsset;
 
-	/* Holds Active GE for pickup (Adds weight to carryweight player-attribute) */
+	/* used for procedural generated items */
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Essentials")
+		FItemBaseInfoStruct ItemInfoStruct;
+
+	/* Holds Active GE for pickup (Adds weight to carryweight player-attribute) */
+	UPROPERTY(BlueprintReadOnly, Category = "Generated")
 		FActiveGameplayEffectHandle ActiveGE;
 
 	FInventoryItemStruct()
@@ -65,6 +69,7 @@ struct FInventoryItemStruct
 		StackCount = InputInventoryItemStruct.StackCount;
 		ItemBaseDataAsset = InputInventoryItemStruct.ItemBaseDataAsset;
 		ActiveGE = FActiveGameplayEffectHandle(InputInventoryItemStruct.ActiveGE);
+		ItemInfoStruct = InputInventoryItemStruct.ItemInfoStruct;
 		if (InputInventoryItemStruct.ItemBaseDataAsset)
 		{
 			ItemBaseDataAsset->ItemInfo = FItemBaseInfoStruct(InputInventoryItemStruct.ItemBaseDataAsset->ItemInfo);

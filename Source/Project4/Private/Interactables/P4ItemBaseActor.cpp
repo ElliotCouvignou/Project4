@@ -53,10 +53,9 @@ void AP4ItemBaseActor::BeginPlay()
 
 	// try to set item Static mesh based on data asset parameter
 	//SetItemStructAndStaticMesh(InventoryItemStruct);	
-	UStaticMesh* SM = InventoryItemStruct.ItemBaseDataAsset->ItemInfo.ItemStaticMesh;
+	UStaticMesh* SM = (InventoryItemStruct.ItemBaseDataAsset) ? InventoryItemStruct.ItemBaseDataAsset->ItemInfo.ItemStaticMesh : InventoryItemStruct.ItemInfoStruct.ItemStaticMesh;
 	if (SM)
 	{
-		print(FString("Set New SM"));
 		StaticMesh->SetStaticMesh(SM);
 	}
 
@@ -85,7 +84,16 @@ void AP4ItemBaseActor::SetWidgetName()
 	UItemActorNameWidget* NameWidget = Cast<UItemActorNameWidget>(WidgetComponent->GetUserWidgetObject());
 	if (NameWidget)
 	{
-		NameWidget->SetItemName(InventoryItemStruct.ItemBaseDataAsset->ItemInfo.ItemName, InventoryItemStruct.ItemBaseDataAsset->ItemInfo.ItemRank);
+		// true if this wasn't randomly generated (itembasedata asset ref is left empty)
+		if (InventoryItemStruct.ItemBaseDataAsset)
+		{
+			NameWidget->SetItemName(InventoryItemStruct.ItemBaseDataAsset->ItemInfo.ItemName, InventoryItemStruct.ItemBaseDataAsset->ItemInfo.ItemRank);
+		}
+		else
+		{
+			NameWidget->SetItemName(InventoryItemStruct.ItemInfoStruct.ItemName, InventoryItemStruct.ItemInfoStruct.ItemRank);
+		}
+		
 	}
 }
 
@@ -99,11 +107,13 @@ void AP4ItemBaseActor::GrantUniqueItemAbility()
 void AP4ItemBaseActor::OnInteract(const AP4PlayerCharacterBase* SourceActor, bool& Result)
 {
 	// TODO: find way to return result (bind delegate on successful add)
+	print(FString("OnInteract"));
 	if (SourceActor)
 	{
 		UP4InventoryBagComponent* IBC = SourceActor->GetInventoryBagComponent();
 		if (IBC)
 		{
+			print(FString("Addtoinv"));
 			IBC->ServerAddItemToInventory(InventoryItemStruct, this);
 		}
 	}

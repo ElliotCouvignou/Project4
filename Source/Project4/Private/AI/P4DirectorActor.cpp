@@ -103,7 +103,7 @@ FVector AP4DirectorActor::GetRandomSpawnLocation()
 
 	AActor* ActorToSpawnOn = FoundActors[(int)FMath::RandRange(0.f, (float)FoundActors.Num() - 0.00001f)];
 
-	return FVector(FMath::RandRange(-1000.f, 1000.f), FMath::RandRange(-1000.f, 1000.f), 10.f) + ActorToSpawnOn->GetActorLocation();
+	return FVector(FMath::RandRange(-5000.f, 5000.f), FMath::RandRange(-5000.f, 5000.f), 10.f) + ActorToSpawnOn->GetActorLocation();
 }
 
 

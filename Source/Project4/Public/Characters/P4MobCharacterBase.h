@@ -7,6 +7,7 @@
 #include "GameplayEffectTypes.h"
 #include "GameplayTagContainer.h"
 #include "Containers/Map.h"
+#include "Interactables/RolleableArmorItemsDataAsset.h"
 #include "P4MobCharacterBase.generated.h"
 
 class UItemBaseDataAsset;
@@ -175,9 +176,32 @@ protected:
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Drops | Drop Delay")
 		float DropDelay = 0.f;
 
+	/* if true then procedurally generate item drops */
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Drops | Drop Delay")
+		bool bGenerateItemDrops = true;
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Drops | Procedural Generation")
+		URolleableAttributesDataAsset* RollableArmorDataAsset;
+	
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Drops | Procedural Generation")
+		URolleableArmorItemsDataAsset* RollableArmorItemsDataAsset;
+
 	/* Delegates */
 	UFUNCTION(BlueprintCallable)
 		void BindDelegates();
+
+	/* procedurally generate item drops, this can be moved elsewhere
+		ONLY CALL THIS ON SERVER */
+	UFUNCTION(BlueprintCallable)
+		void GenerateEquipItemDrop(FInventoryItemStruct& GeneratedItem);
+
+	/* helper function of GenerateEquipItemDrop */
+	UFUNCTION(BlueprintCallable)
+		void GenerateArmorDrop(EArmorType ArmorType, FInventoryItemStruct& GeneratedItem, float Budget);
+
+	/* helper function of GenerateEquipItemDrop */
+	UFUNCTION(BlueprintCallable)
+		void GenerateWeaponDrop(FInventoryItemStruct& GeneratedItem);
 
 	FDelegateHandle HealthChangedDelegateHandle;
 	FDelegateHandle ManaChangedDelegateHandle;
