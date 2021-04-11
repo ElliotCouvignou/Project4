@@ -24,15 +24,15 @@ void UP4ItemToolTip::GetAttributeNamesAndValuesFromGameplayEffectClass(TArray<FA
 
 void UP4ItemToolTip::GetAttributeNamesAndValuesFromItemInfo(const FItemBaseInfoStruct& ItemInfo, TArray<FAttributeDataUIStruct>& OutDataArray)
 {
-	switch (ItemInfo.ItemType)
-	{
-	case EItemType::Armor:
-		if (const FItemArmorInfoStruct* ArmorStruct = Cast<FItemArmorInfoStruct>(&ItemInfo))
-		{
-			GetAttributeNamesAndValuesFromGameplayEffectSpec(*ArmorStruct->EquippedGameplayEffect.Data.Get(), OutDataArray);
-		}
-		break;
-	}
+	//switch (ItemInfo.ItemType)
+	//{
+	//case EItemType::Armor:
+	//	if (const FItemArmorInfoStruct* ArmorStruct = Cast<FItemArmorInfoStruct>(&ItemInfo))
+	//	{
+	//		GetAttributeNamesAndValuesFromGameplayEffectSpec(*ArmorStruct->EquippedGameplayEffect.Data.Get(), OutDataArray);
+	//	}
+	//	break;
+	//}
 
 
 }

@@ -15,7 +15,8 @@
 				"GameplayTasks",
 				"AIModule",
 				"GenericGraphRuntime",
-				"UnrealEd"
+				"UnrealEd",
+				"CoreUObject"
 			]
 		}
 	],
