@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "Interactables/P4InventoryBagComponent.h"
-#include "Interactables/ItemBaseDataAsset.h"
+#include "Interactables/P4ItemBaseObject.h"
 #include "ItemActorNameWidget.generated.h"
 
 /**

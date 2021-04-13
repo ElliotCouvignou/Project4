@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "Interactables/ItemBaseDataAsset.h"
+#include "Interactables/P4ItemBaseObject.h"
 #include "Interactables/P4InventoryBagComponent.h"
 #include "InventoryContainerWidget.generated.h"
 
@@ -20,10 +20,10 @@ public:
 
 	/* Simple handler to change empty bag slot to filled */
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
-		void OnInventorySlotUpdated(const FInventoryItemStruct& NewitemInfo, int Index);
+		void OnInventorySlotUpdated(const UP4ItemBaseObject* NewitemInfo, int Index);
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
-		void OnItemRemoved(UItemBaseDataAsset* NewItemInfo, int InventoryIndex);
+		void OnItemRemoved(UP4ItemBaseObject* NewItemInfo, int InventoryIndex);
 
 protected:
 

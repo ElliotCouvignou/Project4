@@ -28,4 +28,6 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 		void SetupGrantedTagsEffectArmorType(EArmorType Armortype);
+
+	FGameplayModifierInfo MakeModifierInfoWithAttribute(FGameplayAttribute& Attribute, FGameplayTag& MagnitudeDataTag);
 };

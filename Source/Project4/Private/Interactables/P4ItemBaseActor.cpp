@@ -5,6 +5,8 @@
 #include "Characters/P4PlayerCharacterBase.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "UI/ItemActorNameWidget.cpp"
+#include "Interactables/P4ItemWeaponObject.h"
+#include "Interactables/P4ItemArmorObject.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h" 
 
 
@@ -43,6 +45,8 @@ AP4ItemBaseActor::AP4ItemBaseActor() : Super()
 		WidgetComponent->SetWidgetClass(ItemNameWidgetClass);
 		WidgetComponent->UpdateWidget();
 	}
+
+
 }
 
 
@@ -51,13 +55,45 @@ void AP4ItemBaseActor::BeginPlay()
 {
 	Super::BeginPlay();
 
+	if (HasAuthority())
+	{
+		if (ItemDataAsset)
+		{
+			switch (ItemDataAsset->ItemInfo.ItemType)
+			{
+			case EItemType::Armor:
+			{
+				ItemObject = NewObject<UP4ItemArmorObject>();
+				ItemObject->InitializeFromDataAsset(ItemDataAsset);
+				break;
+			}
+			case EItemType::Weapon:
+			{
+				ItemObject = NewObject<UP4ItemWeaponObject>();
+				ItemObject->InitializeFromDataAsset(ItemDataAsset);
+				break;
+			}
+
+			default:
+				ItemObject = NewObject<UP4ItemBaseObject>();
+				ItemObject->InitializeFromDataAsset(ItemDataAsset);
+				break;
+			}
+
+		}
+	}
+	
 	// try to set item Static mesh based on data asset parameter
 	//SetItemStructAndStaticMesh(InventoryItemStruct);	
-	UStaticMesh* SM = (InventoryItemStruct.ItemBaseDataAsset) ? InventoryItemStruct.ItemBaseDataAsset->ItemInfo.ItemStaticMesh : InventoryItemStruct.ItemInfoStruct.ItemStaticMesh;
-	if (SM)
+	if (ItemObject)
 	{
-		StaticMesh->SetStaticMesh(SM);
+		UStaticMesh* SM = ItemObject->DroppedItemStaticMesh;
+		if (SM)
+		{
+			StaticMesh->SetStaticMesh(SM);
+		}
 	}
+	
 
 	// HACK: set all visibility to false, let render dist sphere collision set vis to true when needed
 	RootComponent->SetVisibility(false, true);
@@ -85,15 +121,37 @@ void AP4ItemBaseActor::SetWidgetName()
 	if (NameWidget)
 	{
 		// true if this wasn't randomly generated (itembasedata asset ref is left empty)
-		if (InventoryItemStruct.ItemBaseDataAsset)
+		if (ItemObject)
 		{
-			NameWidget->SetItemName(InventoryItemStruct.ItemBaseDataAsset->ItemInfo.ItemName, InventoryItemStruct.ItemBaseDataAsset->ItemInfo.ItemRank);
-		}
-		else
-		{
-			NameWidget->SetItemName(InventoryItemStruct.ItemInfoStruct.ItemName, InventoryItemStruct.ItemInfoStruct.ItemRank);
-		}
-		
+			switch (ItemObject->ItemType)
+			{
+			case EItemType::Armor:
+			{
+				UP4ItemArmorObject* ArmorObj = Cast<UP4ItemArmorObject>(ItemObject);
+				if (ArmorObj)
+				{
+					NameWidget->SetItemName(ArmorObj->ItemName, ArmorObj->ItemRank);
+				}
+				break;
+			}
+
+			case EItemType::Weapon:
+			{
+				UP4ItemWeaponObject* WepObj = Cast<UP4ItemWeaponObject>(ItemObject);
+				if (WepObj)
+				{
+					NameWidget->SetItemName(WepObj->ItemName, WepObj->ItemRank);
+				}
+				break;
+			}
+			default:
+			{
+				NameWidget->SetItemName(ItemObject->ItemName, EItemRank::None);
+				break;
+			}
+			}
+			
+		}		
 	}
 }
 
@@ -114,7 +172,7 @@ void AP4ItemBaseActor::OnInteract(const AP4PlayerCharacterBase* SourceActor, boo
 		if (IBC)
 		{
 			print(FString("Addtoinv"));
-			IBC->ServerAddItemToInventory(InventoryItemStruct, this);
+			IBC->ServerAddItemToInventory(ItemObject, this);
 		}
 	}
 }
@@ -125,5 +183,5 @@ void AP4ItemBaseActor::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	DOREPLIFETIME(AP4ItemBaseActor, InventoryItemStruct);
+	DOREPLIFETIME(AP4ItemBaseActor, ItemObject);
 }

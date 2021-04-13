@@ -4,6 +4,8 @@
 #include "UI/P4ItemToolTip.h"
 
 
+#define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Green,text)
+
 void UP4ItemToolTip::GetAttributeNamesAndValuesFromGameplayEffectClass(TArray<FAttributeDataUIStruct>& OutDataArray, TSubclassOf<UGameplayEffect> GEClass)
 {
 	if (!GEClass)
@@ -40,5 +42,24 @@ void UP4ItemToolTip::GetAttributeNamesAndValuesFromItemInfo(const FItemBaseInfoS
 
 void UP4ItemToolTip::GetAttributeNamesAndValuesFromGameplayEffectSpec(const FGameplayEffectSpec& GESpec, TArray<FAttributeDataUIStruct>& OutDataArray)
 {
-	
+	for (auto mod : GESpec.ModifiedAttributes)
+	{
+		FGameplayTag AttrTag = FGameplayTag::RequestGameplayTag(FName(FString("Data.Attribute." + mod.Attribute.GetName())));
+		print(FString("findsetbycall: " + AttrTag.GetTagName().ToString()));
+		float mag = GESpec.GetSetByCallerMagnitude(AttrTag);
+		if (FMath::IsNearlyEqual(0.f, mag))
+		{
+			mag = mod.TotalMagnitude;
+		}	
+		
+		OutDataArray.Add(FAttributeDataUIStruct(mod.Attribute.GetName(), mag));
+	}		
+}
+
+void UP4ItemToolTip::GetAttributeNamesAndValuesFromGameplayEffectSpecHandle(const FGameplayEffectSpecHandle& GESpecHandle, TArray<FAttributeDataUIStruct>& OutDataArray)
+{
+	if (GESpecHandle.Data.IsValid())
+	{
+		GetAttributeNamesAndValuesFromGameplayEffectSpec(*GESpecHandle.Data.Get(), OutDataArray);
+	}
 }

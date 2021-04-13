@@ -26,4 +26,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Utility")
 		void GetAttributeNamesAndValuesFromGameplayEffectSpec(const FGameplayEffectSpec& GESpec, TArray<FAttributeDataUIStruct>& OutDataArray);
+
+	UFUNCTION(BlueprintCallable, Category = "Utility")
+		void GetAttributeNamesAndValuesFromGameplayEffectSpecHandle(const FGameplayEffectSpecHandle& GESpecHandle, TArray<FAttributeDataUIStruct>& OutDataArray);
 };

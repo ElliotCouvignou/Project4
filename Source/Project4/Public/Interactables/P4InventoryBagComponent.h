@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "GameplayEffectTypes.h"
+#include "Interactables/P4ItemBaseObject.h"
 #include "Interactables/ItemBaseDataAsset.h"
 #include "Interactables/ItemArmorDataAsset.h"
 #include "Interactables/ItemWeaponDataAsset.h"
@@ -19,64 +20,64 @@
 /**
  * Nullptr counts as empty slot
  */
-USTRUCT(BlueprintType)
-struct FInventoryItemStruct
-{
-	GENERATED_USTRUCT_BODY()
-	
-	/* true if this is just empty inventory slot (should not be spawned actor-item) */
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Essentials")
-		bool bIsEmpty;
-
-	/* Stack Count for this item in inventory pouch */
-	/* IT IS ESSENTIAL THAT THIS is the actual stack count over value in itembasedata asset (data assets should never be written into on play) */
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Essentials")
-		int StackCount;
-
-	/* Data Asset, holds info about the item's mesh and other things not procedurally generated */
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Essentials")
-		UItemBaseDataAsset* ItemBaseDataAsset;
-
-	/* used for procedural generated items */
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Essentials")
-		FItemBaseInfoStruct ItemInfoStruct;
-
-	/* Holds Active GE for pickup (Adds weight to carryweight player-attribute) */
-	UPROPERTY(BlueprintReadOnly, Category = "Generated")
-		FActiveGameplayEffectHandle ActiveGE;
-
-	FInventoryItemStruct()
-	{
-		bIsEmpty = true;
-		StackCount = -1;
-		ItemBaseDataAsset = nullptr;
-	}
-
-	FInventoryItemStruct(UItemBaseDataAsset* InputItemBaseAsset, int StackCount)
-	{
-		bIsEmpty = false;
-		StackCount = StackCount;
-		ItemBaseDataAsset = InputItemBaseAsset;
-		if (ItemBaseDataAsset)
-		{
-			ItemBaseDataAsset->ItemInfo = FItemBaseInfoStruct(InputItemBaseAsset->ItemInfo);
-		}
-	}
-
-	FInventoryItemStruct(const FInventoryItemStruct& InputInventoryItemStruct)
-	{
-		bIsEmpty = InputInventoryItemStruct.bIsEmpty;
-		StackCount = InputInventoryItemStruct.StackCount;
-		ItemBaseDataAsset = InputInventoryItemStruct.ItemBaseDataAsset;
-		ActiveGE = FActiveGameplayEffectHandle(InputInventoryItemStruct.ActiveGE);
-		ItemInfoStruct = InputInventoryItemStruct.ItemInfoStruct;
-		if (InputInventoryItemStruct.ItemBaseDataAsset)
-		{
-			ItemBaseDataAsset->ItemInfo = FItemBaseInfoStruct(InputInventoryItemStruct.ItemBaseDataAsset->ItemInfo);
-		}
-			
-	}
-};
+//USTRUCT(BlueprintType)
+//struct FInventoryItemStruct
+//{
+//	GENERATED_USTRUCT_BODY()
+//	
+//	/* true if this is just empty inventory slot (should not be spawned actor-item) */
+//	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Essentials")
+//		bool bIsEmpty;
+//
+//	/* Stack Count for this item in inventory pouch */
+//	/* IT IS ESSENTIAL THAT THIS is the actual stack count over value in itembasedata asset (data assets should never be written into on play) */
+//	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Essentials")
+//		int StackCount;
+//
+//	/* Data Asset, holds info about the item's mesh and other things not procedurally generated */
+//	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Essentials")
+//		UItemBaseDataAsset* ItemBaseDataAsset;
+//
+//	/* used for procedural generated items */
+//	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Essentials")
+//		FItemBaseInfoStruct ItemInfoStruct;
+//
+//	/* Holds Active GE for pickup (Adds weight to carryweight player-attribute) */
+//	UPROPERTY(BlueprintReadOnly, Category = "Generated")
+//		FActiveGameplayEffectHandle ActiveGE;
+//
+//	FInventoryItemStruct()
+//	{
+//		bIsEmpty = true;
+//		StackCount = -1;
+//		ItemBaseDataAsset = nullptr;
+//	}
+//
+//	FInventoryItemStruct(UItemBaseDataAsset* InputItemBaseAsset, int StackCount)
+//	{
+//		bIsEmpty = false;
+//		StackCount = StackCount;
+//		ItemBaseDataAsset = InputItemBaseAsset;
+//		if (ItemBaseDataAsset)
+//		{
+//			ItemBaseDataAsset->ItemInfo = FItemBaseInfoStruct(InputItemBaseAsset->ItemInfo);
+//		}
+//	}
+//
+//	FInventoryItemStruct(const FInventoryItemStruct& InputInventoryItemStruct)
+//	{
+//		bIsEmpty = InputInventoryItemStruct.bIsEmpty;
+//		StackCount = InputInventoryItemStruct.StackCount;
+//		ItemBaseDataAsset = InputInventoryItemStruct.ItemBaseDataAsset;
+//		ActiveGE = FActiveGameplayEffectHandle(InputInventoryItemStruct.ActiveGE);
+//		ItemInfoStruct = InputInventoryItemStruct.ItemInfoStruct;
+//		if (InputInventoryItemStruct.ItemBaseDataAsset)
+//		{
+//			ItemBaseDataAsset->ItemInfo = FItemBaseInfoStruct(InputInventoryItemStruct.ItemBaseDataAsset->ItemInfo);
+//		}
+//			
+//	}
+//};
 
 /* each enum represents a slot in ui character equip slots */
 UENUM(BlueprintType)
@@ -108,7 +109,7 @@ struct FEquippmentSlotStruct
 	GENERATED_USTRUCT_BODY()
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Essentials")
-		FInventoryItemStruct InventoryItemStruct;
+		UP4ItemBaseObject* InventoryItemObject;
 
 	// Pretty sure storing the enum is unecessary with get/set functions doing the work for us 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Essentials")
@@ -121,7 +122,7 @@ struct FEquippmentSlotStruct
 	FEquippmentSlotStruct()
 	{
 
-		InventoryItemStruct = FInventoryItemStruct();
+		InventoryItemObject = nullptr;
 		EquipSlotType = EEquipSlotType::None;
 		EqippedEffectHandle = FActiveGameplayEffectHandle();
 	}
@@ -129,7 +130,7 @@ struct FEquippmentSlotStruct
 
 	FEquippmentSlotStruct(EEquipSlotType EquipType)
 	{
-		InventoryItemStruct = FInventoryItemStruct();
+		InventoryItemObject = nullptr;
 		EquipSlotType = EquipType;
 		EqippedEffectHandle = FActiveGameplayEffectHandle();
 	}
@@ -196,7 +197,7 @@ struct FEquippedItemsStruct
 
 /* On item added to inventory */
 /* Dynamic due to custom struct*/
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnInventorySlotUpdated, int, Index, const FInventoryItemStruct&, ItemInfoStruct);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnInventorySlotUpdated, int, Index, const UP4ItemBaseObject*, ItemObject);
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEquippmentSlotUpdated, const FEquippmentSlotStruct&, NewEquippmentInfo);
 
@@ -259,7 +260,7 @@ protected:
 	
 	// Similar structure to above but sets its info with inventoryItemStruct
 	UFUNCTION(Category = "Utility")
-		bool SetEquipSlotInfo(EEquipSlotType EquipSlotType, FInventoryItemStruct ItemStruct, FActiveGameplayEffectHandle ActiveGEHandle);
+		bool SetEquipSlotInfo(EEquipSlotType EquipSlotType, UP4ItemBaseObject* ItemObject, FActiveGameplayEffectHandle ActiveGEHandle);
 
 public:	
 
@@ -269,7 +270,7 @@ public:
 
 	/* Items stored in Row-major order (topleft is lowest, bottom right is highest) */
 	UPROPERTY(BlueprintReadWrite, Replicated, EditAnywhere)
-		TArray<FInventoryItemStruct> InventoryArray;
+		TArray<UP4ItemBaseObject*> InventoryArray;
 
 	UPROPERTY(BlueprintReadWrite, Replicated, EditAnywhere)
 		FEquippedItemsStruct EquippmentSlots;
@@ -300,7 +301,7 @@ public:
 
 	/* returns inventory index(es) of items with same itemID in ItemBaseDataAsset */
 	UFUNCTION(BlueprintCallable, Category = "Utility")
-		void FindItemsFromItemData(const FInventoryItemStruct& SearchItem, bool& WasFound, TArray<int>& FoundIndexes);
+		void FindItemsFromItemData(const UP4ItemBaseObject* SearchItem, bool& WasFound, TArray<int>& FoundIndexes);
 
 
 	UFUNCTION(BlueprintCallable, Category = "Utility")
@@ -312,9 +313,9 @@ public:
 
 	/* From server broadcast update inventory delegate to client */
 	UFUNCTION(BlueprintCallable, Client, Reliable, WithValidation, Category = "Utility")
-		void ClientBroadcastInventoryUpdateDelegate(int Index, const FInventoryItemStruct& ItemInfoStruct);
-	void ClientBroadcastInventoryUpdateDelegate_Implementation(int Index, const FInventoryItemStruct& ItemInfoStruct);
-	bool ClientBroadcastInventoryUpdateDelegate_Validate(int Index, const FInventoryItemStruct& ItemInfoStruct) { return true; }
+		void ClientBroadcastInventoryUpdateDelegate(int Index, const UP4ItemBaseObject* ItemInfoObject);
+	void ClientBroadcastInventoryUpdateDelegate_Implementation(int Index, const UP4ItemBaseObject* ItemInfoObject);
+	bool ClientBroadcastInventoryUpdateDelegate_Validate(int Index, const UP4ItemBaseObject* ItemInfoObject) { return true; }
 
 	/* From server broadcast update equippment delegate to client */
 	UFUNCTION(BlueprintCallable, Client, Reliable, WithValidation, Category = "Utility")
@@ -326,9 +327,9 @@ public:
 	/* Return true if item added to array with index to placed item, else return false (e.g inventory full) */
 	/* This should push the item to the first available slot */
 	UFUNCTION(BlueprintCallable, Server, Reliable, WithValidation, Category = "Utility")
-		void ServerAddItemToInventory(const FInventoryItemStruct& NewItem, AActor* Instigator);
-	void ServerAddItemToInventory_Implementation(const FInventoryItemStruct& NewItem, AActor* Instigator);
-	bool ServerAddItemToInventory_Validate(const FInventoryItemStruct& NewItem, AActor* Instigator) { return true; }
+		void ServerAddItemToInventory(UP4ItemBaseObject* NewItem, AActor* Instigator);
+	void ServerAddItemToInventory_Implementation(UP4ItemBaseObject* NewItem, AActor* Instigator);
+	bool ServerAddItemToInventory_Validate(UP4ItemBaseObject* NewItem, AActor* Instigator) { return true; }
 
 			/***************************/
 			/*  Server/Client RPCs     */
@@ -363,10 +364,10 @@ public:
 	/************************/
 
 	/* Server helper function for doing ArmorType Equip */
-	void EquipArmorItemFromInventory(int InventoryIndex, bool IsRightFinger, FInventoryItemStruct& Item);
+	void EquipArmorItemFromInventory(int InventoryIndex, bool IsRightFinger);
 
 	/* Server Helper funciton for doing weapontype Equip */
-	void EquipWeaponItemFromInventory(int InventoryIndex, bool IsRightHand, FInventoryItemStruct& Item);
+	void EquipWeaponItemFromInventory(int InventoryIndex, bool IsRightHand);
 	
 
 
@@ -390,7 +391,7 @@ public:
 	/*******************/
 
 	UFUNCTION(BlueprintCallable, Category = "Utility")
-		void SetNewWeaponStanceFromWeapon(const UItemWeaponDataAsset* WeaponItem);
+		void SetNewWeaponStanceFromWeapon(const UP4ItemWeaponObject* WeaponItem);
 
 	/* Overrides */
 

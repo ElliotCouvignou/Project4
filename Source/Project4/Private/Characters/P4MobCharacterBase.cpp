@@ -4,6 +4,9 @@
 #include "Characters/P4MobCharacterBase.h"
 #include "Characters/PatrolPointsActor.h"
 #include "Interactables/P4InventoryBagComponent.h"
+#include "Interactables/P4ItemBaseActor.h"
+#include "Interactables/P4ItemArmorObject.h"
+
 #include "AbilitySystemComponent.h"
 #include "AbilitySystem/AttributeSets/MobBaseAttributeSet.h"
 #include "AbilitySystem/P4AbilitySystemComponent.h"
@@ -11,9 +14,10 @@
 #include "AbilitySystem/AttributeSets/PlayerAttributeSet.h"
 #include "Kismet/GameplayStatics.h"
 #include "UI/FloatingStatusBarWidget.h"
-#include "Interactables/P4ItemBaseActor.h"
+
 #include "AI/P4AIControllerBase.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h" 
+
 
 #define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Green,text)
 #define ISHOST (GEngine->GetNetMode(GetWorld()) == NM_DedicatedServer) || (GEngine->GetNetMode(GetWorld()) == NM_ListenServer)
@@ -45,6 +49,11 @@ AP4MobCharacterBase::AP4MobCharacterBase(const class FObjectInitializer& ObjectI
 		RollableArmorItemsDataAsset = temp2.Object;
 		RollableArmorItemsDataAsset->SumTotalWeights();
 	}
+	//auto temp3 = ConstructorHelpers::FObjectFinder<UEquipItemGameplayEffect>(TEXT("/Game/Project4/Interactables/Items/Equips/GE_GeneratedEquip"));
+	//if (temp3.Object)
+	//{
+	//	EquipItemGETemplate = temp3.Object->GetClass();
+	//}
 }
 
 
@@ -55,25 +64,28 @@ void AP4MobCharacterBase::Die()
 		// Server Roll Drop table and spawn rolled items nearby
 		if (bGenerateItemDrops)
 		{
-			TArray<FInventoryItemStruct> ItemsToDrop;
+			TArray<UP4ItemBaseObject*> ItemsToDrop;
 			int NumItems = (int)FMath::RandRange(0.f, 2.f);
 			
 			// Roll for Equip drops
-			FInventoryItemStruct GeneratedItem;
+			
 			for(int i=0; i< NumItems; i++)
 			{
-				GenerateEquipItemDrop(GeneratedItem);
+				UP4ItemBaseObject* NewGeneratedItem = nullptr; 
+				GenerateEquipItemDrop(&NewGeneratedItem);
 
 				// create FInventoryItemStruct and ItemActor, then spawn
-				AP4ItemBaseActor* ItemActor = Cast<AP4ItemBaseActor>(GetWorld()->SpawnActorDeferred<AActor>(AP4ItemBaseActor::StaticClass(), GetActorTransform(), this, (APawn*)this, ESpawnActorCollisionHandlingMethod::AlwaysSpawn));
-				if (ItemActor)
+				if (NewGeneratedItem)
 				{
-					ItemActor->SetInventoryItemStruct(GeneratedItem);
-					FTransform Transform = GetActorTransform();
-					Transform.AddToTranslation(FVector(FMath::RandRange(-100.f, 100.f), FMath::RandRange(-100.f, 100.f), 0.f));
-					ItemActor->FinishSpawning(Transform);
+					AP4ItemBaseActor* ItemActor = Cast<AP4ItemBaseActor>(GetWorld()->SpawnActorDeferred<AActor>(AP4ItemBaseActor::StaticClass(), GetActorTransform(), this, (APawn*)this, ESpawnActorCollisionHandlingMethod::AlwaysSpawn));
+					if (ItemActor)
+					{
+						ItemActor->SetInventoryItemObject(&NewGeneratedItem);
+						FTransform Transform = GetActorTransform();
+						Transform.AddToTranslation(FVector(FMath::RandRange(-100.f, 100.f), FMath::RandRange(-100.f, 100.f), 0.f));
+						ItemActor->FinishSpawning(Transform);
+					}
 				}
-
 				//ItemsToDrop.Add(GeneratedItem);
 			}
 
@@ -86,69 +98,73 @@ void AP4MobCharacterBase::Die()
 		}
 		else
 		{
-			TArray<TTuple<UItemBaseDataAsset*, int>> ItemsToDrop = DropTable.RollItemDrops();
-
-			for (TTuple<UItemBaseDataAsset*, int> ItemDrop : ItemsToDrop)
-			{
-				if (ItemDrop.Key && ItemDrop.Value > 0)
-				{
-					// create FInventoryItemStruct and ItemActor, then spawn
-					AP4ItemBaseActor* ItemActor = Cast<AP4ItemBaseActor>(GetWorld()->SpawnActorDeferred<AActor>(AP4ItemBaseActor::StaticClass(), GetActorTransform(), this, (APawn*)this, ESpawnActorCollisionHandlingMethod::AlwaysSpawn));
-					if (ItemActor)
-					{
-						ItemActor->SetInventoryItemStruct(FInventoryItemStruct(ItemDrop.Key, ItemDrop.Value));
-						FTransform Transform = GetActorTransform();
-						Transform.AddToTranslation(FVector(FMath::RandRange(-100.f, 100.f), FMath::RandRange(-100.f, 100.f), 0.f));
-						ItemActor->FinishSpawning(Transform);
-					}
-				}
-			}
+			// TODO: Update this type of item drops with new UObjects
+			//TArray<TTuple<UItemBaseDataAsset*, int>> ItemsToDrop = DropTable.RollItemDrops();
+			//
+			//for (TTuple<UItemBaseDataAsset*, int> ItemDrop : ItemsToDrop)
+			//{
+			//	if (ItemDrop.Key && ItemDrop.Value > 0)
+			//	{
+			//		// create FInventoryItemStruct and ItemActor, then spawn
+			//		AP4ItemBaseActor* ItemActor = Cast<AP4ItemBaseActor>(GetWorld()->SpawnActorDeferred<AActor>(AP4ItemBaseActor::StaticClass(), GetActorTransform(), this, (APawn*)this, ESpawnActorCollisionHandlingMethod::AlwaysSpawn));
+			//		if (ItemActor)
+			//		{
+			//			ItemActor->SetInventoryItemObject(FInventoryItemStruct(ItemDrop.Key, ItemDrop.Value));
+			//			FTransform Transform = GetActorTransform();
+			//			Transform.AddToTranslation(FVector(FMath::RandRange(-100.f, 100.f), FMath::RandRange(-100.f, 100.f), 0.f));
+			//			ItemActor->FinishSpawning(Transform);
+			//		}
+			//	}
+			//}
 		}
 	}
 	
 	Super::Die();
 }
 
-void AP4MobCharacterBase::GenerateEquipItemDrop(FInventoryItemStruct& GeneratedItem)
+void AP4MobCharacterBase::GenerateEquipItemDrop(UP4ItemBaseObject** GeneratedItem)
 {
 	// this is very WIP and randominess can be controlled more later
 
 	float Budget = 100.f; // TODO: figure out current game difficulty to this value 
-	GeneratedItem.bIsEmpty = false;
-	GeneratedItem.StackCount = 1.f;
 
 	// Randomly select item gear type TODO: create structure for weights to allow  wep to drop more often
 	// 11 armor types, add 4 for 3x weight of weapons
-	int ItemType = (int)FMath::RandRange(0.f, float(11 + 4));
+	int ItemType = (int)FMath::RandRange(0.f, float(11));
 	if (ItemType <= 10)
 	{
 		EArmorType ArmorType = (EArmorType)ItemType;
-		GenerateArmorDrop(ArmorType, GeneratedItem, Budget); // TODO: if we drop multiple, split overall budget with each call to this func
+		UP4ItemArmorObject* temp = NewObject<UP4ItemArmorObject>();
+		GenerateArmorDrop(ArmorType, &temp, Budget); // TODO: if we drop multiple, split overall budget with each call to this func
+		*GeneratedItem = Cast<UP4ItemBaseObject>(temp);
 	}
 	else
 	{
 		// Generate random Weapon
-		GenerateWeaponDrop(GeneratedItem);
+		UP4ItemWeaponObject* temp = NewObject<UP4ItemWeaponObject>();
+		GenerateWeaponDrop(&temp);
+		*GeneratedItem = Cast<UP4ItemBaseObject>(temp);
 	}
 
 }
 
-void AP4MobCharacterBase::GenerateArmorDrop(EArmorType ArmorType, FInventoryItemStruct& GeneratedItem, float Budget)
+void AP4MobCharacterBase::GenerateArmorDrop(EArmorType ArmorType, UP4ItemArmorObject** GeneratedItem, float Budget)
 {
-	if (ArmorType != EArmorType::None && RollableArmorDataAsset && RollableArmorItemsDataAsset)
+	if (*GeneratedItem && ArmorType != EArmorType::None && RollableArmorDataAsset && RollableArmorItemsDataAsset)
 	{
 		// TODO: write function to determine item SM, name, etc. (choose random item for ItemClass, name, mesh, weight?, level req?, itemID, ItemIcon.)
 		// Other words: roll for item visuals but not it's stats 
 		FRolleableArmorItemStruct ArmorItem;
 		RollableArmorItemsDataAsset->GetRandomArmorItem(ArmorType, this->StaticClass(), ArmorItem);
-
-		FItemArmorInfoStruct temp = ArmorItem.ArmorDataAsset->ItemInfo;
-		temp.ArmorType = ArmorType;
-		temp.bIsStackable = false;
-		temp.ItemRank = EItemRank::Common;// TODO: roll from weighted tables
+		(*GeneratedItem)->ArmorType = ArmorType;
+		(*GeneratedItem)->bIsEmpty = false;
+		(*GeneratedItem)->bIsStackable = false;
+		(*GeneratedItem)->ItemRank = EItemRank::Common;// TODO: roll from weighted tables
+		(*GeneratedItem)->ItemName = ArmorItem.ArmorDataAsset->ItemInfo.ItemName;
+		(*GeneratedItem)->ItemIcon = ArmorItem.ArmorDataAsset->ItemInfo.ItemIcon;
 
 		// Generate random stats for gameplayeffect for this item
-		FGameplayEffectSpecHandle GEHandle = AbilitySystemComponentHardRef->MakeOutgoingSpec(UEquipItemGameplayEffect::StaticClass(), 1.f, AbilitySystemComponentHardRef->MakeEffectContext());
+		FGameplayEffectSpecHandle GEHandle = AbilitySystemComponentHardRef->MakeOutgoingSpec(EquipItemGETemplate, 1.f, AbilitySystemComponentHardRef->MakeEffectContext());
 		TSharedPtr<FGameplayEffectSpec> GE = GEHandle.Data;
 		if (GE.IsValid())
 		{
@@ -169,19 +185,17 @@ void AP4MobCharacterBase::GenerateArmorDrop(EArmorType ArmorType, FInventoryItem
 				FGameplayEffectModifiedAttribute* AttGE = GE->AddModifiedAttribute(AttInfoStruct.Attribute);
 				if (AttGE)
 				{
-					AttGE->TotalMagnitude = AttBudget * AttInfoStruct.Value;
+					FGameplayTag AttrTag = FGameplayTag::RequestGameplayTag(FName(FString("Data.Attribute." + AttInfoStruct.Attribute.GetName())));
+					GE->SetSetByCallerMagnitude(AttrTag, AttBudget * AttInfoStruct.Value);
 				}
 				 
 			}
-			temp.EquippedGameplayEffect = GEHandle;
-			
+			(*GeneratedItem)->EquippedGameplayEffect = GEHandle;		
 		}
-		
-		GeneratedItem.ItemInfoStruct = temp;
 	}
 }
 
-void AP4MobCharacterBase::GenerateWeaponDrop(FInventoryItemStruct& GeneratedItem)
+void AP4MobCharacterBase::GenerateWeaponDrop(UP4ItemWeaponObject** GeneratedItem)
 {
 }
 

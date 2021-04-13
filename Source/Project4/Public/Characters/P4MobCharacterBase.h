@@ -186,22 +186,22 @@ protected:
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Drops | Procedural Generation")
 		URolleableArmorItemsDataAsset* RollableArmorItemsDataAsset;
 
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Drops | Procedural Generation")
+		TSubclassOf<class UEquipItemGameplayEffect> EquipItemGETemplate;
+
 	/* Delegates */
 	UFUNCTION(BlueprintCallable)
 		void BindDelegates();
 
 	/* procedurally generate item drops, this can be moved elsewhere
 		ONLY CALL THIS ON SERVER */
-	UFUNCTION(BlueprintCallable)
-		void GenerateEquipItemDrop(FInventoryItemStruct& GeneratedItem);
+	void GenerateEquipItemDrop(UP4ItemBaseObject** GeneratedItem);
 
 	/* helper function of GenerateEquipItemDrop */
-	UFUNCTION(BlueprintCallable)
-		void GenerateArmorDrop(EArmorType ArmorType, FInventoryItemStruct& GeneratedItem, float Budget);
+	void GenerateArmorDrop(EArmorType ArmorType, class UP4ItemArmorObject** GeneratedItem, float Budget);
 
 	/* helper function of GenerateEquipItemDrop */
-	UFUNCTION(BlueprintCallable)
-		void GenerateWeaponDrop(FInventoryItemStruct& GeneratedItem);
+	void GenerateWeaponDrop(UP4ItemWeaponObject** GeneratedItem);
 
 	FDelegateHandle HealthChangedDelegateHandle;
 	FDelegateHandle ManaChangedDelegateHandle;

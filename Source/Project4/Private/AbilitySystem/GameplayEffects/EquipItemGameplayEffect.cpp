@@ -61,3 +61,16 @@ void UEquipItemGameplayEffect::SetupModifiersFromItemDataTable(UDataTable* DataT
 void UEquipItemGameplayEffect::SetupGrantedTagsEffectArmorType(EArmorType Armortype)
 {
 }
+
+FGameplayModifierInfo UEquipItemGameplayEffect::MakeModifierInfoWithAttribute(FGameplayAttribute& Attribute, FGameplayTag& MagnitudeDataTag)
+{
+	FGameplayModifierInfo RetModifier = FGameplayModifierInfo();
+	RetModifier.Attribute = Attribute;
+
+	FSetByCallerFloat SBCF = FSetByCallerFloat();
+	SBCF.DataTag = MagnitudeDataTag;
+	RetModifier.ModifierMagnitude = FGameplayEffectModifierMagnitude(SBCF);
+
+
+	return RetModifier;
+}

@@ -35,6 +35,8 @@ struct FItemArmorInfoStruct : public FItemBaseInfoStruct
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Item | Armor")
 		EArmorType ArmorType;
 
+
+
 	/* Use a gameplay effect to fill out attribute buffs to reduce serverload at cost of game memory size (not that much hopefully) */
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Item | Armor")
 		FGameplayEffectSpecHandle EquippedGameplayEffect;
@@ -94,9 +96,14 @@ public:
 		TSubclassOf<UGameplayEffect> EquippedGameplayEffect;
 
 
+
+
 	/*********************/
 	/* Utility Funcitons */
 	/*********************/
 		virtual void GetAttributeNamesAndValuesFromGameplayEffect(TArray<FAttributeDataUIStruct>& OutDataArray) override;
+
+
+
 
 };

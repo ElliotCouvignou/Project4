@@ -4,18 +4,19 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
-#include "Interactables/P4InventoryBagComponent.h"
+#include "Interactables/ItemBaseDataAsset.h"
 #include "P4ItemBaseObject.generated.h"
 
 /**
  * 
  */
-UCLASS()
+UCLASS(Blueprintable, BlueprintType)
 class PROJECT4_API UP4ItemBaseObject : public UObject
 {
 	GENERATED_BODY()
 
 public:
+
 	UP4ItemBaseObject();
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Essentials")
@@ -41,10 +42,6 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Essentials")
 		UClass* DroppedItemClass;
 
-	/* Static mesh to represent the actor item */
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Optional")
-		UStaticMesh* DroppedItemStaticMesh;
-
 	/* Icon to display for inventory widgets */
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Essentials")
 		UTexture2D* ItemIcon;
@@ -59,4 +56,16 @@ public:
 	/* Item ID for every item type (e.g all 'feathers' have same ItemID */
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Essentials")
 		int32 ItemID;
+
+	/* Static mesh to represent the actor item */
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Optional")
+		UStaticMesh* DroppedItemStaticMesh;
+
+	/* Holds Active GE for pickup (Adds weight to carryweight player-attribute) */
+	UPROPERTY(BlueprintReadOnly, Category = "Generated")
+		FActiveGameplayEffectHandle ActiveGE;
+
+
+	UFUNCTION(BlueprintCallable)
+		virtual void InitializeFromDataAsset(UItemBaseDataAsset* Data);
 };

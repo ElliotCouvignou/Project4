@@ -204,68 +204,70 @@ UFloatingStatusBarWidget* AProject4Character::GetFloatingStatusBarWidget()
 	return UIFloatingStatusBar;
 }
 
-void AProject4Character::SetRightHandWeaponInfo(const UItemWeaponDataAsset* WeaponDataAsset)
+void AProject4Character::SetRightHandWeaponInfo(const UP4ItemWeaponObject* WeaponObject)
 {
 	if (HasAuthority())
 	{
-		if (WeaponDataAsset)
+		if (WeaponObject)
 		{
-			MainHandWeaponType = WeaponDataAsset->WeaponType;
+			MainHandWeaponType = WeaponObject->WeaponType;
 			if (MainHandWeaponType == EWeaponType::Bow)
 			{
 				// unique case where you use your main hand to pull bow strings back, therefore attach to offhand
-				MulticastSetWeaponSkeletalMesh(false, WeaponDataAsset->WeaponSkeletalMesh, WeaponDataAsset->MainHandAttatchTransform);
+				MulticastSetWeaponSkeletalMesh(false, WeaponObject->WeaponSkeletalMesh, WeaponObject->MainHandAttatchTransform);
 			}
 			else
 			{
-				MulticastSetWeaponSkeletalMesh(true, WeaponDataAsset->WeaponSkeletalMesh, WeaponDataAsset->MainHandAttatchTransform);
+				MulticastSetWeaponSkeletalMesh(true, WeaponObject->WeaponSkeletalMesh, WeaponObject->MainHandAttatchTransform);
 			}
 			
+			// TODO: remake this wih new procedural generated GE
 			// Apply Equip weapon GE for attack interval
 			FGameplayEffectContextHandle EffectContext = AbilitySystemComponent->MakeEffectContext();
 			FGameplayEffectSpecHandle NewHandle = AbilitySystemComponent->MakeOutgoingSpec(EquipWeaponMainGameplayEffect, 1, EffectContext);
-
+			
 			// set by caller with weapon interval to correct attribute, leave other as is 
 			if (NewHandle.IsValid())
 			{
 				FGameplayEffectSpec* GESpec = NewHandle.Data.Get();
 				// set interval attribute
 				FGameplayTag RightHandIntervalTag = FGameplayTag::RequestGameplayTag(FName("Data.Attribute.MainHandAttackInterval"));
-				GESpec->SetSetByCallerMagnitude(RightHandIntervalTag, WeaponDataAsset->AttackInterval);
+				GESpec->SetSetByCallerMagnitude(RightHandIntervalTag, WeaponObject->AttackInterval);
 				// set weapon power attribute
 				FGameplayTag RightHandWeaponPowerTag = FGameplayTag::RequestGameplayTag(FName("Data.Attribute.MainHandWeaponPower"));
-				GESpec->SetSetByCallerMagnitude(RightHandWeaponPowerTag, WeaponDataAsset->WeaponPower);
-
-
+				GESpec->SetSetByCallerMagnitude(RightHandWeaponPowerTag, WeaponObject->WeaponPower);
+			
+			
 				WeaponMainActiveGE = AbilitySystemComponent->ApplyGameplayEffectSpecToTarget(*NewHandle.Data.Get(), AbilitySystemComponent.Get());
 			}
 		}
 	}
 }
 
-void AProject4Character::SetLeftHandWeaponInfo(const UItemWeaponDataAsset* WeaponDataAsset)
+void AProject4Character::SetLeftHandWeaponInfo(const UP4ItemWeaponObject* WeaponObject)
 {
 	if (HasAuthority())
 	{
-		if (WeaponDataAsset)
+		if (WeaponObject)
 		{
-			OffHandWeaponType = WeaponDataAsset->WeaponType;
-			MulticastSetWeaponSkeletalMesh(false, WeaponDataAsset->WeaponSkeletalMesh, WeaponDataAsset->OffHandAttatchTransform);
+			OffHandWeaponType = WeaponObject->WeaponType;
+			MulticastSetWeaponSkeletalMesh(false, WeaponObject->WeaponSkeletalMesh, WeaponObject->OffHandAttatchTransform);
 
+			// TODO: remake this wih new procedural generated GE
 			// Apply Equip weapon GE for attack interval
 			FGameplayEffectContextHandle EffectContext = AbilitySystemComponent->MakeEffectContext();
 			FGameplayEffectSpecHandle NewHandle = AbilitySystemComponent->MakeOutgoingSpec(EquipWeaponOffameplayEffect, 1, EffectContext);
-
+			
 			// set by caller with weapon interval to correct attribute, leave other as is 
 			if (NewHandle.IsValid())
 			{
 				FGameplayEffectSpec* GESpec = NewHandle.Data.Get();
 				FGameplayTag LeftHandIntervalTag = FGameplayTag::RequestGameplayTag(FName("Data.Attribute.OffHandAttackInterval"));
-				GESpec->SetSetByCallerMagnitude(LeftHandIntervalTag, WeaponDataAsset->AttackInterval);
-
+				GESpec->SetSetByCallerMagnitude(LeftHandIntervalTag, WeaponObject->AttackInterval);
+			
 				FGameplayTag LeftHandWeaponPowerTag = FGameplayTag::RequestGameplayTag(FName("Data.Attribute.OffHandWeaponPower"));
-				GESpec->SetSetByCallerMagnitude(LeftHandWeaponPowerTag, WeaponDataAsset->WeaponPower);
-
+				GESpec->SetSetByCallerMagnitude(LeftHandWeaponPowerTag, WeaponObject->WeaponPower);
+			
 				WeaponOffActiveGE = AbilitySystemComponent->ApplyGameplayEffectSpecToTarget(*NewHandle.Data.Get(), AbilitySystemComponent.Get());
 			}
 		}

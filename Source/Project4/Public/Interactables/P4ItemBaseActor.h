@@ -29,8 +29,12 @@ protected:
 
 
 	/* created on spawn for handoffs */
-	UPROPERTY(BlueprintReadOnly, Replicated, EditAnywhere, Category = "A_ItemStruct")
-		FInventoryItemStruct InventoryItemStruct;
+	UPROPERTY(BlueprintReadOnly, Replicated, EditAnywhere, Category = "ItemObject")
+		UP4ItemBaseObject* ItemObject;
+
+	/* Should be left null unless you want to drag and drop item to be created in the level */
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "ItemObject | Optional")
+		UItemBaseDataAsset* ItemDataAsset;
 
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Essentials")
 		TSubclassOf<class UItemActorNameWidget> ItemNameWidgetClass;
@@ -56,14 +60,10 @@ public:
 		virtual void OnInteract(const AP4PlayerCharacterBase* SourceActor, bool& Result) override;
 
 
-	UFUNCTION(BlueprintCallable)
-		void SetInventoryItemStruct(FInventoryItemStruct InputItemStruct) { InventoryItemStruct = InputItemStruct; }
+	void SetInventoryItemObject(UP4ItemBaseObject** nItemObject) { ItemObject = *nItemObject; }
 
 	UFUNCTION(BlueprintCallable)
-		FInventoryItemStruct& GetInventoryItemStructt() { return InventoryItemStruct; }
-
-	UFUNCTION(BlueprintCallable)
-		void UpdateInventoryItemStruct(const FInventoryItemStruct& InputIventoryItemStruct) { InventoryItemStruct = InputIventoryItemStruct; }
+		UP4ItemBaseObject* GetInventoryItemStrucObject() { return ItemObject; }
 
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
