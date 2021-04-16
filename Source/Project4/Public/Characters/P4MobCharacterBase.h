@@ -7,7 +7,7 @@
 #include "GameplayEffectTypes.h"
 #include "GameplayTagContainer.h"
 #include "Containers/Map.h"
-#include "Interactables/RolleableArmorItemsDataAsset.h"
+#include "Interactables/RolleableItemsDataAsset.h"
 #include "P4MobCharacterBase.generated.h"
 
 class UItemBaseDataAsset;
@@ -181,10 +181,10 @@ protected:
 		bool bGenerateItemDrops = true;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Drops | Procedural Generation")
-		URolleableAttributesDataAsset* RollableArmorDataAsset;
+		URolleableAttributesDataAsset* RollableAttributesDataAsset;
 	
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Drops | Procedural Generation")
-		URolleableArmorItemsDataAsset* RollableArmorItemsDataAsset;
+		URolleableItemsDataAsset* RollableItemsDataAsset;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Drops | Procedural Generation")
 		TSubclassOf<class UEquipItemGameplayEffect> EquipItemGETemplate;
@@ -201,7 +201,7 @@ protected:
 	void GenerateArmorDrop(EArmorType ArmorType, class UP4ItemArmorObject** GeneratedItem, float Budget);
 
 	/* helper function of GenerateEquipItemDrop */
-	void GenerateWeaponDrop(UP4ItemWeaponObject** GeneratedItem);
+	void GenerateWeaponDrop(UP4ItemWeaponObject** GeneratedItem, float Budget);
 
 	FDelegateHandle HealthChangedDelegateHandle;
 	FDelegateHandle ManaChangedDelegateHandle;

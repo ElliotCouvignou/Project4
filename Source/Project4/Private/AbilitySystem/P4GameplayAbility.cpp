@@ -5,6 +5,7 @@
 #include "AbilitySystemComponent.h"
 #include "Project4Controller.h"
 #include "Characters/Project4Character.h"
+#include "Project4Controller.h"
 #include "UI/AbilityTooltipWidget.h"
 #include "GameplayTagContainer.h"
 #include "UI/GameplayHudWidget.h"
@@ -12,6 +13,8 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "Engine/World.h"
 #include "DrawDebugHelpers.h"
+//#include "Intersection/IntersectionUtil.h"
+
 
 #define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Green,text)
 
@@ -62,27 +65,78 @@ void UP4GameplayAbility::SendTargetDataToServer_Implementation(UP4GameplayAbilit
 
 FRotator UP4GameplayAbility::GetLookatRotation(float Range, FVector SourceLocation)
 {
+	// first test is to try to aim towards ground location if player is aiming down that much. if no blocking hit then 
+	// create a line, project our resulting angle in such a way that the line from the source locaiton
+	// 	   to the created line has a distance of Range
+	// 
 	// TODO: maybe expand this for case of AI casting spells to reuse spells
 	FVector OutLocation;
-	FRotator OutRotation;
-	Cast<AProject4Controller>(GetActorInfo().PlayerController)->GetPlayerViewPoint(OutLocation, OutRotation);
-
-	FRotator ShootRotation = UKismetMathLibrary::FindLookAtRotation(SourceLocation, UKismetMathLibrary::GetForwardVector(OutRotation) * Range + OutLocation);
+	FRotator OutRotationR;
+	Cast<AProject4Controller>(GetActorInfo().PlayerController)->GetPlayerViewPoint(OutLocation, OutRotationR);
+	FVector OutRotation = OutRotationR.Vector();
 
 	// try Hit test for floor to see if we should reduce rannge for angle changes (e.g aiming at floor offsets angle)
 	FHitResult Result;
 	FCollisionQueryParams CollisionParam;
 	CollisionParam.AddIgnoredActor(GetOwningActorFromActorInfo());
 	//DrawDebugLine(GetWorld(), OutLocation, OutLocation + UKismetMathLibrary::GetForwardVector(OutRotation) * Range, FColor::Green, true, 2.f, false, 4.f);
-	GetWorld()->LineTraceSingleByProfile(Result, OutLocation, OutLocation + UKismetMathLibrary::GetForwardVector(OutRotation)*Range, FName("TargetActorGroundLocation"), CollisionParam);
+	GetWorld()->LineTraceSingleByProfile(Result, OutLocation, OutLocation + OutRotation * Range, FName("TargetActorGroundLocation"), CollisionParam);
+	if (Result.bBlockingHit)
+	{
+		//DrawDebugLine(GetWorld(), OutLocation, OutLocation + OutRotation * Range, FColor::Green, true, 2.f, false, 4.f);
+		//DrawDebugLine(GetWorld(), SourceLocation, Result.Location, FColor::Red, true, 2.f, false, 4.f);
+		//DrawDebugPoint(GetWorld(), Result.Location, 10.f, FColor::Green, true, 2.f, false);
+		//DrawDebugPoint(GetWorld(), SourceLocation, 10.f, FColor::Green, true, 2.f, false);
+		//print(FString("1 LookatLocation: " + Result.Location.ToString()));
+
+		// raise a little just in case since they're generally looking downwards (can remove)
+		return UKismetMathLibrary::FindLookAtRotation(SourceLocation, Result.Location);
+	}
+
+	// implementaiton taken from IntersectionUtil::RaySphereTest and RaySphereIntersection
+	FVector diff = OutLocation - SourceLocation;
+	float a0 = diff.SizeSquared() - Range * Range;
+	float a1 = FVector::DotProduct(diff, OutRotation);
+	float discr = a1 * a1 - a0;
+	
+	FVector LookatLocation = OutLocation;
+	if (discr > 0)
+	{
+		// Two hits, this happends when camera starts outside range sphere, the intersection to choose is the one farthest from outlocation
+		//ResultOut.parameter.Min = -a1 - root;
+		//ResultOut.parameter.Max = -a1 + root;
+		float root = FMath::Sqrt(discr);
+		//print(FString("discr > 0  Dist: " + FString::SanitizeFloat((-a1) + root, 2)));
+		LookatLocation = OutLocation + OutRotation * ((-a1) + root);
+	}
+	else if (discr < 0)
+	{
+		//print(FString("Increase range for this ability i cant find the UP4GameplayAbility::GetLookatRotation result like this"));
+	}
+	else 
+	{
+		// -a1 is distance along line that we hit
+		//print(FString("!(discr < 0)"));
+		LookatLocation = OutLocation + OutRotation *(-a1);
+	}
+	//DrawDebugLine(GetWorld(), OutLocation, OutLocation + OutRotation * Range, FColor::Green, true, 2.f, false, 4.f);
+	//DrawDebugLine(GetWorld(), SourceLocation, LookatLocation, FColor::Red, true, 2.f, false, 4.f);
+	//DrawDebugPoint(GetWorld(), LookatLocation, 10.f, FColor::Green, true, 2.f, false);
+	//DrawDebugPoint(GetWorld(), SourceLocation, 10.f, FColor::Green, true, 2.f, false);
+	//print(FString("2 LookatLocation: " + LookatLocation.ToString()));
+	return UKismetMathLibrary::FindLookAtRotation(SourceLocation, LookatLocation);
+
+	
+	
+	//FRotator ShootRotation = UKismetMathLibrary::FindLookAtRotation(SourceLocation, UKismetMathLibrary::GetForwardVector(OutRotation) * Range + OutLocation);
+
 
 	//if (Result.bBlockingHit)
 	//{
 	//	print("Blocking Hit!");
 	//	DrawDebugLine(GetWorld(), SourceLocation, Result.Location, FColor::Red, true, 2.f, false, 4.f);
 	//}
-
-	return (Result.bBlockingHit) ? UKismetMathLibrary::FindLookAtRotation(SourceLocation, Result.Location) : ShootRotation;
+	//return (Result.bBlockingHit) ? UKismetMathLibrary::FindLookAtRotation(SourceLocation, Result.Location) : ShootRotation;
 }
 
 

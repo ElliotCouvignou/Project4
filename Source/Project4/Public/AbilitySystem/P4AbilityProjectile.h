@@ -37,6 +37,7 @@ public:
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
 		class UProjectileMovementComponent* ProjectileMovement;
 
+
 	/* This niagara component is created and assigned dynamically on StartNiagaraEffect via SpawnEmitterAttatched return value */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Visuals, meta = (AllowPrivateAccess = "true"))
 		UNiagaraComponent* NiagaraComponent;
@@ -62,6 +63,7 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
 
 	/* this function is default bound to OnComponentBeginOverlap for hitbox */
 	UFUNCTION(BlueprintNativeEvent)

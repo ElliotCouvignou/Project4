@@ -13,11 +13,27 @@ URolleableAttributesDataAsset::URolleableAttributesDataAsset()
 
 
 
-void URolleableAttributesDataAsset::GetRandomAttribute(EArmorType ArmorType, FRolleableAttributeStruct& RolleableAttStruct)
+void URolleableAttributesDataAsset::GetRandomArmorAttribute(EArmorType ArmorType, FRolleableAttributeStruct& RolleableAttStruct)
 {
-	float weight = FMath::RandRange(0.f, *TotalWeight.Find(ArmorType));
+	float weight = FMath::RandRange(0.f, *TotalArmorWeight.Find(ArmorType));
 	
 	TArray<FRolleableAttributeStruct> AttributeArray = ArmorTypeToRolleableAttributes.Find(ArmorType)->Attributes;
+	for (auto att : AttributeArray)
+	{
+		weight -= att.Weight;
+		if (weight <= 0.f)
+		{
+			RolleableAttStruct = att;
+			return;
+		}
+	}
+}
+
+void URolleableAttributesDataAsset::GetRandomWeaponAttribute(EWeaponType WeaponType, FRolleableAttributeStruct& RolleableAttStruct)
+{
+	float weight = FMath::RandRange(0.f, *TotalWeaponWeight.Find(WeaponType));
+
+	TArray<FRolleableAttributeStruct> AttributeArray = WeaponTypeToRolleableAttributes.Find(WeaponType)->Attributes;
 	for (auto att : AttributeArray)
 	{
 		weight -= att.Weight;
@@ -33,17 +49,31 @@ void URolleableAttributesDataAsset::GetRandomAttribute(EArmorType ArmorType, FRo
 
 void URolleableAttributesDataAsset::SumTotalWeights()
 {
-	TotalWeight.Empty();
+	TotalArmorWeight.Empty();
 
 	for (auto Elem : ArmorTypeToRolleableAttributes)
 	{
-		if (!TotalWeight.Contains(Elem.Key))
+		if (!TotalArmorWeight.Contains(Elem.Key))
 		{
-			TotalWeight.Add(TTuple<EArmorType, float>(Elem.Key, 0.f));
+			TotalArmorWeight.Add(TTuple<EArmorType, float>(Elem.Key, 0.f));
 		}
 		for (auto Att : Elem.Value.Attributes)
 		{
-			*TotalWeight.Find(Elem.Key) += Att.Weight;
+			*TotalArmorWeight.Find(Elem.Key) += Att.Weight;
+		}
+	}
+
+	TotalWeaponWeight.Empty();
+
+	for (auto Elem : WeaponTypeToRolleableAttributes)
+	{
+		if (!TotalWeaponWeight.Contains(Elem.Key))
+		{
+			TotalWeaponWeight.Add(TTuple<EWeaponType, float>(Elem.Key, 0.f));
+		}
+		for (auto Att : Elem.Value.Attributes)
+		{
+			*TotalWeaponWeight.Find(Elem.Key) += Att.Weight;
 		}
 	}
 }

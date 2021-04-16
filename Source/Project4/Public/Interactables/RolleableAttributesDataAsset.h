@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
 #include "Interactables/ItemArmorDataAsset.h"
+#include "Interactables/ItemWeaponDataAsset.h"
 #include "AbilitySystem/AttributeSets/PlayerAttributeSet.h"
 #include "GameplayEffect.h"
 #include "Templates/SharedPointer.h"
@@ -56,6 +57,24 @@ struct FRolleableAttributeStructArray
 
 };
 
+USTRUCT(BlueprintType)
+struct FRolleableWeaponAttributeStructArray
+{
+	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Essentials")
+		TArray<FRolleableAttributeStruct> Attributes;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Essentials")
+		TMap<EWeaponHandType, float> HandTypeToWeaponPower;
+
+	FRolleableWeaponAttributeStructArray()
+	{
+
+	}
+
+};
+
 
 /**
  * 
@@ -71,8 +90,14 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Item")
 		TMap<EArmorType, FRolleableAttributeStructArray> ArmorTypeToRolleableAttributes;
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Item")
+		TMap<EWeaponType, FRolleableWeaponAttributeStructArray> WeaponTypeToRolleableAttributes;
+
 	UFUNCTION()
-		void GetRandomAttribute(EArmorType ArmorType, FRolleableAttributeStruct& RolleableAttStruct);
+		void GetRandomArmorAttribute(EArmorType ArmorType, FRolleableAttributeStruct& RolleableAttStruct);
+
+	UFUNCTION()
+		void GetRandomWeaponAttribute(EWeaponType WeaponType, FRolleableAttributeStruct& RolleableAttStruct);
 
 	UFUNCTION()
 		void SumTotalWeights();
@@ -82,5 +107,8 @@ protected:
 
 
 	UPROPERTY()
-		TMap<EArmorType, float> TotalWeight;
+		TMap<EArmorType, float> TotalArmorWeight;
+
+	UPROPERTY()
+		TMap<EWeaponType, float> TotalWeaponWeight;
 };

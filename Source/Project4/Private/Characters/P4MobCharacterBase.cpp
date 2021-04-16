@@ -40,14 +40,14 @@ AP4MobCharacterBase::AP4MobCharacterBase(const class FObjectInitializer& ObjectI
 	auto temp = ConstructorHelpers::FObjectFinder<URolleableAttributesDataAsset>(TEXT("/Game/Project4/Interactables/Items/Equips/RolleableAttributesDataAsset"));
 	if (temp.Object)
 	{
-		RollableArmorDataAsset = temp.Object;
-		RollableArmorDataAsset->SumTotalWeights();
+		RollableAttributesDataAsset = temp.Object;
+		RollableAttributesDataAsset->SumTotalWeights();
 	}
-	auto temp2 = ConstructorHelpers::FObjectFinder<URolleableArmorItemsDataAsset>(TEXT("/Game/Project4/Interactables/Items/Equips/Armor/RolleableArmorItemsDataAsset"));
+	auto temp2 = ConstructorHelpers::FObjectFinder<URolleableItemsDataAsset>(TEXT("/Game/Project4/Interactables/Items/Equips/RolleableItemsDataAsset"));
 	if (temp2.Object)
 	{
-		RollableArmorItemsDataAsset = temp2.Object;
-		RollableArmorItemsDataAsset->SumTotalWeights();
+		RollableItemsDataAsset = temp2.Object;
+		RollableItemsDataAsset->SumTotalWeights();
 	}
 	//auto temp3 = ConstructorHelpers::FObjectFinder<UEquipItemGameplayEffect>(TEXT("/Game/Project4/Interactables/Items/Equips/GE_GeneratedEquip"));
 	//if (temp3.Object)
@@ -130,7 +130,9 @@ void AP4MobCharacterBase::GenerateEquipItemDrop(UP4ItemBaseObject** GeneratedIte
 
 	// Randomly select item gear type TODO: create structure for weights to allow  wep to drop more often
 	// 11 armor types, add 4 for 3x weight of weapons
-	int ItemType = (int)FMath::RandRange(0.f, float(11));
+	
+	//                                  ( 1.f,  14.99f)
+	int ItemType = (int)FMath::RandRange(11.f, float(15.99));
 	if (ItemType <= 10)
 	{
 		EArmorType ArmorType = (EArmorType)ItemType;
@@ -142,7 +144,7 @@ void AP4MobCharacterBase::GenerateEquipItemDrop(UP4ItemBaseObject** GeneratedIte
 	{
 		// Generate random Weapon
 		UP4ItemWeaponObject* temp = NewObject<UP4ItemWeaponObject>();
-		GenerateWeaponDrop(&temp);
+		GenerateWeaponDrop(&temp, Budget);
 		*GeneratedItem = Cast<UP4ItemBaseObject>(temp);
 	}
 
@@ -150,12 +152,12 @@ void AP4MobCharacterBase::GenerateEquipItemDrop(UP4ItemBaseObject** GeneratedIte
 
 void AP4MobCharacterBase::GenerateArmorDrop(EArmorType ArmorType, UP4ItemArmorObject** GeneratedItem, float Budget)
 {
-	if (*GeneratedItem && ArmorType != EArmorType::None && RollableArmorDataAsset && RollableArmorItemsDataAsset)
+	if (*GeneratedItem && ArmorType != EArmorType::None && RollableAttributesDataAsset && RollableItemsDataAsset)
 	{
 		// TODO: write function to determine item SM, name, etc. (choose random item for ItemClass, name, mesh, weight?, level req?, itemID, ItemIcon.)
 		// Other words: roll for item visuals but not it's stats 
 		FRolleableArmorItemStruct ArmorItem;
-		RollableArmorItemsDataAsset->GetRandomArmorItem(ArmorType, this->StaticClass(), ArmorItem);
+		RollableItemsDataAsset->GetRandomArmorItem(ArmorType, this->StaticClass(), ArmorItem);
 		(*GeneratedItem)->ArmorType = ArmorType;
 		(*GeneratedItem)->bIsEmpty = false;
 		(*GeneratedItem)->bIsStackable = false;
@@ -178,11 +180,12 @@ void AP4MobCharacterBase::GenerateArmorDrop(EArmorType ArmorType, UP4ItemArmorOb
 
 				// Get Random Attribute and info about it
 				FRolleableAttributeStruct AttInfoStruct;
-				RollableArmorDataAsset->GetRandomAttribute(ArmorType, AttInfoStruct);
+				RollableAttributesDataAsset->GetRandomArmorAttribute(ArmorType, AttInfoStruct);
 
 				//TODO: mutually exclusive Attributes here (don't see a reason ATM)
 
-				FGameplayEffectModifiedAttribute* AttGE = GE->AddModifiedAttribute(AttInfoStruct.Attribute);
+				FGameplayEffectModifiedAttribute* AttGE = (GE->GetModifiedAttribute(AttInfoStruct.Attribute)) ? (GE->GetModifiedAttribute(AttInfoStruct.Attribute)) : GE->AddModifiedAttribute(AttInfoStruct.Attribute);
+				
 				if (AttGE)
 				{
 					FGameplayTag AttrTag = FGameplayTag::RequestGameplayTag(FName(FString("Data.Attribute." + AttInfoStruct.Attribute.GetName())));
@@ -195,8 +198,61 @@ void AP4MobCharacterBase::GenerateArmorDrop(EArmorType ArmorType, UP4ItemArmorOb
 	}
 }
 
-void AP4MobCharacterBase::GenerateWeaponDrop(UP4ItemWeaponObject** GeneratedItem)
+void AP4MobCharacterBase::GenerateWeaponDrop(UP4ItemWeaponObject** GeneratedItem, float Budget)
 {
+	if (*GeneratedItem && RollableAttributesDataAsset && RollableItemsDataAsset)
+	{
+		// TODO: write function to determine item SM, name, etc. (choose random item for ItemClass, name, mesh, weight?, level req?, itemID, ItemIcon.)
+		// Other words: roll for item visuals but not it's stats 
+
+		EWeaponType WeaponType = (EWeaponType)FMath::RandRange(1.f, 11.f);
+		FRolleableWeaponItemStruct WeaponItem;
+		RollableItemsDataAsset->GetRandomWeaponItem(WeaponType, this->StaticClass(), WeaponItem);
+		(*GeneratedItem)->WeaponType = WeaponType;
+		(*GeneratedItem)->WeaponHandType = WeaponItem.WeaponDataAsset->WeaponHandType;
+		(*GeneratedItem)->WeaponSkeletalMesh = WeaponItem.WeaponDataAsset->WeaponSkeletalMesh;
+		(*GeneratedItem)->bIsEmpty = false;
+		(*GeneratedItem)->bIsStackable = false;
+		(*GeneratedItem)->ItemRank = EItemRank::Common;// TODO: roll from weighted tables
+		(*GeneratedItem)->ItemName = WeaponItem.WeaponDataAsset->ItemInfo.ItemName;
+		(*GeneratedItem)->ItemIcon = WeaponItem.WeaponDataAsset->ItemInfo.ItemIcon;
+		(*GeneratedItem)->AttackInterval = WeaponItem.WeaponDataAsset->AttackInterval * FMath::RandRange(0.9f, 1.1f);
+		
+		// generate random weapon power and attack interval
+		FRolleableWeaponAttributeStructArray fwats = *RollableAttributesDataAsset->WeaponTypeToRolleableAttributes.Find(WeaponType);
+		float WeaponPowerValue = *fwats.HandTypeToWeaponPower.Find((*GeneratedItem)->WeaponHandType);
+		(*GeneratedItem)->WeaponPower = WeaponPowerValue * Budget / 10.f * (*GeneratedItem)->AttackInterval;// TODO: fix this formula
+
+		// Generate random stats for gameplayeffect for this item
+		FGameplayEffectSpecHandle GEHandle = AbilitySystemComponentHardRef->MakeOutgoingSpec(EquipItemGETemplate, 1.f, AbilitySystemComponentHardRef->MakeEffectContext());
+		TSharedPtr<FGameplayEffectSpec> GE = GEHandle.Data;
+		if (GE.IsValid())
+		{
+			int numAtt = (int)FMath::RandRange(1.f, 4.999f);
+			for (int i = 0; i < numAtt; i++)
+			{
+				// split budget for this attr roll
+				float AttBudgetPercent = FMath::RandRange(FMath::Max(.2f, (i * 1.f) / numAtt), FMath::Max(.5f, (i * 1.f) / numAtt)); // TODO: these ranges, can make variables for .2 nd .5
+				float AttBudget = Budget * AttBudgetPercent;
+				Budget -= AttBudget;
+
+				// Get Random Attribute and info about it
+				FRolleableAttributeStruct AttInfoStruct;
+				RollableAttributesDataAsset->GetRandomWeaponAttribute(WeaponType, AttInfoStruct);
+
+				//TODO: mutually exclusive Attributes here (don't see a reason ATM)
+
+				FGameplayEffectModifiedAttribute* AttGE = GE->AddModifiedAttribute(AttInfoStruct.Attribute);
+				if (AttGE)
+				{
+					FGameplayTag AttrTag = FGameplayTag::RequestGameplayTag(FName(FString("Data.Attribute." + AttInfoStruct.Attribute.GetName())));
+					GE->SetSetByCallerMagnitude(AttrTag, AttBudget * AttInfoStruct.Value);
+				}
+
+			}
+			(*GeneratedItem)->EquippedGameplayEffect = GEHandle;
+		}
+	}
 }
 
 void AP4MobCharacterBase::FinishDying()
