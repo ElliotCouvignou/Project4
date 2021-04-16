@@ -198,6 +198,14 @@ void AProject4Controller::OpenAbilityMenu()
 	}
 }
 
+void AProject4Controller::OpenSettingsMenu()
+{
+	if (GameplayHUDWidget)
+	{
+		//GameplayHUDWidget->OpenSettingsMenuWidget();
+	}
+}
+
 
 void AProject4Controller::SetupInputComponent()
 {

@@ -195,6 +195,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void OpenAbilityMenu();
 
+	UFUNCTION(BlueprintCallable)
+		void OpenSettingsMenu();
+
 protected:
 
 	// Which character class does player want (i.e Berserker, ranger, etc.)
