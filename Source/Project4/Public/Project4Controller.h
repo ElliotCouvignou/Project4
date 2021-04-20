@@ -196,7 +196,7 @@ public:
 		void OpenAbilityMenu();
 
 	UFUNCTION(BlueprintCallable)
-		void OpenSettingsMenu();
+		void TryOpenEscapeMenu();
 
 protected:
 

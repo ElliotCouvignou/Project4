@@ -80,6 +80,9 @@ public:
 
 	virtual void FinishDying() override;
 
+	UFUNCTION(BlueprintCallable)
+		void SetCameraSensitivity(float NewVal) { CameraSensitivity = NewVal; }
+
 
 protected:
 	// APawn interface

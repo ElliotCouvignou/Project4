@@ -142,6 +142,8 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Buff Icons")
 		void RemoveBuffIconFromUI(const FGameplayTag& BuffTag);
 
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Input Menus | Settings")
+		void TryOpenEscapeMenu();
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Input Menus | Character Info")
 		void OpenCharacterInfoWidget();
@@ -149,7 +151,6 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Input Menus | Inventory")
 		void OpenInventoryBagWidget();
 
-	
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Input Menus | Ability Menu")
 		void OpenAbilityMenuWidget();
 

@@ -4,6 +4,7 @@
 #include "Project4GameInstance.h"
 #include "Json.h"
 #include "JsonUtilities.h"
+#include "Kismet/GameplayStatics.h"
 #include "TextReaderComponent.h"
 
 
@@ -14,6 +15,8 @@ UProject4GameInstance::UProject4GameInstance()
 	APIUrl = TextReader->ReadFile("Urls/APIUrl.txt");
 	RegionCode = TextReader->ReadFile("Urls/RegionCode.txt");
 	HttpModule = &FHttpModule::Get();
+
+	SettingsSave = Cast<UP4SettingsSave>(UGameplayStatics::CreateSaveGameObject(UP4SettingsSave::StaticClass()));
 }
 
 void UProject4GameInstance::Shutdown()
@@ -63,6 +66,8 @@ void UProject4GameInstance::Init()
 	// set timer to calc player latency (set to every second)
 	GetWorld()->GetTimerManager().SetTimer(GetLatencyTimeLandleHandle, this, &UProject4GameInstance::GetLatencyTime, 1.f, true, 0.f);
 
+	// TODO: change index to save slot? this is settings per pc so prob not
+	LoadSettingsData();
 }
 
 void UProject4GameInstance::SetCognitoTokens(FString NewAccessToken, FString NewIdToken, FString NewRefreshToken)
@@ -75,6 +80,26 @@ void UProject4GameInstance::SetCognitoTokens(FString NewAccessToken, FString New
 	UE_LOG(LogTemp, Warning, TEXT("Refresh Token: %s \n"), *RefreshToken);
 
 	GetWorld()->GetTimerManager().SetTimer(RetrieveNewTokensHandle, this, &UProject4GameInstance::RetrieveNewTokens, 1.0f, false, 3300.0f); //55 min timer
+}
+
+void UProject4GameInstance::LoadSettingsData()
+{
+	if (SettingsSaveSlot.Len() > 0)
+	{
+		SettingsSave = Cast<UP4SettingsSave>(UGameplayStatics::LoadGameFromSlot(SettingsSaveSlot, 0));
+		if (SettingsSave == NULL)
+		{
+			// if failed to load, create a new one
+			SettingsSave = Cast<UP4SettingsSave>(UGameplayStatics::CreateSaveGameObject(UP4SettingsSave::StaticClass()));
+		}
+
+		check(SettingsSave != NULL);
+	}
+}
+
+void UProject4GameInstance::SaveSettingsData()
+{
+	UGameplayStatics::SaveGameToSlot(SettingsSave, SettingsSaveSlot, 0);
 }
 
 void UProject4GameInstance::RetrieveNewTokens()

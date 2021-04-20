@@ -198,11 +198,11 @@ void AProject4Controller::OpenAbilityMenu()
 	}
 }
 
-void AProject4Controller::OpenSettingsMenu()
+void AProject4Controller::TryOpenEscapeMenu()
 {
 	if (GameplayHUDWidget)
 	{
-		//GameplayHUDWidget->OpenSettingsMenuWidget();
+		GameplayHUDWidget->TryOpenEscapeMenu();
 	}
 }
 
@@ -215,6 +215,7 @@ void AProject4Controller::SetupInputComponent()
 	InputComponent->BindAction("OpenInventoryBagMenu", IE_Pressed, this, &AProject4Controller::OpenInventoryBagMenu);
 	InputComponent->BindAction("OpenSkillsMenu", IE_Pressed, this, &AProject4Controller::OpenSkillsMenu);
 	InputComponent->BindAction("OpenAbilityMenu", IE_Pressed, this, &AProject4Controller::OpenAbilityMenu);
+	InputComponent->BindAction("TryOpenEscapeMenu", IE_Pressed, this, &AProject4Controller::TryOpenEscapeMenu);
 
 }
 
