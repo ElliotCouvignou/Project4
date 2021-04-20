@@ -80,7 +80,7 @@ FRotator UP4GameplayAbility::GetLookatRotation(float Range, FVector SourceLocati
 	FCollisionQueryParams CollisionParam;
 	CollisionParam.AddIgnoredActor(GetOwningActorFromActorInfo());
 	//DrawDebugLine(GetWorld(), OutLocation, OutLocation + UKismetMathLibrary::GetForwardVector(OutRotation) * Range, FColor::Green, true, 2.f, false, 4.f);
-	GetWorld()->LineTraceSingleByProfile(Result, OutLocation, OutLocation + OutRotation * Range, FName("TargetActorGroundLocation"), CollisionParam);
+	GetWorld()->LineTraceSingleByProfile(Result, OutLocation, OutLocation + OutRotation * Range, FName("AbilityProjectile"), CollisionParam);
 	if (Result.bBlockingHit)
 	{
 		//DrawDebugLine(GetWorld(), OutLocation, OutLocation + OutRotation * Range, FColor::Green, true, 2.f, false, 4.f);

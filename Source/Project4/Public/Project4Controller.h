@@ -96,6 +96,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Utility")
 		void GetPlayerViewPointBP(FVector& out_Location, FRotator& out_Rotation);
 
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+		void BP_OnViewportResizedCallback();
+
 	/************************************/
 	/* Server RPC/Functions From Client */
 	/************************************/

@@ -9,6 +9,7 @@
 #include "GameplayEffect.h"
 
 #include "UI/XPBarWidget.h"
+#include "UI/AbilityHotbar.h"
 
 #include "GameplayHudWidget.generated.h"
 
@@ -115,6 +116,9 @@ public:
 
 	UFUNCTION(Category = "Ability Block")
 		void SetAbilityHotbarBlock(int32 BlockIndex, TSubclassOf<class UP4GameplayAbility> Ability);
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Input Menus | Inventory")
+		void UpdateAbilityHotbarBlockBinding(EHotbarType HotbarType, int32 blockIndex, const FInputChord& InputChord);
 
 	UFUNCTION(BlueprintCallable, Category = "Crosshair")
 		void GetCrosshairGroundLocation(float MaxSearchDistance, FVector& EndLocation, FVector& StartLocation);

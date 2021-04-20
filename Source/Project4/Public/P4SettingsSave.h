@@ -21,6 +21,7 @@ public:
 		float MouseSensitivity;
 	
 
+
 	UPROPERTY(BlueprintReadWrite, Category = "Audio")
 		float Master;
 

@@ -8,6 +8,13 @@
 #include "AbilityHotbar.generated.h"
 
 
+UENUM(BlueprintType)
+enum class EHotbarType : uint8
+{
+	// 0 None
+	AbilityHotbar		UMETA(DisplayName = "AbilityHotbar"),
+	Hotbar				UMETA(DisplayName = "Hotbar")
+};
 
 /**
  * 
