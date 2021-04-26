@@ -132,6 +132,16 @@ void AProject4Controller::Client_DisplaypAbilityChoicesWidget_Implementation(con
 	GameplayHUDWidget->SetupAbilitySelectionWidget(Abilities);
 }
 
+void AProject4Controller::Client_DisplaypAbilityModifierAbilityChoicesWidget_Implementation(const TArray<TSubclassOf<UP4GameplayAbility>>& AbilityChoices)
+{
+	GameplayHUDWidget->SetupAbilityModifierAbilitySelectionWidget(AbilityChoices);
+}
+
+void AProject4Controller::Client_DisplaypAbilityModifierChoicesWidget_Implementation(const TArray<FP4AbilityModifierInfoStruct>& AbilityModifierInfos)
+{
+	GameplayHUDWidget->SetupAbilityModifierSelectionWidget(AbilityModifierInfos);
+}
+
 void AProject4Controller::SendUIAbilityError(EAbilityErrorText ErrorType)
 {
 	GameplayHUDWidget->NewAbilityErrorMessage(ErrorType);

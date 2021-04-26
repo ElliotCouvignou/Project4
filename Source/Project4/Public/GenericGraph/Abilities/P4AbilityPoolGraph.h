@@ -26,6 +26,18 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void GetAbilitiesFromPoolsAndCategory(TArray<EClassAbilityPoolType>& AbilityPools, EAbilityCategory Category, TArray<TSubclassOf<UP4GameplayAbility>>& Result);
 
+	UFUNCTION(BlueprintCallable)
+		void GetAbilitiesFromPools(const TArray<EClassAbilityPoolType>& AbilityPools, TArray<TSubclassOf<UP4GameplayAbility>>& Result);
+
+	UFUNCTION(BlueprintCallable)
+		void GetAbilityNodesFromPools(const TArray<EClassAbilityPoolType>& AbilityPools, TArray<UP4AbilityNode*>& Result);
+
+	UFUNCTION(BlueprintCallable)
+		void GetLearnedAbilityNodesFromPools(const TArray<EClassAbilityPoolType>& AbilityPools, const TArray<TSubclassOf<UP4GameplayAbility>>& LearnedAbilities, TArray<UP4AbilityNode*>& Result);
+
+	UFUNCTION(BlueprintCallable)
+		void GetAbilityNodes(const TArray<EClassAbilityPoolType>& AbilityPools, const TSubclassOf<UP4GameplayAbility> AbilityClass, TArray<UP4AbilityNode*>& Result);
+
 	UPROPERTY(EditDefaultsOnly, Category = "Ability Pool")
 		FLinearColor AbilityPoolColor;
 

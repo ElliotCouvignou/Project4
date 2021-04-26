@@ -10,7 +10,7 @@
 
 #include "UI/XPBarWidget.h"
 #include "UI/AbilityHotbar.h"
-
+#include "AbilitySystem/P4AbilityModifier.h"
 #include "GameplayHudWidget.generated.h"
 
 /**
@@ -185,6 +185,11 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Skill Drops")
 		void SetupAbilitySelectionWidget(const TArray<TSubclassOf<UP4GameplayAbility>>& Abilities);
 
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Skill Drops")
+		void SetupAbilityModifierAbilitySelectionWidget(const TArray<TSubclassOf<UP4GameplayAbility>>& Abilities);
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Skill Drops")
+		void SetupAbilityModifierSelectionWidget(const TArray<FP4AbilityModifierInfoStruct>& AbilityModifierInfos);
 
 	// Getter fucntions
 	UFUNCTION()

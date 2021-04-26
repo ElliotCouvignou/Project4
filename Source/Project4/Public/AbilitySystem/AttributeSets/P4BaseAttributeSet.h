@@ -219,6 +219,12 @@ public:
 	ATTRIBUTE_ACCESSORS(UP4BaseAttributeSet, MagicPower)
 		UFUNCTION()
 		virtual void OnRep_MagicPower(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, MagicPower, Previous); }
+
+	UPROPERTY(Category = "Player Attributes | Offensive", EditAnywhere, ReplicatedUsing = OnRep_HealPower, BlueprintReadWrite)
+		FGameplayAttributeData HealPower;
+	ATTRIBUTE_ACCESSORS(UP4BaseAttributeSet, HealPower)
+		UFUNCTION()
+		virtual void OnRep_HealPower(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UP4BaseAttributeSet, HealPower, Previous); }
 	
 	
 	/* Independent Weapon of main hand (Main hand) auto Weapon (so main hand AA damage isnt equal to offhand)  */

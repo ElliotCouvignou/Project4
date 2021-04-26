@@ -107,6 +107,7 @@ void UDamageExecution::Execute_Implementation(const FGameplayEffectCustomExecuti
 	{
 		OutExecutionOutput.AddOutputModifier(FGameplayModifierEvaluatedData(Damage().DamageProperty, EGameplayModOp::Additive, RawDamage));
 		//OutExecutionOutput.AddOutputModifier(FGameplayModifierEvaluatedData(Damage().HealthProperty, EGameplayModOp::Additive, -DamageDone));
+		OutExecutionOutput.MarkConditionalGameplayEffectsToTrigger();
 	}
 	
 	//Congratulations, your damage calculation is complete!

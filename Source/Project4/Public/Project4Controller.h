@@ -7,6 +7,7 @@
 #include "GameplayTagContainer.h"
 #include "GameplayEffect.h"
 #include "Project4.h"
+#include "AbilitySystem/P4AbilityModifier.h"
 #include "Project4Controller.generated.h"
 
 /* UNUSED ATM */
@@ -151,6 +152,16 @@ public:
 		void Client_DisplaypAbilityChoicesWidget(const TArray<TSubclassOf<UP4GameplayAbility>>& Abilities);
 	void Client_DisplaypAbilityChoicesWidget_Implementation(const TArray < TSubclassOf<UP4GameplayAbility>>& Abilities);
 	bool Client_DisplaypAbilityChoicesWidget_Validate(const TArray < TSubclassOf<UP4GameplayAbility>>& Abilities) { return true; }
+
+	UFUNCTION(Client, Reliable, WithValidation, BlueprintCallable)
+		void Client_DisplaypAbilityModifierAbilityChoicesWidget(const TArray<TSubclassOf<UP4GameplayAbility>>& AbilityChoices);
+	void Client_DisplaypAbilityModifierAbilityChoicesWidget_Implementation(const TArray<TSubclassOf<UP4GameplayAbility>>& AbilityChoices);
+	bool Client_DisplaypAbilityModifierAbilityChoicesWidget_Validate(const TArray<TSubclassOf<UP4GameplayAbility>>& AbilityChoices){ return true; }
+
+	UFUNCTION(Client, Reliable, WithValidation, BlueprintCallable)
+		void Client_DisplaypAbilityModifierChoicesWidget(const TArray<FP4AbilityModifierInfoStruct>& AbilityModifierInfos);
+	void Client_DisplaypAbilityModifierChoicesWidget_Implementation(const TArray<FP4AbilityModifierInfoStruct>& AbilityModifierInfos);
+	bool Client_DisplaypAbilityModifierChoicesWidget_Validate(const TArray<FP4AbilityModifierInfoStruct>& AbilityModifierInfos) { return true; }
 
 
 	// Called on Ability Error (e.g. Out of range, Out of mana, etc.)

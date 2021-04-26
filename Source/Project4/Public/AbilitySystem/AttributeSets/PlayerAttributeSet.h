@@ -55,6 +55,22 @@ public:
 	//virtual void AdjustAttributeForMaxChange(FGameplayAttributeData& AffectedAttribute, const FGameplayAttributeData& MaxAttribute, float NewMaxValue, const FGameplayAttribute& AffectedAttributeProperty);
 
 	////////////////////////////////////
+	/*         Defensive Stats      */
+	////////////////////////////////////
+
+	UPROPERTY(Category = "Player Attributes | Defensive", EditAnywhere, ReplicatedUsing = OnRep_BlockChance, BlueprintReadWrite)
+		FGameplayAttributeData BlockChance;
+	ATTRIBUTE_ACCESSORS(UPlayerAttributeSet, BlockChance)
+		UFUNCTION()
+		void OnRep_BlockChance(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UPlayerAttributeSet, BlockChance, Previous); }
+
+	UPROPERTY(Category = "Player Attributes | Defensive", EditAnywhere, ReplicatedUsing = OnRep_EvadeChance, BlueprintReadWrite)
+		FGameplayAttributeData EvadeChance;
+	ATTRIBUTE_ACCESSORS(UPlayerAttributeSet, EvadeChance)
+		UFUNCTION()
+		void OnRep_EvadeChance(const FGameplayAttributeData& Previous) { GAMEPLAYATTRIBUTE_REPNOTIFY(UPlayerAttributeSet, EvadeChance, Previous); }
+
+	////////////////////////////////////
 	/*         Progression Stats      */
 	////////////////////////////////////
 

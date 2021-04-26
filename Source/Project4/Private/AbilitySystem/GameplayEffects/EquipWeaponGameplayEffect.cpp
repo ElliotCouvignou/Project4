@@ -4,6 +4,7 @@
 #include "AbilitySystem/GameplayEffects/EquipWeaponGameplayEffect.h"
 
 UEquipWeaponGameplayEffect::UEquipWeaponGameplayEffect(const class FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
 {
 	DurationPolicy = EGameplayEffectDurationType::Infinite;
 	

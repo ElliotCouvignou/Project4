@@ -115,6 +115,7 @@ void UMagicDamageExecCalc::Execute_Implementation(const FGameplayEffectCustomExe
 	if (DamageDone > 0.f)
 	{
 		OutExecutionOutput.AddOutputModifier(FGameplayModifierEvaluatedData(MagicDamage().DamageProperty, EGameplayModOp::Additive, DamageDone));
+		OutExecutionOutput.MarkConditionalGameplayEffectsToTrigger();
 	}
 
 	//Congratulations, your damage calculation is complete!

@@ -116,7 +116,8 @@ void UPhysicalDamageExecCalc::Execute_Implementation(const FGameplayEffectCustom
 	// Relay damage val to meta attribute, will be handled by attribute class
 	if (DamageDone > 0.f)
 	{
-		OutExecutionOutput.AddOutputModifier(FGameplayModifierEvaluatedData(PhysicalDamage().DamageProperty, EGameplayModOp::Additive, DamageDone));		
+		OutExecutionOutput.AddOutputModifier(FGameplayModifierEvaluatedData(PhysicalDamage().DamageProperty, EGameplayModOp::Additive, DamageDone));	
+		OutExecutionOutput.MarkConditionalGameplayEffectsToTrigger();
 	}
 
 	//Congratulations, your damage calculation is complete!

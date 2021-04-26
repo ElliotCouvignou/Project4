@@ -274,6 +274,7 @@ void UP4BaseAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& 
 	
 	DOREPLIFETIME_CONDITION_NOTIFY(UP4BaseAttributeSet, AttackPower, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UP4BaseAttributeSet, MagicPower, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UP4BaseAttributeSet, HealPower, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UP4BaseAttributeSet, MainHandWeaponPower, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UP4BaseAttributeSet, MainHandAttackInterval, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UP4BaseAttributeSet, OffHandWeaponPower, COND_None, REPNOTIFY_Always);

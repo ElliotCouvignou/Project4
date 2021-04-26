@@ -45,6 +45,10 @@ void UPlayerAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& 
 {
 	
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME_CONDITION_NOTIFY(UPlayerAttributeSet, BlockChance, COND_OwnerOnly, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UPlayerAttributeSet, EvadeChance, COND_OwnerOnly, REPNOTIFY_Always);
+
 	////////////////////////////////////
 	/*         Progression Stats      */
 	////////////////////////////////////

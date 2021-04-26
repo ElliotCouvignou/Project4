@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GenericGraphNode.h"
 #include "GameplayTagContainer.h"
+#include "AbilitySystem/P4AbilityModifier.h"
 #include "AbilitySystem/P4PlayerAbilitySystemComponent.h" // only necessary for EAbilityPoolType
 #include "P4AbilityNode.generated.h"
 
@@ -42,6 +43,9 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Category")
 		EAbilityCategory CategoryType;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability")
+		TMap<FGameplayTag, FP4AbilityModifierBaseInfoStruct> AbilityModifiers;
 
 	UFUNCTION(BlueprintCallable, Category = "Utility")
 		void GetLeafNodes(TArray<UP4AbilityNode*>& Result);

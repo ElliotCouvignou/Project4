@@ -7,8 +7,10 @@
 #include "Project4.h"
 #include "Project4Controller.h"
 #include "GameplayTagContainer.h"
-#include "UI/AbilityTooltipWidget.h" // for tooltip struct info
+#include "UI/AbilityTooltipWidget.h" // for tooltip struct info'
+#include "AbilitySystem/GameplayEffects/P4AbilityModifierGameplayEffect.h"
 #include "P4GameplayAbility.generated.h"
+
 
 
 
@@ -88,5 +90,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		FRotator GetLookatRotation(float Range, FVector SourceLocation);
+
+
 
 };

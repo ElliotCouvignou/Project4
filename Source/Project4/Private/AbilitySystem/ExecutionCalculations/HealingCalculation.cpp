@@ -105,5 +105,6 @@ void UHealingCalculation::Execute_Implementation(const FGameplayEffectCustomExec
 	if (HealingDone > 0.f)
 	{
 		OutExecutionOutput.AddOutputModifier(FGameplayModifierEvaluatedData(Heal().HealProperty, EGameplayModOp::Additive, HealingDone));
+		OutExecutionOutput.MarkConditionalGameplayEffectsToTrigger();
 	}
 }
