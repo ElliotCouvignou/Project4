@@ -19,6 +19,10 @@ UP4BaseAttributeSet::UP4BaseAttributeSet(const FObjectInitializer& ObjectInitial
 	: Super(ObjectInitializer)
 {
 	
+	DamageNumberContainerFilter = FGameplayTagContainer();
+	DamageNumberContainerFilter.AddTagFast(FGameplayTag::RequestGameplayTag("Effect.Damage.Physical"));
+	DamageNumberContainerFilter.AddTagFast(FGameplayTag::RequestGameplayTag("Effect.Damage.Magic"));
+	DamageNumberContainerFilter.AddTagFast(FGameplayTag::RequestGameplayTag("Effect.Damage.Crit"));
 }
 
 void UP4BaseAttributeSet::PreAttributeBaseChange(const FGameplayAttribute& Attribute, float& NewValue) const
@@ -174,7 +178,7 @@ void UP4BaseAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCall
 					{
 						FGameplayTagContainer DamageNumberTags;
 						Data.EffectSpec.GetAllAssetTags(DamageNumberTags);
-						DamageNumberTags = DamageNumberTags.Filter(DamageNumberContainerFilter);
+						//DamageNumberTags = DamageNumberTags.Filter(DamageNumberContainerFilter);
 	
 						/* Look at dynamic asset tags for info about damage type */
 						if (Data.EffectSpec.DynamicAssetTags.HasTag(CritTag))

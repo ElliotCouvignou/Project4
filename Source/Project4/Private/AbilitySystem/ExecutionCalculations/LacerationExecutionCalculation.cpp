@@ -3,6 +3,8 @@
 
 #include "AbilitySystem/ExecutionCalculations/LacerationExecutionCalculation.h"
 #include "AbilitySystem/AttributeSets/PlayerAttributeSet.h"
+#include "AbilitySystem/P4PlayerAbilitySystemComponent.h"
+#include "AbilitySystem/P4AbilityModifier.h"
 #include "AbilitySystem/P4AbilitySystemComponent.h"
 
 
@@ -43,7 +45,10 @@ void ULacerationExecutionCalculation::Execute_Implementation(const FGameplayEffe
 	// We put AbilitySystemComponents into little helper variables. Not necessary, 
 	// but it helps keeping us from typing so much.
 	UAbilitySystemComponent* TargetAbilitySystemComponent = ExecutionParams.GetTargetAbilitySystemComponent();
-	UAbilitySystemComponent* SourceAbilitySystemComponent = ExecutionParams.GetSourceAbilitySystemComponent();
+	UP4PlayerAbilitySystemComponent* SourceAbilitySystemComponent = Cast<UP4PlayerAbilitySystemComponent>(ExecutionParams.GetSourceAbilitySystemComponent());
+
+	if (!SourceAbilitySystemComponent)
+		return;
 
 	AActor* SourceActor = SourceAbilitySystemComponent ? SourceAbilitySystemComponent->GetAvatarActor() : nullptr; //If our AbilitySystemComponents are valid, we get each their owning actors and put them in variables. This is mostly to prevent crashing by trying to get the AvatarActor variable from
 	AActor* TargetActor = TargetAbilitySystemComponent ? TargetAbilitySystemComponent->GetAvatarActor() : nullptr; //a null pointer.
@@ -61,6 +66,7 @@ void ULacerationExecutionCalculation::Execute_Implementation(const FGameplayEffe
 	EvaluationParameters.SourceTags = SourceTags;
 	EvaluationParameters.TargetTags = TargetTags;
 
+	
 	if (SourceActor && TargetActor && (SourceActor->GetDistanceTo(TargetActor) <= RefundDistance))
 	{
 		// Refund Mana
@@ -70,13 +76,19 @@ void ULacerationExecutionCalculation::Execute_Implementation(const FGameplayEffe
 		FGameplayTag LacerationCDTag = FGameplayTag::RequestGameplayTag(FName("Cooldown.Skill.Berserker.Laceration"));
 		FGameplayEffectQuery Query = FGameplayEffectQuery::MakeQuery_MatchAnyOwningTags(FGameplayTagContainer(LacerationCDTag));
 		TArray<FActiveGameplayEffectHandle> CD_GEArray = SourceAbilitySystemComponent->GetActiveEffects(Query);
+
+		// TODO: maybe move magvalue collection to SetByCaller magnitude on Mana (use mana because already snapshotted).
+		TArray<float> MagValues;
+		UP4AbilityModifierInfo* ModInfo = *SourceAbilitySystemComponent->AbilityModifiers.Find(FGameplayTag::RequestGameplayTag(FName("AbilityModifier.Laceration.BleedCDR")));
+		ModInfo->CalculateModifierMagnitudes(MagValues);
+		//CooldownRefundAmount = 
 		for (const FActiveGameplayEffectHandle& CD_GEHandle : CD_GEArray)
 		{
 			const FActiveGameplayEffect* ActiveGE = SourceAbilitySystemComponent->GetActiveGameplayEffect(CD_GEHandle);	
 			UWorld* World = SourceActor->GetWorld();
 			if (World)
 			{
-				float NewCDDuration = FMath::Clamp(ActiveGE->GetTimeRemaining(World->GetTimeSeconds()) - CooldownRefundAmount, 0.f, 9000.f);
+				float NewCDDuration = FMath::Clamp(ActiveGE->GetTimeRemaining(World->GetTimeSeconds()) - MagValues[0], 0.f, 9000.f);
 				UP4AbilitySystemComponent* P4ASC = Cast<UP4AbilitySystemComponent>(SourceAbilitySystemComponent);
 				if (P4ASC)
 				{

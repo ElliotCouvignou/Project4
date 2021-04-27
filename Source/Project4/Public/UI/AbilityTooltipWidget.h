@@ -100,6 +100,37 @@ struct FP4AbilityDetailsTableRow : public FTableRowBase
 };
 
 
+/* Ability tooltip displayed to player is generated with this struct info*/
+USTRUCT(BlueprintType)
+struct FAbilityModifierTooltipStruct
+{
+	GENERATED_USTRUCT_BODY()
+
+	/* If false, no tooltip will be generated when hovering this ability */
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Tooltip | Essential")
+		bool bGenerateTooltip;
+
+	/* Name of ability displayed to players */
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Tooltip | Ability Name")
+		FText ModifierName;
+
+	/* This should be a rich text style description for those pretty colors */
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Tooltip | Descriptions")
+		FText Description;
+
+};
+
+USTRUCT(BlueprintType)
+struct FP4AbilityModifierDetailsTableRow : public FTableRowBase
+{
+	GENERATED_BODY()
+
+
+	/** Details on tooltip and varaibles to help generate UI **/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tooltip")
+		FAbilityModifierTooltipStruct TooltipStruct;
+};
+
 /**
  * 
  */

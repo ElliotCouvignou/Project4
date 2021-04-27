@@ -100,13 +100,14 @@ void UPhysicalDamageExecCalc::Execute_Implementation(const FGameplayEffectCustom
 	FGameplayTagContainer AssetTags;
 	Spec.GetAllAssetTags(AssetTags);
 
+	FGameplayEffectSpec* MutableSpec = ExecutionParams.GetOwningSpecForPreExecuteMod();
 	// Determine Crit Strike (uses applied bonuses)
 	if (FMath::FRand() <= CritChance && !AssetTags.HasTagExact(FGameplayTag::RequestGameplayTag(FName("Effect.CannotCrit"))))
 	{
 		RawDamage *= 1.f + CritDamage;
 
 		/* Add dynamic crit tag to this GE spec To be read in player Attributes post exec */
-		FGameplayEffectSpec* MutableSpec = ExecutionParams.GetOwningSpecForPreExecuteMod();
+
 		MutableSpec->DynamicAssetTags.AddTag(FGameplayTag::RequestGameplayTag(FName("Effect.Damage.Crit")));
 	}
 	
@@ -116,6 +117,7 @@ void UPhysicalDamageExecCalc::Execute_Implementation(const FGameplayEffectCustom
 	// Relay damage val to meta attribute, will be handled by attribute class
 	if (DamageDone > 0.f)
 	{
+		MutableSpec->DynamicAssetTags.AddTag(FGameplayTag::RequestGameplayTag(FName("Effect.Damage.Physical")));
 		OutExecutionOutput.AddOutputModifier(FGameplayModifierEvaluatedData(PhysicalDamage().DamageProperty, EGameplayModOp::Additive, DamageDone));	
 		OutExecutionOutput.MarkConditionalGameplayEffectsToTrigger();
 	}

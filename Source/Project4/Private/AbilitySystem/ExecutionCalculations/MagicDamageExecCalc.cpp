@@ -98,13 +98,14 @@ void UMagicDamageExecCalc::Execute_Implementation(const FGameplayEffectCustomExe
 	FGameplayTagContainer AssetTags;
 	Spec.GetAllAssetTags(AssetTags);
 
+	FGameplayEffectSpec* MutableSpec = ExecutionParams.GetOwningSpecForPreExecuteMod();
 	// Determine Crit Strike (uses applied bonuses)
 	if (FMath::FRand() <= CritChance && !AssetTags.HasTagExact(FGameplayTag::RequestGameplayTag(FName("Effect.CannotCrit"))))
 	{
 		RawDamage *= 1.f + CritDamage;
 
 		/* Add dynamic Tags to this GE for damage info */
-		FGameplayEffectSpec* MutableSpec = ExecutionParams.GetOwningSpecForPreExecuteMod();
+		
 		MutableSpec->DynamicAssetTags.AddTag(FGameplayTag::RequestGameplayTag(FName("Effect.Damage.Crit")));
 		
 	}
@@ -114,6 +115,7 @@ void UMagicDamageExecCalc::Execute_Implementation(const FGameplayEffectCustomExe
 	// Relay damage val to meta attribute, will be handled by attribute class
 	if (DamageDone > 0.f)
 	{
+		MutableSpec->DynamicAssetTags.AddTag(FGameplayTag::RequestGameplayTag(FName("Effect.Damage.Magic")));
 		OutExecutionOutput.AddOutputModifier(FGameplayModifierEvaluatedData(MagicDamage().DamageProperty, EGameplayModOp::Additive, DamageDone));
 		OutExecutionOutput.MarkConditionalGameplayEffectsToTrigger();
 	}

@@ -174,6 +174,12 @@ public:
 		void ShowAbilityTooltipFromWidget(TSubclassOf<class UP4GameplayAbility> AbilityClass, const UUserWidget* Widget);
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Input Menus | Abilities")
+		void ShowAbilityModifierTooltipFromWidget(class UP4AbilityModifierInfo* ModifierInfo, const UUserWidget* Widget);
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Input Menus | Abilities")
+		void ShowAbilityModifierTooltip(class UP4AbilityModifierInfo* ModifierInfo, const FVector2D ViewportLocation);
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Input Menus | Abilities")
 		void HideAbilityTooltip();
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Input Menus | Inventory")

@@ -139,4 +139,9 @@ FRotator UP4GameplayAbility::GetLookatRotation(float Range, FVector SourceLocati
 	//return (Result.bBlockingHit) ? UKismetMathLibrary::FindLookAtRotation(SourceLocation, Result.Location) : ShootRotation;
 }
 
+//void UP4GameplayAbility::CalculateAbilityMagnitudes_Implementation(const int& AbilityLevel, TArray<float>& Results)
+//{
+//	Results.Empty();
+//}
+
 

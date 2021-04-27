@@ -91,6 +91,4 @@ public:
 	UFUNCTION(BlueprintCallable)
 		FRotator GetLookatRotation(float Range, FVector SourceLocation);
 
-
-
 };

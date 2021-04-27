@@ -40,7 +40,7 @@ public:
 		TArray<EClassAbilityPoolType> AbilityPools;
 
 	UPROPERTY(EditAnywhere, Replicated, BlueprintReadWrite, Category = "Abilities | Pools")
-		TMap<TSubclassOf<UP4GameplayAbility>, FP4AbilityModifierInfoMapStruct> AbilityModifiers;
+		TMap<FGameplayTag, UP4AbilityModifierInfo*> AbilityModifiers;
 
 	UPROPERTY(EditAnywhere, Replicated, BlueprintReadWrite, Category = "Abilities | Pools")
 		int MaxAbilityPools = 1;
@@ -91,7 +91,7 @@ public:
 	bool Server_OnAbilityModifierAbilityChoiceSelected_Validate(TSubclassOf<UP4GameplayAbility> SelectedAbility) { return true; }
 
 	UFUNCTION(BlueprintCallable, Server, Reliable, WithValidation, Category = "Abilities")
-		void Server_OnPlayerAbilityModifierSelected(TSubclassOf<UP4GameplayAbility> AbilityClass, UP4AbilityModifierInfo* ModifierInfo);
-	void Server_OnPlayerAbilityModifierSelected_Implementation(TSubclassOf<UP4GameplayAbility> AbilityClass, UP4AbilityModifierInfo* ModifierInfo);
-	bool Server_OnPlayerAbilityModifierSelected_Validate(TSubclassOf<UP4GameplayAbility> AbilityClass, UP4AbilityModifierInfo* ModifierInfo) { return true; }
+		void Server_OnPlayerAbilityModifierSelected(UP4AbilityModifierInfo* ModifierInfo);
+	void Server_OnPlayerAbilityModifierSelected_Implementation(UP4AbilityModifierInfo* ModifierInfo);
+	bool Server_OnPlayerAbilityModifierSelected_Validate(UP4AbilityModifierInfo* ModifierInfo) { return true; }
 };

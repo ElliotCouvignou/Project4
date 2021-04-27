@@ -250,41 +250,23 @@ void UP4PlayerAbilitySystemComponent::Server_OnAbilityModifierAbilityChoiceSelec
 	}
 }
 
-void UP4PlayerAbilitySystemComponent::Server_OnPlayerAbilityModifierSelected_Implementation(TSubclassOf<UP4GameplayAbility> AbilityClass, UP4AbilityModifierInfo* ModifierInfo)
+void UP4PlayerAbilitySystemComponent::Server_OnPlayerAbilityModifierSelected_Implementation(UP4AbilityModifierInfo* ModifierInfo)
 {
 	// Ability Modifiers are setup so that all you need to enable them is to grant tag and store modifier magnitude in ASC
-	if (!AbilityClass)
+	if (!ModifierInfo || !ModifierInfo->GrantedTag.IsValid())
 		return;
 
-	if (AbilityModifiers.Contains(AbilityClass))
+	if (AbilityModifiers.Contains(ModifierInfo->GrantedTag))
 	{
 		// Add onto existing key
-		//
-		FP4AbilityModifierInfoMapStruct* Elem = AbilityModifiers.Find(AbilityClass);
-		if (Elem->AbilityModifiers.Contains(ModifierInfo))
-		{
-			// Modifier already exists so override if magnitude is greater (should always be the case once magnitudes are scalled off current values if possible)
-			UP4AbilityModifierInfo* ElemInfo = Elem->AbilityModifiers[Elem->AbilityModifiers.Find(ModifierInfo)];
-			ElemInfo->ModifierMagnitude = FMath::Max(ElemInfo->ModifierMagnitude, ModifierInfo->ModifierMagnitude);
-		}
-		else
-		{
-			// first time player is learning this ability modifier, create entry inn modtotinfo map
-			FP4AbilityModifierInfoMapStruct NewElemMap;
-			NewElemMap.AbilityModifiers.Add(ModifierInfo);
-			AddLooseGameplayTag(ModifierInfo->GrantedTag);
-			bIsNetDirty = true;
-		}
+		// Modifier already exists so override if magnitude is greater (should always be the case once magnitudes are scalled off current values if possible)
+		UP4AbilityModifierInfo* ElemInfo = AbilityModifiers[ModifierInfo->GrantedTag];
+		ElemInfo->ModifierMagnitude = FMath::Max(ElemInfo->ModifierMagnitude, ModifierInfo->ModifierMagnitude);
 	}
 	else
 	{
 		// first ability modifier of this ability, create key and containing info map
-		TTuple<TSubclassOf<UP4GameplayAbility>, FP4AbilityModifierInfoMapStruct> NewElem;
-		NewElem.Key = AbilityClass;
-
-		FP4AbilityModifierInfoMapStruct NewElemMap;
-		NewElemMap.AbilityModifiers.Add(ModifierInfo);
-		NewElem.Value = NewElemMap;		
+		AbilityModifiers.Add(TTuple<FGameplayTag, UP4AbilityModifierInfo*>(ModifierInfo->GrantedTag, ModifierInfo));
 		AddLooseGameplayTag(ModifierInfo->GrantedTag);
 		bIsNetDirty = true;
 	}

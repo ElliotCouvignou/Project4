@@ -158,7 +158,7 @@ public:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Generated Info")
 		float ModifierMagnitude = 0.f;
 
-	UFUNCTION(BlueprintNativeEvent, Category = "Essential")
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Essential")
 		void CalculateModifierMagnitudes(TArray<float>& Results);
 
 	virtual void CalculateModifierMagnitudes_Implementation(TArray<float>& Results);
