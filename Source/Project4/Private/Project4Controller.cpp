@@ -137,7 +137,7 @@ void AProject4Controller::Client_DisplaypAbilityModifierAbilityChoicesWidget_Imp
 	GameplayHUDWidget->SetupAbilityModifierAbilitySelectionWidget(AbilityChoices);
 }
 
-void AProject4Controller::Client_DisplaypAbilityModifierChoicesWidget_Implementation(const TArray<FP4AbilityModifierInfoStruct>& AbilityModifierInfos)
+void AProject4Controller::Client_DisplaypAbilityModifierChoicesWidget_Implementation(const TArray<UP4AbilityModifierInfo*>& AbilityModifierInfos)
 {
 	GameplayHUDWidget->SetupAbilityModifierSelectionWidget(AbilityModifierInfos);
 }

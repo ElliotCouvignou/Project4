@@ -16,25 +16,6 @@ UP4PlayerAbilitySystemComponent::UP4PlayerAbilitySystemComponent()
 	AbilityPools = { EClassAbilityPoolType::None };
 }
 
-void UP4PlayerAbilitySystemComponent::TestModiftyAbility(TSubclassOf<UP4GameplayAbility> SelectedAbility)
-{
-	if (SelectedAbility)
-	{
-		print(FString("Start test"));
-
-		FGameplayAbilitySpec* testspec = this->FindAbilitySpecFromClass(SelectedAbility);
-		if (testspec)
-		{
-			UP4GameplayAbility* p4gpa = Cast<UP4GameplayAbility>(testspec->Ability);
-			if (p4gpa)
-			{
-				p4gpa->testfloat = 1.f;
-				print(FString("set testfloat to 1,.f"));
-			}
-		}
-	}
-}
-
 void UP4PlayerAbilitySystemComponent::GetLearnedPoolAbilities(TArray<TSubclassOf<UP4GameplayAbility>>& Abilities)
 {
 	Abilities.Empty();
@@ -211,55 +192,55 @@ void UP4PlayerAbilitySystemComponent::Server_OnAbilityModifierAbilityChoiceSelec
 
 			// generate one array of abilitymodifiers for this abilityclass
 			// Tally up weights as well for rolling N Modifiers
-			TMap<FGameplayTag, FP4AbilityModifierBaseInfoStruct> AbilityModifierInfos;
+			TArray<TSubclassOf<UP4AbilityModifierInfo>> AbilityModifierInfos;
 			for (UP4AbilityNode* Node : AbilityNodes)
 			{
 				AbilityModifierInfos.Append(Node->AbilityModifiers);
-				//TArray<FP4AbilityModifierBaseInfoStruct> Infos;
-				//Node->AbilityModifiers.GenerateValueArray(Infos);
 			}
 
 			// from this array of modifiers, choose N Amount
 			// TODO: figure out N (Currently N = 3)
-			TArray<FP4AbilityModifierBaseInfoStruct> Values;
-			AbilityModifierInfos.GenerateValueArray(Values);
 			float TotalWeight = 0.f;
-			for (FP4AbilityModifierBaseInfoStruct& info : Values)
+			for (auto infoClass : AbilityModifierInfos)
 			{
-				TotalWeight += info.Weight;
+				if(infoClass)
+					TotalWeight += infoClass.GetDefaultObject()->Weight;
 			}
 
-			TArray<FP4AbilityModifierInfoStruct> Result;
-			while (Result.Num() < 3 && Values.Num() > 0)
+			TArray<UP4AbilityModifierInfo*> Result;
+			while (Result.Num() < 3 && AbilityModifierInfos.Num() > 0)
 			{
-				// Get Random Key Based on Weighted range
-				FP4AbilityModifierInfoStruct GeneratedInfo;
+				// Get Random abilitymodifier class Based on Weighted range
+				
+				TSubclassOf<UP4AbilityModifierInfo> RandomClass;
 				int idx = 0;
 				float RandWeight = FMath::RandRange(0.f, TotalWeight);
-				while (idx < Values.Num())
+				while (idx < AbilityModifierInfos.Num())
 				{
-					RandWeight -= Values[idx].Weight;
+					RandWeight -= AbilityModifierInfos[idx].GetDefaultObject()->Weight;
 					if (RandWeight <= 0.f)
 					{
-						GeneratedInfo = Values[idx];	
-						TotalWeight -= Values[idx].Weight;
-						Values.RemoveAt(idx);
+						//GeneratedInfo = AbilityModifierInfos[idx].GetDefaultObject()->InfoStruct;
+						RandomClass = AbilityModifierInfos[idx];
+						TotalWeight -= AbilityModifierInfos[idx].GetDefaultObject()->Weight;
+						AbilityModifierInfos.RemoveAt(idx);
 						break; // break out of this while (found out key for this iter)
-						
 					}
 					idx++;
 				}
 				
+				UP4AbilityModifierInfo* GeneratedInfo = NewObject<UP4AbilityModifierInfo>(GetOwnerActor(), RandomClass);
+				
 				// roll ability magnitude 
 				// TODO: Scale magnitude to player's current Aability modifier magnitude 
-				GeneratedInfo.ModifierMagnitude = FMath::RandRange(0.f, 1.f);
+				GeneratedInfo->ModifierMagnitude = FMath::RandRange(0.f, 1.f);
 
 				// TODO: determine rank from magnitude
-				GeneratedInfo.AbilityModifierRank = (GeneratedInfo.ModifierMagnitude > 0.66f) ? EAbilityModifierRank::Epic : EAbilityModifierRank::Rare;
-				GeneratedInfo.AbilityModifierRank = (GeneratedInfo.ModifierMagnitude > 0.33f) ? GeneratedInfo.AbilityModifierRank : EAbilityModifierRank::Common;
+				GeneratedInfo->AbilityModifierRank = (GeneratedInfo->ModifierMagnitude > 0.66f) ? EAbilityModifierRank::Epic : EAbilityModifierRank::Rare;
+				GeneratedInfo->AbilityModifierRank = (GeneratedInfo->ModifierMagnitude > 0.33f) ? GeneratedInfo->AbilityModifierRank : EAbilityModifierRank::Common;
 
-				if (!GeneratedInfo.AbilityModifierIcon)
-					GeneratedInfo.AbilityModifierIcon = SelectedAbility.GetDefaultObject()->AbilityIcon;
+				if (!GeneratedInfo->AbilityModifierIcon)
+					GeneratedInfo->AbilityModifierIcon = SelectedAbility.GetDefaultObject()->AbilityIcon;
 
 				Result.Add(GeneratedInfo);
 			}
@@ -269,7 +250,7 @@ void UP4PlayerAbilitySystemComponent::Server_OnAbilityModifierAbilityChoiceSelec
 	}
 }
 
-void UP4PlayerAbilitySystemComponent::Server_OnPlayerAbilityModifierSelected_Implementation(TSubclassOf<UP4GameplayAbility> AbilityClass, const FP4AbilityModifierInfoStruct& ModifierInfo)
+void UP4PlayerAbilitySystemComponent::Server_OnPlayerAbilityModifierSelected_Implementation(TSubclassOf<UP4GameplayAbility> AbilityClass, UP4AbilityModifierInfo* ModifierInfo)
 {
 	// Ability Modifiers are setup so that all you need to enable them is to grant tag and store modifier magnitude in ASC
 	if (!AbilityClass)
@@ -280,18 +261,18 @@ void UP4PlayerAbilitySystemComponent::Server_OnPlayerAbilityModifierSelected_Imp
 		// Add onto existing key
 		//
 		FP4AbilityModifierInfoMapStruct* Elem = AbilityModifiers.Find(AbilityClass);
-		if (Elem->AbilityModToInfoMap.Contains(ModifierInfo.GrantedTag))
+		if (Elem->AbilityModifiers.Contains(ModifierInfo))
 		{
 			// Modifier already exists so override if magnitude is greater (should always be the case once magnitudes are scalled off current values if possible)
-			FP4AbilityModifierInfoStruct* ElemInfo = Elem->AbilityModToInfoMap.Find(ModifierInfo.GrantedTag);
-			ElemInfo->ModifierMagnitude = FMath::Max(ElemInfo->ModifierMagnitude, ModifierInfo.ModifierMagnitude);
+			UP4AbilityModifierInfo* ElemInfo = Elem->AbilityModifiers[Elem->AbilityModifiers.Find(ModifierInfo)];
+			ElemInfo->ModifierMagnitude = FMath::Max(ElemInfo->ModifierMagnitude, ModifierInfo->ModifierMagnitude);
 		}
 		else
 		{
 			// first time player is learning this ability modifier, create entry inn modtotinfo map
 			FP4AbilityModifierInfoMapStruct NewElemMap;
-			NewElemMap.AbilityModToInfoMap.Add(TTuple<FGameplayTag, FP4AbilityModifierInfoStruct>(ModifierInfo.GrantedTag, ModifierInfo));
-			AddLooseGameplayTag(ModifierInfo.GrantedTag);
+			NewElemMap.AbilityModifiers.Add(ModifierInfo);
+			AddLooseGameplayTag(ModifierInfo->GrantedTag);
 			bIsNetDirty = true;
 		}
 	}
@@ -302,9 +283,9 @@ void UP4PlayerAbilitySystemComponent::Server_OnPlayerAbilityModifierSelected_Imp
 		NewElem.Key = AbilityClass;
 
 		FP4AbilityModifierInfoMapStruct NewElemMap;
-		NewElemMap.AbilityModToInfoMap.Add(TTuple<FGameplayTag, FP4AbilityModifierInfoStruct>(ModifierInfo.GrantedTag, ModifierInfo));
+		NewElemMap.AbilityModifiers.Add(ModifierInfo);
 		NewElem.Value = NewElemMap;		
-		AddLooseGameplayTag(ModifierInfo.GrantedTag);
+		AddLooseGameplayTag(ModifierInfo->GrantedTag);
 		bIsNetDirty = true;
 	}
 }

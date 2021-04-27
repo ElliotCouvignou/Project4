@@ -159,9 +159,9 @@ public:
 	bool Client_DisplaypAbilityModifierAbilityChoicesWidget_Validate(const TArray<TSubclassOf<UP4GameplayAbility>>& AbilityChoices){ return true; }
 
 	UFUNCTION(Client, Reliable, WithValidation, BlueprintCallable)
-		void Client_DisplaypAbilityModifierChoicesWidget(const TArray<FP4AbilityModifierInfoStruct>& AbilityModifierInfos);
-	void Client_DisplaypAbilityModifierChoicesWidget_Implementation(const TArray<FP4AbilityModifierInfoStruct>& AbilityModifierInfos);
-	bool Client_DisplaypAbilityModifierChoicesWidget_Validate(const TArray<FP4AbilityModifierInfoStruct>& AbilityModifierInfos) { return true; }
+		void Client_DisplaypAbilityModifierChoicesWidget(const TArray<UP4AbilityModifierInfo*>& AbilityModifierInfos);
+	void Client_DisplaypAbilityModifierChoicesWidget_Implementation(const TArray<UP4AbilityModifierInfo*>& AbilityModifierInfos);
+	bool Client_DisplaypAbilityModifierChoicesWidget_Validate(const TArray<UP4AbilityModifierInfo*>& AbilityModifierInfos) { return true; }
 
 
 	// Called on Ability Error (e.g. Out of range, Out of mana, etc.)

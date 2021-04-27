@@ -189,7 +189,7 @@ public:
 		void SetupAbilityModifierAbilitySelectionWidget(const TArray<TSubclassOf<UP4GameplayAbility>>& Abilities);
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Skill Drops")
-		void SetupAbilityModifierSelectionWidget(const TArray<FP4AbilityModifierInfoStruct>& AbilityModifierInfos);
+		void SetupAbilityModifierSelectionWidget(const TArray<UP4AbilityModifierInfo*>& AbilityModifierInfos);
 
 	// Getter fucntions
 	UFUNCTION()

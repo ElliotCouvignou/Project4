@@ -45,7 +45,7 @@ public:
 		EAbilityCategory CategoryType;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability")
-		TMap<FGameplayTag, FP4AbilityModifierBaseInfoStruct> AbilityModifiers;
+		TArray<TSubclassOf<UP4AbilityModifierInfo>> AbilityModifiers;
 
 	UFUNCTION(BlueprintCallable, Category = "Utility")
 		void GetLeafNodes(TArray<UP4AbilityNode*>& Result);
