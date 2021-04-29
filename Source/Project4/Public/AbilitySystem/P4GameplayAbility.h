@@ -130,6 +130,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Utility")
 		void CreateCustomGameplayEffectSpec(TSubclassOf<UGameplayEffect> EffectClass, const FP4GEExposedParametersStruct& Params, const int& Level, FGameplayEffectSpecHandle& Result);
 
+	//UFUNCTION(BlueprintCallable, Category = "Utility")
+	//	void SetContitionalGameplayEffectSetByCallerByTag(TSubclassOf<UGameplayEffect> EffectClass, const FGameplayTag CallerTag, float Value);
+
 	UFUNCTION(BlueprintCallable, Server, Reliable, WithValidation)
 		void SendTargetDataToServer(UP4GameplayAbility* AbilityRef, const FVector& HitLocation);
 	void SendTargetDataToServer_Implementation(UP4GameplayAbility* AbilityRef, const FVector& HitLocation);

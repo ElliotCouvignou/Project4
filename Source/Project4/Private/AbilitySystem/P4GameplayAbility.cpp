@@ -66,6 +66,10 @@ void UP4GameplayAbility::CreateCustomGameplayEffectSpec(TSubclassOf<UGameplayEff
 	Result =  FGameplayEffectSpecHandle(NewSpec);
 }
 
+//void UP4GameplayAbility::SetContitionalGameplayEffectSetByCallerByTag(TSubclassOf<UGameplayEffect> EffectClass, const FGameplayTag CallerTag, float Value)
+//{
+//}
+
 void UP4GameplayAbility::SendTargetDataToServer_Implementation(UP4GameplayAbility* AbilityRef, const FVector& HitLocation)
 {
 	//FGameplayAbilityTargetDataHandle TargetRef = FGameplayAbilityTargetDataHandle(DataHandle);
