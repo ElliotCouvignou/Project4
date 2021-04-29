@@ -306,6 +306,7 @@ void AP4PlayerCharacterBase::PossessedBy(AController* NewController)
 		GiveEssentialAbilities();
 
 		InitFloatingStatusBarWidget();
+		InitFloatingTextWidgetComponent();
 
 	}
 }
@@ -351,6 +352,7 @@ void AP4PlayerCharacterBase::OnRep_PlayerState()
 
 
 		InitFloatingStatusBarWidget();
+		InitFloatingTextWidgetComponent();
 	}
 }
 

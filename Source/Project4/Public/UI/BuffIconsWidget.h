@@ -31,7 +31,7 @@ struct FBuffIconDataStruct
 		TooltipText = Ability->BuffToolTipText;
 
 		ResetDurationOnNewStack = SpecApplied.Def->StackDurationRefreshPolicy == EGameplayEffectStackingDurationPolicy::RefreshOnSuccessfulApplication;
-		Stackable = (SpecApplied.Def->StackLimitCount == 0 ? false : true);
+		Stackable = (SpecApplied.Def->StackLimitCount == 0) ? false : true;
 		StacksExpireTogether = SpecApplied.Def->StackExpirationPolicy == EGameplayEffectStackingExpirationPolicy::ClearEntireStack;
 		RestartOnExpire = SpecApplied.Def->StackExpirationPolicy == EGameplayEffectStackingExpirationPolicy::RefreshDuration;
 	}

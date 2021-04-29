@@ -4,12 +4,15 @@
 #include "AbilitySystem/ExecutionCalculations/HealingCalculation.h"
 #include "AbilitySystem/AttributeSets/PlayerAttributeSet.h"
 
+
+#define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Green,text)
+
+
 struct HealAttStruct
 {
 	DECLARE_ATTRIBUTE_CAPTUREDEF(Health); //The DECLARE_ATTRIBUTE_CAPTUREDEF macro actually only declares two variables. The variable names are dependent on the input, however. Here they will be HealthProperty(which is a UPROPERTY pointer)
 										  //and HealthDef(which is a FGameplayEffectAttributeCaptureDefinition).
 
-	DECLARE_ATTRIBUTE_CAPTUREDEF(MagicPower);
 
 	// Meta Attributes
 	DECLARE_ATTRIBUTE_CAPTUREDEF(Heal);
@@ -21,13 +24,6 @@ struct HealAttStruct
 		//on the receiving target of this execution. The last parameter is a bool, 
 		//and determines if we snapshot the attribute's value at the time of definition.
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UPlayerAttributeSet, Health, Target, false);
-
-		//This here is a different example: We still take the attribute from UPlayerAttributeSet, 
-		//but this time it is BaseAttackPower, and we look at the effect's source for it. 
-		//We also want to snapshot is because the effect's strength should be determined during
-		//its initial creation. A projectile wouldn't change damage values depending on the 
-		// source's stat changes halfway through flight, after all.
-		DEFINE_ATTRIBUTE_CAPTUREDEF(UPlayerAttributeSet, MagicPower, Source, true);
 
 		// Meta Attributes
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UPlayerAttributeSet, Heal, Target, false);
@@ -50,8 +46,7 @@ UHealingCalculation::UHealingCalculation(const FObjectInitializer& ObjectInitial
 	RelevantAttributesToCapture.Add(Attributes.HealthDef);
 	//However, an attribute added here on top of being added in RelevantAttributesToCapture will still be captured, but will not be shown for potential in-function modifiers in the GameplayEffect blueprint, more on that later.
 	//InvalidScopedModifierAttributes.Add(Attributes.HealthDef);
-
-	RelevantAttributesToCapture.Add(Attributes.MagicPowerDef);
+	RelevantAttributesToCapture.Add(Attributes.HealDef);
 }
 
 void UHealingCalculation::Execute_Implementation(const FGameplayEffectCustomExecutionParameters& ExecutionParams, FGameplayEffectCustomExecutionOutput& OutExecutionOutput) const
@@ -86,17 +81,15 @@ void UHealingCalculation::Execute_Implementation(const FGameplayEffectCustomExec
 	float Health = 0.f;
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(Attributes.HealthDef, EvaluationParameters, Health);
 
-	float MagicPower = 0.f;
-	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(Attributes.MagicPowerDef, EvaluationParameters, MagicPower);
-
+	float InputHeal = 0.f;
+	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(Attributes.HealDef, EvaluationParameters, InputHeal);
 
 	//Finally, we go through our simple example damage calculation. BaseAttackPower and AttackMultiplier come from soruce, DefensePower comes from target.
-	float BaseHeal = FMath::Max<float>(Spec.GetSetByCallerMagnitude(FGameplayTag::RequestGameplayTag(FName("Data.Heal")), false, -1.0f), 0.0f); //AttackPower / Armor + MagicPower / MagicResistance;
+	float BaseHeal = InputHeal + FMath::Max<float>(Spec.GetSetByCallerMagnitude(FGameplayTag::RequestGameplayTag(FName("Data.Heal")), false, -1.0f), 0.0f); //AttackPower / Armor + MagicPower / MagicResistance;
 
 	float RawHeal = BaseHeal; // Apply Bonuses here
 
 	float HealingDone = RawHeal; // Apply mitigation here
-
 
 	// Finally, we check if we even did any damage in this whole ordeal. 
 	// If yes, then we will add an outgoing execution modifer to the Health attribute we got from our target, 
@@ -106,5 +99,17 @@ void UHealingCalculation::Execute_Implementation(const FGameplayEffectCustomExec
 	{
 		OutExecutionOutput.AddOutputModifier(FGameplayModifierEvaluatedData(Heal().HealProperty, EGameplayModOp::Additive, HealingDone));
 		OutExecutionOutput.MarkConditionalGameplayEffectsToTrigger();
+	}
+	else if (HealingDone < 0.f)
+	{
+		// Negative healing sends heal back to source. Heal value should never be negative unless explicitly set so by GE
+		UGameplayEffect* GESourceHeal = NewObject<UGameplayEffect>(GetTransientPackage(), FName(TEXT("Heal")));
+		int32 Idx = GESourceHeal->Modifiers.Num();
+		GESourceHeal->Modifiers.SetNum(Idx + 1);
+		FGameplayModifierInfo& Info = GESourceHeal->Modifiers[Idx];
+		Info.ModifierMagnitude = FScalableFloat(-1*HealingDone);
+		Info.ModifierOp = EGameplayModOp::Additive;
+		Info.Attribute = UP4BaseAttributeSet::GetHealAttribute();
+		SourceAbilitySystemComponent->ApplyGameplayEffectToSelf(GESourceHeal, 1.0f, SourceAbilitySystemComponent->MakeEffectContext());
 	}
 }

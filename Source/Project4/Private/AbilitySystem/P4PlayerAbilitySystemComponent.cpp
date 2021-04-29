@@ -32,6 +32,7 @@ void UP4PlayerAbilitySystemComponent::GetLearnedPoolAbilities(TArray<TSubclassOf
 	}
 }
 
+
 void UP4PlayerAbilitySystemComponent::Server_OnAbilityPoolPicked_Implementation(EClassAbilityPoolType newPoolType)
 {
 	if (newPoolType != EClassAbilityPoolType::None)
@@ -256,6 +257,7 @@ void UP4PlayerAbilitySystemComponent::Server_OnPlayerAbilityModifierSelected_Imp
 	if (!ModifierInfo || !ModifierInfo->GrantedTag.IsValid())
 		return;
 
+	ModifierInfo->CalculateModifierMagnitudes(ModifierInfo->ModifierMagnitudes);
 	if (AbilityModifiers.Contains(ModifierInfo->GrantedTag))
 	{
 		// Add onto existing key

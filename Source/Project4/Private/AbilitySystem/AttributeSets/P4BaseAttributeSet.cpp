@@ -207,6 +207,7 @@ void UP4BaseAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCall
 	
 	if (Data.EvaluatedData.Attribute == GetHealAttribute()) {
 		// Try to extract a hit result
+		
 		FHitResult HitResult;
 		if (Context.GetHitResult())
 		{
@@ -215,19 +216,27 @@ void UP4BaseAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCall
 	
 		const float HealingDone = GetHeal();
 		SetHeal(0.f);
-	
-		if (HealingDone > 0.f && GetHealth() != GetHealthMax()) {
+
+		// uncomment to stop heal texts at max bal
+		if (HealingDone > 0.f /*&& GetHealth() != GetHealthMax()*/) 
+		{
 			// no testing for death transients here, Spell shouln't go off anyway if target is dead
 			// i.e check death before casting spell 
 	
-			const float NewHealth = GetHealth() + HealingDone;
-			SetHealth(FMath::Clamp(NewHealth, 0.f, GetHealthMax()));
+			if (GetHealth() != GetHealthMax())
+			{
+				const float NewHealth = GetHealth() + HealingDone;
+				SetHealth(FMath::Clamp(NewHealth, 0.f, GetHealthMax()));
+			}			
 	
 			if (TargetCharacter) {
 				// show healing numbers to source actor (DONT IGNORE SELF-HEAL)
 				AProject4Controller* PController = Cast<AProject4Controller>(SourceController);
-				if (PController) {
-					PController->DisplayHealNumber(HealingDone, TargetCharacter);
+				if (PController) 
+				{
+					FGameplayTagContainer HealTags;
+					Data.EffectSpec.GetAllAssetTags(HealTags);
+					PController->DisplayHealNumber(FP4DamageNumber(HealingDone, HealTags), TargetCharacter);
 				}
 			}
 		}

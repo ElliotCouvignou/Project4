@@ -10,7 +10,7 @@
 
 
 
-#include "UI/FloatingTextWidgetComponent.h"
+#include "UI/P4FloatingTextWidget.h"
 #include "UI/GameplayHudWidget.h"
 #include "UI/BuffIconsWidget.h"
 #include "..\Public\Project4Controller.h"
@@ -94,18 +94,20 @@ void AProject4Controller::SendCrosshairOffsetAngleToServer_Implementation(float 
 
 void AProject4Controller::DisplayDamageNumber_Implementation(FP4DamageNumber Damage, AProject4Character* TargetCharacter)
 {
-	UFloatingTextWidgetComponent* DamageText = NewObject<UFloatingTextWidgetComponent>(TargetCharacter, FloatingTextClass);
-	DamageText->RegisterComponent();
-	DamageText->AttachToComponent(TargetCharacter->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
-	DamageText->SetDamageText(Damage);
+	UP4FloatingTextWidget* DamageText = TargetCharacter->GetFloatingTextWidget();
+	if (DamageText)
+	{
+		DamageText->SetDamageText(Damage);
+	}
 }
 
-void AProject4Controller::DisplayHealNumber_Implementation(float HealValue, AProject4Character* TargetCharacter)
+void AProject4Controller::DisplayHealNumber_Implementation(FP4DamageNumber Heal, AProject4Character* TargetCharacter)
 {
-	UFloatingTextWidgetComponent* DamageText = NewObject<UFloatingTextWidgetComponent>(TargetCharacter, FloatingTextClass);
-	DamageText->RegisterComponent();
-	DamageText->AttachToComponent(TargetCharacter->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
-	DamageText->SetHealText(HealValue);
+	UP4FloatingTextWidget* DamageText = TargetCharacter->GetFloatingTextWidget();
+	if (DamageText)
+	{
+		DamageText->SetHealText(Heal);
+	}
 }
 
 void AProject4Controller::SetUIRespawnCountdown_Implementation(float Duration)

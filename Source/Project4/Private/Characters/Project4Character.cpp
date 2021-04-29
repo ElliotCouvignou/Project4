@@ -18,6 +18,7 @@
 
 #include "UI/GameplayHudWidget.h"
 #include "UI/FloatingStatusBarWidget.h"
+#include "UI/P4FloatingTextWidget.h"
 
 #include "GameplayAbilitySpec.h"
 #include "GameplayEffect.h"
@@ -76,13 +77,19 @@ AProject4Character::AProject4Character(const class FObjectInitializer& ObjectIni
 	UIFloatingStatusBarComponent->SetWidgetSpace(EWidgetSpace::Screen);
 	UIFloatingStatusBarComponent->SetDrawSize(FVector2D(500, 500));
 
+	FloatingTextWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(FName("FloatingTextWidgetComponent"));
+	FloatingTextWidgetComponent->SetupAttachment(GetMesh());
+	FloatingTextWidgetComponent->SetWidgetSpace(EWidgetSpace::Screen);
+	FloatingTextWidgetComponent->SetDrawSize(FVector2D(500, 500));
+
+
 	NiagaraComponent = CreateDefaultSubobject<UNiagaraComponent>(FName("NiagaraComponent"));
 	NiagaraComponent->SetupAttachment(RootComponent);
 
 	DeadTag = FGameplayTag::RequestGameplayTag(FName("State.Dead"));
 	StunnedTag = FGameplayTag::RequestGameplayTag(FName("Buffs.Negative.Stunned"));
 
-	RootComponent->SetVisibility(false, true);
+	//RootComponent->SetVisibility(false, true);
 
 	//Respawn = FGameplayTag::RequestGameplayTag(FName(""));
 }
@@ -199,9 +206,49 @@ void AProject4Character::InitFloatingStatusBarWidget()
 	}
 }
 
+void AProject4Character::InitFloatingTextWidgetComponent()
+{
+	// idk why but owning palyer doesn't initialize sometimes so do this in case
+	if (!FloatingTextWidgetComponent)
+	{
+		FloatingTextWidgetComponent = NewObject<UWidgetComponent>(this);
+		FloatingTextWidgetComponent->RegisterComponent();
+		FloatingTextWidgetComponent->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
+		FloatingTextWidgetComponent->SetWidgetSpace(EWidgetSpace::Screen);
+		FloatingTextWidgetComponent->SetDrawSize(FVector2D(500, 500));
+
+	}
+
+	if (AbilitySystemComponent.IsValid())
+	{
+		// Setup FloatingStatusBar UI for Locally Owned Players only but exclude your own FSB
+		// Skip Init when no pc is present (NPC's dont need to see hp bars)
+		APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+		if (PC)
+		{
+			if (UIFloatingTextWidgetClass)
+			{
+				UIFloatingTextWidget = CreateWidget<UP4FloatingTextWidget>(PC, UIFloatingTextWidgetClass);
+				if (UIFloatingTextWidget && FloatingTextWidgetComponent)
+				{
+					FloatingTextWidgetComponent->SetWidget(UIFloatingTextWidget);
+					FloatingTextWidgetComponent->SetDrawSize(UIFloatingTextWidget->GetDesiredSize());
+					//FloatingTextWidgetComponent->SetRelativeLocation(FVector(0, 0, GetCapsuleComponent()->GetScaledCapsuleHalfHeight() * FloatingStatusBarHeightCoeff));
+					FloatingTextWidgetComponent->SetCullDistance(FloatingStatusBarCullDistance);
+				}
+			}
+		}
+	}
+}
+
 UFloatingStatusBarWidget* AProject4Character::GetFloatingStatusBarWidget()
 {
 	return UIFloatingStatusBar;
+}
+
+UP4FloatingTextWidget* AProject4Character::GetFloatingTextWidget()
+{
+	return (UIFloatingTextWidget) ? UIFloatingTextWidget : Cast<UP4FloatingTextWidget>(FloatingTextWidgetComponent->GetWidget());
 }
 
 void AProject4Character::SetRightHandWeaponInfo(const UP4ItemWeaponObject* WeaponObject)

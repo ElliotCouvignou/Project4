@@ -129,9 +129,9 @@ public:
 
 	// Server calls this fucntion to display damage numbers to a player
 	UFUNCTION(Client, Reliable, WithValidation)
-		void DisplayHealNumber(float HealValue, AProject4Character* TargetCharacter);
-	void DisplayHealNumber_Implementation(float HealValue, AProject4Character* TargetCharacter);
-	bool DisplayHealNumber_Validate(float HealValue, AProject4Character* TargetCharacter) { return true; }
+		void DisplayHealNumber(FP4DamageNumber Heal, AProject4Character* TargetCharacter);
+	void DisplayHealNumber_Implementation(FP4DamageNumber Heal, AProject4Character* TargetCharacter);
+	bool DisplayHealNumber_Validate(FP4DamageNumber Heal, AProject4Character* TargetCharacter) { return true; }
 
 	UFUNCTION(Client, Reliable, WithValidation)
 		void SetUIRespawnCountdown(float Duration);
@@ -218,10 +218,6 @@ protected:
 	// TODO make this class on spawn not from GM
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 		TSubclassOf<class AP4PlayerCharacterBase> PlayerCharacterClass;
-
-	// Floating Text Component Class to create for dmg text
-	UPROPERTY(EditAnywhere, Category = "UI")
-		TSubclassOf<class UFloatingTextWidgetComponent> FloatingTextClass;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "UI")
 		class UGameplayHudWidget* GameplayHUDWidget;

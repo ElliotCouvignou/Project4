@@ -17,7 +17,7 @@
 
 
 #define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Green,text)
-
+#define CONSTRUCT_CLASS(Class, Name) Class* Name = NewObject<Class>(GetTransientPackage(), FName(TEXT(#Name)))
 
 UP4GameplayAbility::UP4GameplayAbility()
 {
@@ -29,7 +29,7 @@ UP4GameplayAbility::UP4GameplayAbility()
 	ActivationBlockedTags.AddTag(FGameplayTag::RequestGameplayTag(FName("Buffs.Negative.Stunned")));
 	ActivationBlockedTags.AddTag(FGameplayTag::RequestGameplayTag(FName("Buffs.Negative.Silenced")));
 	ActivationBlockedTags.AddTag(FGameplayTag::RequestGameplayTag(FName("State.DisabledAbilities")));
-	
+
 }
 
 void UP4GameplayAbility::OnAvatarSet(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec)
@@ -54,6 +54,16 @@ void UP4GameplayAbility::SendErrorMessageToUI(EAbilityErrorText ErrorType)
 			PController->SendUIAbilityError(ErrorType);
 		}
 	}
+}
+
+void UP4GameplayAbility::CreateCustomGameplayEffectSpec(TSubclassOf<UGameplayEffect> EffectClass, const FP4GEExposedParametersStruct& Params, const int& Level, FGameplayEffectSpecHandle& Result)
+{
+	UGameplayEffect* GE = NewObject<UGameplayEffect>(GetTransientPackage(), EffectClass);
+	GE->StackLimitCount = (Params.StackLimitCount.Key) ? Params.StackLimitCount.Value : GE->StackLimitCount;
+	
+	// TODO: make sure this doesnt cause mem leaks 
+	FGameplayEffectSpec* NewSpec = new FGameplayEffectSpec(GE, GetAbilitySystemComponentFromActorInfo()->MakeEffectContext(), Level);
+	Result =  FGameplayEffectSpecHandle(NewSpec);
 }
 
 void UP4GameplayAbility::SendTargetDataToServer_Implementation(UP4GameplayAbility* AbilityRef, const FVector& HitLocation)

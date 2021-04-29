@@ -294,6 +294,7 @@ void AP4MobCharacterBase::BeginPlay()
 		BindDelegates();
 
 		InitFloatingStatusBarWidget();
+		InitFloatingTextWidgetComponent();
 
 		AddAllStartupEffects();
 	}

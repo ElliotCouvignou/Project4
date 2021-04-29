@@ -110,10 +110,6 @@ struct FAbilityModifierTooltipStruct
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Tooltip | Essential")
 		bool bGenerateTooltip;
 
-	/* Name of ability displayed to players */
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Tooltip | Ability Name")
-		FText ModifierName;
-
 	/* This should be a rich text style description for those pretty colors */
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Tooltip | Descriptions")
 		FText Description;

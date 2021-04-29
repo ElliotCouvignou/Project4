@@ -151,8 +151,8 @@ void AProject4PlayerState::OnActiveGameplayEffectApplied(UAbilitySystemComponent
 		}
 		
 		// find reset policy
-		bool BuffResetTimer = (SpecApplied.Def->StackDurationRefreshPolicy == EGameplayEffectStackingDurationPolicy::NeverRefresh ? false : true);
-		bool Stackable = (SpecApplied.Def->StackLimitCount == 0 ? false : true);
+		bool BuffResetTimer = (SpecApplied.Def->StackDurationRefreshPolicy == EGameplayEffectStackingDurationPolicy::NeverRefresh) ? false : true;
+		bool Stackable = (SpecApplied.Def->StackLimitCount == 0) ? false : true;
 
 		const UP4GameplayAbility* Ability = Cast<UP4GameplayAbility>(SpecApplied.GetEffectContext().GetAbility());
 		

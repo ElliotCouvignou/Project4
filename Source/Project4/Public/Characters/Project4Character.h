@@ -52,14 +52,25 @@ protected:
 	UPROPERTY(Category = Abilities, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		USkeletalMeshComponent* MeshLH;
 
+	/** The main skeletal mesh associated with this Character (optional sub-object). */
 	UPROPERTY(Category = Abilities, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		USkeletalMeshComponent* MeshRH;
+
+
 
 	// Floatingstatusbar is connected to statusbarcomponent
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "UI")
 		class UFloatingStatusBarWidget* UIFloatingStatusBar;
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "UI")
 		class UWidgetComponent* UIFloatingStatusBarComponent;
+
+	/* Widget for displaying damage/heal texts */
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "UI")
+		class UP4FloatingTextWidget* UIFloatingTextWidget;
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "UI")
+		class UWidgetComponent* FloatingTextWidgetComponent;
+
+
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "VFX")
 		UNiagaraComponent* NiagaraComponent;
 
@@ -144,6 +155,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 		class UFloatingStatusBarWidget* GetFloatingStatusBarWidget();
 
+	UFUNCTION(BlueprintCallable)
+		class UP4FloatingTextWidget* GetFloatingTextWidget();
+
 	/***************************/
 	/*         Utility         */
 	/***************************/
@@ -174,6 +188,9 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "UI")
 		TSubclassOf<class UFloatingStatusBarWidget> UIFloatingStatusBarClass;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "UI")
+		TSubclassOf<class UP4FloatingTextWidget> UIFloatingTextWidgetClass;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = GAS)
 		UDataTable* AttrDataTable;
@@ -237,6 +254,9 @@ protected:
 
 	UFUNCTION(BlueprintCallable)
 		virtual void InitFloatingStatusBarWidget();
+
+	UFUNCTION(BlueprintCallable)
+		virtual void InitFloatingTextWidgetComponent();
 
 	// TODO: Find a way to fill this out
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)

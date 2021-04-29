@@ -13,7 +13,51 @@
 
 
 
+USTRUCT(BlueprintType)
+struct PROJECT4_API FP4GENumberParamStruct
+{
+	GENERATED_USTRUCT_BODY()
+		// add more tuple params when needed		
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		bool Key;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		float Value;
+
+
+	FP4GENumberParamStruct()
+	{
+		Key = false;
+		Value = 0.f;
+	}
+
+	FP4GENumberParamStruct(bool _key, float _val)
+	{
+		Key = _key;
+		Value = _val;
+	}
+};
+
+/*
+*  Struct of tuples to expose parameters to make more dynamic gameplay effects,
+* Enable tuple bool to actually use this parameter, if not default to class
+*/
+USTRUCT(BlueprintType)
+struct PROJECT4_API FP4GEExposedParametersStruct
+{
+	GENERATED_USTRUCT_BODY()
+	// add more tuple params when needed		
+	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		FP4GENumberParamStruct StackLimitCount;
+
+	FP4GEExposedParametersStruct()
+	{
+		StackLimitCount = FP4GENumberParamStruct(false, 0);
+	}
+
+};
 
 
 /**
@@ -82,6 +126,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Utility | UI")
 		void SendErrorMessageToUI(EAbilityErrorText ErrorType);
+
+	UFUNCTION(BlueprintCallable, Category = "Utility")
+		void CreateCustomGameplayEffectSpec(TSubclassOf<UGameplayEffect> EffectClass, const FP4GEExposedParametersStruct& Params, const int& Level, FGameplayEffectSpecHandle& Result);
 
 	UFUNCTION(BlueprintCallable, Server, Reliable, WithValidation)
 		void SendTargetDataToServer(UP4GameplayAbility* AbilityRef, const FVector& HitLocation);

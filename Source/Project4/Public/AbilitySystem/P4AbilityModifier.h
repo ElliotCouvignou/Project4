@@ -25,8 +25,8 @@ struct FP4AbilityModifierBaseInfoStruct
 {
 	GENERATED_USTRUCT_BODY()
 
-		/* Tag granted to player to gain this modifier (stackeable if allowed) */
-		UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Essentials")
+	/* Tag granted to player to gain this modifier (stackeable if allowed) */
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Essentials")
 		FGameplayTag GrantedTag;
 
 	/* Name of this modifier that player see */
@@ -111,8 +111,8 @@ struct FP4AbilityModifierBaseInfoMapStruct
 {
 	GENERATED_USTRUCT_BODY()
 
-		/* Tag granted to player to gain this modifier (stackeable if allowed) */
-		UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Essentials")
+	/* Tag granted to player to gain this modifier (stackeable if allowed) */
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Essentials")
 		TMap<FGameplayTag, FP4AbilityModifierBaseInfoStruct> AbilityModToBaseInfoMap;
 };
 
@@ -127,10 +127,14 @@ class PROJECT4_API UP4AbilityModifierInfo : public UObject
 	GENERATED_BODY()
 
 public:
+
+
 	UP4AbilityModifierInfo();
 	~UP4AbilityModifierInfo();
 
+	UP4AbilityModifierInfo(const FObjectInitializer& ObjectInitializer);
 
+	
 
 	/* Tag granted to player to gain this modifier (stackeable if allowed) */
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Base Info")
@@ -154,9 +158,13 @@ public:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Generated Info")
 		EAbilityModifierRank AbilityModifierRank;
 
-	/* Magnitude of this modifier (since magnitude are procedurally generated) */
+	/* Normalzied Magnitude of this modifier (0-1 across all modifiers) */
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Generated Info")
 		float ModifierMagnitude = 0.f;
+
+	/* Magnitude of this modifier (since magnitude are procedurally generated) */
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Generated Info")
+		TArray<float> ModifierMagnitudes;
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Essential")
 		void CalculateModifierMagnitudes(TArray<float>& Results);
