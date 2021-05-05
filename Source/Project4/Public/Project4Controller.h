@@ -72,6 +72,23 @@ public:
 	AProject4Controller(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
 
+	UFUNCTION(BlueprintCallable, Server, Reliable, WithValidation, BlueprintCallable)
+		void ServerChooseCharacter(const EClassAbilityPoolType& PoolType);
+	void ServerChooseCharacter_Implementation(const EClassAbilityPoolType& PoolType);
+	bool ServerChooseCharacter_Validate(const EClassAbilityPoolType& PoolType) { return true; }
+
+
+	/*************************************/
+	/*       Pre-Game Lobby Stuff        */
+	/*************************************/
+
+	/* Bp native event cause idk seems easier to test visuals
+	   Serves as a helper function for ServerChooseCharacter */
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Essential")
+		void OnCharacterSelected(const EClassAbilityPoolType& PoolType);
+	virtual void OnCharacterSelected_Implementation(const EClassAbilityPoolType& PoolType);
+
+
 	/* Pitch offset from screen center due to crosshair Y offset. (Rads) */
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Crosshair")
 		float CrosshairOffsetPitchAngle;
@@ -82,10 +99,28 @@ public:
 		void FindCrosshairOffsetPitchAngle(const FIntPoint& ViewportSizeXY, float CrosshairScreenYOffset);
 
 	// creates a widget based on gameplayHUDwidgetclass
+	UFUNCTION(Client, Reliable, BlueprintCallable)
 		void CreateMainHUDWidget();
+	void CreateMainHUDWidget_Implementation();
 
 	UFUNCTION(BlueprintCallable, Category = "Utility")
 		class UGameplayHudWidget* GetMainHUDWidget();
+	
+	/************************************/
+    /*     PreGame Lobby Stuff          */
+    /************************************/
+
+	// creates a widget based on gameplayHUDwidgetclass
+	UFUNCTION(Client, Reliable, BlueprintCallable)
+		void CreatePreGameLobbyWidget();
+	void CreatePreGameLobbyWidget_Implementation();
+
+	UFUNCTION(Client, Reliable, BlueprintCallable)
+		void PossessCamera(const ACameraActor* Camera);
+	void PossessCamera_Implementation(const ACameraActor* Camera);
+
+	UFUNCTION(BlueprintCallable, Category = "Utility")
+		class UPreGameLobbyWidget* GetPreGameLobbyWidget() { return PreGameLobbyWidget;  }
 
 	UFUNCTION(BlueprintCallable, Category = "Utility")
 		TSubclassOf<AP4PlayerCharacterBase> GetPlayerCharacterClass();
@@ -103,6 +138,11 @@ public:
 	/************************************/
 	/* Server RPC/Functions From Client */
 	/************************************/
+
+	UFUNCTION(Server, Reliable, WithValidation, BlueprintCallable)
+		void ServerPlayerReadyStatusChanged();
+	void ServerPlayerReadyStatusChanged_Implementation();
+	bool ServerPlayerReadyStatusChanged_Validate() { return true; }
 
 	// Called after respawn button pressed
 	// need server for gamemode access to respawn
@@ -163,6 +203,11 @@ public:
 	void Client_DisplaypAbilityModifierChoicesWidget_Implementation(const TArray<UP4AbilityModifierInfo*>& AbilityModifierInfos);
 	bool Client_DisplaypAbilityModifierChoicesWidget_Validate(const TArray<UP4AbilityModifierInfo*>& AbilityModifierInfos) { return true; }
 
+	UFUNCTION(Client, Reliable, WithValidation, BlueprintCallable)
+		void Client_PlayerReadyStatusChanged(int PlayerIndex, bool NewVal);
+	void Client_PlayerReadyStatusChanged_Implementation(int PlayerIndex, bool NewVal);
+	bool Client_PlayerReadyStatusChanged_Validate(int PlayerIndex, bool NewVal) { return true; }
+
 
 	// Called on Ability Error (e.g. Out of range, Out of mana, etc.)
 	// doesn't need client RPC since ability error texts occurs during
@@ -212,6 +257,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void TryOpenEscapeMenu();
 
+	// TODO; replace this with call to widget when c++ class is made for pregamelobby widget
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+		void PlayerReadtStatusChanged(int PlayerIndex, bool NewVal);
+
 protected:
 
 	// Which character class does player want (i.e Berserker, ranger, etc.)
@@ -224,6 +273,12 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "UI")
 		TSubclassOf<class UGameplayHudWidget> GameplayHUDWidgetClass;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "UI")
+		class UPreGameLobbyWidget* PreGameLobbyWidget;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "UI")
+		TSubclassOf<class UPreGameLobbyWidget> PreGameLobbyWidgetClass;
 
 
 	virtual void SetupInputComponent() override;

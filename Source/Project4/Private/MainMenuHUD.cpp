@@ -2,6 +2,7 @@
 
 
 #include "MainMenuHUD.h"
+#include "Project4GameInstance.h"
 #include "Blueprint/UserWidget.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h" 
 
@@ -27,13 +28,17 @@ void AMainMenuHUD::BeginPlay()
 	if (PlayerController != nullptr) {
 		PlayerController->bShowMouseCursor = true;
 	}
-
-	if (MainMenuWidgetClass != nullptr) {
-		UUserWidget* MainMenuWidget = CreateWidget<UUserWidget>(GetWorld(), MainMenuWidgetClass);
-		if (MainMenuWidget != nullptr) {
-			MainMenuWidget->AddToViewport();
-			MainMenuWidget->SetFocus();
-		}
-	}
+	
+	
+	UProject4GameInstance* GI = Cast<UProject4GameInstance>(GetGameInstance());
+	GI->LoadMainMenu();
+	//
+	//if (MainMenuWidgetClass != nullptr) {
+	//	UUserWidget* MainMenuWidget = CreateWidget<UUserWidget>(GetWorld(), MainMenuWidgetClass);
+	//	if (MainMenuWidget != nullptr) {
+	//		MainMenuWidget->AddToViewport();
+	//		MainMenuWidget->SetFocus();
+	//	}
+	//}
 
 }

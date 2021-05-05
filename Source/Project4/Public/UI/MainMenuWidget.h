@@ -12,6 +12,24 @@ class UButton;
 class UTextBlock;
 class UVerticalBox;
 
+USTRUCT(BlueprintType)
+struct FServerData
+{
+	GENERATED_BODY()
+
+		UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		FString Name;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		int CurrentPlayers;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		int MaxPlayers;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		FString HostUsername;
+};
+
 /**
  * 
  */
@@ -31,6 +49,9 @@ public:
 	// TODO: This should be replaced with websocket api's so i dont rely on continuous polling but too bad im stupid and dont know websockets :/ 
 	UPROPERTY()
 		FTimerHandle PollMatchmakingHandle;
+
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+		void InitializeSessionsList(const TArray<FServerData>& ServerData);
 
 protected:
 	virtual void NativeConstruct() override;

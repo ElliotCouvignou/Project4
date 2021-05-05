@@ -54,8 +54,8 @@ void UMainMenuWidget::NativeConstruct()
 	MatchMakingEventTextBlock = (UTextBlock*)GetWidgetFromName(TEXT("MatchmakingEventText"));
 	MainMenuVBox = (UVerticalBox*)GetWidgetFromName(TEXT("RealMenuBox"));
 
-		// poll ping #'s
-	GetWorld()->GetTimerManager().SetTimer(SetPlayerLatencyHandle, this, &UMainMenuWidget::SetPlayerLatency, 1.0f, true, 1.0f);
+	// poll ping #'s
+	//GetWorld()->GetTimerManager().SetTimer(SetPlayerLatencyHandle, this, &UMainMenuWidget::SetPlayerLatency, 1.0f, true, 1.0f);
 
 	FString AccessToken;
 	UProject4GameInstance* P4GameInstance = Cast<UProject4GameInstance>(GetGameInstance());

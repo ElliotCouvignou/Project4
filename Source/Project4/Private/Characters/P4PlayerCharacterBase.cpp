@@ -57,6 +57,24 @@ AP4PlayerCharacterBase::AP4PlayerCharacterBase(const class FObjectInitializer& O
 	SkillTreeComponent->SetIsReplicated(true);
 
 	BoundAbilities.SetNum(ABILITY_BLOCK_AMOUNT);
+
+}
+
+void AP4PlayerCharacterBase::OnCharacterSelected_Implementation()
+{
+	print(FString("OnCharacterSelected_Implementation"));
+}
+
+void AP4PlayerCharacterBase::Mutlicast_SetPreGameLobbyPosition_Implementation()
+{
+	SetPreGameLobbyPosition();
+}
+
+void AP4PlayerCharacterBase::MulticastSetCharacterInfo_Implementation(const FCharacterInfoStruct& InfoStruct)
+{
+	GetMesh()->SetSkeletalMesh(InfoStruct.CharacterSkeletalMesh);
+	GetMesh()->SetAnimClass(InfoStruct.AnimationBlueprint);
+	SetCharacterColor(InfoStruct.TEMPColor);
 }
 
 void AP4PlayerCharacterBase::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
@@ -294,11 +312,11 @@ void AP4PlayerCharacterBase::PossessedBy(AController* NewController)
 
 		// For edge cases where the PlayerState is repped before the Hero is possessed.
 		// Maybe dont use this for servers? some might still need a ref for some reason
-		AProject4Controller* PC = Cast<AProject4Controller>(GetController());
-		if (PC)
-		{
-			PC->CreateMainHUDWidget();
-		}
+		//AProject4Controller* PC = Cast<AProject4Controller>(GetController());
+		//if (PC)
+		//{
+		//	PC->CreateMainHUDWidget();
+		//}
 
 		SkillTreeComponent->GetSetPlayerAndASCRef();
 		InventoryBagComponent->GetSetPlayerRefAndASC();
@@ -342,10 +360,10 @@ void AP4PlayerCharacterBase::OnRep_PlayerState()
 		// For edge cases where the PlayerState is repped before the Hero is possessed.
 		// Maybe dont use this for servers? some might still need a ref for some reason
 		AProject4Controller* PC = Cast<AProject4Controller>(GetController());
-		if (PC)
-		{
-			PC->CreateMainHUDWidget();
-		}
+		//if (PC)
+		//{
+		//	PC->CreateMainHUDWidget();
+		//}
 
 		BindASCInput();
 

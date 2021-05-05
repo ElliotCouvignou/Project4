@@ -10,9 +10,6 @@
 
 struct HealAttStruct
 {
-	DECLARE_ATTRIBUTE_CAPTUREDEF(Health); //The DECLARE_ATTRIBUTE_CAPTUREDEF macro actually only declares two variables. The variable names are dependent on the input, however. Here they will be HealthProperty(which is a UPROPERTY pointer)
-										  //and HealthDef(which is a FGameplayEffectAttributeCaptureDefinition).
-
 
 	// Meta Attributes
 	DECLARE_ATTRIBUTE_CAPTUREDEF(Heal);
@@ -23,7 +20,6 @@ struct HealAttStruct
 		//HealthProperty will point to the Health attribute in the UPlayerAttributeSet 
 		//on the receiving target of this execution. The last parameter is a bool, 
 		//and determines if we snapshot the attribute's value at the time of definition.
-		DEFINE_ATTRIBUTE_CAPTUREDEF(UPlayerAttributeSet, Health, Target, false);
 
 		// Meta Attributes
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UPlayerAttributeSet, Heal, Target, false);
@@ -42,8 +38,6 @@ UHealingCalculation::UHealingCalculation(const FObjectInitializer& ObjectInitial
 {
 	HealAttStruct Attributes;
 
-	//RelevantAttributesToCapture is the array that contains all attributes you wish to capture, without exceptions. 
-	RelevantAttributesToCapture.Add(Attributes.HealthDef);
 	//However, an attribute added here on top of being added in RelevantAttributesToCapture will still be captured, but will not be shown for potential in-function modifiers in the GameplayEffect blueprint, more on that later.
 	//InvalidScopedModifierAttributes.Add(Attributes.HealthDef);
 	RelevantAttributesToCapture.Add(Attributes.HealDef);
@@ -78,8 +72,6 @@ void UHealingCalculation::Execute_Implementation(const FGameplayEffectCustomExec
 	// Alright, this is where we get the attribute's captured value into our function. 
 	// Damage().HealthDef is the definition of the attribute we want to get, we defined EvaluationParameters 
 	// just above us, and Health is the variable where we will put the captured value into(the Health variable we just declared)
-	float Health = 0.f;
-	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(Attributes.HealthDef, EvaluationParameters, Health);
 
 	float InputHeal = 0.f;
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(Attributes.HealDef, EvaluationParameters, InputHeal);

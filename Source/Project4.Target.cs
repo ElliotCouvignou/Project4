@@ -10,5 +10,6 @@ public class Project4Target : TargetRules
 		Type = TargetType.Game;
 		DefaultBuildSettings = BuildSettingsVersion.V2;
 		ExtraModuleNames.Add("Project4");
+
 	}
 }

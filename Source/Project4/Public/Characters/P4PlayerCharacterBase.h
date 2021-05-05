@@ -5,9 +5,10 @@
 #include "CoreMinimal.h"
 #include "Project4Character.h"
 #include "Project4.h"
-#include "AbilitySystemComponent.h"
+#include "AbilitySystem/P4PlayerAbilitySystemComponent.h" 
 #include "AbilitySystemInterface.h"
 #include "UI/SkillTree/SkillTreeDataAsset.h"
+#include "Characters/P4CharacterInfoDataAsset.h"
 #include "P4PlayerCharacterBase.generated.h"
 
 
@@ -37,6 +38,31 @@ class PROJECT4_API AP4PlayerCharacterBase : public AProject4Character
 public:
 	AP4PlayerCharacterBase(const class FObjectInitializer& ObjectInitializer);
 
+
+	/* Function to call animation + vfx when player selects this character on pregamelobby */
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Essential")
+		void OnCharacterSelected();
+
+	virtual void OnCharacterSelected_Implementation();
+
+	// TODO: remove this its temp-ish
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+		void SetCharacterColor(const FLinearColor& Color);  // For left-click selection
+
+	/* Called during pregame lobby for clients to determine where to place this character (owning player has it centered rest is elsewhere) */
+	UFUNCTION(BlueprintCallable, NetMulticast, Reliable)
+		void Mutlicast_SetPreGameLobbyPosition();  // For left-click selection
+	void Mutlicast_SetPreGameLobbyPosition_Implementation();  // For left-click selection
+
+		// TODO: remove this its temp-ish
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+		void SetPreGameLobbyPosition();  // For left-click selection
+
+	UFUNCTION(NetMulticast, Reliable, BlueprintCallable)
+		void MulticastSetCharacterInfo(const FCharacterInfoStruct& InfoStruct);
+	void MulticastSetCharacterInfo_Implementation(const FCharacterInfoStruct& InfoStruct);
+
+
 	/***************************/
 	/* Player Inventory system */
 	/***************************/
@@ -46,9 +72,6 @@ public:
 	/***************************/
 	/* Gameplay Ability system */
 	/***************************/
-
-
-
 	
 	/* Levels up player, giving xp, more base stats and some extra points to choose */
 	/* Only use this from server */
@@ -94,6 +117,9 @@ protected:
 
 		// Init playerAttributes with .csv
 	virtual void InitializeAttributeSet() override;
+
+
+
 
 	/* Array of bound ability classes to hotbar, on input ppress try activate ability through class
 		This is only saved on the client */

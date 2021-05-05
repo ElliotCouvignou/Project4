@@ -9,6 +9,7 @@ public class Project4EditorTarget : TargetRules
 	{
 		Type = TargetType.Editor;
 		DefaultBuildSettings = BuildSettingsVersion.V2;
-		ExtraModuleNames.Add("Project4");
+
+		ExtraModuleNames.AddRange(new string[] { "Project4" , "Project4Editor"});
 	}
 }

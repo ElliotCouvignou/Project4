@@ -72,3 +72,15 @@ EAbilityCategory::Physical,
 EAbilityCategory::Magical,
 EAbilityCategory::Defensive,
 EAbilityCategory::Utility };
+
+
+// maybe move this too?
+UENUM(BlueprintType)
+enum class EClassAbilityPoolType : uint8
+{
+	// 0 None
+	None					UMETA(DisplayName = "None"), // this is default for fresh character
+	Hero					UMETA(DisplayName = "Hero"),    // has access to everything (mostly for testing maybe dont give to players)
+	Berserker				UMETA(DisplayName = "Berserker"),  // "None"
+	Ranger					UMETA(DisplayName = "Ranger")
+};

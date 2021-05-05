@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+﻿// Copyright Epic Games, Inc. All Rights Reserved.
 
 using UnrealBuildTool;
 using System.IO;
@@ -28,6 +28,7 @@ public class Project4 : ModuleRules
 			"Json",
 			"JsonUtilities",
 			"WebBrowserWidget",
+			"OnlineSubsystem", "﻿OnlineSubsystemSteam﻿"
 			}
 		);
 
@@ -47,8 +48,7 @@ public class Project4 : ModuleRules
 
 		/* UI related modules */
 		PrivateDependencyModuleNames.AddRange(new string[] {
-			"Slate",
-			"SlateCore",
+			"Slate", "SlateCore",
 			"UMG",
 			"GameplayAbilities",
 			"GameplayTags",
@@ -57,10 +57,19 @@ public class Project4 : ModuleRules
 			}
 		);
 
+
+		// TODO: platform specific online subsystems
+        //      determine PC platform, setup steamonlinesubsystem if true
+		//if (Target.Platform == UnrealTargetPlatform.Win64 || Target.Platform == UnrealTargetPlatform.Linux || Target.Platform == UnrealTargetPlatform.Mac)
+		//{
+		//	PublicDependencyModuleNames.AddRange(new string[] { "OnlineSubsystem", "﻿OnlineSubsystemSteam﻿" });
+		//
+		//}
+
 		if (Target.bBuildEditor)
 		{
-			PublicIncludePaths.AddRange(new string[] { "Project4/Public" });
-
+			//PublicIncludePaths.AddRange(new string[] { "Project4/Public" });
+			//PrivateDependencyModuleNames.AddRange(new string[] { "GenericGraphRuntime" });
 			PrivateDependencyModuleNames.AddRange(new string[] { "UnrealEd", "GenericGraphRuntime"});
 		}
 

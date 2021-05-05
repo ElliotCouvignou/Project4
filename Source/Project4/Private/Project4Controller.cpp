@@ -2,15 +2,15 @@
 
 #include "Project4Controller.h"
 #include "Project4GameMode.h"
-#include "Characters/Project4Character.h"
-#include "AbilitySystem/P4AbilitySystemComponent.h"
+#include "Characters/P4PlayerCharacterBase.h"
 
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
+#include "P4PreGameLobbyGameMode.h"
 
-
-
+#include "Blueprint/WidgetBlueprintLibrary.h"
 #include "UI/P4FloatingTextWidget.h"
+#include "UI/PreGameLobbyWidget.h"
 #include "UI/GameplayHudWidget.h"
 #include "UI/BuffIconsWidget.h"
 #include "..\Public\Project4Controller.h"
@@ -23,6 +23,31 @@ AProject4Controller::AProject4Controller(const FObjectInitializer& ObjectInitial
 {
 
 }
+
+void AProject4Controller::ServerChooseCharacter_Implementation(const EClassAbilityPoolType& PoolType)
+{
+	if (PoolType == EClassAbilityPoolType::None)
+		return;
+
+	AP4PreGameLobbyGameMode* GM = Cast<AP4PreGameLobbyGameMode>(GetWorld()->GetAuthGameMode());
+	if (GM)
+	{
+		GM->OnPlayerCharacterSelected(this, PoolType);
+		//OnCharacterSelected(PoolType);
+	}
+	
+	//AP4PlayerCharacterBase* PChar = Cast<AP4PlayerCharacterBase>(GetPawn());
+	//if (PChar)
+	//{
+	//	PChar->OnCharacterSelected(PoolType);
+	//}		
+}
+
+void AProject4Controller::OnCharacterSelected_Implementation(const EClassAbilityPoolType& PoolType)
+{
+	print(FString("OnCharacterSelected_Implementation"));
+}
+
 
 void AProject4Controller::FindCrosshairOffsetPitchAngle(const FIntPoint& ViewportSizeXY, float CrosshairScreenYOffset)
 {
@@ -45,8 +70,8 @@ void AProject4Controller::FindCrosshairOffsetPitchAngle(const FIntPoint& Viewpor
 	SendCrosshairOffsetAngleToServer(CrosshairOffsetPitchAngle);
 }
 
-// called in onRep_PC in playercharacterbase
-void AProject4Controller::CreateMainHUDWidget()
+
+void AProject4Controller::CreateMainHUDWidget_Implementation()
 {
 
 	if (GameplayHUDWidget || !GameplayHUDWidgetClass || !IsLocalPlayerController())
@@ -58,10 +83,36 @@ void AProject4Controller::CreateMainHUDWidget()
 	GameplayHUDWidget->AddToViewport();
 }
 
+
+void AProject4Controller::CreatePreGameLobbyWidget_Implementation()
+{
+	if (PreGameLobbyWidget || !PreGameLobbyWidgetClass || !IsLocalPlayerController())
+	{
+		return;
+	}
+
+	PreGameLobbyWidget = CreateWidget<UPreGameLobbyWidget>(this, PreGameLobbyWidgetClass);
+	PreGameLobbyWidget->AddToViewport();
+	UWidgetBlueprintLibrary::SetInputMode_UIOnlyEx(this, PreGameLobbyWidget, EMouseLockMode::DoNotLock);
+	bShowMouseCursor = true;
+	bEnableClickEvents = true;
+	bEnableMouseOverEvents = true;
+}
+
+void AProject4Controller::PossessCamera_Implementation(const ACameraActor* Camera)
+{
+	if (Camera)
+	{
+		SetViewTarget((AActor*)Camera);
+	}
+}
+
 UGameplayHudWidget* AProject4Controller::GetMainHUDWidget()
 {
 	return GameplayHUDWidget;
 }
+
+
 
 TSubclassOf< AP4PlayerCharacterBase> AProject4Controller::GetPlayerCharacterClass()
 {
@@ -77,6 +128,17 @@ void AProject4Controller::GetPlayerViewPointBP(FVector& out_Location, FRotator& 
 {
 	GetPlayerViewPoint(out_Location, out_Rotation);
 }
+
+void AProject4Controller::ServerPlayerReadyStatusChanged_Implementation()
+{
+	AP4PreGameLobbyGameMode* GM = Cast<AP4PreGameLobbyGameMode>(GetWorld()->GetAuthGameMode());
+	if (GM)
+	{
+		GM->OnPlayerReadyStatusChanged(this);
+	}
+}
+
+
 
 void AProject4Controller::ClientRequestRespawn_Implementation()
 {
@@ -142,6 +204,11 @@ void AProject4Controller::Client_DisplaypAbilityModifierAbilityChoicesWidget_Imp
 void AProject4Controller::Client_DisplaypAbilityModifierChoicesWidget_Implementation(const TArray<UP4AbilityModifierInfo*>& AbilityModifierInfos)
 {
 	GameplayHUDWidget->SetupAbilityModifierSelectionWidget(AbilityModifierInfos);
+}
+
+void AProject4Controller::Client_PlayerReadyStatusChanged_Implementation(int PlayerIndex, bool NewVal)
+{
+	PlayerReadtStatusChanged(PlayerIndex, NewVal);
 }
 
 void AProject4Controller::SendUIAbilityError(EAbilityErrorText ErrorType)
@@ -217,7 +284,6 @@ void AProject4Controller::TryOpenEscapeMenu()
 		GameplayHUDWidget->TryOpenEscapeMenu();
 	}
 }
-
 
 void AProject4Controller::SetupInputComponent()
 {

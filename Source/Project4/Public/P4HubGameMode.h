@@ -20,6 +20,10 @@ public:
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
 		TArray<FString> PlayableLevelNames;
 
+	// TODO: figure out wht to do with this if we wanna make classes for each char or just swap info
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
+		TSubclassOf<class AP4PlayerCharacterBase> CharacterBaseClass;
+
 	UFUNCTION(BlueprintCallable, Server, Reliable, WithValidation, BlueprintCallable)
 		void ServerTravelToLevel(const FString& LevelName);
 	void ServerTravelToLevel_Implementation(const FString& LevelName);
@@ -29,5 +33,7 @@ public:
 		void ServerTravelToNewLevel();
 	void ServerTravelToNewLevel_Implementation();
 	bool ServerTravelToNewLevel_Validate()  { return true; }
+
+	virtual void BeginPlay() override;
 
 };

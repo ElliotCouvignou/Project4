@@ -110,12 +110,9 @@ UP4BaseAttributeSet* AProject4Character::GetAttributeSet() const
 bool AProject4Character::IsAlive() const
 {
 	if (AttributeSet.Get()) {
-		if (AttributeSet->GetHealth() > 0.f)
-		{
-			return true;
-		}
+		return (AttributeSet->GetHealth() > 0.f);
 	}
-	return false;
+	return true;
 }
 
 void AProject4Character::Die()
@@ -385,7 +382,8 @@ void AProject4Character::BeginPlay()
 	Super::BeginPlay();
 
 
-	AbilitySystemComponent->SetOwnerActor(this);
+	if(AbilitySystemComponent.IsValid())
+		AbilitySystemComponent->SetOwnerActor(this);
 
 	//AddAllStartupEffects();
 	// FIXME: set all visibility to false, let render dist sphere collision set vis to true when needed

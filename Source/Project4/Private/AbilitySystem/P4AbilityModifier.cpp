@@ -18,7 +18,7 @@ UP4AbilityModifierInfo::~UP4AbilityModifierInfo()
 UP4AbilityModifierInfo::UP4AbilityModifierInfo(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
-	CalculateModifierMagnitudes(ModifierMagnitudes);
+	//CalculateModifierMagnitudes(ModifierMagnitudes);
 }
 
 

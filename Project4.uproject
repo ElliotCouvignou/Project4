@@ -11,13 +11,18 @@
 			"AdditionalDependencies": [
 				"UMG",
 				"Engine",
+				"InputCore",
 				"GameplayAbilities",
 				"GameplayTasks",
 				"AIModule",
 				"GenericGraphRuntime",
-				"UnrealEd",
 				"CoreUObject"
 			]
+		},
+		{
+			"Name": "Project4Editor",
+			"Type": "Editor",
+			"LoadingPhase": "PostEngineInit"
 		}
 	],
 	"Plugins": [
@@ -70,6 +75,18 @@
 			"Name": "VoxelFree",
 			"Enabled": false,
 			"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/content/c61d1941c8664436be42d649404a10e0"
+		},
+		{
+			"Name": "OnlineSubsystemSteam",
+			"Enabled": true
+		},
+		{
+			"Name": "AdvancedSessions",
+			"Enabled": true
+		},
+		{
+			"Name": "AdvancedSteamSessions",
+			"Enabled": true
 		}
 	]
 }
