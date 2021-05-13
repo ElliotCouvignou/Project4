@@ -114,7 +114,6 @@ void AP4PlayerCharacterBase::SetupPlayerInputComponent(class UInputComponent* Pl
 	check(PlayerInputComponent);
 	PlayerInputComponent->BindAxis("CameraZoom", this, &AP4PlayerCharacterBase::CameraZoom);
 
-	// Bind ASC Input
 	BindASCInput();
 }
 
@@ -340,13 +339,9 @@ void AP4PlayerCharacterBase::OnRep_Controller()
 		// For edge cases where the PlayerState is repped before the Hero is possessed.
 		// Maybe dont use this for servers? some might still need a ref for some reason
 		AProject4Controller* PC = Cast<AProject4Controller>(GetController());
-		if (PC)
-		{
-			PC->InputComponent->Activate();
-			SetupPlayerInputComponent(PC->InputComponent);
-		}
 		
-
+		// Bind ASC Input
+		BindASCInput();
 
 
 		InitFloatingStatusBarWidget();
@@ -368,13 +363,18 @@ void AP4PlayerCharacterBase::PossessedBy(AController* NewController)
 	AProject4PlayerState* PS = GetPlayerState<AProject4PlayerState>();
 
 	print(FString("AP4PlayerCharacterBase::PossessedBy()\n\n"));
+
+	UE_LOG(LogTemp, Warning, TEXT("\n\n[AP4PlayerCharacterBase::PossessedBy] "));
 	if (PS) {
 		// Set the ASC for clients. Server does this in PossessedBy.
 		AbilitySystemComponent = Cast<UAbilitySystemComponent>(PS->GetAbilitySystemComponent());
 
 		if (PS->GetAbilitySystemComponent())
+		{
+			UE_LOG(LogTemp, Warning, TEXT("[AP4PlayerCharacterBase::PossessedBy] ValidASC"));
 			print(FString("ASC Set From PlayerState"));
-
+		}
+			
 		// Init ASC Actor Info for clients. Server will init its ASC when it possesses a new Actor.
 		PS->GetAbilitySystemComponent()->InitAbilityActorInfo(PS, this);
 
@@ -403,11 +403,9 @@ void AP4PlayerCharacterBase::PossessedBy(AController* NewController)
 		//{
 		//	PC->CreateMainHUDWidget();
 		//}
-		if (PC)
-		{
-			PC->InputComponent->Activate();
-			SetupPlayerInputComponent(PC->InputComponent);
-		}
+
+			// Bind ASC Input
+		BindASCInput();
 
 		SkillTreeComponent->GetSetPlayerAndASCRef();
 		InventoryBagComponent->GetSetPlayerRefAndASC();
@@ -457,13 +455,9 @@ void AP4PlayerCharacterBase::OnRep_PlayerState()
 		//{
 		//	PC->CreateMainHUDWidget();
 		//}
-		if (PC)
-		{
-			PC->InputComponent->Activate();
-			SetupPlayerInputComponent(PC->InputComponent);
-		}
 
-
+			// Bind ASC Input
+		BindASCInput();
 
 		InitFloatingStatusBarWidget();
 		InitFloatingTextWidgetComponent();

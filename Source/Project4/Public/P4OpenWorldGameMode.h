@@ -17,6 +17,8 @@ class PROJECT4_API AP4OpenWorldGameMode : public AProject4GameMode
 
 public:
 
+	virtual void GenericPlayerInitialization(AController* Controller) override;
+
 	virtual void StartPlay() override;
 
 	virtual void PostLogin(APlayerController* NewPlayer) override;

@@ -40,7 +40,7 @@ public:
 	AP4PreGameLobbyGameState();
 
 	/* map of player controller index to ready status */
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Replicated)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		TMap<APlayerController*, FPreGameLobbyPlayerInfoStruct> PlayerInfo;
 
 	/* Index of each player controller represents their player # */

@@ -67,5 +67,5 @@ void AP4PreGameLobbyGameState::GetLifetimeReplicatedProps(TArray<FLifetimeProper
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	//DOREPLIFETIME(AProject4Character, AttributeSet);
-	DOREPLIFETIME(AP4PreGameLobbyGameState, PlayerInfo);
+	//DOREPLIFETIME(AP4PreGameLobbyGameState, PlayerInfo);  Tmap replication not supported
 }

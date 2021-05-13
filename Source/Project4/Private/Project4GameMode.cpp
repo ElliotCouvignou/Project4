@@ -113,6 +113,68 @@ void AProject4GameMode::SaveGameInfo()
 	}
 }
 
+void AProject4GameMode::LoadCharacterForClient(APlayerController* NewPlayer)
+{
+	UProject4GameInstance* GI = Cast<UProject4GameInstance>(GetGameInstance());
+	UP4CurrentGameSave* Save = GI->CurrentGameSave;
+
+	UE_LOG(LogTemp, Warning, TEXT("\n\n[LoadCharacterForClient] Start"));
+	if (Save)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("[LoadCharacterForClient] ValidSave"));
+		FP4CharacterSaveStruct* PSave = Save->PlayerCharacterSave.Find(Cast<AProject4Controller>(NewPlayer));
+		if (PSave)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("[LoadCharacterForClient] ValidPlayerSave"));
+			// 0. Player character class defaults (Mesh, Init att set, etc.)
+			print(FString("0"));
+			//FCharacterInfoStruct* CharInfo = PoolCharacterInfoMap->PoolTypeToInfoMap.Find(PSave->PlayerClass);
+			//PChar->ServerSetCharacterInfo(*CharInfo, PSave->PlayerClass);
+			//PChar->MulticastSetCharacterInfo(*CharInfo);
+			CreateCharacter(PSave->PlayerClass, NewPlayer);
+			AP4PlayerCharacterBase* PChar = Cast<AP4PlayerCharacterBase>(NewPlayer->GetPawn());
+
+			if (!PChar)
+			{
+				UE_LOG(LogTemp, Warning, TEXT("AProject4GameMode::LoadCurrentGameInfo] Invalid PChar from getPawn()"));
+			}
+
+			// 1. Essential non-derived Attributes
+			print(FString("1"));
+			UPlayerAttributeSet* AS = Cast<UPlayerAttributeSet>(PChar->GetAttributeSet());
+			if (AS)
+			{
+				AS->SetLevel(*PSave->AttributeSaves.Find("Level"));
+				AS->SetExperience(*PSave->AttributeSaves.Find("Experience"));
+			}
+
+			// 2. InventoryItems and Equips
+			print(FString("2"));
+			UP4InventoryBagComponent* IBC = PChar->GetInventoryBagComponent();
+			if (IBC)
+			{
+				// Inventory Items
+				for (auto b : PSave->InventorySaves)
+					IBC->InventoryArray[b.InventoryIndex] = b.ItemObject;
+
+				// Player Equips
+				IBC->EquippmentSlots = PSave->PlayerEquips;
+			}
+
+			// 3. Relevant Gameplay Effects
+			print(FString("3"));
+			UAbilitySystemComponent* ASC = PChar->GetAbilitySystemComponent();
+			if (ASC)
+			{
+				for (auto b : PSave->GameplayEffects)
+					ASC->ApplyGameplayEffectSpecToSelf(b);
+			}
+			UE_LOG(LogTemp, Warning, TEXT("[LoadCharacterForClient] LoadCharacterForClient DONE"));
+		}
+	}
+}
+
+
 void AProject4GameMode::LoadCurrentGameInfo()
 {
 	UProject4GameInstance* GI = Cast<UProject4GameInstance>(GetGameInstance());
@@ -183,6 +245,10 @@ void AProject4GameMode::LoadCurrentGameInfo()
 void AProject4GameMode::CreateCharacter(EClassAbilityPoolType CharClass, APlayerController* OwningPC)
 {
 	print(FString("AProject4GameMode::CreateCharacter()\n"));
+	
+	FString debug = FString::FromInt((int)CharClass);
+	UE_LOG(LogTemp, Warning, TEXT("\n\n[CreateCharacter] Creating New Character for  %s   Class Idx: %s"), *OwningPC->GetName(), *debug);
+
 	AP4PlayerCharacterBase* PChar = Cast<AP4PlayerCharacterBase>(OwningPC->GetPawn());
 	if (!PChar)
 	{
@@ -195,9 +261,11 @@ void AProject4GameMode::CreateCharacter(EClassAbilityPoolType CharClass, APlayer
 		PChar->SetPlayerState(OwningPC->GetPlayerState<AProject4PlayerState>());
 		PChar->FinishSpawning(FTransform());
 
+		UE_LOG(LogTemp, Warning, TEXT("[CreateCharacter] CreatedCharacter for owningPC"));
 
 		PChar->Mutlicast_SetPreGameLobbyPosition();
 
+		// PlayerState owns the ASC that the character refers to
 		UP4PlayerAbilitySystemComponent* ASC = Cast< UP4PlayerAbilitySystemComponent>(OwningPC->GetPlayerState<AProject4PlayerState>()->GetAbilitySystemComponent());
 		//UP4PlayerAbilitySystemComponent* ASC = Cast< UP4PlayerAbilitySystemComponent>(PChar->GetAbilitySystemComponent());
 		if (ASC)

@@ -100,6 +100,9 @@ public:
 		virtual void SaveGameInfo();
 
 	UFUNCTION(BlueprintCallable)
+		void LoadCharacterForClient(APlayerController* NewPlayer);
+
+	UFUNCTION(BlueprintCallable)
 		virtual void LoadCurrentGameInfo();
 
 	UFUNCTION(BlueprintCallable)

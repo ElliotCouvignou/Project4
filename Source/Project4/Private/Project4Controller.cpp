@@ -111,6 +111,10 @@ void AProject4Controller::CreateMainHUDWidget_Implementation()
 	print(FString("Create New MAin HUD Widget !!!!!!!!!!!\n\n"));
 	GameplayHUDWidget = CreateWidget<UGameplayHudWidget>(this, GameplayHUDWidgetClass);
 	GameplayHUDWidget->AddToViewport();
+	bShowMouseCursor = false;
+	UWidgetBlueprintLibrary::SetInputMode_GameOnly(this);
+	
+
 }
 
 

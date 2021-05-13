@@ -28,6 +28,10 @@ class PROJECT4_API UP4AbilitySystemComponent : public UAbilitySystemComponent
 	GENERATED_BODY()
 	
 public:
+
+
+
+
 	bool CharacterAbilitiesGiven = false;
 	bool StartupEffectsApplied = false;
 

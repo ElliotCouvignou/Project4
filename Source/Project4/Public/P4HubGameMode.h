@@ -29,9 +29,11 @@ public:
 	bool ServerTravelToNewLevel_Validate() { return true; }
 
 
+	virtual void GenericPlayerInitialization(AController* Controller) override;
+
+	virtual void HandleStartingNewPlayer_Implementation(APlayerController* NewPlayer) override;
 
 	virtual void StartPlay() override;
 
 	virtual void PostLogin(APlayerController* NewPlayer) override;
-
 };
