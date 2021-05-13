@@ -6,16 +6,11 @@
 #include "GenericGraphNode.h"
 #include "GameplayTagContainer.h"
 #include "AbilitySystem/P4AbilityModifier.h"
+#include "AbilitySystem/P4AbilityPoolsDataAsset.h"
 #include "AbilitySystem/P4PlayerAbilitySystemComponent.h" // only necessary for EAbilityPoolType
 #include "P4AbilityNode.generated.h"
 
-UENUM(BlueprintType)
-enum class EP4AbilityNodeType : uint8
-{
-	Pool			UMETA(DisplayName = "Pool"),
-	Category		UMETA(DisplayName = "Category"),
-	Ability			UMETA(DisplayName = "Ability")
-};
+
 
 
 class UP4GameplayAbility;

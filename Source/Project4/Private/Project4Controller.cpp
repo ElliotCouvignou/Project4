@@ -7,6 +7,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "P4PreGameLobbyGameMode.h"
+#include "Project4GameInstance.h"
 
 #include "Blueprint/WidgetBlueprintLibrary.h"
 #include "UI/P4FloatingTextWidget.h"
@@ -70,33 +71,79 @@ void AProject4Controller::FindCrosshairOffsetPitchAngle(const FIntPoint& Viewpor
 	SendCrosshairOffsetAngleToServer(CrosshairOffsetPitchAngle);
 }
 
+void AProject4Controller::ClearWidgets_Implementation()
+{
+	// TODO: replace with call to fade or smth
+	if (PreGameLobbyWidget)
+	{
+		PreGameLobbyWidget->SetVisibility(ESlateVisibility::Collapsed);
+		//PreGameLobbyWidget->RemoveFromViewport();
+	}
+	if (GameplayHUDWidget)
+	{
+		GameplayHUDWidget->SetVisibility(ESlateVisibility::Collapsed);
+		//GameplayHUDWidget->RemoveFromViewport();
+	}
+	bShowMouseCursor = false;
+}
+
 
 void AProject4Controller::CreateMainHUDWidget_Implementation()
 {
-
-	if (GameplayHUDWidget || !GameplayHUDWidgetClass || !IsLocalPlayerController())
+	if (!GameplayHUDWidgetClass || !IsLocalPlayerController())
 	{
 		return;
 	}
+	// remove pregamelobby widget if visible 
+	if (PreGameLobbyWidget)
+	{
+		PreGameLobbyWidget->SetVisibility(ESlateVisibility::Collapsed);
+		PreGameLobbyWidget->RemoveFromViewport();
+	}
 
+	if (GameplayHUDWidget)
+	{
+		GameplayHUDWidget->SetVisibility(ESlateVisibility::Collapsed);
+		GameplayHUDWidget->RemoveFromViewport();
+		GameplayHUDWidget = nullptr;
+	}
+
+	print(FString("Create New MAin HUD Widget !!!!!!!!!!!\n\n"));
 	GameplayHUDWidget = CreateWidget<UGameplayHudWidget>(this, GameplayHUDWidgetClass);
 	GameplayHUDWidget->AddToViewport();
 }
 
 
+
 void AProject4Controller::CreatePreGameLobbyWidget_Implementation()
 {
-	if (PreGameLobbyWidget || !PreGameLobbyWidgetClass || !IsLocalPlayerController())
+	if (!PreGameLobbyWidgetClass || !IsLocalPlayerController())
 	{
 		return;
 	}
 
-	PreGameLobbyWidget = CreateWidget<UPreGameLobbyWidget>(this, PreGameLobbyWidgetClass);
+	if (GameplayHUDWidget)
+	{
+		GameplayHUDWidget->SetVisibility(ESlateVisibility::Collapsed);
+		GameplayHUDWidget->RemoveFromViewport();
+	}
+
+	if (PreGameLobbyWidget)
+	{
+		PreGameLobbyWidget->SetVisibility(ESlateVisibility::Visible);
+	}
+	else
+	{
+		PreGameLobbyWidget = CreateWidget<UPreGameLobbyWidget>(this, PreGameLobbyWidgetClass);
+		
+	}
+
 	PreGameLobbyWidget->AddToViewport();
 	UWidgetBlueprintLibrary::SetInputMode_UIOnlyEx(this, PreGameLobbyWidget, EMouseLockMode::DoNotLock);
 	bShowMouseCursor = true;
 	bEnableClickEvents = true;
 	bEnableMouseOverEvents = true;
+	print(FString("PregameLobbyWidget, sgow cursor"));
 }
 
 void AProject4Controller::PossessCamera_Implementation(const ACameraActor* Camera)
@@ -153,6 +200,7 @@ void AProject4Controller::SendCrosshairOffsetAngleToServer_Implementation(float 
 {
 	CrosshairOffsetPitchAngle = NewAngle;
 }
+
 
 void AProject4Controller::DisplayDamageNumber_Implementation(FP4DamageNumber Damage, AProject4Character* TargetCharacter)
 {
@@ -282,6 +330,21 @@ void AProject4Controller::TryOpenEscapeMenu()
 	if (GameplayHUDWidget)
 	{
 		GameplayHUDWidget->TryOpenEscapeMenu();
+	}
+}
+
+void AProject4Controller::BeginDestroy()
+{
+	Super::BeginDestroy();
+
+	print(FString("AProject4Controller::BeginDestroy()"));
+
+	// remove pregamelobby widget if visible 
+	if (PreGameLobbyWidget)
+	{
+		print(FString("\n\nRemove PregameLobyy\n\n "));
+		PreGameLobbyWidget->SetVisibility(ESlateVisibility::Collapsed);
+		PreGameLobbyWidget->RemoveFromViewport();
 	}
 }
 

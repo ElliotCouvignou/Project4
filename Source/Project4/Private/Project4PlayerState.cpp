@@ -16,6 +16,7 @@
 
 #include "UI/GameplayHudWidget.h"
 #include "UI/FloatingStatusBarWidget.h"
+#include "UI/PreGameLobbyWidget.h"
 
 #define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Green,text)
 
@@ -26,6 +27,7 @@ AProject4PlayerState::AProject4PlayerState()
     AbilitySystemComponent->SetIsReplicated(true);
     AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
 	
+	bActorSeamlessTraveled = true;
 
     AttributeSet = CreateDefaultSubobject<UPlayerAttributeSet>(TEXT("AttributeSet"));
 
@@ -116,7 +118,23 @@ void AProject4PlayerState::BindAbilityDelegates()
 
 
 
+void AProject4PlayerState::ClientPlayerReadyStateChanged_Implementation(int index, bool NewState)
+{
+	AProject4Controller* PC = Cast<AProject4Controller>(GetOwner());
+	if (PC && PC->GetPreGameLobbyWidget())
+	{
+		PC->GetPreGameLobbyWidget()->PlayerReadyStatusChanged(index, NewState);
+	}
+}
 
+void AProject4PlayerState::ClientInitPlayerReadyStates_Implementation(const TArray<bool>& States)
+{
+	AProject4Controller* PC = Cast<AProject4Controller>(GetOwner());
+	if (PC && PC->GetPreGameLobbyWidget())
+	{
+		PC->GetPreGameLobbyWidget()->InitPlayerReadyStatus(States);
+	}	
+}
 
 
 /*********************/

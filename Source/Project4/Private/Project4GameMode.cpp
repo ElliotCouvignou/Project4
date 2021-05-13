@@ -3,12 +3,21 @@
 #include "Project4GameMode.h"
 #include "Project4Controller.h"
 #include "Project4PlayerState.h"
+#include "P4PreGameLobbyGameState.h"
+#include "Project4GameInstance.h"
+
 #include "Characters/Project4Character.h"
 #include "Characters/P4PlayerCharacterBase.h"
+
+#include "AbilitySystem/AttributeSets/PlayerAttributeSet.h"
+
+#include "Interactables/P4InventoryBagComponent.h"
+
 #include "GameFramework/SpectatorPawn.h"
 #include "Kismet/GameplayStatics.h"
 #include "TimerManager.h"
 #include "UObject/ConstructorHelpers.h"
+
 #include "Blueprint/WidgetBlueprintLibrary.h"
 
 
@@ -81,13 +90,162 @@ void AProject4GameMode::RespawnPlayer(AController* Controller)
 	}
 }
 
+void AProject4GameMode::ServerTravelToLevel(const FString& LevelName)
+{
+	// TODO: maybe move saving current game info logic here
+	GetWorld()->ServerTravel(LevelName);
+}
 
 
+void AProject4GameMode::SaveGameInfo()
+{
+	print(FString("SaveGameInfo()"));
+	UProject4GameInstance* GI = Cast<UProject4GameInstance>(GetGameInstance());
+	AP4PreGameLobbyGameState* GS = GetGameState<AP4PreGameLobbyGameState>();
+	UP4CurrentGameSave* Save = GI->CurrentGameSave;
+	if (GS && Save)
+	{
+		// Iterate through player controllers, gather character and send to save object ot parse
+		for (auto e : GS->PlayerNumberMap)
+		{
+			Save->SaveCharacterInfoFromPlayer(Cast<AProject4Controller>(e.Key), e.Key->GetPawn<AP4PlayerCharacterBase>());
+		}
+	}
+}
 
+void AProject4GameMode::LoadCurrentGameInfo()
+{
+	UProject4GameInstance* GI = Cast<UProject4GameInstance>(GetGameInstance());
+	UP4CurrentGameSave* Save = GI->CurrentGameSave;
+	AP4PreGameLobbyGameState* GS = GetGameState<AP4PreGameLobbyGameState>();
+
+	print(FString("\n\nAProject4GameMode::LoadCurrentGameInfo"));
+	if (Save)
+	{
+		print(FString("ValidSave"));
+		// Unload info for each player in order it was stored in (order isn't actually relevant)
+		for (auto e : Save->PlayerCharacterSave)
+		{
+			// controller should always be p4
+			FP4CharacterSaveStruct* PSave = GI->CurrentGameSave->PlayerCharacterSave.Find(Cast<AProject4Controller>(e.Key));
+		
+			if (PSave)
+			{
+				// 0. Player character class defaults (Mesh, Init att set, etc.)
+				print(FString("0"));
+				//FCharacterInfoStruct* CharInfo = PoolCharacterInfoMap->PoolTypeToInfoMap.Find(PSave->PlayerClass);
+				//PChar->ServerSetCharacterInfo(*CharInfo, PSave->PlayerClass);
+				//PChar->MulticastSetCharacterInfo(*CharInfo);
+				CreateCharacter(PSave->PlayerClass, e.Key);
+				AP4PlayerCharacterBase* PChar = Cast<AP4PlayerCharacterBase>(e.Key->GetPawn());
+
+				if (!PChar)
+				{
+					UE_LOG(LogTemp, Warning, TEXT("AProject4GameMode::LoadCurrentGameInfo] Invalid PChar from getPawn()"));
+				}
+
+				// 1. Essential non-derived Attributes
+				print(FString("1"));
+				UPlayerAttributeSet* AS = Cast<UPlayerAttributeSet>(PChar->GetAttributeSet());
+				if (AS)
+				{
+					AS->SetLevel(*PSave->AttributeSaves.Find("Level"));
+					AS->SetExperience(*PSave->AttributeSaves.Find("Experience"));
+				}
+
+				// 2. InventoryItems and Equips
+				print(FString("2"));
+				UP4InventoryBagComponent* IBC = PChar->GetInventoryBagComponent();
+				if (IBC)
+				{
+					// Inventory Items
+					for (auto b : PSave->InventorySaves)
+						IBC->InventoryArray[b.InventoryIndex] = b.ItemObject;
+					
+					// Player Equips
+					IBC->EquippmentSlots = PSave->PlayerEquips;
+				}
+
+				// 3. Relevant Gameplay Effects
+				print(FString("3"));
+				UAbilitySystemComponent* ASC = PChar->GetAbilitySystemComponent();
+				if (ASC)
+				{
+					for (auto b : PSave->GameplayEffects)
+						ASC->ApplyGameplayEffectSpecToSelf(b);
+				}
+			}	
+		}
+	}
+	print(FString("end\n"));
+}
+
+void AProject4GameMode::CreateCharacter(EClassAbilityPoolType CharClass, APlayerController* OwningPC)
+{
+	print(FString("AProject4GameMode::CreateCharacter()\n"));
+	AP4PlayerCharacterBase* PChar = Cast<AP4PlayerCharacterBase>(OwningPC->GetPawn());
+	if (!PChar)
+	{
+		print(FString("Creating New Character"));
+		// TODO: set this locaiton out of camera, then multicast the clients to place the locaiton of this char to their needed area
+		PChar = GetWorld()->SpawnActorDeferred<AP4PlayerCharacterBase>(*ClassToCharClass.Find(CharClass), FTransform(), nullptr, nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+		PChar->SetOwner(OwningPC);
+		OwningPC->Possess(PChar);
+		OwningPC->SetPawn(PChar);
+		PChar->SetPlayerState(OwningPC->GetPlayerState<AProject4PlayerState>());
+		PChar->FinishSpawning(FTransform());
+
+
+		PChar->Mutlicast_SetPreGameLobbyPosition();
+
+		UP4PlayerAbilitySystemComponent* ASC = Cast< UP4PlayerAbilitySystemComponent>(OwningPC->GetPlayerState<AProject4PlayerState>()->GetAbilitySystemComponent());
+		//UP4PlayerAbilitySystemComponent* ASC = Cast< UP4PlayerAbilitySystemComponent>(PChar->GetAbilitySystemComponent());
+		if (ASC)
+		{
+			ASC->Server_OnAbilityPoolPicked(CharClass);
+		}
+	}
+}
+
+void AProject4GameMode::PostSeamlessTravel()
+{
+	Super::PostSeamlessTravel();
+	
+}
+
+void AProject4GameMode::StartPlay()
+{
+	Super::StartPlay();
+
+	// TODO: change class type to base one if i do that eventually
+	AP4PreGameLobbyGameState* GS = GetGameState<AP4PreGameLobbyGameState>();
+	if (GS)
+	{
+		GS->InitNewPlayerState(0);
+	}
+
+}
+
+void AProject4GameMode::PostLogin(APlayerController* NewPlayer)
+{
+	Super::PostLogin(NewPlayer);
+
+	// TODO: this one too
+	AP4PreGameLobbyGameState* GS = GetGameState<AP4PreGameLobbyGameState>();
+	if (GS)
+	{
+		GS->InitNewPlayerState(NewPlayer);
+	}
+
+
+}
 
 void AProject4GameMode::BeginPlay()
 {
 	Super::BeginPlay();
+
+	
+
 	//print(FString(TEXT("ALLO")));
 	UE_LOG(LogTemp, Warning, TEXT("GameliftServer::BeginPlay() start, WITH_GAMELIFT=%i"), WITH_GAMELIFT);
 
@@ -172,6 +330,8 @@ void AProject4GameMode::BeginPlay()
 		// TODO handle when ProcessReady returns false (rare, but it happens)
 	}
 #endif
+
+
 }
 
 FString AProject4GameMode::InitNewPlayer(APlayerController* NewPlayerController, const FUniqueNetIdRepl& UniqueId, const FString& Options, const FString& Portal)

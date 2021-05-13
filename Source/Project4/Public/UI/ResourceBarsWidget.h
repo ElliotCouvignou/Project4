@@ -16,6 +16,10 @@ class PROJECT4_API UResourceBarsWidget : public UUserWidget
 	
 public:
 
+	/* Called when attribute set gets reinitialized, used just to ensure things dont get left behind */
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+		void ReInitValues();
+
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 		void UpdatePlayerLevel(float NewLevel);
 

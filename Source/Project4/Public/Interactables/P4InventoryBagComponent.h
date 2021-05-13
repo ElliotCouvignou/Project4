@@ -203,7 +203,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEquippmentSlotUpdated, const FEqu
 
 
 /**
- * Inventory class, this contains array of item structures to obviously hold info about the items the player holds (pepega).
+ * Inventory class, this contains array of item structures to obviously hold info about the items the player holds and some slots for equips.
  *  - This class also holds an array of currently equipped items. This part could be ported to its own component if needed but kept together due to their somewhat similar needs
  */
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )

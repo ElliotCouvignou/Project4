@@ -14,4 +14,11 @@ class PROJECT4_API UPreGameLobbyWidget : public UUserWidget
 {
 	GENERATED_BODY()
 	
+public:
+
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+		void InitPlayerReadyStatus(const TArray<bool>& States);
+
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+		void PlayerReadyStatusChanged(int index, bool NewState);
 };

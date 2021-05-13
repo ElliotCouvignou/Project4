@@ -5,8 +5,9 @@
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
 #include "Runtime/Online/HTTP/Public/Http.h"
-#include "GenericGraph/Abilities/P4AbilityPoolGraph.h"
+#include "AbilitySystem/P4AbilityPoolsDataAsset.h"
 #include "P4SettingsSave.h"
+#include "P4CurrentGameSave.h"
 #include "P4PreGameLobbyGameMode.h"
 
 #include "Interfaces/SessionMenuInterface.h"
@@ -52,6 +53,14 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 		FString MatchmakingTicketId;
 
+	/****************************************/
+	/*         Online Steam Subsystem       */
+	/****************************************/
+
+	UPROPERTY(BlueprintReadOnly)
+		FString Url;
+
+
 	// Tokens expire every hour, this timer should request new tokens every 59 mins to 'refresh'
 	UPROPERTY(BlueprintReadOnly)
 		FTimerHandle RetrieveNewTokensHandle;
@@ -82,6 +91,15 @@ public:
 		void SaveSettingsData();
 
 	UFUNCTION(BlueprintCallable)
+		void CreateNewCurrentGameData();
+
+	UFUNCTION(BlueprintCallable)
+		void LoadCurrentGameData();
+
+	UFUNCTION(BlueprintCallable)
+		void SaveCurrentGameData();
+
+	UFUNCTION(BlueprintCallable)
 		void LoadMainMenu();
 
 
@@ -103,18 +121,33 @@ public:
 		void OpenSessionListMenu() override;
 	///// ISessionMenuInterface /////////////////// 
 
+		/* called by host to servertravel */
+	UFUNCTION(BlueprintCallable)
+		void HostTravelToNextLevel(FString TravelUrl);
+
+	/* called by host to clienttravel */
+	UFUNCTION(BlueprintCallable)
+		void ClientTravelToNextLevel();
+
+	UFUNCTION(BlueprintCallable)
+		void OpenFriendInvites();
 
 
 	UPROPERTY(BlueprintReadWrite)
 		UP4SettingsSave* SettingsSave;
 
+	UPROPERTY(BlueprintReadWrite)
+		UP4CurrentGameSave* CurrentGameSave;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Abilities | Pools")
-		UP4AbilityPoolGraph* GlobalAbilityPoolGraph;
+		UP4AbilityPoolsDataAsset* GlobalAbilityDataAsset;
 
 protected:
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
 		TSubclassOf<class UMainMenuWidget> MenuClass;
 	class UMainMenuWidget* MainMenu;
+
+
 
 private:
 
@@ -128,11 +161,15 @@ private:
 	void OnDestroySessionComplete(FName SessionName, bool Success);
 	void OnFindSessionsComplete(bool Success);
 	void OnJoinSessionsComplete(FName SessionName, EOnJoinSessionCompleteResult::Type Result);
+	void OnSessionUserInviteAccepted(bool bWasSuccessful, int32 ControllerIndex, TSharedPtr<const FUniqueNetId> NetId, const FOnlineSessionSearchResult& SessionToJoin);
+	void OnJoinInviteSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type Result);
 
 	void CreateSession();
 
 	IOnlineSessionPtr SessionInterface;
 	TSharedPtr<class FOnlineSessionSearch> SessionSearch;
+
+	FOnJoinSessionCompleteDelegate OnJoinInviteSessionCompleteDelegate;
 
 
 	/******************************/
@@ -149,6 +186,9 @@ private:
 
 	UPROPERTY()
 		FString SettingsSaveSlot = "SettingsSlaveSlot";
+
+	UPROPERTY()
+		FString CurrentGameSaveSlot = "CurrentGameSaveSlot";
 
 	UFUNCTION()
 		void RetrieveNewTokens();

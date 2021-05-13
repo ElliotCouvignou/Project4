@@ -100,6 +100,11 @@ public:
 
 	// creates a widget based on gameplayHUDwidgetclass
 	UFUNCTION(Client, Reliable, BlueprintCallable)
+		void ClearWidgets();
+	void ClearWidgets_Implementation();
+
+	// creates a widget based on gameplayHUDwidgetclass
+	UFUNCTION(Client, Reliable, BlueprintCallable)
 		void CreateMainHUDWidget();
 	void CreateMainHUDWidget_Implementation();
 
@@ -109,6 +114,7 @@ public:
 	/************************************/
     /*     PreGame Lobby Stuff          */
     /************************************/
+
 
 	// creates a widget based on gameplayHUDwidgetclass
 	UFUNCTION(Client, Reliable, BlueprintCallable)
@@ -160,6 +166,7 @@ public:
 	/*******************************/
 	/* Client RPC/Functions for UI */
 	/*******************************/
+
 
 	// Server calls this fucntion to display damage numbers to a player
 	UFUNCTION(Client, Reliable, WithValidation)
@@ -260,6 +267,8 @@ public:
 	// TODO; replace this with call to widget when c++ class is made for pregamelobby widget
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
 		void PlayerReadtStatusChanged(int PlayerIndex, bool NewVal);
+
+	virtual void BeginDestroy() override;
 
 protected:
 

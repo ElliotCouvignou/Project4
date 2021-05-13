@@ -38,6 +38,8 @@ class PROJECT4_API AP4PlayerCharacterBase : public AProject4Character
 public:
 	AP4PlayerCharacterBase(const class FObjectInitializer& ObjectInitializer);
 
+	// TODO: DELETE THIS
+
 
 	/* Function to call animation + vfx when player selects this character on pregamelobby */
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Essential")
@@ -57,6 +59,10 @@ public:
 		// TODO: remove this its temp-ish
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
 		void SetPreGameLobbyPosition();  // For left-click selection
+
+	/* Called on by authority */
+	UFUNCTION()
+		void ServerSetCharacterInfo(const FCharacterInfoStruct& InfoStruct, const EClassAbilityPoolType& PoolType);
 
 	UFUNCTION(NetMulticast, Reliable, BlueprintCallable)
 		void MulticastSetCharacterInfo(const FCharacterInfoStruct& InfoStruct);

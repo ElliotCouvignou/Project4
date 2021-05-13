@@ -11,7 +11,7 @@ void UCrosshairWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime
 {
 	TryFindCrosshairTarget();
 
-	if (DistanceMeterType == EDistanceMeterType::DistanceToTarget && PlayerRef->SelectedTarget)
+	if (DistanceMeterType == EDistanceMeterType::DistanceToTarget && PlayerRef && PlayerRef->SelectedTarget)
 	{
 		SetDistanceText(PlayerRef->GetDistanceTo(PlayerRef->SelectedTarget));
 	}

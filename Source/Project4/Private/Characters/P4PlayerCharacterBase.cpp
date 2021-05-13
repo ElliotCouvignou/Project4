@@ -25,6 +25,7 @@
 #include "Characters/SkillTreeComponent.h"
 
 #include "UI/GameplayHudWidget.h"
+#include "UI/ResourceBarsWidget.h"
 
 
 #define CAMERA_ZOOM_MIN 100.f
@@ -58,6 +59,8 @@ AP4PlayerCharacterBase::AP4PlayerCharacterBase(const class FObjectInitializer& O
 
 	BoundAbilities.SetNum(ABILITY_BLOCK_AMOUNT);
 
+	bActorSeamlessTraveled = true;
+
 }
 
 void AP4PlayerCharacterBase::OnCharacterSelected_Implementation()
@@ -68,6 +71,25 @@ void AP4PlayerCharacterBase::OnCharacterSelected_Implementation()
 void AP4PlayerCharacterBase::Mutlicast_SetPreGameLobbyPosition_Implementation()
 {
 	SetPreGameLobbyPosition();
+
+	// since attribute sets are reset right before this is a good time to let client re-init in case delegates didnt trigger
+	AProject4Controller* PC = Cast<AProject4Controller>(GetController());
+	if (PC && PC->IsLocalController() && PC->GetMainHUDWidget() && PC->GetMainHUDWidget()->GetResourceBarsWidget())
+	{
+		PC->GetMainHUDWidget()->GetResourceBarsWidget()->ReInitValues();
+	}
+}
+
+void AP4PlayerCharacterBase::ServerSetCharacterInfo(const FCharacterInfoStruct& InfoStruct, const EClassAbilityPoolType& PoolType)
+{
+	UP4PlayerAbilitySystemComponent* ASC = Cast< UP4PlayerAbilitySystemComponent>(GetAbilitySystemComponent());
+	if (ASC)
+	{
+		ASC->Server_OnAbilityPoolPicked(PoolType);
+	}
+	AttrDataTable = InfoStruct.ChracterBaseAttributes;
+	GetAttributeSet()->ReinitializeProperties();
+	InitializeAttributeSet();
 }
 
 void AP4PlayerCharacterBase::MulticastSetCharacterInfo_Implementation(const FCharacterInfoStruct& InfoStruct)
@@ -75,10 +97,19 @@ void AP4PlayerCharacterBase::MulticastSetCharacterInfo_Implementation(const FCha
 	GetMesh()->SetSkeletalMesh(InfoStruct.CharacterSkeletalMesh);
 	GetMesh()->SetAnimClass(InfoStruct.AnimationBlueprint);
 	SetCharacterColor(InfoStruct.TEMPColor);
+
+	// since attribute sets are reset right before this is a good time to let client re-init in case delegates didnt trigger
+	AProject4Controller* PC = Cast<AProject4Controller>(GetController());
+	if (PC && PC->IsLocalController() && PC->GetMainHUDWidget() && PC->GetMainHUDWidget()->GetResourceBarsWidget())
+	{
+		PC->GetMainHUDWidget()->GetResourceBarsWidget()->ReInitValues();
+	}
 }
 
 void AP4PlayerCharacterBase::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
+	Super::SetupPlayerInputComponent(PlayerInputComponent);
+
 	// Set up gameplay key bindings
 	check(PlayerInputComponent);
 	PlayerInputComponent->BindAxis("CameraZoom", this, &AP4PlayerCharacterBase::CameraZoom);
@@ -89,9 +120,16 @@ void AP4PlayerCharacterBase::SetupPlayerInputComponent(class UInputComponent* Pl
 
 void AP4PlayerCharacterBase::InitializeAttributeSet()
 {
+	// dont call super cause we want to use player att set 
 	if (AbilitySystemComponent.IsValid())
 	{
 		AbilitySystemComponent->InitStats(UPlayerAttributeSet::StaticClass(), AttrDataTable);
+	}
+
+	AProject4Controller* PC = Cast<AProject4Controller>(GetController());
+	if (PC && PC->IsLocalController() && PC->GetMainHUDWidget() && PC->GetMainHUDWidget()->GetResourceBarsWidget())
+	{
+		PC->GetMainHUDWidget()->GetResourceBarsWidget()->ReInitValues();
 	}
 }
 
@@ -254,6 +292,7 @@ void AP4PlayerCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
 
+
 	// Move listener to character instead of camera (has weird stereo issues)
 	//AddAllStartupEffects();
 	//if (IsLocallyControlled())
@@ -274,6 +313,46 @@ void AP4PlayerCharacterBase::OnRep_Controller()
 {
 	Super::OnRep_Controller();
 
+	AProject4PlayerState* PS = GetPlayerState<AProject4PlayerState>();
+	print(FString("OnRep_Controller()\n\n"));
+	if (PS) {
+		// Set the ASC for clients. Server does this in PossessedBy.
+		AbilitySystemComponent = Cast<UAbilitySystemComponent>(PS->GetAbilitySystemComponent());
+
+		if (PS->GetAbilitySystemComponent())
+			print(FString("ASC Set From PlayerState"));
+
+		// Init ASC Actor Info for clients. Server will init its ASC when it possesses a new Actor.
+		AbilitySystemComponent->InitAbilityActorInfo(PS, this);
+
+		// Set AttributeSet
+		AttributeSet = PS->GetAttributeSet();
+
+		// Tell PS to bind delegates before init
+		PS->BindAbilityDelegates();
+
+		// Init playerAttributes with .csv
+		InitializeAttributeSet();
+
+		//print(FString("PossessedBy()"));
+		//AddAllStartupEffects();
+
+		// For edge cases where the PlayerState is repped before the Hero is possessed.
+		// Maybe dont use this for servers? some might still need a ref for some reason
+		AProject4Controller* PC = Cast<AProject4Controller>(GetController());
+		if (PC)
+		{
+			PC->InputComponent->Activate();
+			SetupPlayerInputComponent(PC->InputComponent);
+		}
+		
+
+
+
+		InitFloatingStatusBarWidget();
+		InitFloatingTextWidgetComponent();
+	}
+
 	// Changed PlayerController, update AbilitySystemCompnent
 	if (AbilitySystemComponent.IsValid()) {
 		AbilitySystemComponent->RefreshAbilityActorInfo();
@@ -288,9 +367,13 @@ void AP4PlayerCharacterBase::PossessedBy(AController* NewController)
 
 	AProject4PlayerState* PS = GetPlayerState<AProject4PlayerState>();
 
+	print(FString("AP4PlayerCharacterBase::PossessedBy()\n\n"));
 	if (PS) {
 		// Set the ASC for clients. Server does this in PossessedBy.
 		AbilitySystemComponent = Cast<UAbilitySystemComponent>(PS->GetAbilitySystemComponent());
+
+		if (PS->GetAbilitySystemComponent())
+			print(FString("ASC Set From PlayerState"));
 
 		// Init ASC Actor Info for clients. Server will init its ASC when it possesses a new Actor.
 		PS->GetAbilitySystemComponent()->InitAbilityActorInfo(PS, this);
@@ -305,18 +388,26 @@ void AP4PlayerCharacterBase::PossessedBy(AController* NewController)
 		// Init playerAttributes with .csv
 		InitializeAttributeSet();
 
+
+
 		//print(FString("PossessedBy()"));
 		AddAllStartupEffects();
 
-		BindASCInput();
+		
+
 
 		// For edge cases where the PlayerState is repped before the Hero is possessed.
 		// Maybe dont use this for servers? some might still need a ref for some reason
-		//AProject4Controller* PC = Cast<AProject4Controller>(GetController());
+		AProject4Controller* PC = Cast<AProject4Controller>(GetController());
 		//if (PC)
 		//{
 		//	PC->CreateMainHUDWidget();
 		//}
+		if (PC)
+		{
+			PC->InputComponent->Activate();
+			SetupPlayerInputComponent(PC->InputComponent);
+		}
 
 		SkillTreeComponent->GetSetPlayerAndASCRef();
 		InventoryBagComponent->GetSetPlayerRefAndASC();
@@ -336,11 +427,13 @@ void AP4PlayerCharacterBase::OnRep_PlayerState()
 	Super::OnRep_PlayerState();
 
 	AProject4PlayerState* PS = GetPlayerState<AProject4PlayerState>();
-
+	print(FString("AP4PlayerCharacterBase::OnRep_PlayerState()\n\n"));
 	if (PS) {
 		// Set the ASC for clients. Server does this in PossessedBy.
 		AbilitySystemComponent = Cast<UAbilitySystemComponent>(PS->GetAbilitySystemComponent());
 
+		if(PS->GetAbilitySystemComponent())
+			print(FString("ASC Set From PlayerState"));
 
 		// Init ASC Actor Info for clients. Server will init its ASC when it possesses a new Actor.
 		AbilitySystemComponent->InitAbilityActorInfo(PS, this);
@@ -364,13 +457,17 @@ void AP4PlayerCharacterBase::OnRep_PlayerState()
 		//{
 		//	PC->CreateMainHUDWidget();
 		//}
-
-		BindASCInput();
+		if (PC)
+		{
+			PC->InputComponent->Activate();
+			SetupPlayerInputComponent(PC->InputComponent);
+		}
 
 
 
 		InitFloatingStatusBarWidget();
 		InitFloatingTextWidgetComponent();
+
 	}
 }
 

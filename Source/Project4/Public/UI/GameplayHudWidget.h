@@ -13,6 +13,10 @@
 #include "AbilitySystem/P4AbilityModifier.h"
 #include "GameplayHudWidget.generated.h"
 
+
+class UResourceBarsWidget;
+
+
 /**
  * 
  */
@@ -201,6 +205,9 @@ public:
 	UFUNCTION()
 		UXPBarWidget* GetXPBarWidget() { return XPBarWidget;  }
 
+	UFUNCTION()
+		UResourceBarsWidget* GetResourceBarsWidget() { return ResourceBarsWidget; }
+
 protected:
 
 	virtual void NativeConstruct() override;
@@ -210,7 +217,7 @@ protected:
 		class UXPBarWidget* XPBarWidget;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Attributes)
-		class UResourceBarsWidget* ResourceBarsWidget;
+		UResourceBarsWidget* ResourceBarsWidget;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Ability Hotbar")
 		class UAbilityHotbar* AbilityHotbar;

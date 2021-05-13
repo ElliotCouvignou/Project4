@@ -61,7 +61,7 @@ void UP4PlayerAbilitySystemComponent::Server_OnPlayerSkillDropInteracted_Impleme
 			// Roll Random Abilities: gives 3 options and get more specific/narrow from which pool you want to pick from
 			int numGeneralSkillPoolChoices = 3;  // this can be opened up to other params
 
-			UP4AbilityPoolGraph* APG = P4GM->GlobalAbilityPoolGraph;
+			UP4AbilityPoolsDataAsset* APG = P4GM->GlobalAbilityPoolDataAsset;
 			TArray<EAbilityCategory> GeneratedGeneralPool;
 			APG->GetAbilityCategoriesFromPools(AbilityPools, GeneratedGeneralPool);
 
@@ -85,7 +85,7 @@ void UP4PlayerAbilitySystemComponent::Server_OnGeneralSkillPoolSelected_Implemen
 	AProject4GameMode* P4GM = Cast<AProject4GameMode>(GetWorld()->GetAuthGameMode());
 	if (P4GM)
 	{
-		UP4AbilityPoolGraph* APG = P4GM->GlobalAbilityPoolGraph;
+		UP4AbilityPoolsDataAsset* APG = P4GM->GlobalAbilityPoolDataAsset;
 		if (APG)
 		{
 			AProject4Character* P4C = Cast<AProject4Character>(GetOwnerActor());
@@ -138,21 +138,21 @@ void UP4PlayerAbilitySystemComponent::Server_OnPlayerSkillModifierDropInteracted
 		if (PC)
 		{		
 			// Get Abilitites that Player has learned and can be Modified
-			UP4AbilityPoolGraph* APG = P4GM->GlobalAbilityPoolGraph;
-			TArray<UP4AbilityNode*> Abilities;
+			UP4AbilityPoolsDataAsset* APG = P4GM->GlobalAbilityPoolDataAsset;
+			TArray<FP4AbilityPoolAbilityInfoStruct> Abilities;
 			TArray<TSubclassOf<UP4GameplayAbility>> LearnedAbilities;
 			GetLearnedPoolAbilities(LearnedAbilities);
-			APG->GetLearnedAbilityNodesFromPools(AbilityPools, LearnedAbilities, Abilities);
+			APG->GetLearnedAbilityInfoFromPools(AbilityPools, LearnedAbilities, Abilities);
 
 			// trim abilities without modifiers
-			TArray<UP4AbilityNode*> AbilityNodesToRemove;
-			for (UP4AbilityNode* Node : Abilities)
+			TArray<FP4AbilityPoolAbilityInfoStruct> AbilityNodesToRemove;
+			for (FP4AbilityPoolAbilityInfoStruct& Node : Abilities)
 			{
-				if (Node->AbilityModifiers.Num() <= 0)
+				if (Node.AbilityModifiers.Num() <= 0)
 					AbilityNodesToRemove.Add(Node);
 			}
 
-			for (UP4AbilityNode* Node : AbilityNodesToRemove)
+			for (FP4AbilityPoolAbilityInfoStruct& Node : AbilityNodesToRemove)
 			{
 				Abilities.Remove(Node);
 			}
@@ -163,7 +163,7 @@ void UP4PlayerAbilitySystemComponent::Server_OnPlayerSkillModifierDropInteracted
 			while(Result.Num() < 3 && Abilities.Num() > 0)
 			{
 				int randidx = FMath::RandRange(0.f, (float)Abilities.Num());
-				Result.Add(Abilities[randidx]->Ability);
+				Result.Add(Abilities[randidx].Ability);
 				Abilities.RemoveAt(randidx);
 			}
 
@@ -180,7 +180,7 @@ void UP4PlayerAbilitySystemComponent::Server_OnPlayerSkillModifierDropInteracted
 void UP4PlayerAbilitySystemComponent::Server_OnAbilityModifierAbilityChoiceSelected_Implementation(TSubclassOf<UP4GameplayAbility> SelectedAbility)
 {
 	AProject4GameMode* P4GM = Cast<AProject4GameMode>(GetWorld()->GetAuthGameMode());
-	UP4AbilityPoolGraph* APG = P4GM->GlobalAbilityPoolGraph;
+	UP4AbilityPoolsDataAsset* APG = P4GM->GlobalAbilityPoolDataAsset;
 	if (P4GM && APG && SelectedAbility)
 	{
 		AProject4Character* P4C = Cast<AProject4Character>(GetOwnerActor());
@@ -188,15 +188,15 @@ void UP4PlayerAbilitySystemComponent::Server_OnAbilityModifierAbilityChoiceSelec
 		if (PC)
 		{
 			// Get AbilityNodes of this ability class (gathered from all pools and overlapping categories
-			TArray<UP4AbilityNode*> AbilityNodes;
-			APG->GetAbilityNodes(AbilityPools, SelectedAbility, AbilityNodes);
+			TArray<FP4AbilityPoolAbilityInfoStruct> AbilityNodes;
+			APG->GetAbilityInfoStructs(AbilityPools, SelectedAbility, AbilityNodes);
 
 			// generate one array of abilitymodifiers for this abilityclass
 			// Tally up weights as well for rolling N Modifiers
 			TArray<TSubclassOf<UP4AbilityModifierInfo>> AbilityModifierInfos;
-			for (UP4AbilityNode* Node : AbilityNodes)
+			for (FP4AbilityPoolAbilityInfoStruct& Node : AbilityNodes)
 			{
-				AbilityModifierInfos.Append(Node->AbilityModifiers);
+				AbilityModifierInfos.Append(Node.AbilityModifiers);
 			}
 
 			// from this array of modifiers, choose N Amount

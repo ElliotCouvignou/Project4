@@ -9,13 +9,6 @@
 
 
 
-
-
-void AP4HubGameMode::ServerTravelToLevel_Implementation(const FString& LevelName)
-{
-	GetWorld()->ServerTravel(LevelName);
-}
-
 void AP4HubGameMode::ServerTravelToNewLevel_Implementation()
 {
 	// TODO: figure out how to select random levels
@@ -30,42 +23,28 @@ void AP4HubGameMode::ServerTravelToNewLevel_Implementation()
 	
 }
 
-void AP4HubGameMode::BeginPlay()
+void AP4HubGameMode::StartPlay()
 {
-	UProject4GameInstance* GI = Cast<UProject4GameInstance>(GetGameInstance());
+	Super::StartPlay();
 
-	// Check if we are loading from pregame lobby
-	if (GI->LoadFromPreGameLobbyInfo)
+	LoadCurrentGameInfo();
+
+	AProject4Controller* P4C = Cast<AProject4Controller>(GetWorld()->GetFirstPlayerController());
+	if (P4C)
 	{
-		//FPreGameLobbyInfoStruct& Info = GI->PreGameLobbyInfo;
-		//if (Info.PlayerInfoMap.Num() == 0)
-		//{
-		//	// TODO something idk if i should even bother with this case (prob from playing in editor and skipping pregame)
-		//}
-		//else
-		//{
-		//	// Create Characters and set the player's chosen , assign mapped player controller to created character
-		//	for (auto elem : Info.PlayerInfoMap)
-		//	{
-		//		AP4PlayerCharacterBase* PChar = GetWorld()->SpawnActorDeferred<AP4PlayerCharacterBase>(CharacterBaseClass, FTransform(), nullptr, nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
-		//		PChar->SetOwner(elem.Key);
-		//		elem.Key->SetPawn(PChar);
-		//
-		//		AProject4PlayerState* PS = elem.Key->GetPlayerState<AProject4PlayerState>();
-		//		if (PS)
-		//		{
-		//			UP4PlayerAbilitySystemComponent* ASC = Cast<UP4PlayerAbilitySystemComponent>(PS->GetAbilitySystemComponent());
-		//			if (ASC)
-		//			{
-		//				ASC->Server_OnAbilityPoolPicked_Implementation(elem.Value.PlayerChosenPool);
-		//			}
-		//		}
-		//
-		//		// TODO: find location for tihs
-		//		PChar->FinishSpawning(FTransform());
-		//	}
-		//}
+		P4C->CreateMainHUDWidget();
 	}
-	
-
 }
+
+void AP4HubGameMode::PostLogin(APlayerController* NewPlayer)
+{
+
+	Super::PostLogin(NewPlayer);
+
+	AProject4Controller* P4C = Cast<AProject4Controller>(NewPlayer);
+	if (P4C)
+	{
+		P4C->CreateMainHUDWidget();
+	}
+}
+

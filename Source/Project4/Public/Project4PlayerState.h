@@ -37,7 +37,15 @@ public:
 		void BindAbilityDelegates();
 
 
+	UFUNCTION(Client, Reliable, BlueprintCallable)
+		void ClientPlayerReadyStateChanged(int index, bool NewState);
+	void ClientPlayerReadyStateChanged_Implementation(int index, bool NewState);
 
+	UFUNCTION(Client, Reliable, BlueprintCallable)
+		void ClientInitPlayerReadyStates(const TArray<bool>& States);
+	void ClientInitPlayerReadyStates_Implementation(const TArray<bool>& States);
+
+	
 
 protected:
 

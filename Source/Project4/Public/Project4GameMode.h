@@ -4,9 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameLiftServerSDK.h"
-#include "GameFramework/GameModeBase.h"
+#include "GameFramework/GameMode.h"
 #include "Interactables/SkillDropActor.h"
-#include "GenericGraph/Abilities/P4AbilityPoolGraph.h"
+#include "AbilitySystem/P4AbilityPoolsDataAsset.h"
+#include "Characters/P4CharacterInfoDataAsset.h"
 #include "Project4GameMode.generated.h"
 
 
@@ -67,12 +68,16 @@ struct FHealthCheckState
 // some offline mode or singleplayer
 
 UCLASS(minimalapi)
-class AProject4GameMode : public AGameModeBase
+class AProject4GameMode : public AGameMode
 {
 	GENERATED_BODY()
 
 public:
 	AProject4GameMode();
+
+	// TODO: figure out wht to do with this if we wanna make classes for each char or just swap info
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
+		TSubclassOf<class AP4PlayerCharacterBase> CharacterBaseClass;
 
 
 	/***************************/
@@ -87,8 +92,35 @@ public:
 	UFUNCTION()
 		void RespawnPlayer(AController* Controller);
 
+	UFUNCTION(BlueprintCallable, BlueprintCallable)
+		void ServerTravelToLevel(const FString& LevelName);
+
+
+	UFUNCTION(BlueprintCallable)
+		virtual void SaveGameInfo();
+
+	UFUNCTION(BlueprintCallable)
+		virtual void LoadCurrentGameInfo();
+
+	UFUNCTION(BlueprintCallable)
+		void CreateCharacter(EClassAbilityPoolType CharClass, APlayerController* OwningPC);
+
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Abilities | Pools")
-		UP4AbilityPoolGraph* GlobalAbilityPoolGraph;
+		UP4AbilityPoolsDataAsset* GlobalAbilityPoolDataAsset;
+
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+		UP4CharacterInfoDataAsset* PoolCharacterInfoMap;
+
+	/* map of enum to character class to spawn */
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+		TMap<EClassAbilityPoolType, TSubclassOf<AP4PlayerCharacterBase>> ClassToCharClass;
+
+	virtual void PostSeamlessTravel() override;
+
+	virtual void StartPlay() override;
+
+	virtual void PostLogin(APlayerController* NewPlayer) override;
 
 
 private:
