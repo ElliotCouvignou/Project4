@@ -17,7 +17,7 @@
 
 
 #define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Green,text)
-#define CONSTRUCT_CLASS(Class, Name) Class* Name = NewObject<Class>(GetTransientPackage(), FName(TEXT(#Name)))
+#define CONSTRUCT_CLASS(Class, Name) Name = NewObject<Class>(GetTransientPackage(), FName(TEXT(#Name)))
 
 UP4GameplayAbility::UP4GameplayAbility()
 {
@@ -58,12 +58,66 @@ void UP4GameplayAbility::SendErrorMessageToUI(EAbilityErrorText ErrorType)
 
 void UP4GameplayAbility::CreateCustomGameplayEffectSpec(TSubclassOf<UGameplayEffect> EffectClass, const FP4GEExposedParametersStruct& Params, const int& Level, FGameplayEffectSpecHandle& Result)
 {
-	UGameplayEffect* GE = NewObject<UGameplayEffect>(GetTransientPackage(), EffectClass);
-	GE->StackLimitCount = (Params.StackLimitCount.Key) ? Params.StackLimitCount.Value : GE->StackLimitCount;
-	
+	// Create New GE or reuse existing object (neeeds same obj ref for stacking)
+
+	//for (auto e : GeneratedGameplayEffects)
+	//{
+	//	if (e.Params == Params && EffectClass == e.BaseClass)
+	//	{
+	//		//GameplayEffectClass->GetDefaultObject<UGameplayEffect>();
+	//
+	//		UGameplayEffect* GE = e.GeneratedObject->CreateDefaultSubobject<UGameplayEffect>(FName(EffectClass.Get()->GetName() + "_Generated"));
+	//		
+	//		FGameplayEffectContextHandle Context = MakeEffectContext(CurrentSpecHandle, CurrentActorInfo);
+	//		if (!Context.IsValid())
+	//		{
+	//			Context = GetAbilitySystemComponentFromActorInfo()->MakeEffectContext();
+	//		}
+	//		
+	//		FGameplayEffectSpec* NewSpec = new FGameplayEffectSpec(GE, Context, Level);
+	//		Result = FGameplayEffectSpecHandle(NewSpec);
+	//		return;
+	//
+	//		//FGameplayEffectSpec* NewSpec = new FGameplayEffectSpec(e.GeneratedSpec);
+	//		//NewSpec->SetLevel(Level);
+	//		//Result = FGameplayEffectSpecHandle(NewSpec);
+	//		//print(FString("Found old"));	
+	//		//return;
+	//	}
+	//}
+
+	//CONSTRUCT_CLASS(UGameplayEffect, GE);
+	//UGameplayEffect* GE = NewObject<UGameplayEffect>(EffectClass->GetDefaultObject());
+
+	UGameplayEffect* GE = EffectClass->GetDefaultObject<UGameplayEffect>();
+
+	// Construct new Custom GE
+	if ((Params.Stacking.Key))
+	{
+		GE->StackLimitCount = Params.Stacking.StackLimitCount;
+		GE->StackingType = Params.Stacking.StackingType;
+		GE->StackDurationRefreshPolicy = Params.Stacking.StackDurationRefreshPolicy;
+		GE->StackPeriodResetPolicy = Params.Stacking.StackPeriodResetPolicy;
+		GE->StackExpirationPolicy = Params.Stacking.StackExpirationPolicy;
+	}
+
 	// TODO: make sure this doesnt cause mem leaks 
-	FGameplayEffectSpec* NewSpec = new FGameplayEffectSpec(GE, GetAbilitySystemComponentFromActorInfo()->MakeEffectContext(), Level);
-	Result =  FGameplayEffectSpecHandle(NewSpec);
+	FGameplayEffectContextHandle Context = MakeEffectContext(CurrentSpecHandle, CurrentActorInfo);
+	if (!Context.IsValid())
+	{
+		Context = GetAbilitySystemComponentFromActorInfo()->MakeEffectContext();
+	}
+
+	//GetAbilitySystemComponentFromActorInfo()->GetHandle;
+	FGameplayEffectSpec* NewSpec = new FGameplayEffectSpec(GE, Context, Level);
+	Result = FGameplayEffectSpecHandle(NewSpec);
+
+	FP4GECustomGameplayEffectStruct Genstruct;
+	Genstruct.Params = Params;
+	Genstruct.BaseClass = EffectClass;
+	Genstruct.GeneratedObject = GE;
+	Genstruct.GeneratedSpec = *NewSpec;
+//	GeneratedGameplayEffects.AddUnique(Genstruct);
 }
 
 //void UP4GameplayAbility::SetContitionalGameplayEffectSetByCallerByTag(TSubclassOf<UGameplayEffect> EffectClass, const FGameplayTag CallerTag, float Value)

@@ -17,7 +17,7 @@ AP4PreGameLobbyGameState::AP4PreGameLobbyGameState()
 
 void AP4PreGameLobbyGameState::InitNewPlayerState(APlayerController* PC)
 {
-	if (PC)
+	if (PC && !PlayerNumberMap.Contains(PC))
 	{
 		PlayerNumberMap.Add(TTuple<APlayerController*, int>(PC, PlayerNumberMap.Num()));
 

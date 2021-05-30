@@ -23,6 +23,9 @@ public:
 
 	virtual void NativeConstruct() override;
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Ability, Meta = (ExposeOnSpawn = true))
+		int BlockIdx;
+
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Ability)
 		FGameplayTagContainer CooldownTagContainer;
 

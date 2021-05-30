@@ -56,9 +56,9 @@ public:
 		void Mutlicast_SetPreGameLobbyPosition();  // For left-click selection
 	void Mutlicast_SetPreGameLobbyPosition_Implementation();  // For left-click selection
 
-		// TODO: remove this its temp-ish
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
 		void SetPreGameLobbyPosition();  // For left-click selection
+
 
 	/* Called on by authority */
 	UFUNCTION()

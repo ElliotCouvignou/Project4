@@ -30,10 +30,16 @@ public:
 		void UpdateHealthMax();
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 		void UpdateHealthRegen();
+
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 		void UpdateManaMax();
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 		void UpdateManaRegen();
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+		void UpdateRageMax();
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+		void UpdateRageRegen();
+
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 		void UpdateEnduranceMax();
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)

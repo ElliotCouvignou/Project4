@@ -12,7 +12,7 @@
 
 
 
-
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDamageDealt, const FGameplayTagContainer&, DamageTags);
 
 
 /**
@@ -40,6 +40,14 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Abilities | Pools")
 		void GetLearnedPoolAbilities(TArray<TSubclassOf<UP4GameplayAbility>>& Abilities);
+
+
+
+	UFUNCTION(BlueprintCallable, Category = "Delegates")
+		void QueryDamageTagsForDelegates(FGameplayTagContainer& DamageTags);
+
+	UPROPERTY(BlueprintAssignable, Category = "Delegates")
+		FOnDamageDealt DamageDealtDelegate;
 
 	/*******************************/
 	/* AbilityPool/Class selection */

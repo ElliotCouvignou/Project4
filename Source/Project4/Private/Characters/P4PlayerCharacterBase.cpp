@@ -80,6 +80,7 @@ void AP4PlayerCharacterBase::Mutlicast_SetPreGameLobbyPosition_Implementation()
 	}
 }
 
+
 void AP4PlayerCharacterBase::ServerSetCharacterInfo(const FCharacterInfoStruct& InfoStruct, const EClassAbilityPoolType& PoolType)
 {
 	UP4PlayerAbilitySystemComponent* ASC = Cast< UP4PlayerAbilitySystemComponent>(GetAbilitySystemComponent());
@@ -312,7 +313,7 @@ void AP4PlayerCharacterBase::OnRep_Controller()
 {
 	Super::OnRep_Controller();
 
-	AProject4PlayerState* PS = GetPlayerState<AProject4PlayerState>();
+	AProject4PlayerState* PS = GetController()->GetPlayerState<AProject4PlayerState>();
 	print(FString("OnRep_Controller()\n\n"));
 	if (PS) {
 		// Set the ASC for clients. Server does this in PossessedBy.
@@ -426,7 +427,11 @@ void AP4PlayerCharacterBase::OnRep_PlayerState()
 
 	AProject4PlayerState* PS = GetPlayerState<AProject4PlayerState>();
 	print(FString("AP4PlayerCharacterBase::OnRep_PlayerState()\n\n"));
+
 	if (PS) {
+
+		UE_LOG(LogTemp, Warning, TEXT("[AP4PlayerCharacterBase::OnRep_PlayerState] New PlayerState, bind asc"));
+
 		// Set the ASC for clients. Server does this in PossessedBy.
 		AbilitySystemComponent = Cast<UAbilitySystemComponent>(PS->GetAbilitySystemComponent());
 

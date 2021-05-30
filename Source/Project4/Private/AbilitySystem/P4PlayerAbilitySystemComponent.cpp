@@ -14,6 +14,11 @@ UP4PlayerAbilitySystemComponent::UP4PlayerAbilitySystemComponent()
 	:Super()
 {
 	AbilityPools = { EClassAbilityPoolType::None };
+
+
+	
+
+	// AbilityEndedCallbacks
 }
 
 void UP4PlayerAbilitySystemComponent::GetLearnedPoolAbilities(TArray<TSubclassOf<UP4GameplayAbility>>& Abilities)
@@ -27,9 +32,18 @@ void UP4PlayerAbilitySystemComponent::GetLearnedPoolAbilities(TArray<TSubclassOf
 		FGameplayTag abilityTag = FGameplayTag::RequestGameplayTag(FName("Ability.Skill"));
 		if (Tag.HasTag(abilityTag))
 		{
-			Abilities.Add(Spec.Ability->GetClass());
+			Abilities.AddUnique(Spec.Ability->GetClass());
 		}
 	}
+}
+
+void UP4PlayerAbilitySystemComponent::QueryDamageTagsForDelegates(FGameplayTagContainer& DamageTags)
+{
+	// TODO: determine if we should split delegate into types if we need performance (e.g magic/phys dmg delegate, etc.)
+	// thats teh reason why this function exists
+
+	// TODO 2: determine if clients need to be informed (SERVER ONLY ATM)
+	DamageDealtDelegate.Broadcast(DamageTags);
 }
 
 
@@ -139,22 +153,14 @@ void UP4PlayerAbilitySystemComponent::Server_OnPlayerSkillModifierDropInteracted
 		{		
 			// Get Abilitites that Player has learned and can be Modified
 			UP4AbilityPoolsDataAsset* APG = P4GM->GlobalAbilityPoolDataAsset;
-			TArray<FP4AbilityPoolAbilityInfoStruct> Abilities;
+			
 			TArray<TSubclassOf<UP4GameplayAbility>> LearnedAbilities;
 			GetLearnedPoolAbilities(LearnedAbilities);
-			APG->GetLearnedAbilityInfoFromPools(AbilityPools, LearnedAbilities, Abilities);
-
-			// trim abilities without modifiers
-			TArray<FP4AbilityPoolAbilityInfoStruct> AbilityNodesToRemove;
-			for (FP4AbilityPoolAbilityInfoStruct& Node : Abilities)
+			TArray<TSubclassOf<UP4GameplayAbility>> Abilities = LearnedAbilities;
+			for (auto e : LearnedAbilities)
 			{
-				if (Node.AbilityModifiers.Num() <= 0)
-					AbilityNodesToRemove.Add(Node);
-			}
-
-			for (FP4AbilityPoolAbilityInfoStruct& Node : AbilityNodesToRemove)
-			{
-				Abilities.Remove(Node);
+				if (e.GetDefaultObject()->AbilityModifiers.Num() == 0)
+					Abilities.Remove(e);
 			}
 
 			// from array of abilities with modifiers, choose N amount
@@ -163,7 +169,7 @@ void UP4PlayerAbilitySystemComponent::Server_OnPlayerSkillModifierDropInteracted
 			while(Result.Num() < 3 && Abilities.Num() > 0)
 			{
 				int randidx = FMath::RandRange(0.f, (float)Abilities.Num());
-				Result.Add(Abilities[randidx].Ability);
+				Result.Add(Abilities[randidx]);
 				Abilities.RemoveAt(randidx);
 			}
 
@@ -193,11 +199,11 @@ void UP4PlayerAbilitySystemComponent::Server_OnAbilityModifierAbilityChoiceSelec
 
 			// generate one array of abilitymodifiers for this abilityclass
 			// Tally up weights as well for rolling N Modifiers
-			TArray<TSubclassOf<UP4AbilityModifierInfo>> AbilityModifierInfos;
-			for (FP4AbilityPoolAbilityInfoStruct& Node : AbilityNodes)
-			{
-				AbilityModifierInfos.Append(Node.AbilityModifiers);
-			}
+			TArray<TSubclassOf<UP4AbilityModifierInfo>> AbilityModifierInfos = SelectedAbility.GetDefaultObject()->AbilityModifiers;
+			//for (FP4AbilityPoolAbilityInfoStruct& Node : AbilityNodes)
+			//{
+			//	AbilityModifierInfos.Append(Node.AbilityModifiers);
+			//}
 
 			// from this array of modifiers, choose N Amount
 			// TODO: figure out N (Currently N = 3)

@@ -8,7 +8,6 @@
 #include "Project4Controller.h"
 
 #include "AbilitySystem/AttributeSets/PlayerAttributeSet.h"
-#include "AbilitySystem/AttributeSets/P4BaseAttributeSet.h"
 #include "AbilitySystem/P4PlayerAbilitySystemComponent.h"
 #include "AbilitySystem/P4GameplayAbility.h"
 #include "AbilitySystemComponent.h"
@@ -26,6 +25,8 @@ AProject4PlayerState::AProject4PlayerState()
 	AbilitySystemComponent = CreateDefaultSubobject<UP4PlayerAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
     AbilitySystemComponent->SetIsReplicated(true);
     AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
+
+	UE_LOG(LogTemp, Warning, TEXT("[AProject4PlayerState::AProject4PlayerState()] Created new ASC for Playerstate"));
 	
 	bActorSeamlessTraveled = true;
 
@@ -81,6 +82,11 @@ void AProject4PlayerState::BindAbilityDelegates()
 		ManaMaxChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetManaMaxAttribute()).AddUObject(this, &AProject4PlayerState::ManaMaxChanged);
 		ManaRegenChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetManaRegenAttribute()).AddUObject(this, &AProject4PlayerState::ManaRegenChanged);
 		
+		RageChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetRageAttribute()).AddUObject(this, &AProject4PlayerState::RageChanged);
+		RageMaxChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetRageMaxAttribute()).AddUObject(this, &AProject4PlayerState::RageMaxChanged);
+		RageRegenChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetRageRegenAttribute()).AddUObject(this, &AProject4PlayerState::RageRegenChanged);
+
+
 		EnduranceChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetEnduranceAttribute()).AddUObject(this, &AProject4PlayerState::EnduranceChanged);
 		EnduranceMaxChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetEnduranceMaxAttribute()).AddUObject(this, &AProject4PlayerState::EnduranceMaxChanged);
 		EnduranceRegenChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetEnduranceRegenAttribute()).AddUObject(this, &AProject4PlayerState::EnduranceRegenChanged);
@@ -111,6 +117,9 @@ void AProject4PlayerState::BindAbilityDelegates()
 		CritChanceChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetCritChanceAttribute()).AddUObject(this, &AProject4PlayerState::CritChanceChanged);
 		CritDamageChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetCritDamageAttribute()).AddUObject(this, &AProject4PlayerState::CritDamageChanged);
 		
+		/* Input buffer binds */
+		AbilitySystemComponent->AbilityFailedCallbacks.AddUObject(this, &AProject4PlayerState::OnPlayerAbilityFailed);
+		AbilitySystemComponent->AbilityEndedCallbacks.AddUObject(this, &AProject4PlayerState::OnPlayerAbilityEnded);
 
 		AbilitySystemComponent->RegisterGameplayTagEvent(FGameplayTag::RequestGameplayTag(FName("Buffs.Negative.Stunned")), EGameplayTagEventType::NewOrRemoved).AddUObject(this, &AProject4PlayerState::OnStunTagChanged);
 	}
@@ -135,6 +144,22 @@ void AProject4PlayerState::ClientInitPlayerReadyStates_Implementation(const TArr
 		PC->GetPreGameLobbyWidget()->InitPlayerReadyStatus(States);
 	}	
 }
+
+void AProject4PlayerState::OnPlayerAbilityFailed(const UGameplayAbility* Ability, const FGameplayTagContainer& InfoTags)
+{
+	// TODO: determine if container info can determine if this was from input
+	print(FString("OnPlayerAbilityFailed: Tags: "));
+	for (auto e : InfoTags)
+	{
+		print(e.GetTagName().ToString());
+	}
+
+}
+
+void AProject4PlayerState::OnPlayerAbilityEnded(UGameplayAbility* Ability)
+{
+}
+
 
 
 /*********************/
@@ -521,6 +546,62 @@ void AProject4PlayerState::ManaRegenChanged(const FOnAttributeChangeData& Data)
 		if (HUD)
 		{
 			HUD->UpdateManaRegen(ManaRegen);
+		}
+	}
+}
+
+
+void AProject4PlayerState::RageChanged(const FOnAttributeChangeData& Data)
+{
+	float Rage = Data.NewValue;
+
+	//print(FString("New Rage: " + FString::SanitizeFloat(Rage, 2)));
+	// 
+	// update Player HUD (ref in controller)
+	AProject4Controller* PC = Cast<AProject4Controller>(GetOwner());
+	if (PC)
+	{
+
+		UGameplayHudWidget* HUD = PC->GetMainHUDWidget();
+		if (HUD)
+		{
+			HUD->UpdateRage(Rage);
+		}
+	}
+}
+
+void AProject4PlayerState::RageMaxChanged(const FOnAttributeChangeData& Data)
+{
+	float RageMax = Data.NewValue;
+
+	//print(FString("New RageMax: " + FString::SanitizeFloat(RageMax, 2)));
+
+	// update Player HUD (ref in controller)
+	AProject4Controller* PC = Cast<AProject4Controller>(GetOwner());
+	if (PC)
+	{
+
+		UGameplayHudWidget* HUD = PC->GetMainHUDWidget();
+		if (HUD)
+		{
+			HUD->UpdateRageMax(RageMax);
+		}
+	}
+}
+
+void AProject4PlayerState::RageRegenChanged(const FOnAttributeChangeData& Data)
+{
+	float RageRegen = Data.NewValue;
+
+	// update Player HUD (ref in controller)
+	AProject4Controller* PC = Cast<AProject4Controller>(GetOwner());
+	if (PC)
+	{
+
+		UGameplayHudWidget* HUD = PC->GetMainHUDWidget();
+		if (HUD)
+		{
+			HUD->UpdateRageRegen(RageRegen);
 		}
 	}
 }

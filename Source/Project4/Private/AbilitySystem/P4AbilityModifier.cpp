@@ -19,6 +19,7 @@ UP4AbilityModifierInfo::UP4AbilityModifierInfo(const FObjectInitializer& ObjectI
 	: Super(ObjectInitializer)
 {
 	//CalculateModifierMagnitudes(ModifierMagnitudes);
+	OnModifierGranted();
 }
 
 
@@ -27,3 +28,14 @@ void UP4AbilityModifierInfo::CalculateModifierMagnitudes_Implementation(TArray<f
 
 }
 
+
+void UP4AbilityModifierInfo::OnModifierGranted_Implementation()
+{
+
+}
+
+
+void UP4AbilityModifierInfo::OnModifierMagnitudesChanged_Implementation()
+{
+
+}

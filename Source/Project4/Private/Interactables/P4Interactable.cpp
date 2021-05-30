@@ -54,11 +54,15 @@ void AP4Interactable::StartNiagaraEffect()
 }
 
 
-void AP4Interactable::OnInteract(const AP4PlayerCharacterBase* SourceActor, bool& Result)
+void AP4Interactable::ServerOnInteract_Implementation(const AP4PlayerCharacterBase* SourceActor)
+{
+	OnInteract(SourceActor);
+}
+
+void AP4Interactable::OnInteract(const AP4PlayerCharacterBase* SourceActor)
 {
 	print(FString("OnInteract  bAse Called!"));
 
-	Result = true;
 }
 
 void AP4Interactable::BeginDestroy()

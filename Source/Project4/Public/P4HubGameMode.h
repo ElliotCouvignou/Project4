@@ -28,6 +28,11 @@ public:
 	void ServerTravelToNewLevel_Implementation();
 	bool ServerTravelToNewLevel_Validate() { return true; }
 
+	/* Funciton called from levelblueprints since no way to go from here to there */
+	UFUNCTION(BlueprintCallable)
+		void LoadFromPreGameLobby();
+
+	virtual void LoadCharacterForClient(APlayerController* NewPlayer) override;
 
 	virtual void GenericPlayerInitialization(AController* Controller) override;
 

@@ -78,7 +78,7 @@ AProject4Character::AProject4Character(const class FObjectInitializer& ObjectIni
 	UIFloatingStatusBarComponent->SetDrawSize(FVector2D(500, 500));
 
 	FloatingTextWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(FName("FloatingTextWidgetComponent"));
-	FloatingTextWidgetComponent->SetupAttachment(GetMesh());
+	FloatingTextWidgetComponent->SetupAttachment(RootComponent);
 	FloatingTextWidgetComponent->SetWidgetSpace(EWidgetSpace::Screen);
 	FloatingTextWidgetComponent->SetDrawSize(FVector2D(500, 500));
 

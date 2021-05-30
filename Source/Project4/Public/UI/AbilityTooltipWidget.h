@@ -24,7 +24,15 @@ enum class EAbilityTooltipCostValueType : uint8
 {
 	Flat				UMETA(DisplayName = "Flat"),
 	PercentMax			UMETA(DisplayName = "PercentMax"),
-	PercentCurrent		UMETA(DisplayName = "PercentCurrent")
+	PercentCurrent		UMETA(DisplayName = "PercentCurrent"),
+};
+
+UENUM(BlueprintType)
+enum class ETooltipValueType : uint8
+{
+	None				UMETA(DisplayName = "None"),    // no changes
+	Percent				UMETA(DisplayName = "Percent"), // decimal converted to %
+	Meters				UMETA(DisplayName = "Meters")  // Meters (*52.5)
 };
 
 
@@ -114,12 +122,17 @@ struct FAbilityModifierTooltipStruct
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Tooltip | Descriptions")
 		FText Description;
 
+	// Used to modify values for UI (e.g Percents and distances modify values shown)
+	// Index in array is index to calculation array that this refers to
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Tooltip | Values")
+		TArray<ETooltipValueType> DescriptionValueTypes;
+
 };
 
 USTRUCT(BlueprintType)
 struct FP4AbilityModifierDetailsTableRow : public FTableRowBase
 {
-	GENERATED_BODY()
+	GENERATED_USTRUCT_BODY()
 
 
 	/** Details on tooltip and varaibles to help generate UI **/

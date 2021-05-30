@@ -71,6 +71,8 @@ void AP4PreGameLobbyGameMode::OnPlayerReadyStatusChanged(const APlayerController
 		}
 
 		print(FString("All Players Ready"));
+		UE_LOG(LogTemp, Warning, TEXT("[AP4PreGameLobbyGameMode::OnPlayerReadyStatusChanged] All Players Ready"));
+
 		// if we made it here everyone is ready
 		// save info to game instance for when we done travel
 		UProject4GameInstance* GI = Cast<UProject4GameInstance>(GetGameInstance());
@@ -107,12 +109,20 @@ void AP4PreGameLobbyGameMode::OnPlayerReadyStatusChanged(const APlayerController
 
 
 
+void AP4PreGameLobbyGameMode::SetCharacterSpawnPosition(AP4PlayerCharacterBase* PChar)
+{
+	PChar->Mutlicast_SetPreGameLobbyPosition();
+}
+
 void AP4PreGameLobbyGameMode::TravelToHub()
 {
-	if (!GetWorld()->ServerTravel("/Game/Project4/Maps/HubLevel?listen?Game=/Game/Project4/Blueprints/GameModes/GM_Hub.GM_Hub_C"))
-	{
-		print(FString("Failed ServerTravvel"));
-	}
+	ServerTravelToLevel("/Game/Project4/Maps/HubLevel?listen?Game=/Game/Project4/Blueprints/GameModes/GM_Hub.GM_Hub_C");
+	//if (!GetWorld()->ServerTravel("/Game/Project4/Maps/HubLevel?listen?Game=/Game/Project4/Blueprints/GameModes/GM_Hub.GM_Hub_C"))
+	//{
+	//	print(FString("Failed ServerTravvel"));
+	//	bUseSeamlessTravel = false;
+	//	GetWorld()->ServerTravel("/Game/Project4/Maps/HubLevel?listen?Game=/Game/Project4/Blueprints/GameModes/GM_Hub.GM_Hub_C");
+	//}
 }
 
 void AP4PreGameLobbyGameMode::PostSeamlessTravel()

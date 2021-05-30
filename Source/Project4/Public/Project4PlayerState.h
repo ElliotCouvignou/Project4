@@ -49,12 +49,23 @@ public:
 
 protected:
 
+	/*************************************/
+	/*        Input buffer Stuff          */
+	/*************************************/
+
+	UFUNCTION(Category = "Input")
+		void OnPlayerAbilityFailed(const UGameplayAbility* Ability, const FGameplayTagContainer& InfoTags);
+
+	UFUNCTION(Category = "Input")
+		void OnPlayerAbilityEnded(UGameplayAbility* Ability);
+
+
 	// Hard refs of ASC and AS, this gets plugged into AProject4Characters' weak ptrs
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Abilities, meta = (AllowPrivateAccess = "true"))
 		class UAbilitySystemComponent* AbilitySystemComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Abilities, meta = (AllowPrivateAccess = "true"))
-		class UP4BaseAttributeSet* AttributeSet;
+		class UPlayerAttributeSet* AttributeSet;
 	
 
 
@@ -82,9 +93,14 @@ protected:
 	FDelegateHandle HealthChangedDelegateHandle;
 	FDelegateHandle HealthMaxChangedDelegateHandle;
 	FDelegateHandle HealthRegenChangedDelegateHandle;
+
 	FDelegateHandle ManaChangedDelegateHandle;
 	FDelegateHandle ManaMaxChangedDelegateHandle;
 	FDelegateHandle ManaRegenChangedDelegateHandle;
+	FDelegateHandle RageChangedDelegateHandle;
+	FDelegateHandle RageMaxChangedDelegateHandle;
+	FDelegateHandle RageRegenChangedDelegateHandle;
+
 	FDelegateHandle EnduranceChangedDelegateHandle;
 	FDelegateHandle EnduranceMaxChangedDelegateHandle;
 	FDelegateHandle EnduranceRegenChangedDelegateHandle;
@@ -133,9 +149,14 @@ protected:
 	virtual void HealthChanged(const FOnAttributeChangeData& Data);
 	virtual void HealthMaxChanged(const FOnAttributeChangeData& Data);
 	virtual void HealthRegenChanged(const FOnAttributeChangeData& Data);
+
 	virtual void ManaChanged(const FOnAttributeChangeData& Data);
 	virtual void ManaMaxChanged(const FOnAttributeChangeData& Data);
 	virtual void ManaRegenChanged(const FOnAttributeChangeData& Data);
+	virtual void RageChanged(const FOnAttributeChangeData& Data);
+	virtual void RageMaxChanged(const FOnAttributeChangeData& Data);
+	virtual void RageRegenChanged(const FOnAttributeChangeData& Data);
+
 	virtual void EnduranceChanged(const FOnAttributeChangeData& Data);
 	virtual void EnduranceMaxChanged(const FOnAttributeChangeData& Data);
 	virtual void EnduranceRegenChanged(const FOnAttributeChangeData& Data);

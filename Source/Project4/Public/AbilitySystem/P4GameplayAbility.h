@@ -11,7 +11,57 @@
 #include "AbilitySystem/GameplayEffects/P4AbilityModifierGameplayEffect.h"
 #include "P4GameplayAbility.generated.h"
 
+USTRUCT(BlueprintType)
+struct PROJECT4_API FP4GEStackingStruct
+{
+	GENERATED_USTRUCT_BODY()
+		// add more tuple params when needed		
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		bool Key;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Stacking)
+		EGameplayEffectStackingType	StackingType;
+
+	/** Stack limit for StackingType */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Stacking)
+		int32 StackLimitCount;
+
+	/** Policy for how the effect duration should be refreshed while stacking */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Stacking)
+		EGameplayEffectStackingDurationPolicy StackDurationRefreshPolicy;
+
+	/** Policy for how the effect period should be reset (or not) while stacking */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Stacking)
+		EGameplayEffectStackingPeriodPolicy StackPeriodResetPolicy;
+
+	/** Policy for how to handle duration expiring on this gameplay effect */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Stacking)
+		EGameplayEffectStackingExpirationPolicy StackExpirationPolicy;
+
+
+	FP4GEStackingStruct()
+	{
+		Key = false;
+	}
+
+	FP4GEStackingStruct(const FP4GEStackingStruct& other)
+	{
+		Key = other.Key;
+		StackingType = other.StackingType;
+		StackLimitCount = other.StackLimitCount;
+		StackDurationRefreshPolicy = other.StackDurationRefreshPolicy;
+		StackPeriodResetPolicy = other.StackPeriodResetPolicy;
+		StackExpirationPolicy = other.StackExpirationPolicy;
+	}
+
+
+	bool operator==(const FP4GEStackingStruct& r) const
+	{
+		return (Key == r.Key) && (StackingType == r.StackingType) && (StackLimitCount == r.StackLimitCount) && (StackDurationRefreshPolicy == r.StackDurationRefreshPolicy) && (StackPeriodResetPolicy == r.StackPeriodResetPolicy) && (StackExpirationPolicy == r.StackExpirationPolicy);
+	}
+
+};
 
 USTRUCT(BlueprintType)
 struct PROJECT4_API FP4GENumberParamStruct
@@ -39,6 +89,8 @@ struct PROJECT4_API FP4GENumberParamStruct
 	}
 };
 
+
+
 /*
 *  Struct of tuples to expose parameters to make more dynamic gameplay effects,
 * Enable tuple bool to actually use this parameter, if not default to class
@@ -50,11 +102,71 @@ struct PROJECT4_API FP4GEExposedParametersStruct
 	// add more tuple params when needed		
 	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-		FP4GENumberParamStruct StackLimitCount;
+		FP4GEStackingStruct Stacking;
 
 	FP4GEExposedParametersStruct()
 	{
-		StackLimitCount = FP4GENumberParamStruct(false, 0);
+		Stacking = FP4GEStackingStruct();
+	}
+
+	FP4GEExposedParametersStruct(const FP4GEExposedParametersStruct& other)
+	{
+		Stacking = other.Stacking;
+	}
+
+	bool operator==(const FP4GEExposedParametersStruct& r) const
+	{
+		return Stacking == r.Stacking;
+	}
+
+};
+
+USTRUCT(BlueprintType)
+struct PROJECT4_API FP4GECustomGameplayEffectStruct
+{
+	GENERATED_USTRUCT_BODY()
+		// add more tuple params when needed		
+
+		UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		FP4GEExposedParametersStruct Params;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		TSubclassOf<UGameplayEffect> BaseClass;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		UGameplayEffect* GeneratedObject;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		FGameplayEffectSpec GeneratedSpec;
+	
+
+	FP4GECustomGameplayEffectStruct()
+	{
+		GeneratedSpec = FGameplayEffectSpec();
+	}
+
+	FP4GECustomGameplayEffectStruct(const FP4GEExposedParametersStruct& _Params, const TSubclassOf<UGameplayEffect> Class)
+	{
+		Params = _Params;
+		BaseClass = Class;
+	}
+
+	FP4GECustomGameplayEffectStruct(const FP4GEExposedParametersStruct& _Params, const TSubclassOf<UGameplayEffect> Class, FGameplayEffectSpec& GE)
+	{
+		Params = _Params;
+		BaseClass = Class;
+		GeneratedSpec = GE;
+	}
+
+	FP4GECustomGameplayEffectStruct(const FP4GECustomGameplayEffectStruct& other)
+	{
+		Params = other.Params;
+		BaseClass = other.BaseClass;
+	}
+
+	bool operator==(const FP4GECustomGameplayEffectStruct& r) const
+	{
+		return (BaseClass == r.BaseClass && Params == r.Params) || GeneratedObject == r.GeneratedObject;
 	}
 
 };
@@ -118,7 +230,6 @@ public:
 	/*************************/
 	/*       Utilities       */
 	/*************************/
-
 	
 	// If an ability is marked as 'ActivateAbilityOnGranted', activate them immediately when given here
 	// Epic's comment: Projects may want to initiate passives or do other "BeginPlay" type of logic here.
@@ -141,4 +252,13 @@ public:
 	UFUNCTION(BlueprintCallable)
 		FRotator GetLookatRotation(float Range, FVector SourceLocation);
 
+	//UPROPERTY()
+	//	TArray<FP4GECustomGameplayEffectStruct> GeneratedGameplayEffects;
+
+
+
+	// TODO: move this to gameinstance or ASC if multiple abilities need to make same custom GE to stack
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Modifiers")
+		TArray<TSubclassOf<class UP4AbilityModifierInfo>> AbilityModifiers;
 };

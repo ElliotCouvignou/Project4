@@ -6,6 +6,8 @@
 
 
 
+
+
 void AP4OpenWorldGameMode::GenericPlayerInitialization(AController* Controller)
 {
 	Super::GenericPlayerInitialization(Controller);

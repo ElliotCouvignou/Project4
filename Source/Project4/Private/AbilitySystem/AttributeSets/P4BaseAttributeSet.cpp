@@ -4,7 +4,7 @@
 #include "AbilitySystem/AttributeSets/P4BaseAttributeSet.h"
 #include "GameplayEffect.h"
 #include "GameplayEffectExtension.h"
-#include "AbilitySystemComponent.h"
+#include "AbilitySystem/P4PlayerAbilitySystemComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 #include "Project4Controller.h"
@@ -168,7 +168,16 @@ void UP4BaseAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCall
 				if (Hit) {
 					// Trigger Animation on-hit Reactions here e.g flinch
 				}
-	
+					
+				FGameplayTagContainer DamageNumberTags;
+				Data.EffectSpec.GetAllAssetTags(DamageNumberTags);
+
+				UP4PlayerAbilitySystemComponent* P4ASC = Cast<UP4PlayerAbilitySystemComponent>(Source);
+				if (P4ASC)
+				{
+					P4ASC->QueryDamageTagsForDelegates(DamageNumberTags);
+				}
+
 				// Get source PC
 				AProject4Controller* SourcePC = Cast<AProject4Controller>(SourceController);
 	
@@ -176,10 +185,7 @@ void UP4BaseAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCall
 				if (SourceActor != TargetActor) {
 					if (SourcePC)
 					{
-						FGameplayTagContainer DamageNumberTags;
-						Data.EffectSpec.GetAllAssetTags(DamageNumberTags);
 						//DamageNumberTags = DamageNumberTags.Filter(DamageNumberContainerFilter);
-	
 						/* Look at dynamic asset tags for info about damage type */
 						if (Data.EffectSpec.DynamicAssetTags.HasTag(CritTag))
 						{

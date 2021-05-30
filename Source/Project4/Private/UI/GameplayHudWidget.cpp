@@ -98,6 +98,37 @@ void UGameplayHudWidget::UpdateManaRegen(float NewValue)
 	}
 }
 
+void UGameplayHudWidget::UpdateRage(float NewValue)
+{
+	if (ResourceBarsWidget)
+	{
+		ResourceBarsWidget->UpdateRage(NewValue);
+	}
+}
+void UGameplayHudWidget::UpdateRageMax(float NewValue)
+{
+	if (ResourceBarsWidget)
+	{
+		ResourceBarsWidget->UpdateRageMax(NewValue);
+	}
+	if (CharacterInfoWidget)
+	{
+		CharacterInfoWidget->UpdateRageMax();
+	}
+}
+
+void UGameplayHudWidget::UpdateRageRegen(float NewValue)
+{
+	if (ResourceBarsWidget)
+	{
+		ResourceBarsWidget->UpdateRageRegen(NewValue);
+	}
+	if (CharacterInfoWidget)
+	{
+		CharacterInfoWidget->UpdateRageMax();
+	}
+}
+
 void UGameplayHudWidget::UpdateEndurance(float NewValue)
 {
 	if (ResourceBarsWidget)

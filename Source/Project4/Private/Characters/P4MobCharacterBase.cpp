@@ -132,7 +132,7 @@ void AP4MobCharacterBase::GenerateEquipItemDrop(UP4ItemBaseObject** GeneratedIte
 	// 11 armor types, add 4 for 3x weight of weapons
 	
 	//                                  ( 1.f,  14.99f)
-	int ItemType = (int)FMath::RandRange(11.f, float(15.99));
+	int ItemType = (int)FMath::RandRange(1.f, float(10));
 	if (ItemType <= 10)
 	{
 		EArmorType ArmorType = (EArmorType)ItemType;

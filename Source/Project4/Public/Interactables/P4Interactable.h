@@ -8,6 +8,7 @@
 #include "NiagaraSystem.h"
 #include "P4Interactable.generated.h"
 
+
 class AP4PlayerCharacterBase;
 
 UCLASS()
@@ -46,8 +47,15 @@ public:
 
 	/* true = Successful interact, false = Unsuccessful (Inventory full, invalid state, etc.) */
 	/* Used in Interact GA to start interacting with interactable classes */
+
+	UFUNCTION(BlueprintCallable, Server, Reliable, WithValidation)
+		 void ServerOnInteract(const AP4PlayerCharacterBase* SourceActor);
+	void ServerOnInteract_Implementation(const AP4PlayerCharacterBase* SourceActor);
+	bool ServerOnInteract_Validate(const AP4PlayerCharacterBase* SourceActor) { return true; }
+
+	/* Real virtual implementation of interact behavior (will always be on server) */
 	UFUNCTION(BlueprintCallable)
-		virtual void OnInteract(const AP4PlayerCharacterBase* SourceActor, bool& Result);
+		virtual void OnInteract(const AP4PlayerCharacterBase* SourceActor);
 
 
 	virtual void BeginDestroy() override;

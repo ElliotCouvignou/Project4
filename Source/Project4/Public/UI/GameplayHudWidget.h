@@ -72,6 +72,14 @@ public:
 		void UpdateManaRegen(float NewValue);
 
 	UFUNCTION(Category = Attributes)
+		void UpdateRage(float NewValue);
+	UFUNCTION(Category = Attributes)
+		void UpdateRageMax(float NewValue);
+	UFUNCTION(Category = Attributes)
+		void UpdateRageRegen(float NewValue);
+
+
+	UFUNCTION(Category = Attributes)
 		void UpdateEndurance(float NewValue);
 	UFUNCTION(Category = Attributes)
 		void UpdateEnduranceMax(float NewValue);
@@ -131,6 +139,9 @@ public:
 	/* Blueprint implementable functions, for widgets that dont 
 		need a special class made for them in c++ so let BP's 
 		handle from here (only need 1 function for this widget) */
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+		void LoadAbilityHotbarBindings();
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 		void SetRespawnCountdown(float Duration);

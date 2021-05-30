@@ -38,6 +38,13 @@ public:
 		void UpdateManaRegen(float NewValue);
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+		void UpdateRage(float NewValue);
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+		void UpdateRageMax(float NewValue);
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+		void UpdateRageRegen(float NewValue);
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 		void UpdateEndurance(float NewValue);
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 		void UpdateEnduranceMax(float NewValue);

@@ -10,7 +10,8 @@
 
 struct HealAttStruct
 {
-
+	DECLARE_ATTRIBUTE_CAPTUREDEF(CritChance);
+	DECLARE_ATTRIBUTE_CAPTUREDEF(CritDamage);
 	// Meta Attributes
 	DECLARE_ATTRIBUTE_CAPTUREDEF(Heal);
 
@@ -20,6 +21,9 @@ struct HealAttStruct
 		//HealthProperty will point to the Health attribute in the UPlayerAttributeSet 
 		//on the receiving target of this execution. The last parameter is a bool, 
 		//and determines if we snapshot the attribute's value at the time of definition.
+
+		DEFINE_ATTRIBUTE_CAPTUREDEF(UPlayerAttributeSet, CritChance, Source, false);
+		DEFINE_ATTRIBUTE_CAPTUREDEF(UPlayerAttributeSet, CritDamage, Source, false);
 
 		// Meta Attributes
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UPlayerAttributeSet, Heal, Target, false);
@@ -38,6 +42,9 @@ UHealingCalculation::UHealingCalculation(const FObjectInitializer& ObjectInitial
 {
 	HealAttStruct Attributes;
 
+	RelevantAttributesToCapture.Add(Attributes.CritChanceDef);
+	//InvalidScopedModifierAttributes.Add(Attributes.CritChanceDef);
+	RelevantAttributesToCapture.Add(Attributes.CritDamageDef);
 	//However, an attribute added here on top of being added in RelevantAttributesToCapture will still be captured, but will not be shown for potential in-function modifiers in the GameplayEffect blueprint, more on that later.
 	//InvalidScopedModifierAttributes.Add(Attributes.HealthDef);
 	RelevantAttributesToCapture.Add(Attributes.HealDef);
@@ -72,9 +79,27 @@ void UHealingCalculation::Execute_Implementation(const FGameplayEffectCustomExec
 	// Alright, this is where we get the attribute's captured value into our function. 
 	// Damage().HealthDef is the definition of the attribute we want to get, we defined EvaluationParameters 
 	// just above us, and Health is the variable where we will put the captured value into(the Health variable we just declared)
+	float CritChance = 0.f;
+	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(Attributes.CritChanceDef, EvaluationParameters, CritChance);
+
+	float CritDamage = 0.f;
+	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(Attributes.CritDamageDef, EvaluationParameters, CritDamage);
+
 
 	float InputHeal = 0.f;
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(Attributes.HealDef, EvaluationParameters, InputHeal);
+
+
+	// Crit chance bonus (additive)
+	CritChance += FMath::Max<float>(Spec.GetSetByCallerMagnitude(FGameplayTag::RequestGameplayTag(FName("Data.Attribute.CritChance.Bonus")), false, -1.0f), 0.f);
+	if (CritChance > 1.f)
+	{
+		CritDamage += CritChance - 1.f;
+	}
+
+	// Crit damage effectiveness (default to 1.0)
+	CritDamage *= FMath::Max<float>(Spec.GetSetByCallerMagnitude(FGameplayTag::RequestGameplayTag(FName("Data.Attribute.CritDamage.Effectiveness")), false, -1.0f), 1.0f);
+
 
 	//Finally, we go through our simple example damage calculation. BaseAttackPower and AttackMultiplier come from soruce, DefensePower comes from target.
 	float BaseHeal = InputHeal + FMath::Max<float>(Spec.GetSetByCallerMagnitude(FGameplayTag::RequestGameplayTag(FName("Data.Heal")), false, -1.0f), 0.0f); //AttackPower / Armor + MagicPower / MagicResistance;

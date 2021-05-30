@@ -92,14 +92,23 @@ void AProject4GameMode::RespawnPlayer(AController* Controller)
 
 void AProject4GameMode::ServerTravelToLevel(const FString& LevelName)
 {
+
+
 	// TODO: maybe move saving current game info logic here
-	GetWorld()->ServerTravel(LevelName);
+	if (!GetWorld()->ServerTravel(LevelName))
+	{
+		bUseSeamlessTravel = false;
+		GetWorld()->ServerTravel(LevelName);
+	}
+
+	
 }
 
 
 void AProject4GameMode::SaveGameInfo()
 {
 	print(FString("SaveGameInfo()"));
+	UE_LOG(LogTemp, Warning, TEXT("[AProject4GameMode::SaveGameInfo] SaveGameInfo"));
 	UProject4GameInstance* GI = Cast<UProject4GameInstance>(GetGameInstance());
 	AP4PreGameLobbyGameState* GS = GetGameState<AP4PreGameLobbyGameState>();
 	UP4CurrentGameSave* Save = GI->CurrentGameSave;
@@ -141,6 +150,7 @@ void AProject4GameMode::LoadCharacterForClient(APlayerController* NewPlayer)
 
 			// 1. Essential non-derived Attributes
 			print(FString("1"));
+
 			UPlayerAttributeSet* AS = Cast<UPlayerAttributeSet>(PChar->GetAttributeSet());
 			if (AS)
 			{
@@ -161,9 +171,20 @@ void AProject4GameMode::LoadCharacterForClient(APlayerController* NewPlayer)
 				IBC->EquippmentSlots = PSave->PlayerEquips;
 			}
 
-			// 3. Relevant Gameplay Effects
-			print(FString("3"));
+			// 3. ASC related thingies
+			//UP4PlayerAbilitySystemComponent* ASC = Cast<UP4PlayerAbilitySystemComponent>(NewPlayer->GetPlayerState<AProject4PlayerState>()->GetAbilitySystemComponent());
 			UAbilitySystemComponent* ASC = PChar->GetAbilitySystemComponent();
+			for (auto e : PSave->ASCSaves.LearnedAbilities)
+			{
+				ASC->GiveAbility(e);
+				UE_LOG(LogTemp, Warning, TEXT("[LoadCharacterForClient] LoadAbility  %s"), *e.GetDebugString());
+
+			}
+				
+
+			// 4. Relevant Gameplay Effects
+			print(FString("3"));
+			
 			if (ASC)
 			{
 				for (auto b : PSave->GameplayEffects)
@@ -263,7 +284,7 @@ void AProject4GameMode::CreateCharacter(EClassAbilityPoolType CharClass, APlayer
 
 		UE_LOG(LogTemp, Warning, TEXT("[CreateCharacter] CreatedCharacter for owningPC"));
 
-		PChar->Mutlicast_SetPreGameLobbyPosition();
+		SetCharacterSpawnPosition(PChar);
 
 		// PlayerState owns the ASC that the character refers to
 		UP4PlayerAbilitySystemComponent* ASC = Cast< UP4PlayerAbilitySystemComponent>(OwningPC->GetPlayerState<AProject4PlayerState>()->GetAbilitySystemComponent());
@@ -272,6 +293,16 @@ void AProject4GameMode::CreateCharacter(EClassAbilityPoolType CharClass, APlayer
 		{
 			ASC->Server_OnAbilityPoolPicked(CharClass);
 		}
+	}
+}
+
+void AProject4GameMode::SetCharacterSpawnPosition(AP4PlayerCharacterBase* PChar)
+{
+	TArray<AActor*> FoundActors;
+	AActor* PlayerStart = FindPlayerStart(PChar->GetController());
+	if (PlayerStart)
+	{
+		PChar->SetActorLocation(PlayerStart->GetActorLocation());
 	}
 }
 
@@ -285,12 +316,17 @@ void AProject4GameMode::StartPlay()
 {
 	Super::StartPlay();
 
+	UE_LOG(LogTemp, Warning, TEXT("[AProject4GameMode::PostLogin] StartPlay"));
 	// TODO: change class type to base one if i do that eventually
-	AP4PreGameLobbyGameState* GS = GetGameState<AP4PreGameLobbyGameState>();
-	if (GS)
-	{
-		GS->InitNewPlayerState(0);
-	}
+	//AP4PreGameLobbyGameState* GS = GetGameState<AP4PreGameLobbyGameState>();
+	//if (GS)
+	//{
+	//	GS->InitNewPlayerState(0);
+	//}
+	//else
+	//{
+	//	UE_LOG(LogTemp, Warning, TEXT("[AProject4GameMode::PostLogin] Invalid Gamestate!"));
+	//}
 
 }
 
@@ -299,13 +335,30 @@ void AProject4GameMode::PostLogin(APlayerController* NewPlayer)
 	Super::PostLogin(NewPlayer);
 
 	// TODO: this one too
+	//AP4PreGameLobbyGameState* GS = GetGameState<AP4PreGameLobbyGameState>();
+	//if (GS)
+	//{
+	//	GS->InitNewPlayerState(NewPlayer);
+	//}
+	//else
+	//{
+	//	UE_LOG(LogTemp, Warning, TEXT("[AProject4GameMode::PostLogin] Invalid Gamestate!"));
+	//}
+
+
+
+}
+
+void AProject4GameMode::GenericPlayerInitialization(AController* Controller)
+{
+	Super::GenericPlayerInitialization(Controller);
+
+	APlayerController* PC = Cast<APlayerController>(Controller);
 	AP4PreGameLobbyGameState* GS = GetGameState<AP4PreGameLobbyGameState>();
-	if (GS)
+	if (GS && PC)
 	{
-		GS->InitNewPlayerState(NewPlayer);
+		GS->InitNewPlayerState(PC);
 	}
-
-
 }
 
 void AProject4GameMode::BeginPlay()

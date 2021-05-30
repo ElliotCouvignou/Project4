@@ -77,6 +77,8 @@ public:
 
 	FTimerHandle PlayToLoadTimerHandle;
 
+	virtual void SetCharacterSpawnPosition(AP4PlayerCharacterBase* PChar) override;
+
 	virtual void PostSeamlessTravel() override;
 
 	virtual void StartPlay() override;

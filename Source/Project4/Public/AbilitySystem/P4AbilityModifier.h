@@ -171,4 +171,14 @@ public:
 
 	virtual void CalculateModifierMagnitudes_Implementation(TArray<float>& Results);
 
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Essential")
+		void OnModifierGranted();
+	
+	virtual void OnModifierGranted_Implementation();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Essential")
+		void OnModifierMagnitudesChanged();
+
+	virtual void OnModifierMagnitudesChanged_Implementation();
+
 };

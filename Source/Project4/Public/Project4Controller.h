@@ -78,6 +78,8 @@ public:
 	bool ServerChooseCharacter_Validate(const EClassAbilityPoolType& PoolType) { return true; }
 
 
+
+
 	/*************************************/
 	/*       Pre-Game Lobby Stuff        */
 	/*************************************/

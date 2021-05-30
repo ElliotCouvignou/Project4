@@ -100,13 +100,16 @@ public:
 		virtual void SaveGameInfo();
 
 	UFUNCTION(BlueprintCallable)
-		void LoadCharacterForClient(APlayerController* NewPlayer);
+		virtual void LoadCharacterForClient(APlayerController* NewPlayer);
 
 	UFUNCTION(BlueprintCallable)
 		virtual void LoadCurrentGameInfo();
 
 	UFUNCTION(BlueprintCallable)
 		void CreateCharacter(EClassAbilityPoolType CharClass, APlayerController* OwningPC);
+
+	UFUNCTION(BlueprintCallable)
+		virtual void SetCharacterSpawnPosition(AP4PlayerCharacterBase* PChar);
 
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Abilities | Pools")
@@ -124,6 +127,8 @@ public:
 	virtual void StartPlay() override;
 
 	virtual void PostLogin(APlayerController* NewPlayer) override;
+
+	virtual void GenericPlayerInitialization(AController* Controller) override;
 
 
 private:

@@ -162,7 +162,7 @@ void AP4ItemBaseActor::GrantUniqueItemAbility()
 
 
 
-void AP4ItemBaseActor::OnInteract(const AP4PlayerCharacterBase* SourceActor, bool& Result)
+void AP4ItemBaseActor::OnInteract(const AP4PlayerCharacterBase* SourceActor)
 {
 	// TODO: find way to return result (bind delegate on successful add)
 	print(FString("OnInteract"));

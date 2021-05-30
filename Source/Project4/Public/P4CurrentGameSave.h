@@ -8,6 +8,8 @@
 #include "AbilitySystem/P4PlayerAbilitySystemComponent.h"
 #include "Interactables/P4InventoryBagComponent.h"
 #include "Project4.h"
+#include "UI/AbilityHotbar.h"
+#include "UI/AbilityHotbarBlock.h"
 
 #include "P4CurrentGameSave.generated.h"
 
@@ -51,6 +53,25 @@ struct FP4InventorySaveStruct
 
 };
 
+USTRUCT(BlueprintType)
+struct FP4ASCSaveStruct
+{
+	GENERATED_USTRUCT_BODY()
+
+	/* Index into player's inventory */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Essential")
+		TArray<FGameplayAbilitySpec>  LearnedAbilities;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Essential")
+		TMap<FGameplayTag, UP4AbilityModifierInfo*> AbilityModifiers;
+
+	FP4ASCSaveStruct()
+	{
+
+	}
+
+};
+
 
 /*
 		List Of Things that need to be saved
@@ -85,6 +106,9 @@ struct FP4CharacterSaveStruct
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Player Equips")
 		FEquippedItemsStruct PlayerEquips;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Abilities")
+		FP4ASCSaveStruct ASCSaves;
+
 	// TODO: figure this out when necessary
 	/* snapshot of the player's gameplayeffects */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GameplayEffects")
@@ -92,6 +116,51 @@ struct FP4CharacterSaveStruct
 
 
 	FP4CharacterSaveStruct()
+	{
+
+	}
+
+};
+
+USTRUCT(BlueprintType)
+struct FP4HotbarBlockSaveStruct
+{
+	GENERATED_USTRUCT_BODY()
+
+	/* probably unecessary as we can use array idx */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Essential")
+		int BlockIndex;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Essential")
+		TSubclassOf<UP4GameplayAbility> GAClass;
+
+
+	FP4HotbarBlockSaveStruct()
+	{
+
+	}
+
+	FP4HotbarBlockSaveStruct(int i, TSubclassOf<UP4GameplayAbility> c)
+	{
+		BlockIndex = i;
+		GAClass = c;
+	}
+
+};
+
+USTRUCT(BlueprintType)
+struct FP4HotbarSaveStruct
+{
+	GENERATED_USTRUCT_BODY()
+
+		/* Character for controller to repossess after traveling */
+		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Essential")
+		TArray<FP4HotbarBlockSaveStruct> AbilityHotbars;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Essential")
+		TArray<FP4HotbarBlockSaveStruct> NumberHotbars;
+
+	FP4HotbarSaveStruct()
 	{
 
 	}
@@ -109,11 +178,28 @@ class PROJECT4_API UP4CurrentGameSave : public USaveGame
 
 public:
 
+	UP4CurrentGameSave();
+
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Essential")
 		TMap<AProject4Controller*, FP4CharacterSaveStruct> PlayerCharacterSave;
+
+	// Data locally saved and loaded on clients
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Essential")
+		FP4HotbarSaveStruct PlayerHotbarSave;
 
 	// TODO: save data about hub or something
 
 	UFUNCTION(BlueprintCallable)
 		void SaveCharacterInfoFromPlayer(AProject4Controller* PC, AP4PlayerCharacterBase* PlayerChar);
+
+	// returns reference to save struct for this hotbar block
+	UFUNCTION(BlueprintCallable)
+		void InitHotbarBlockSave(const EHotbarType HotbarType, const UAbilityHotbarBlock* BlockWidget, FP4HotbarBlockSaveStruct& Result);
+
+	UFUNCTION(BlueprintCallable)
+		void LoadHotbarBlockSave(const EHotbarType HotbarType, const UAbilityHotbarBlock* BlockWidget, FP4HotbarBlockSaveStruct& Result);
+
+
+	UFUNCTION(BlueprintCallable)
+		void SaveHotbarBlockInfo(const EHotbarType HotbarType, const UAbilityHotbarBlock* BlockWidget);
 };

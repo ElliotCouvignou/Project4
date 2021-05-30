@@ -82,6 +82,17 @@ void UDamageExecution::Execute_Implementation(const FGameplayEffectCustomExecuti
 	float InputDamage = 0.f;
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(Attributes.DamageDef, EvaluationParameters, InputDamage);
 
+	// Crit chance bonus (additive)
+	CritChance += FMath::Max<float>(Spec.GetSetByCallerMagnitude(FGameplayTag::RequestGameplayTag(FName("Data.Attribute.CritChance.Bonus")), false, -1.0f), 0.f);
+	if (CritChance > 1.f)
+	{
+		CritDamage += CritChance - 1.f;
+	}
+
+
+	// Crit damage effectiveness (default to 1.0)
+	CritDamage *= FMath::Max<float>(Spec.GetSetByCallerMagnitude(FGameplayTag::RequestGameplayTag(FName("Data.Attribute.CritDamage.Effectiveness")), false, -1.0f), 1.0f);
+
 
 	//Finally, we go through our simple example damage calculation. Read from damage data tag (not all do this but some due to context)
 	float BaseDamage = InputDamage + FMath::Max<float>(Spec.GetSetByCallerMagnitude(FGameplayTag::RequestGameplayTag(FName("Data.Damage")), false, -1.0f), 0.0f); 

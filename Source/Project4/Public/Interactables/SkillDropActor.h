@@ -20,14 +20,19 @@ public:
 	// Sets default values for this actor's properties
 	ASkillDropActor();
 
+	/* if true, thios actor doesnt get destroyed after interaction */
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+		bool bIsTestActor = false;
 
-	virtual void OnInteract(const AP4PlayerCharacterBase* SourceActor, bool& Result) override;
+	virtual void OnInteract(const AP4PlayerCharacterBase* SourceActor) override;
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 
+	UPROPERTY()
+		TArray<APlayerController*> SeenPlayers;
 
 public:	
 	// Called every frame

@@ -9,6 +9,9 @@
 #include "AbilitySystem/P4GameplayAbility.h"
 #include "P4AbilityPoolsDataAsset.generated.h"
 
+
+
+
 USTRUCT(BlueprintType)
 struct FP4AbilityPoolAbilityInfoStruct
 {
@@ -18,9 +21,6 @@ struct FP4AbilityPoolAbilityInfoStruct
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Ability")
 		TSubclassOf<UP4GameplayAbility> Ability;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability")
-		TArray<TSubclassOf<UP4AbilityModifierInfo>> AbilityModifiers;
-
 	FP4AbilityPoolAbilityInfoStruct()
 	{
 
@@ -28,7 +28,6 @@ struct FP4AbilityPoolAbilityInfoStruct
 	FP4AbilityPoolAbilityInfoStruct(const FP4AbilityPoolAbilityInfoStruct& other)
 	{
 		Ability = other.Ability;
-		AbilityModifiers = other.AbilityModifiers;
 	}
 
 	bool operator==(const FP4AbilityPoolAbilityInfoStruct& B)

@@ -57,7 +57,7 @@ public:
 		virtual void GrantUniqueItemAbility();
 
 	/* OnInteract == Pickup item */
-		virtual void OnInteract(const AP4PlayerCharacterBase* SourceActor, bool& Result) override;
+		virtual void OnInteract(const AP4PlayerCharacterBase* SourceActor) override;
 
 
 	void SetInventoryItemObject(UP4ItemBaseObject** nItemObject) { ItemObject = *nItemObject; }
