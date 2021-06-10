@@ -72,7 +72,7 @@ public:
 	//UPROPERTY(BlueprintReadOnly)
 	//	FPreGameLobbyInfoStruct PreGameLobbyInfo;
 
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		bool LoadFromPreGameLobbyInfo = false;
 
 

@@ -206,6 +206,23 @@ void AP4PlayerCharacterBase::BindAbilityToHotbarBlock(int32 BlockIndex, TSubclas
 	}
 }
 
+void AP4PlayerCharacterBase::UnBindAbilityFromInputID_Implementation(EP4AbilityInputID InputID, TSubclassOf<class UP4GameplayAbility> Ability)
+{
+	if (HasAuthority())
+	{
+		// TODO: this and make sure we save abilityspec to change the inputid (for enum)
+		if (AbilitySystemComponent.IsValid())
+		{
+			FGameplayAbilitySpec* Spec = AbilitySystemComponent->FindAbilitySpecFromClass(Ability);
+			if (Spec)
+			{
+				AbilitySystemComponent->BlockAbilityByInputID(static_cast<int32>(InputID));
+			}
+		}
+	}
+}
+
+
 void AP4PlayerCharacterBase::BindAbilityToInputID_Implementation(EP4AbilityInputID InputID, TSubclassOf<class UP4GameplayAbility> Ability)
 {
 	if (HasAuthority())
@@ -216,7 +233,7 @@ void AP4PlayerCharacterBase::BindAbilityToInputID_Implementation(EP4AbilityInput
 			FGameplayAbilitySpec* Spec = AbilitySystemComponent->FindAbilitySpecFromClass(Ability);
 			if (Spec)
 			{
-				AbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(Spec->Ability, Spec->Level, static_cast<int32>(InputID), this));
+				AbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(Spec->Ability, Spec->Level, static_cast<int32>(InputID), this));		
 			}
 		}
 	}

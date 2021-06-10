@@ -24,13 +24,14 @@ UAsyncTaskCooldownChanged* UAsyncTaskCooldownChanged::ListenForCooldownChange(UA
 	}
 
 	AbilitySystemComponent->OnActiveGameplayEffectAddedDelegateToSelf.AddUObject(ListenForCooldownChange, &UAsyncTaskCooldownChanged::OnActiveGameplayEffectAddedCallback);
+	
 
 	TArray<FGameplayTag> CooldownTagArray;
 	InCooldownTags.GetGameplayTagArray(CooldownTagArray);
 
 	for (FGameplayTag CooldownTag : CooldownTagArray)
 	{
-		AbilitySystemComponent->RegisterGameplayTagEvent(CooldownTag, EGameplayTagEventType::NewOrRemoved).AddUObject(ListenForCooldownChange, &UAsyncTaskCooldownChanged::CooldownTagChanged);
+		AbilitySystemComponent->RegisterGameplayTagEvent(CooldownTag, EGameplayTagEventType::AnyCountChange).AddUObject(ListenForCooldownChange, &UAsyncTaskCooldownChanged::CooldownTagChanged);
 	}
 
 	return ListenForCooldownChange;
@@ -47,7 +48,7 @@ void UAsyncTaskCooldownChanged::EndTask()
 
 		for (FGameplayTag CooldownTag : CooldownTagArray)
 		{
-			ASC->RegisterGameplayTagEvent(CooldownTag, EGameplayTagEventType::NewOrRemoved).RemoveAll(this);
+			ASC->RegisterGameplayTagEvent(CooldownTag, EGameplayTagEventType::AnyCountChange).RemoveAll(this);
 		}
 	}
 
@@ -66,6 +67,8 @@ void UAsyncTaskCooldownChanged::OnActiveGameplayEffectAddedCallback(UAbilitySyst
 	TArray<FGameplayTag> CooldownTagArray;
 	CooldownTags.GetGameplayTagArray(CooldownTagArray);
 
+	
+	
 	for (FGameplayTag CooldownTag : CooldownTagArray)
 	{
 		bool FoundTag = (!bExactTagsOnly) ? (AssetTags.HasTag(CooldownTag) || GrantedTags.HasTag(CooldownTag)) : (AssetTags.HasTagExact(CooldownTag) || GrantedTags.HasTagExact(CooldownTag));
@@ -76,6 +79,8 @@ void UAsyncTaskCooldownChanged::OnActiveGameplayEffectAddedCallback(UAbilitySyst
 			// Expecting cooldown tag to always be first tag
 			FGameplayTagContainer CooldownTagContainer(GrantedTags.GetByIndex(0));
 			GetCooldownRemainingForTag(CooldownTagContainer, TimeRemaining, Duration);
+
+			ASC->OnGameplayEffectRemovedDelegate(ActiveHandle)->AddUObject(this, &UAsyncTaskCooldownChanged::OnActiveGameplayEffectRemoved);
 
 			//print(CooldownTag.ToString());
 			
@@ -116,6 +121,11 @@ void UAsyncTaskCooldownChanged::CooldownTagChanged(const FGameplayTag CooldownTa
 	{
 		OnCooldownEnd.Broadcast(CooldownTag, -1.0f, -1.0f);
 	}
+}
+
+void UAsyncTaskCooldownChanged::OnActiveGameplayEffectRemoved()
+{
+	OnCooldownEnd.Broadcast(FGameplayTag(), 0.f, -1.0f);
 }
 
 void UAsyncTaskCooldownChanged::OnActiveGameplayEffectTimeChanged(FActiveGameplayEffectHandle ActiveGEHandle, float NewStartTime, float NewDuration)

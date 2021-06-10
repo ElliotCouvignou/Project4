@@ -54,8 +54,11 @@ public:
 	bool ServerOnInteract_Validate(const AP4PlayerCharacterBase* SourceActor) { return true; }
 
 	/* Real virtual implementation of interact behavior (will always be on server) */
-	UFUNCTION(BlueprintCallable)
-		virtual void OnInteract(const AP4PlayerCharacterBase* SourceActor);
+	virtual void OnInteract(const AP4PlayerCharacterBase* SourceActor);
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+		void BP_OnInteract(const AP4PlayerCharacterBase* SourceActor);
+	virtual void BP_OnInteract_Implementation(const AP4PlayerCharacterBase* SourceActor);
 
 
 	virtual void BeginDestroy() override;

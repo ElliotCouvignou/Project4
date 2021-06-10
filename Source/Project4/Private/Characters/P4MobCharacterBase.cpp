@@ -12,8 +12,11 @@
 #include "AbilitySystem/P4AbilitySystemComponent.h"
 #include "AbilitySystem/GameplayEffects/EquipItemGameplayEffect.h"
 #include "AbilitySystem/AttributeSets/PlayerAttributeSet.h"
+#include "AbilitySystem/P4GameplayAbility.h"
 #include "Kismet/GameplayStatics.h"
 #include "UI/FloatingStatusBarWidget.h"
+
+#include "BehaviorTree/BehaviorTree.h"
 
 #include "AI/P4AIControllerBase.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h" 
@@ -54,6 +57,42 @@ AP4MobCharacterBase::AP4MobCharacterBase(const class FObjectInitializer& ObjectI
 	//{
 	//	EquipItemGETemplate = temp3.Object->GetClass();
 	//}
+}
+
+// Default to getting random abilitty unweighted
+void AP4MobCharacterBase::GetNextAbility_Implementation(TSubclassOf<UP4GameplayAbility>& Result)
+{
+	TArray<TSubclassOf<UP4GameplayAbility>> AbilitiesCopy = Abilities;
+	TSubclassOf<UP4GameplayAbility> LowestCDAbility; // calculated on first pass so we dont need another pass
+	float lowestCDDuration = 9999999.f;
+	TSubclassOf<UP4GameplayAbility> temp;
+
+	while (AbilitiesCopy.Num() > 0)
+	{
+		temp = AbilitiesCopy[(int)FMath::RandRange(0.f, (float)AbilitiesCopy.Num())];
+
+		// check if ability on CD
+		FGameplayEffectQuery const Query = FGameplayEffectQuery::MakeQuery_MatchAllOwningTags(FGameplayTagContainer(Cast<UP4GameplayAbility>(temp->GetDefaultObject())->CooldownTag));
+		TArray<float> Times = AbilitySystemComponent->GetActiveEffectsDuration(Query);
+		if (Times.Num() == 0)
+		{
+			// ability is ready so set and return
+			Result = temp;
+			return;
+		}
+		for (float e : Times)
+		{
+			if (lowestCDDuration < e)
+			{
+				LowestCDAbility = temp;
+				lowestCDDuration = e;
+			}
+		}
+	}
+	
+
+	// if we made it here all abilities are on CD so choose one on lowest CD
+	Result = LowestCDAbility;
 }
 
 
@@ -281,6 +320,14 @@ void AP4MobCharacterBase::BeginPlay()
 
 		GiveEssentialAbilities();
 
+		// Give mob abilities apart from essential
+		for(auto e : Abilities)
+		{
+			AbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(e));
+		}
+
+		/* Maps injection tags to this mob's class default behavior tree mappings */
+		SetDynamicBehaviorSubtrees();
 
 		// TODO: Create floating status bars to clients here
 		APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
@@ -326,6 +373,17 @@ void AP4MobCharacterBase::BindDelegates()
 	}
 }
 
+void AP4MobCharacterBase::SetDynamicBehaviorSubtrees()
+{
+	AP4AIControllerBase* AIC = Cast<AP4AIControllerBase>(GetController());
+	UBehaviorTreeComponent* BTC = (AIC) ? AIC->GetBehaviorTreeComponent() : nullptr;
+	if (!BTC)
+		return;
+
+	for (auto e : BehaviorTreeMap)
+		BTC->SetDynamicSubtree(e.Key, e.Value);	
+}
+
 
 void AP4MobCharacterBase::HealthChanged(const FOnAttributeChangeData& Data)
 {
@@ -352,12 +410,6 @@ void AP4MobCharacterBase::HealthChanged(const FOnAttributeChangeData& Data)
 	//  		print(FString("Invalid Source"));
 	//  	}
 	//  }
-
-	// check ded
-	if (!IsAlive() && !AbilitySystemComponent->HasMatchingGameplayTag(DeadTag))
-	{
-		this->Die();
-	}
 }
 
 void AP4MobCharacterBase::ManaChanged(const FOnAttributeChangeData& Data)

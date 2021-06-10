@@ -196,6 +196,11 @@ public:
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Essential")
 		FText AbilityName;
 
+	/* THIS IS ESSENTIAL, fill this out and have ability values depend on these base values so tooltip
+	    is guaranteed to reflect actual values */
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Essential")
+		UCurveTable* AbilityMagnitudes;
+
 	// when true fire off ability moment actor has it like some wort of Autocast
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Ability")
 		bool ActivateAbilityOnGranted = false;
@@ -208,6 +213,10 @@ public:
 	// The max amount of charges if bHasCharges is true, else this is useless,
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Ability")
 		int MaxCharges = 0;
+
+	// max range that the AI will be willnig to cast this ability 
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Ability")
+		float AI_CastRange = 0.f;
 
 	// Cooldown Tag UI widgets keep track of
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Ability")
@@ -238,6 +247,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Utility | UI")
 		void SendErrorMessageToUI(EAbilityErrorText ErrorType);
 
+
+	UFUNCTION(BlueprintCallable, Category = "Utility")
+		void GetAbilityMagnitude(FName RowName, const FString& ContextString, float& Result, float DefaultIfNotFound = 0.f) const;
+
 	UFUNCTION(BlueprintCallable, Category = "Utility")
 		void CreateCustomGameplayEffectSpec(TSubclassOf<UGameplayEffect> EffectClass, const FP4GEExposedParametersStruct& Params, const int& Level, FGameplayEffectSpecHandle& Result);
 
@@ -251,6 +264,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		FRotator GetLookatRotation(float Range, FVector SourceLocation);
+
 
 	//UPROPERTY()
 	//	TArray<FP4GECustomGameplayEffectStruct> GeneratedGameplayEffects;

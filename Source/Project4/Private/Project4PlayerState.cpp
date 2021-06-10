@@ -416,15 +416,6 @@ void AProject4PlayerState::HealthChanged(const FOnAttributeChangeData& Data)
 			HUD->UpdateHealth(Health);
 		}
 	}
-
-	// if dead and no deathtag on player (true = ondeath transient)
-	if (!IsAlive() && !AbilitySystemComponent->HasMatchingGameplayTag(DeadTag))
-	{
-		if (PChar)
-		{
-			PChar->Die();
-		}
-	}
 }
 
 void AProject4PlayerState::HealthMaxChanged(const FOnAttributeChangeData& Data)

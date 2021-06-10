@@ -25,13 +25,13 @@ void AP4OpenWorldGameMode::StartPlay()
 {
 	Super::StartPlay();
 
-	LoadCharacterForClient(GetWorld()->GetFirstPlayerController());
-
-	AProject4Controller* P4C = Cast<AProject4Controller>(GetWorld()->GetFirstLocalPlayerFromController());
-	if (P4C)
-	{
-		P4C->CreateMainHUDWidget();
-	}
+	//LoadCharacterForClient(GetWorld()->GetFirstPlayerController());
+	//
+	//AProject4Controller* P4C = Cast<AProject4Controller>(GetWorld()->GetFirstLocalPlayerFromController());
+	//if (P4C)
+	//{
+	//	P4C->CreateMainHUDWidget();
+	//}
 }
 
 void AP4OpenWorldGameMode::PostLogin(APlayerController* NewPlayer)
@@ -39,11 +39,11 @@ void AP4OpenWorldGameMode::PostLogin(APlayerController* NewPlayer)
 
 	Super::PostLogin(NewPlayer);
 
-	LoadCharacterForClient(NewPlayer);
-
-	AProject4Controller* P4C = Cast<AProject4Controller>(NewPlayer);
-	if (P4C)
-	{
-		P4C->CreateMainHUDWidget();
-	}
+	//LoadCharacterForClient(NewPlayer);
+	//
+	//AProject4Controller* P4C = Cast<AProject4Controller>(NewPlayer);
+	//if (P4C)
+	//{
+	//	P4C->CreateMainHUDWidget();
+	//}
 }

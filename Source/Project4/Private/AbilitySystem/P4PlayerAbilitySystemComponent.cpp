@@ -37,6 +37,22 @@ void UP4PlayerAbilitySystemComponent::GetLearnedPoolAbilities(TArray<TSubclassOf
 	}
 }
 
+
+//void UP4PlayerAbilitySystemComponent::BP_GetAbilityMagnitudesByHandle(TSubclassOf<UP4GameplayAbility> AbilityClass, TArray<float>& Magnitudes, bool& FoundResult)
+//{
+//	FoundResult = false;
+//	for (auto e : GetActivatableAbilities())
+//	{
+//		UP4GameplayAbility* P4AB = Cast<UP4GameplayAbility>(e.Ability);
+//		if (P4AB && P4AB->GetClass() == AbilityClass)
+//		{
+//			Magnitudes = P4AB->AbilityMagnitudes;
+//			FoundResult = true;
+//			return;
+//		}
+//	}
+//}
+
 void UP4PlayerAbilitySystemComponent::QueryDamageTagsForDelegates(FGameplayTagContainer& DamageTags)
 {
 	// TODO: determine if we should split delegate into types if we need performance (e.g magic/phys dmg delegate, etc.)

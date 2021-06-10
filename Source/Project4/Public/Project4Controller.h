@@ -110,6 +110,12 @@ public:
 		void CreateMainHUDWidget();
 	void CreateMainHUDWidget_Implementation();
 
+	/* Called on new character created post pregamelobby */
+	UFUNCTION(Client, Reliable, BlueprintCallable)
+		void InitializeMainHUDWidgetForNewChar();
+	void InitializeMainHUDWidgetForNewChar_Implementation();
+
+
 	UFUNCTION(BlueprintCallable, Category = "Utility")
 		class UGameplayHudWidget* GetMainHUDWidget();
 	

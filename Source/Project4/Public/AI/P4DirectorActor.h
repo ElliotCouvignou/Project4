@@ -52,49 +52,47 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void StartPointTimer();
 
+	/* to stop spawning one thing we can only spawn groups of at least 4 mos */
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		int MinimumSpawnCount = 1;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		int MaximumSpawnCount = 5;
+
+	/* rate of timer that increments Points*/
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		float PointTimerRate_s = 1.f;
+
+	/* Amount of points given whenever point timer updates */
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		float PointTimerAmount = 1.f;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		float CurrentPoints = 0.f;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Meta = (MakeEditWidget = true))
+		float SpawnRadius = 30*52.5f;
+
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		bool DoTimerMethod = true;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	/* to stop spawning one thing we can only spawn groups of at least 4 mos */
-	UPROPERTY()
-		int MinimumSpawnCount = 1;
-
-	UPROPERTY()
-		int MaximumSpawnCount = 5;
-
-	/* At what percent of current/max points do we try to spawn */
-	UPROPERTY()
-		float PercentToTrySpawn = 0.8f;
-
-	/* what % of max budget will we roll for on lows*/
-	UPROPERTY()
-		float MinBudgetPercent = 0.4f;
-
-	UPROPERTY()
-		float MaxPoints;
-	
-	UPROPERTY()
-		float CurrentPoints;
-
 	/* Number of mobs spawned by this director */
-	UPROPERTY()
+	UPROPERTY(EditDefaultsOnly)
 		int SpawnCount = 0;
 
-	UPROPERTY()
+	UPROPERTY(EditDefaultsOnly)
 		TArray<FMobSpawnInfo> SpawnableMobs;
 
 	/* # of weights summed in spawnableMobs array */
 	UPROPERTY()
 		float TotalWeight;
 
-	/* rate of timer that increments Points*/
-	UPROPERTY()
-		float PointTimerRate_s = 1.f;
 
-	/* Amount of points given whenever point timer updates */
-	UPROPERTY()
-		float PointTimerAmount = 1.f;
 
 	UPROPERTY()
 		FTimerHandle PointTimerHandle;

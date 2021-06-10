@@ -41,6 +41,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Abilities | Pools")
 		void GetLearnedPoolAbilities(TArray<TSubclassOf<UP4GameplayAbility>>& Abilities);
 
+	//UFUNCTION(BlueprintCallable, Category = "BP Exposed")
+	//	void BP_GetAbilityMagnitudesByHandle(TSubclassOf<UP4GameplayAbility> AbilityClass, TArray<float>& Magnitudes, bool& FoundResult);
 
 
 	UFUNCTION(BlueprintCallable, Category = "Delegates")

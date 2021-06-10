@@ -90,7 +90,13 @@ public:
 	// However we need client work so clients need to do this function and call servers
 	UFUNCTION(BlueprintCallable)
 		void BindAbilityToHotbarBlock(int32 BlockIndex, TSubclassOf<class UP4GameplayAbility> Ability);
-	
+
+
+	UFUNCTION(Server, Reliable, WithValidation, BlueprintCallable)
+		void UnBindAbilityFromInputID(EP4AbilityInputID InputID, TSubclassOf<class UP4GameplayAbility> Ability);
+	void UnBindAbilityFromInputID_Implementation(EP4AbilityInputID InputID, TSubclassOf<class UP4GameplayAbility> Ability);
+	bool UnBindAbilityFromInputID_Validate(EP4AbilityInputID InputID, TSubclassOf<class UP4GameplayAbility> Ability) { return true; }
+
 	UFUNCTION(Server, Reliable, WithValidation, BlueprintCallable)
 		void BindAbilityToInputID(EP4AbilityInputID InputID, TSubclassOf<class UP4GameplayAbility> Ability);
 	void BindAbilityToInputID_Implementation(EP4AbilityInputID InputID, TSubclassOf<class UP4GameplayAbility> Ability);

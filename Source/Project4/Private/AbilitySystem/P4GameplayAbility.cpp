@@ -56,6 +56,24 @@ void UP4GameplayAbility::SendErrorMessageToUI(EAbilityErrorText ErrorType)
 	}
 }
 
+
+void UP4GameplayAbility::GetAbilityMagnitude(FName RowName, const FString& ContextString, float& Result, float DefaultIfNotFound) const
+{
+	if (AbilityMagnitudes)
+	{
+		FCurveTableRowHandle Handle;
+		Handle.CurveTable = AbilityMagnitudes;
+		Handle.RowName = RowName;
+
+		bool found = Handle.Eval(GetAbilityLevel(), &Result, ContextString);
+
+		if (!found)
+		{
+			Result = DefaultIfNotFound;
+		}
+	}
+}
+
 void UP4GameplayAbility::CreateCustomGameplayEffectSpec(TSubclassOf<UGameplayEffect> EffectClass, const FP4GEExposedParametersStruct& Params, const int& Level, FGameplayEffectSpecHandle& Result)
 {
 	// Create New GE or reuse existing object (neeeds same obj ref for stacking)

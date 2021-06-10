@@ -17,6 +17,7 @@ public class Project4 : ModuleRules
 			"CoreUObject", 
 			"Engine", 
 			"InputCore",
+			"NavigationSystem",
 			"Niagara",
 			"GameplayTags",
 			"GameplayAbilities",

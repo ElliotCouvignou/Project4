@@ -5,9 +5,11 @@
 #include "CoreMinimal.h"
 #include "AIController.h"
 #include "Perception/AIPerceptionComponent.h"
+#include "BehaviorTree/BehaviorTreeComponent.h"
 #include "Characters/Project4Character.h"
 #include "Containers/SortedMap.h"
 #include "Tasks/AITask_MoveTo.h"
+
 #include "P4AIControllerBase.generated.h"
 
 
@@ -23,9 +25,9 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		float Threat;
 
-	FORCEINLINE bool operator==(const FThreatTarget& Other) const
+	FORCEINLINE bool operator==(const FThreatTarget& rhs) const
 	{
-		return Other.Target == Target;
+		return rhs.Target == Target;
 	}
 
 	FThreatTarget()
@@ -45,14 +47,20 @@ public:
  * 
  */
 UCLASS()
-class PROJECT4_API AP4AIControllerBase : public AAIController
+class PROJECT4_API AP4AIControllerBase : public AAIController, public IAbilitySystemInterface
 {
 	GENERATED_BODY()
 
 protected:
 
+	TWeakObjectPtr<class UAbilitySystemComponent> AbilitySystemComponent;
+
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Perception")
 		class UAIPerceptionComponent* AIPerceptionComponent;
+
+
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Behavior")
+		class UBehaviorTreeComponent* BehaviorTreeComponent;
 
 	/* Sorted Array of struct containing a threat value and the actor associated with it
 		Highest threat sorted at 0 index, least threat at last index */
@@ -64,8 +72,18 @@ protected:
 
 public:
 
+
+	virtual class UAbilitySystemComponent* GetAbilitySystemComponent() const override { return AbilitySystemComponent.Get(); }
+
+
+	/* Radius around mob to notify and make them also start combat if with in radius and not already in combat */
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Threat")
+		float CombatNotifyRadius = 15*52.5;
+
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Threat")
 		UAITask_MoveTo* ChaseTask;
+
+
 
 	/* returns highest threat in threatarray, if empty return nullptr */
 	UFUNCTION(BlueprintCallable, Category = "Threat")
@@ -92,5 +110,21 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, Category = "Essential")
 		void MobDamageTaken(AActor* Source, float DamageTaken);
 
+	UFUNCTION(BlueprintCallable)
+		void GetThreatArray(TArray<FThreatTarget>& Result) { Result = ThreatArray; }
+
+	UFUNCTION(BlueprintCallable)
+		void OnCombatStarted(AProject4Character* Actor);
+
+	UFUNCTION(BlueprintCallable)
+		UBehaviorTreeComponent* GetBehaviorTreeComponent() { return BehaviorTreeComponent; }
+
 	AP4AIControllerBase(const class FObjectInitializer& ObjectInitializer);
+
+protected:
+
+	UFUNCTION(BlueprintCallable)
+		void NotifyNearbyFirendsOfNewThreat(AProject4Character* Actor);
+
+
 };

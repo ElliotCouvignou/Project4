@@ -29,15 +29,32 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Ability)
 		FGameplayTagContainer CooldownTagContainer;
 
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Ability)
+		class UAbilitySystemComponent* ASC;
+
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Ability)
 		TSubclassOf<class UP4GameplayAbility> Ability;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = Ability)
+		FGameplayAbilitySpecHandle AbilitySpec;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Binding", Meta = (ExposeOnSpawn = true))
 		EP4AbilityInputID InputBind;
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Binding")
+		FString InputBindActionName;
+
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 		void BindAbilityToBlock(TSubclassOf<class UP4GameplayAbility> NewAbility);
 
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
-		void BindAbilitySpecToBlock(FGameplayAbilitySpec NewAbilitySpec);
+	UFUNCTION(BlueprintCallable)
+		void SetAbilitySpecFromAbility();
+
+	/**/
+	UFUNCTION(BlueprintCallable)
+		void InitializeInputCallback();
+
+	void OnInputPressed();
+	void OnInputReleased();
 };

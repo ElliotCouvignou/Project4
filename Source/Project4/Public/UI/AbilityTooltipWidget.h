@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "Engine/DataTable.h"
+#include "AbilitySystem/AttributeSets/PlayerAttributeSet.h"
 #include "AbilityTooltipWidget.generated.h"
 
 
@@ -135,9 +136,71 @@ struct FP4AbilityModifierDetailsTableRow : public FTableRowBase
 	GENERATED_USTRUCT_BODY()
 
 
-	/** Details on tooltip and varaibles to help generate UI **/
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tooltip")
+		/** Details on tooltip and varaibles to help generate UI **/
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tooltip")
 		FAbilityModifierTooltipStruct TooltipStruct;
+};
+
+
+/* Ability tooltip displayed to player is generated with this struct info*/
+USTRUCT(BlueprintType)
+struct FAbilityTooltipCostStruct
+{
+	GENERATED_USTRUCT_BODY()
+
+	/* flat cost if curve isn't necessary (if a curve table exists this var is ignored) */
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Cost | Flat ")
+		FName MagnitudeRowName;
+
+	/* If false, no tooltip will be generated when hovering this ability */
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Cost | Type")
+		EP4ResourceTypes CostType;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Cost | Type")
+		EAbilityTooltipCostValueType CostValueType;
+
+};
+
+
+/* Ability tooltip displayed to player is generated with this struct info*/
+USTRUCT(BlueprintType)
+struct FAbilityTooltipInfoStruct
+{
+	GENERATED_USTRUCT_BODY()
+
+	/* If false, no tooltip will be generated when hovering this ability */
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Tooltip | Essential")
+		bool bGenerateTooltip;
+
+	/* This should be a rich text style description for those pretty colors */
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Tooltip | Cost")
+		TArray<FAbilityTooltipCostStruct> Costs;
+
+	/* This should be a rich text style description for those pretty colors */
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Tooltip | Cooldown")
+		FName CooldownMagnitudeRowName;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Tooltip | AbilityEffect", meta = (MultiLine = "true"))
+		FText AbilityDescription;
+
+	/* This array is shared across all descriptions */
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Tooltip | Essential")
+		TArray<ETooltipValueType> DescriptionValueTypes;
+
+};
+
+
+
+
+USTRUCT(BlueprintType)
+struct FP4AbilityTooltipDetailsTableRow : public FTableRowBase
+{
+	GENERATED_USTRUCT_BODY()
+
+
+		/** Details on tooltip and varaibles to help generate UI **/
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tooltip")
+		FAbilityTooltipInfoStruct TooltipStruct;
 };
 
 /**
@@ -148,4 +211,5 @@ class PROJECT4_API UAbilityTooltipWidget : public UUserWidget
 {
 	GENERATED_BODY()
 	
+
 };

@@ -42,6 +42,8 @@ void UP4AbilitySystemComponent::BP_SetGameplayEffectDurationWithHandle(const FAc
 	}		
 }
 
+
+
 FGameplayTagContainer UP4AbilitySystemComponent::GetGameplayTagNames(const FGameplayTag& Tag)
 {
 	//FGameplayTagContainer OwnedTags;

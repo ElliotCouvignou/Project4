@@ -204,6 +204,7 @@ void UP4BaseAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCall
 					{
 						AP4PlayerCharacterBase* PlayerChar = Cast<AP4PlayerCharacterBase>(SourceCharacter);
 						PlayerChar->GainExperience(GetExperienceBounty());
+						TargetCharacter->Die();
 					}
 				}
 				SetHealth(FMath::Clamp(NewHealth, 0.f, GetHealthMax()));

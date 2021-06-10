@@ -123,6 +123,10 @@ struct FDropTableStruct
 	}
 };
  
+
+
+class UP4GameplayAbility;
+
 /**
  * 
  */
@@ -147,8 +151,21 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "AI | Stats ")
 		float AttackRange;
 
+	/* Used in AI behavior tree for abilities that this mob can cast */
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "AI | Abilities ")
+		TArray<TSubclassOf<UP4GameplayAbility>> Abilities;
+
+	/* Map of injection tags to behavior tree (i.e what combat behavior tree or out of combat behavior tree to use ....) */
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "AI | Behavior ")
+		TMap<FGameplayTag, class UBehaviorTree*> BehaviorTreeMap;
+
 	UFUNCTION(BlueprintCallable)
 		FGameplayTagContainer& GetCooldownContainer() { return CooldownContainer;  }
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "AI | Abilities ")
+		void GetNextAbility(TSubclassOf<UP4GameplayAbility>& Result);
+
+	virtual void GetNextAbility_Implementation(TSubclassOf<UP4GameplayAbility>& Result);
 
 	/* override to roll droptable and drop */
 	virtual void Die() override;
@@ -192,6 +209,10 @@ protected:
 	/* Delegates */
 	UFUNCTION(BlueprintCallable)
 		void BindDelegates();
+
+	/* Maps injection tags to this mob's class default BehaviorTreeMap variable */
+	UFUNCTION()
+		void SetDynamicBehaviorSubtrees();
 
 	/* procedurally generate item drops, this can be moved elsewhere
 		ONLY CALL THIS ON SERVER */

@@ -2,8 +2,51 @@
 
 
 #include "AI/P4AIControllerBase.h"
+#include "Kismet/KismetSystemLibrary.h"
+#include "Characters/P4MobCharacterBase.h"
+
 
 #define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Green,text)
+
+void AP4AIControllerBase::OnCombatStarted(AProject4Character * Actor)
+{
+	// assuming This actor is already included in threat array,  this is just a transient helper function for when we start combat
+
+	if (Actor)
+	{
+		NotifyNearbyFirendsOfNewThreat(Actor);
+	}
+}
+
+void AP4AIControllerBase::NotifyNearbyFirendsOfNewThreat(AProject4Character * Actor)
+{
+	// Friends in this context is enemies to player duh
+	TArray<TEnumAsByte<EObjectTypeQuery>> Objects;   	Objects.Add(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_Pawn));
+	TArray<AActor*> Ignores;   							Ignores.Add(GetPawn());
+
+	TArray<AActor*>Out;
+	UKismetSystemLibrary::SphereOverlapActors(GetWorld(), GetPawn()->GetActorLocation(), CombatNotifyRadius, Objects, AP4MobCharacterBase::StaticClass(), Ignores, Out);
+
+	for (auto e : Out)
+	{
+		AP4MobCharacterBase* FriendMob = Cast<AP4MobCharacterBase>(e);
+		if (FriendMob)
+		{
+			AP4AIControllerBase* AIC = Cast<AP4AIControllerBase>(FriendMob->GetController());
+			if (AIC)
+			{
+				AIC->MobDamageTaken(Actor, 0.f);
+			}
+		}
+	}
+}
+
+AP4AIControllerBase::AP4AIControllerBase(const class FObjectInitializer& ObjectInitializer)
+{
+	AIPerceptionComponent = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("AIPerceptionComponent"));
+
+	BehaviorTreeComponent = CreateDefaultSubobject<UBehaviorTreeComponent>(TEXT("BehaviorTreeComponent"));
+}
 
 AProject4Character* AP4AIControllerBase::GetHighestThreatTarget()
 {
@@ -15,8 +58,17 @@ void AP4AIControllerBase::AddUniqueThreatActor(AProject4Character* Actor, float 
 	// add sorted, if Threat == other threat then set this one at lower priority/higher inde
 
 	// if we made it here then this is lowest or == lowerst so place at end
+	for (auto e : ThreatArray)
+	{
+		if (e.Target == Actor)
+			return; // already exists
+	}
+
 	ThreatArray.AddUnique(FThreatTarget(Actor, Threat));
 	ThreatArray.Sort([](const FThreatTarget& A, const FThreatTarget& B) { return A.Threat < B.Threat; });
+
+	if (ThreatArray.Num() == 1)
+		OnCombatStarted(Actor);
 }
 
 void AP4AIControllerBase::AddThreatToThreatArray(AProject4Character* Actor, float ThreatToAdd)
@@ -30,28 +82,26 @@ void AP4AIControllerBase::AddThreatToThreatArray(AProject4Character* Actor, floa
 			return;
 		}
 	}
+
+	// if made it here doesnt exist so add unique
+	AddUniqueThreatActor(Actor, ThreatToAdd);
 	
 }
 
 void AP4AIControllerBase::RemoveActorFromThreatArray(AProject4Character* Actor)
 {
-	int foundindex = -1;
+	if (!Actor)
+		return; 
+
 	for (int i = 0; i < ThreatArray.Num(); i++)
 	{
 		if (ThreatArray[i].Target == Actor)
 		{
 			ThreatArray.RemoveAt(i);
-			foundindex = i;
 			break;
 		}
 	}
-	if (foundindex >= 0)
-	{
-		for (int i = foundindex; i < ThreatArray.Num(); i++)
-		{
-			ThreatArray[foundindex] = ThreatArray[foundindex + 1];
-		}
-	}
+	
 }
 
 void AP4AIControllerBase::PrintThreatArray()
@@ -69,9 +119,5 @@ void AP4AIControllerBase::StopFightingTarget_Implementation(AProject4Character* 
 	RemoveActorFromThreatArray(Actor);
 }
 
-AP4AIControllerBase::AP4AIControllerBase(const class FObjectInitializer& ObjectInitializer)
-{
 
 
-	AIPerceptionComponent = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("AIPerceptionComponent"));
-}

@@ -9,10 +9,13 @@
 
 #include "Characters/P4PlayerCharacterBase.h"
 
-
+#define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Green,text)
 
 void AP4HubGameMode::ServerTravelToNewLevel_Implementation()
 {
+	UProject4GameInstance* GI = Cast<UProject4GameInstance>(GetGameInstance());
+	GI->LoadFromPreGameLobbyInfo = false;
+
 	SaveGameInfo();
 
 	// TODO: figure out how to select random levels
@@ -34,9 +37,11 @@ void AP4HubGameMode::LoadFromPreGameLobby()
 	UProject4GameInstance* GI = Cast<UProject4GameInstance>(GetGameInstance());
 	if (GI->LoadFromPreGameLobbyInfo)
 	{
-		GI->LoadFromPreGameLobbyInfo = false;
+		
 		
 		// TODO: other stuff if needed
+
+		// load default bound abilities
 	}
 }
 
@@ -50,12 +55,19 @@ void AP4HubGameMode::GenericPlayerInitialization(AController* Controller)
 {
 	Super::GenericPlayerInitialization(Controller);
 
+	UProject4GameInstance* GI = Cast<UProject4GameInstance>(GetGameInstance());
 	AProject4Controller* P4C = Cast<AProject4Controller>(Controller);
 	if (P4C)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("\n\n[AP4HubGameMode::GenericPlayerInitialization]   %s "), *Controller->GetName());
 		LoadCharacterForClient(P4C);
 		P4C->CreateMainHUDWidget();
+
+		if (GI->LoadFromPreGameLobbyInfo)
+		{
+			print(FString("InitializeMainHUDWidgetForNewChar"));
+			P4C->InitializeMainHUDWidgetForNewChar();
+		}
 	}
 }
 

@@ -6,6 +6,7 @@
 #include "Math/UnrealMathUtility.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Characters/P4PlayerCharacterBase.h"
+#include "NavigationSystem.h"
 #include "Kismet/GameplayStatics.h"
 
 #define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Green,text)
@@ -14,7 +15,7 @@
 AP4DirectorActor::AP4DirectorActor()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bCanEverTick = true;
 	bReplicates = false;
 	//PointTimerRate_s = 1.f;
 	//PointTimerAmount = 1.f;
@@ -25,14 +26,14 @@ AP4DirectorActor::AP4DirectorActor()
 
 void AP4DirectorActor::AddPointsToMax(float AmountToAdd)
 {
-	MaxPoints += AmountToAdd;
+	CurrentPoints += AmountToAdd;
 	QueryMobSpawn();
 }
 
 void AP4DirectorActor::QueryMobSpawn()
 {
 	// determines whether or not to spawn mobs and waht kinds, actual mob spawning handled separately
-	if (CurrentPoints < MaxPoints && CurrentPoints / MaxPoints <= PercentToTrySpawn && SpawnableMobs.Num() > 0)
+	if (SpawnableMobs.Num() > 0)
 	{
 		// TODO: check for Overcrowding here (find # of spawned mobs in current map)
 		TArray<AActor*> FoundActors;
@@ -46,7 +47,7 @@ void AP4DirectorActor::QueryMobSpawn()
 			
 		// Create wave to spawn, select 
 		TArray<FMobSpawnParameters> MobstoSpawn;
-		float Cost = 0.f;   float Budget = (MaxPoints - CurrentPoints);
+		float Cost = 0.f;
 
 		int WaveSize = (int)FMath::RandRange(float(MinimumSpawnCount),FMath::Min((float)(MaximumSpawnCount - numSpawned), float(MaximumSpawnCount) + 0.99f));
 		while (MobstoSpawn.Num() < WaveSize)
@@ -66,13 +67,13 @@ void AP4DirectorActor::QueryMobSpawn()
 			}
 		}
 
-		if (Cost > Budget)
+		if (Cost > CurrentPoints)
 		{
 			return; // not in budget, just give up and wait for next query
 		}
-		print(FString("Try Spawn"));
+
 		SpawnMobWave(MobstoSpawn);
-		CurrentPoints += Cost;
+		CurrentPoints -= Cost;
 	}
 }
 
@@ -84,9 +85,10 @@ void AP4DirectorActor::SpawnMobWave(TArray<FMobSpawnParameters> MobSpawns)
 	/* we want spawns to be in pack so find a spawn location and then */
 	UWorld* World = GetWorld();
 
+	FVector SpawnLoc = GetRandomSpawnLocation();
 	for (auto Mob : MobSpawns)
 	{
-		FVector SpawnLoc = GetRandomSpawnLocation();
+		
 
 		FActorSpawnParameters SpawnInfo;
 		SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
@@ -98,13 +100,23 @@ void AP4DirectorActor::SpawnMobWave(TArray<FMobSpawnParameters> MobSpawns)
 
 FVector AP4DirectorActor::GetRandomSpawnLocation()
 {
+	// find location around self and spawn TODO: determine to use this andor other part after.
+	FNavLocation Location;
+	UNavigationSystemV1* NavSys = UNavigationSystemV1::GetCurrent(GetWorld());
+	if (NavSys && NavSys->GetRandomReachablePointInRadius(GetActorLocation(), SpawnRadius, Location))
+	{
+		return Location.Location;
+	}
+
+	// Get Players to spawn on 
 	TArray<AActor*> FoundActors;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AP4PlayerCharacterBase::StaticClass(), FoundActors);
 	if (FoundActors.Num() > 0)
 	{
+		// Choose random person to spawn on 
+		print(FString("Spawn on player"));
 		AActor* ActorToSpawnOn = FoundActors[(int)FMath::RandRange(0.f, (float)FoundActors.Num() - 0.00001f)];
-
-		return FVector(FMath::RandRange(-5000.f, 5000.f), FMath::RandRange(-5000.f, 5000.f), 10.f) + ActorToSpawnOn->GetActorLocation();
+		return FVector(FMath::RandRange(-SpawnRadius, SpawnRadius), FMath::RandRange(-SpawnRadius, SpawnRadius), 10.f) + ActorToSpawnOn->GetActorLocation();
 	}
 	
 	return FVector(0.f, 0.f, 0.f);
@@ -148,13 +160,17 @@ void AP4DirectorActor::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	if (DoTimerMethod)
+		StartPointTimer();
+	else
+		QueryMobSpawn();
 }
 
 void AP4DirectorActor::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 
-	StartPointTimer();
+	
 }
 
 void AP4DirectorActor::StartPointTimer()

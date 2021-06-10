@@ -79,6 +79,8 @@ public:
 		void BP_SetGameplayEffectDurationWithHandle(const FActiveGameplayEffectHandle& Handle, float NewDuration);
 
 
+
+
 	/* use this to find the gameplay tags with the inputted substring
 	   used in castbar to find what ability is doing casting */
 	UFUNCTION(BlueprintCallable, Category = "BP Exposed")

@@ -144,6 +144,10 @@ public:
 		void LoadAbilityHotbarBindings();
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+		void InitializeAbilityHotbarAbilities();
+
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 		void SetRespawnCountdown(float Duration);
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)

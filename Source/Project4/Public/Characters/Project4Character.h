@@ -121,6 +121,9 @@ public:
 	/*          Death          */
 	/***************************/
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+		float RadgollDeathDelay = 2.f;
+
 	// Simple check if health
 	UFUNCTION(BlueprintCallable)
 		virtual bool IsAlive() const;
@@ -133,6 +136,7 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = Death)
 		void ActivateRagdoll();
+
 
 	// used by gamemode to undo ragdoll IF no death montage
 	UFUNCTION(BlueprintCallable, NetMulticast, Reliable, WithValidation)
@@ -231,8 +235,7 @@ protected:
 
 	// delay from ragdoll in die() to FinishDying()
 	// i.e time to show death animation before moving onto respawn timer
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-		float RadgollDeathDelay = 2.f;
+
 
 	FTimerHandle RadgollDeathHandle;
 
@@ -245,6 +248,7 @@ protected:
 
 	/* Tags to bind to when granted to this char */
 	FGameplayTag DeadTag;
+	FGameplayTag AliveTag;
 	FGameplayTag RespawnTag;
 	FGameplayTag StunnedTag;
 

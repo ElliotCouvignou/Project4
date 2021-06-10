@@ -87,6 +87,7 @@ AProject4Character::AProject4Character(const class FObjectInitializer& ObjectIni
 	NiagaraComponent->SetupAttachment(RootComponent);
 
 	DeadTag = FGameplayTag::RequestGameplayTag(FName("State.Dead"));
+	AliveTag = FGameplayTag::RequestGameplayTag(FName("State.Alive"));
 	StunnedTag = FGameplayTag::RequestGameplayTag(FName("Buffs.Negative.Stunned"));
 
 	//RootComponent->SetVisibility(false, true);
@@ -130,12 +131,13 @@ void AProject4Character::Die()
 		// stop all abilitites regardless of tags (not GE's)
 		AbilitySystemComponent->CancelAllAbilities();
 		AbilitySystemComponent->AddLooseGameplayTag(DeadTag);
+		AbilitySystemComponent->SetTagMapCount(AliveTag, 0);
+		AbilitySystemComponent->RemoveActiveEffectsWithGrantedTags(FGameplayTagContainer(FGameplayTag::RequestGameplayTag(FName("Passives.Regen"))));
 	}
 
 	// play death montage if set, else play ALS ragdoll with manual delay
 	if (DeathMontage)
 	{
-
 		PlayAnimMontage(DeathMontage);
 		GetWorld()->GetTimerManager().SetTimer(RadgollDeathHandle, this, &AProject4Character::FinishDying, DeathMontage->GetPlayLength(), false);
 	}
@@ -152,12 +154,13 @@ void AProject4Character::FinishDying()
 	//Destroy();
 }
 
+
 void AProject4Character::Respawn_Implementation()
 {
 	if (AbilitySystemComponent.IsValid())
 	{
 		AbilitySystemComponent->SetTagMapCount(DeadTag, 0);
-		int32 count = AbilitySystemComponent->GetTagCount(DeadTag);
+		AbilitySystemComponent->AddLooseGameplayTag(AliveTag);
 	}
 	if (!DeathMontage)
 	{

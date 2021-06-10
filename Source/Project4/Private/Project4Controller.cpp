@@ -158,6 +158,15 @@ void AProject4Controller::PossessCamera_Implementation(const ACameraActor* Camer
 	}
 }
 
+void AProject4Controller::InitializeMainHUDWidgetForNewChar_Implementation()
+{
+	if (GameplayHUDWidget)
+	{
+		print(FString("AProject4Controller::InitializeMainHUDWidgetForNewChar_Implementation()"));
+		GameplayHUDWidget->InitializeAbilityHotbarAbilities();
+	}
+}
+
 UGameplayHudWidget* AProject4Controller::GetMainHUDWidget()
 {
 	return GameplayHUDWidget;
