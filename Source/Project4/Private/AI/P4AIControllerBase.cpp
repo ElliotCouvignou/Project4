@@ -8,6 +8,14 @@
 
 #define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Green,text)
 
+
+AP4AIControllerBase::AP4AIControllerBase(const class FObjectInitializer& ObjectInitializer)
+{
+	AIPerceptionComponent = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("AIPerceptionComponent"));
+
+	BehaviorTreeComponent = CreateDefaultSubobject<UBehaviorTreeComponent>(TEXT("BehaviorTreeComponent"));
+}
+
 void AP4AIControllerBase::OnCombatStarted(AProject4Character * Actor)
 {
 	// assuming This actor is already included in threat array,  this is just a transient helper function for when we start combat
@@ -15,8 +23,23 @@ void AP4AIControllerBase::OnCombatStarted(AProject4Character * Actor)
 	if (Actor)
 	{
 		NotifyNearbyFirendsOfNewThreat(Actor);
+		
+		// deactivate 
+		AIPerceptionComponent->Deactivate();
 	}
 }
+
+void AP4AIControllerBase::OnCombatEnded(AProject4Character* Actor)
+{
+	// assuming This actor is already included in threat array,  this is just a transient helper function for when we start combat
+
+	if (Actor)
+	{
+		// deactivate 
+		AIPerceptionComponent->Activate();
+	}
+}
+
 
 void AP4AIControllerBase::NotifyNearbyFirendsOfNewThreat(AProject4Character * Actor)
 {
@@ -41,12 +64,6 @@ void AP4AIControllerBase::NotifyNearbyFirendsOfNewThreat(AProject4Character * Ac
 	}
 }
 
-AP4AIControllerBase::AP4AIControllerBase(const class FObjectInitializer& ObjectInitializer)
-{
-	AIPerceptionComponent = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("AIPerceptionComponent"));
-
-	BehaviorTreeComponent = CreateDefaultSubobject<UBehaviorTreeComponent>(TEXT("BehaviorTreeComponent"));
-}
 
 AProject4Character* AP4AIControllerBase::GetHighestThreatTarget()
 {
@@ -101,6 +118,9 @@ void AP4AIControllerBase::RemoveActorFromThreatArray(AProject4Character* Actor)
 			break;
 		}
 	}
+
+	if (ThreatArray.Num() == 0)
+		OnCombatEnded(Actor);
 	
 }
 

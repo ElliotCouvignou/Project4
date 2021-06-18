@@ -117,6 +117,9 @@ public:
 		void OnCombatStarted(AProject4Character* Actor);
 
 	UFUNCTION(BlueprintCallable)
+		void OnCombatEnded(AProject4Character* Actor);
+
+	UFUNCTION(BlueprintCallable)
 		UBehaviorTreeComponent* GetBehaviorTreeComponent() { return BehaviorTreeComponent; }
 
 	AP4AIControllerBase(const class FObjectInitializer& ObjectInitializer);

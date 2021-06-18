@@ -1,18 +1,21 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "AbilitySystem/P4GameplayAbility.h"
 #include "AbilitySystemComponent.h"
 #include "Project4Controller.h"
 #include "Characters/Project4Character.h"
+#include "AI/P4AIControllerBase.h"
 #include "Project4Controller.h"
 #include "UI/AbilityTooltipWidget.h"
 #include "GameplayTagContainer.h"
 #include "UI/GameplayHudWidget.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Kismet/KismetSystemLibrary.h"
 #include "Engine/World.h"
 #include "DrawDebugHelpers.h"
+
 //#include "Intersection/IntersectionUtil.h"
 
 
@@ -56,6 +59,18 @@ void UP4GameplayAbility::SendErrorMessageToUI(EAbilityErrorText ErrorType)
 	}
 }
 
+
+void UP4GameplayAbility::TryGetTarget(float Range, AProject4Character*& Result)
+{
+	Result = nullptr;
+
+	AProject4Character* Owner = Cast<AProject4Character>(GetAvatarActorFromActorInfo());
+	if (!Owner)
+		return;
+
+	Owner->TryGetTarget(Range, Result);
+	// made it here then no target
+}
 
 void UP4GameplayAbility::GetAbilityMagnitude(FName RowName, const FString& ContextString, float& Result, float DefaultIfNotFound) const
 {

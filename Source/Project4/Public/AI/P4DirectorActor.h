@@ -8,6 +8,16 @@
 #include "AI/P4AreaToMobPoints.h"
 #include "P4DirectorActor.generated.h"
 
+
+UENUM(BlueprintType)
+enum class EDirectorMobSpawnerType : uint8
+{
+	// 0 None
+	Boss			UMETA(DisplayName = "Boss"),
+	Trash				UMETA(DisplayName = "Trash")
+};
+
+
 USTRUCT(BlueprintType)
 struct FMobSpawnParameters
 {
@@ -76,6 +86,9 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		bool DoTimerMethod = true;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		EDirectorMobSpawnerType SpawnerType = EDirectorMobSpawnerType::Trash;
 
 protected:
 	// Called when the game starts or when spawned

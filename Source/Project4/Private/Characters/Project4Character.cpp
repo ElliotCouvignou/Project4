@@ -30,6 +30,8 @@
 #include "AbilitySystem/P4AbilitySystemComponent.h"
 
 #include "Characters/P4CharacterMovementComponent.h"
+#include "AI/P4AIControllerBase.h"
+#include "BehaviorTree/BlackboardComponent.h"
 
 
 
@@ -73,15 +75,16 @@ AProject4Character::AProject4Character(const class FObjectInitializer& ObjectIni
 	MeshRH->SetIsReplicated(true);
 
 	UIFloatingStatusBarComponent = CreateDefaultSubobject<UWidgetComponent>(FName("UIFloatingStatusBarComponent"));
+	UIFloatingStatusBarComponent->bWantsInitializeComponent = true;
 	UIFloatingStatusBarComponent->SetupAttachment(RootComponent);
 	UIFloatingStatusBarComponent->SetWidgetSpace(EWidgetSpace::Screen);
 	UIFloatingStatusBarComponent->SetDrawSize(FVector2D(500, 500));
 
 	FloatingTextWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(FName("FloatingTextWidgetComponent"));
-	FloatingTextWidgetComponent->SetupAttachment(RootComponent);
+	FloatingTextWidgetComponent->bWantsInitializeComponent = true;
+	FloatingTextWidgetComponent->SetupAttachment(GetMesh());
 	FloatingTextWidgetComponent->SetWidgetSpace(EWidgetSpace::Screen);
 	FloatingTextWidgetComponent->SetDrawSize(FVector2D(500, 500));
-
 
 	NiagaraComponent = CreateDefaultSubobject<UNiagaraComponent>(FName("NiagaraComponent"));
 	NiagaraComponent->SetupAttachment(RootComponent);
@@ -93,6 +96,97 @@ AProject4Character::AProject4Character(const class FObjectInitializer& ObjectIni
 	//RootComponent->SetVisibility(false, true);
 
 	//Respawn = FGameplayTag::RequestGameplayTag(FName(""));
+}
+
+void AProject4Character::TryGetTarget(float Range, AProject4Character*& Result)
+{
+	Result = nullptr;
+
+	// Return SelectedTarget if Valid
+	AProject4Character* P4SelectedTarget = Cast<AProject4Character>(SelectedTarget);
+	if (P4SelectedTarget && P4SelectedTarget->GetDistanceTo(this) <= Range)
+	{
+		Result = P4SelectedTarget;
+		return;
+	}
+
+	// if AI return their blackboard stored target, not doing checks cause if we crash here then cmon bruh we got bigger problems
+	AP4AIControllerBase* AIC = Cast<AP4AIControllerBase>(GetController());
+	if (AIC)
+	{
+		Result = Cast<AProject4Character>(AIC->GetBlackboardComponent()->GetValueAsObject(FName("TargetActor")));
+		return;
+	}
+
+	// No selected target, try recursive targeting (WIP TODO: tune this during gameplay)
+	// to ensure player precision while allowing forgiveness we cycle through multiple passes of cylinder linetraces at increasing radius
+	AProject4Controller* P4C = Cast<AProject4Controller>(GetController());
+	if (!P4C)
+		return;
+
+	// Gather General Trace start/end, same for all subsequent traces
+	FVector Start; FRotator OutRot;
+	P4C->GetPlayerViewPoint(Start, OutRot);
+	FVector End = Start + 5250 * OutRot.Vector();
+
+
+	// pre-iteration do simple linetrace raycast
+	FCollisionQueryParams TraceParams(FName(TEXT("Camera")), true, NULL);
+	TraceParams.bTraceComplex = true;
+	TraceParams.bReturnPhysicalMaterial = true;
+	//Re-initialize hit info
+	FHitResult HitDetails = FHitResult(ForceInit);
+	bool bIsHit = GetWorld()->LineTraceSingleByChannel(
+		HitDetails,      // FHitResult object that will be populated with hit info
+		Start,      // starting position
+		End,        // end position
+		ECC_Pawn,  // collision channel - 3rd custom one   // TODO: Determine if we need to use ability channel for this
+		TraceParams      // additional trace settings
+	);
+
+	P4SelectedTarget = Cast<AProject4Character>(HitDetails.Actor);
+	if (bIsHit && P4SelectedTarget && P4SelectedTarget->GetDistanceTo(this) <= Range)
+	{
+		Result = P4SelectedTarget;
+		return;
+	}
+
+	// temp magic numbers as vars to be moved later 
+	int Iterations = 3;
+	float RadiusInc = 52.5;
+	float Radius = RadiusInc;
+	TArray<TEnumAsByte<EObjectTypeQuery>> objectTypesArray; // object types to trace
+	objectTypesArray.Add(UEngineTypes::ConvertToObjectType(ECC_Pawn));
+	TArray<AActor*> IgnoreActors;
+	IgnoreActors.Add(this);
+
+	for (int i = 0; i < Iterations; i++)
+	{
+		//Re-initialize hit info
+		FHitResult HitResult = FHitResult(ForceInit);
+		UKismetSystemLibrary::SphereTraceSingleForObjects(
+			GetWorld(),
+			Start, End, Radius,
+			objectTypesArray,
+			true,
+			IgnoreActors,
+			EDrawDebugTrace::None,
+			HitResult,
+			true,
+			FLinearColor::Red, FLinearColor::Green, 0.1f
+		);
+
+		P4SelectedTarget = Cast<AProject4Character>(HitResult.Actor);
+		if (P4SelectedTarget && P4SelectedTarget->GetDistanceTo(this) <= Range)
+		{
+			Result = P4SelectedTarget;
+			return;
+		}
+
+		Radius += RadiusInc;
+	}
+
+	// made it here then no target
 }
 
 UAbilitySystemComponent* AProject4Character::GetAbilitySystemComponent() const
@@ -132,7 +226,9 @@ void AProject4Character::Die()
 		AbilitySystemComponent->CancelAllAbilities();
 		AbilitySystemComponent->AddLooseGameplayTag(DeadTag);
 		AbilitySystemComponent->SetTagMapCount(AliveTag, 0);
-		AbilitySystemComponent->RemoveActiveEffectsWithGrantedTags(FGameplayTagContainer(FGameplayTag::RequestGameplayTag(FName("Passives.Regen"))));
+
+		// apply ondeath gameplay effects
+		ApplyDeathGameplayEffects();
 	}
 
 	// play death montage if set, else play ALS ragdoll with manual delay
@@ -161,6 +257,8 @@ void AProject4Character::Respawn_Implementation()
 	{
 		AbilitySystemComponent->SetTagMapCount(DeadTag, 0);
 		AbilitySystemComponent->AddLooseGameplayTag(AliveTag);
+		RemoveDeathGameplayEffects();
+		ApplyRespawnGameplayEffects();
 	}
 	if (!DeathMontage)
 	{
@@ -209,6 +307,7 @@ void AProject4Character::InitFloatingStatusBarWidget()
 void AProject4Character::InitFloatingTextWidgetComponent()
 {
 	// idk why but owning palyer doesn't initialize sometimes so do this in case
+	// Apparently this might be some BP and c++ updates not linking right long ago
 	if (!FloatingTextWidgetComponent)
 	{
 		FloatingTextWidgetComponent = NewObject<UWidgetComponent>(this);
@@ -216,7 +315,7 @@ void AProject4Character::InitFloatingTextWidgetComponent()
 		FloatingTextWidgetComponent->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 		FloatingTextWidgetComponent->SetWidgetSpace(EWidgetSpace::Screen);
 		FloatingTextWidgetComponent->SetDrawSize(FVector2D(500, 500));
-
+	
 	}
 
 	if (AbilitySystemComponent.IsValid())
@@ -439,6 +538,38 @@ void AProject4Character::InitializeAttributeSet()
 		AbilitySystemComponent->InitStats(UP4BaseAttributeSet::StaticClass(), AttrDataTable);
 	}
 
+}
+
+void AProject4Character::ApplyRespawnGameplayEffects()
+{
+	FGameplayEffectContextHandle EffectContext = AbilitySystemComponent->MakeEffectContext();
+	for (TSubclassOf<UGameplayEffect> GameplayEffect : OnRespawnGEs)
+	{
+		FGameplayEffectSpecHandle NewHandle = AbilitySystemComponent->MakeOutgoingSpec(GameplayEffect, 1, EffectContext);
+		if (NewHandle.IsValid())
+		{
+			FActiveGameplayEffectHandle ActiveGEHandle = AbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*NewHandle.Data.Get());
+		}
+	}
+}
+
+void AProject4Character::ApplyDeathGameplayEffects()
+{
+	FGameplayEffectContextHandle EffectContext = AbilitySystemComponent->MakeEffectContext();
+	for (TSubclassOf<UGameplayEffect> GameplayEffect : OnDeathGEs)
+	{
+		FGameplayEffectSpecHandle NewHandle = AbilitySystemComponent->MakeOutgoingSpec(GameplayEffect, 1, EffectContext);
+		if (NewHandle.IsValid())
+		{
+			FActiveGameplayEffectHandle ActiveGEHandle = AbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*NewHandle.Data.Get());
+		}
+	}
+}
+
+void AProject4Character::RemoveDeathGameplayEffects()
+{
+	for (auto e : OnDeathGEHandles)
+		AbilitySystemComponent->RemoveActiveGameplayEffect(e);
 }
 
 

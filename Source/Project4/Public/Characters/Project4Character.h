@@ -70,7 +70,6 @@ protected:
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "UI")
 		class UWidgetComponent* FloatingTextWidgetComponent;
 
-
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "VFX")
 		UNiagaraComponent* NiagaraComponent;
 
@@ -100,6 +99,10 @@ public:
 	/***************************/
 	/* Gameplay Ability system */  
 	/***************************/
+
+	// TODO: move this somewhere nice, gameplayabilitites need easy access though
+	UFUNCTION(BlueprintCallable)
+		void TryGetTarget(float Range, AProject4Character*& Result);
 
 
 	virtual class UAbilitySystemComponent* GetAbilitySystemComponent() const override;
@@ -162,6 +165,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 		class UP4FloatingTextWidget* GetFloatingTextWidget();
 
+	UFUNCTION(BlueprintCallable)
+		class UWidgetComponent* GetFloatingTextWidgetComponent() { return FloatingTextWidgetComponent; }
+
 	/***************************/
 	/*         Utility         */
 	/***************************/
@@ -205,6 +211,16 @@ protected:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "GAS | Essential GE's")
 		TArray<TSubclassOf<class UGameplayEffect>> StartupEffects;
 
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "GAS | Death")
+		TArray<TSubclassOf<class UGameplayEffect>> OnDeathGEs;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "GAS | Death")
+		TArray<TSubclassOf<class UGameplayEffect>> OnRespawnGEs;
+
+	// filled at runtime
+	UPROPERTY()
+		TArray<FActiveGameplayEffectHandle> OnDeathGEHandles;
+
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "GAS | Essential GE's")
 		bool StartupEffectsApplied = false; 
 
@@ -232,6 +248,15 @@ protected:
 	/***************************/
 	/*          Death          */
 	/***************************/
+
+	UFUNCTION()
+		void ApplyRespawnGameplayEffects();
+
+	UFUNCTION()
+		void ApplyDeathGameplayEffects();
+
+	UFUNCTION()
+		void RemoveDeathGameplayEffects();
 
 	// delay from ragdoll in die() to FinishDying()
 	// i.e time to show death animation before moving onto respawn timer

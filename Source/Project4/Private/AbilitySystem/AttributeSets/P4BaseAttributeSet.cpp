@@ -172,6 +172,14 @@ void UP4BaseAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCall
 				FGameplayTagContainer DamageNumberTags;
 				Data.EffectSpec.GetAllAssetTags(DamageNumberTags);
 
+				// TODO: filter garbage tags
+				//DamageNumberTags = DamageNumberTags.Filter(DamageNumberContainerFilter);
+				/* Look at dynamic asset tags for info about damage type */
+				if (Data.EffectSpec.DynamicAssetTags.HasTag(CritTag))
+				{
+					DamageNumberTags.AddTagFast(CritTag);
+				}
+
 				UP4PlayerAbilitySystemComponent* P4ASC = Cast<UP4PlayerAbilitySystemComponent>(Source);
 				if (P4ASC)
 				{
@@ -180,18 +188,16 @@ void UP4BaseAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCall
 
 				// Get source PC
 				AProject4Controller* SourcePC = Cast<AProject4Controller>(SourceController);
-	
+				AProject4Controller* TargetPC = Cast<AProject4Controller>(TargetController);
 				// Show Damage numbers to source actor (ignore self-damage)
 				if (SourceActor != TargetActor) {
+					if (TargetPC)
+					{
+						// display damage taken to player
+						TargetPC->DisplayDamageNumber(FP4DamageNumber(DamageTaken, DamageNumberTags), TargetCharacter);
+					}						
 					if (SourcePC)
 					{
-						//DamageNumberTags = DamageNumberTags.Filter(DamageNumberContainerFilter);
-						/* Look at dynamic asset tags for info about damage type */
-						if (Data.EffectSpec.DynamicAssetTags.HasTag(CritTag))
-						{
-							DamageNumberTags.AddTagFast(CritTag);
-						}
-	
 						/* Send collected damage data tags to client, let them do parse */
 						SourcePC->DisplayDamageNumber(FP4DamageNumber(DamageTaken, DamageNumberTags), TargetCharacter);
 					}
@@ -200,11 +206,11 @@ void UP4BaseAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCall
 				if (NewHealth < 0.f) {
 					// target died, give xp and generate loots
 					// check if source PC exists in case an npc killed something
+					TargetCharacter->Die();
 					if (SourceCharacter && SourcePC && (SourceController != TargetController))
 					{
 						AP4PlayerCharacterBase* PlayerChar = Cast<AP4PlayerCharacterBase>(SourceCharacter);
 						PlayerChar->GainExperience(GetExperienceBounty());
-						TargetCharacter->Die();
 					}
 				}
 				SetHealth(FMath::Clamp(NewHealth, 0.f, GetHealthMax()));

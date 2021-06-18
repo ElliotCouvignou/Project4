@@ -7,6 +7,7 @@
 #include "UObject/ConstructorHelpers.h"
 #include "Characters/P4PlayerCharacterBase.h"
 #include "NavigationSystem.h"
+#include "Project4GameMode.h"
 #include "Kismet/GameplayStatics.h"
 
 #define print(text) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Green,text)
@@ -91,7 +92,7 @@ void AP4DirectorActor::SpawnMobWave(TArray<FMobSpawnParameters> MobSpawns)
 		
 
 		FActorSpawnParameters SpawnInfo;
-		SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+		SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 		World->SpawnActor<AProject4Character>(Mob.MobClass, SpawnLoc, FRotator(0.f, FMath::FRand(), 0.f), SpawnInfo);
 
 		print(FString("Spawned Mob: Location: " + SpawnLoc.ToString()));
@@ -159,6 +160,16 @@ void AP4DirectorActor::OnPointTimerUpdate()
 void AP4DirectorActor::BeginPlay()
 {
 	Super::BeginPlay();
+
+	// set spawnable mobs from current gamemode if possible
+	if (HasAuthority())
+	{
+		AProject4GameMode* GM = GetWorld()->GetAuthGameMode<AProject4GameMode>();
+		if (GM)
+		{
+			SetSpawnableMobsArray(GM->LevelToMobSpawnAsset);
+		}
+	}
 	
 	if (DoTimerMethod)
 		StartPointTimer();

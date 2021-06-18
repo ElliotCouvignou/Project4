@@ -3,6 +3,8 @@
 
 #include "AbilitySystem/P4AbilityProjectile.h"
 #include "NiagaraFunctionLibrary.h"
+#include "Characters/Project4Character.h"
+#include "Components/WidgetComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 
 
@@ -33,6 +35,7 @@ AP4AbilityProjectile::AP4AbilityProjectile()
 	ProjectileMovement->SetIsReplicated(true);
 	ProjectileMovement->bInitialVelocityInLocalSpace = true;
 	ProjectileMovement->ProjectileGravityScale = 0.f;
+	ProjectileMovement->SetComponentTickEnabled(false);
 
 	NiagaraComponent = CreateDefaultSubobject<UNiagaraComponent>(TEXT("NiagaraComponent"));
 	NiagaraComponent->SetupAttachment(RootComponent);
@@ -51,13 +54,28 @@ void AP4AbilityProjectile::BeginPlay()
 	{
 		NiagaraComponent = UNiagaraFunctionLibrary::SpawnSystemAttached(StartupNiagaraEffect, RootComponent, FName(TEXT("None")), FVector(0.f, 0.f, 0.f), FRotator(0.f, 0.f, 0.f), EAttachLocation::KeepRelativeOffset, true);
 	}
+
+	switch (MovementType)
+	{
+	case(EProjectileMovementType::Homing):
+		if (HomingTarget)
+		{
+			// TODO: subclass projectile movement and override homing accel to set target to something other than a scene component
+			ProjectileMovement->bIsHomingProjectile = true;
+			ProjectileMovement->HomingTargetComponent = HomingTarget->GetMesh();
+		}
+		break;
+
+	default:
+		break;
+	}
 }
 
 
 
 void AP4AbilityProjectile::OnHitboxBeginOverlap_Implementation(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	
+
 }
 
 // Called every frame

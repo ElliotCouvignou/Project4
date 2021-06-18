@@ -41,6 +41,9 @@ struct FArrayOfMobSpawnInfo
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Essentials")
 		TArray<FMobSpawnInfo> SpawnableMobs;
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Essentials")
+		TArray<FMobSpawnInfo> SpawnableBosses;
+
 	FArrayOfMobSpawnInfo()
 	{
 
@@ -65,4 +68,11 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		void GetMobSpawnArrayFromLevelName(const FName& LevelName, FArrayOfMobSpawnInfo& Return);
+
+
+	UFUNCTION(BlueprintCallable)
+		void GetRandomMob(FName CurrentLevelName, FMobSpawnInfo& Result);
+
+	UFUNCTION(BlueprintCallable)
+		void GetRandomBossMob(FName CurrentLevelName, FMobSpawnInfo& Result);
 };

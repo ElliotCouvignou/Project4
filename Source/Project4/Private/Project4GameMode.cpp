@@ -92,7 +92,7 @@ void AProject4GameMode::RespawnPlayer(AController* Controller)
 
 void AProject4GameMode::ServerTravelToLevel(const FString& LevelName)
 {
-
+	SaveGameInfo();
 
 	// TODO: maybe move saving current game info logic here
 	if (!GetWorld()->ServerTravel(LevelName))

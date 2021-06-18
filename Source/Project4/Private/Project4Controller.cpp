@@ -221,6 +221,16 @@ void AProject4Controller::DisplayDamageNumber_Implementation(FP4DamageNumber Dam
 	if (DamageText)
 	{
 		DamageText->SetDamageText(Damage);
+		//if(TargetCharacter == GetPawn<AProject4Character>())
+		//{ 
+		//	// Display damage on self (only for players)
+		//	DamageText->SetDamageText(Damage);
+		//}
+		//else
+		//{
+		//	DamageText->SetDamageText(Damage);
+		//}
+			
 	}
 }
 

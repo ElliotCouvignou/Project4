@@ -247,6 +247,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Utility | UI")
 		void SendErrorMessageToUI(EAbilityErrorText ErrorType);
 
+	/* Helper fucntion to be used in any ability that requires a target actor to cast on
+	   This method first returns the AI or player selected actor (via tab). If no current actor selected by player
+	   then do recursive cylinder traces at increasing radius. If this fails then return none/error */
+	UFUNCTION(BlueprintCallable, Category = "Utility")
+		void TryGetTarget(float Range, AProject4Character*& Result);
 
 	UFUNCTION(BlueprintCallable, Category = "Utility")
 		void GetAbilityMagnitude(FName RowName, const FString& ContextString, float& Result, float DefaultIfNotFound = 0.f) const;

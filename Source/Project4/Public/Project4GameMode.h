@@ -8,6 +8,7 @@
 #include "Interactables/SkillDropActor.h"
 #include "AbilitySystem/P4AbilityPoolsDataAsset.h"
 #include "Characters/P4CharacterInfoDataAsset.h"
+#include "AI/P4AreaToMobPoints.h"
 #include "Project4GameMode.generated.h"
 
 
@@ -117,6 +118,9 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
 		UP4CharacterInfoDataAsset* PoolCharacterInfoMap;
+
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+		UP4AreaToMobPoints* LevelToMobSpawnAsset;
 
 	/* map of enum to character class to spawn */
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)

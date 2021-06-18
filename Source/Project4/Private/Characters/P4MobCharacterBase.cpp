@@ -98,6 +98,18 @@ void AP4MobCharacterBase::GetNextAbility_Implementation(TSubclassOf<UP4GameplayA
 
 void AP4MobCharacterBase::Die()
 {
+	// hide floating hp bar
+	UIFloatingStatusBarComponent->SetVisibility(false, true);
+
+	// disable current behavior
+	AP4AIControllerBase* AIC = Cast<AP4AIControllerBase>(GetController());
+	UBehaviorTreeComponent* BTC = (AIC) ? AIC->GetBehaviorTreeComponent() : nullptr;
+	if (BTC)
+	{
+		BTC->Deactivate();
+	}
+	
+
 	if (HasAuthority())
 	{
 		// Server Roll Drop table and spawn rolled items nearby
@@ -323,7 +335,7 @@ void AP4MobCharacterBase::BeginPlay()
 		// Give mob abilities apart from essential
 		for(auto e : Abilities)
 		{
-			AbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(e));
+			AbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(e, 1));
 		}
 
 		/* Maps injection tags to this mob's class default behavior tree mappings */
