@@ -31,16 +31,36 @@ AP4AbilityProjectile::AP4AbilityProjectile()
 	OverlapDelegate.BindUFunction(this, "OnHitboxBeginOverlap");
 	Hitbox->OnComponentBeginOverlap.Add(OverlapDelegate);
 
-	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(FName("ProjectileMovement"));
+	ProjectileMovement = CreateDefaultSubobject<UP4ProjectileMovementComponent>(FName("ProjectileMovement"));
 	ProjectileMovement->SetIsReplicated(true);
 	ProjectileMovement->bInitialVelocityInLocalSpace = true;
 	ProjectileMovement->ProjectileGravityScale = 0.f;
 	ProjectileMovement->SetComponentTickEnabled(false);
 
+
+
 	NiagaraComponent = CreateDefaultSubobject<UNiagaraComponent>(TEXT("NiagaraComponent"));
 	NiagaraComponent->SetupAttachment(RootComponent);
 
 	
+}
+
+void AP4AbilityProjectile::PreInitializeComponents()
+{
+	switch (MovementType)
+	{
+	case(EProjectileMovementType::Homing):
+		if (HomingTarget)
+		{
+			ProjectileMovement->bIsHomingProjectile = true;
+			ProjectileMovement->HomingTarget = HomingTarget;
+
+		}
+		break;
+
+	default:
+		break;
+	}
 }
 
 // Called when the game starts or when spawned
@@ -55,20 +75,22 @@ void AP4AbilityProjectile::BeginPlay()
 		NiagaraComponent = UNiagaraFunctionLibrary::SpawnSystemAttached(StartupNiagaraEffect, RootComponent, FName(TEXT("None")), FVector(0.f, 0.f, 0.f), FRotator(0.f, 0.f, 0.f), EAttachLocation::KeepRelativeOffset, true);
 	}
 
-	switch (MovementType)
-	{
-	case(EProjectileMovementType::Homing):
-		if (HomingTarget)
-		{
-			// TODO: subclass projectile movement and override homing accel to set target to something other than a scene component
-			ProjectileMovement->bIsHomingProjectile = true;
-			ProjectileMovement->HomingTargetComponent = HomingTarget->GetMesh();
-		}
-		break;
+	//switch (MovementType)
+	//{
+	//case(EProjectileMovementType::Homing):
+	//	if (HomingTarget)
+	//	{
+	//		// TODO: subclass projectile movement and override homing accel to set target to something other than a scene component
+	//		ProjectileMovement->bIsHomingProjectile = true;
+	//		ProjectileMovement->HomingTarget = HomingTarget;
 
-	default:
-		break;
-	}
+	//		ProjectileMovement->Activate();
+	//	}
+	//	break;
+
+	//default:
+	//	break;
+	//}
 }
 
 

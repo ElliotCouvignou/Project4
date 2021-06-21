@@ -220,6 +220,8 @@ void AProject4Character::Die()
 	// broadcast delegate I ded
 	OnCharacterDied.Broadcast(this);
 
+
+
 	if (AbilitySystemComponent.IsValid())
 	{
 		// stop all abilitites regardless of tags (not GE's)
@@ -230,7 +232,17 @@ void AProject4Character::Die()
 		// apply ondeath gameplay effects
 		ApplyDeathGameplayEffects();
 	}
+	MulticastDeath();
 
+}
+
+void AProject4Character::FinishDying()
+{
+	//Destroy();
+}
+
+void AProject4Character::MulticastDeath_Implementation()
+{
 	// play death montage if set, else play ALS ragdoll with manual delay
 	if (DeathMontage)
 	{
@@ -242,12 +254,22 @@ void AProject4Character::Die()
 		// calls ALS to do ragdoll
 		ActivateRagdoll();
 		GetWorld()->GetTimerManager().SetTimer(RadgollDeathHandle, this, &AProject4Character::FinishDying, RadgollDeathDelay, false);
+
+		GetCharacterMovement()->Deactivate();
+		//SetReplicates(false);
 	}
 }
 
-void AProject4Character::FinishDying()
+void AProject4Character::MulticastRespawn_Implementation()
 {
-	//Destroy();
+	if (!DeathMontage)
+	{
+		// HACK: kindof assuming we are in ragdoll to undo it
+		//SetReplicates(true);
+		GetCharacterMovement()->Activate();
+
+		ActivateRagdoll();
+	}
 }
 
 
@@ -260,11 +282,9 @@ void AProject4Character::Respawn_Implementation()
 		RemoveDeathGameplayEffects();
 		ApplyRespawnGameplayEffects();
 	}
-	if (!DeathMontage)
-	{
-		// HACK: kindof assuming we are in ragdoll to undo it
-		ActivateRagdoll();
-	}
+
+	MulticastRespawn();
+	
 }
 
 /***************************/

@@ -333,25 +333,27 @@ void AP4MobCharacterBase::BeginPlay()
 		GiveEssentialAbilities();
 
 		// Give mob abilities apart from essential
-		for(auto e : Abilities)
+		if (HasAuthority())
 		{
-			AbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(e, 1));
+			for (auto e : Abilities)
+			{
+				AbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(e, 1));
+			}
+
+			/* Maps injection tags to this mob's class default behavior tree mappings */
+			SetDynamicBehaviorSubtrees();
 		}
-
-		/* Maps injection tags to this mob's class default behavior tree mappings */
-		SetDynamicBehaviorSubtrees();
-
-		// TODO: Create floating status bars to clients here
-		APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-		if (PC && PC->IsLocalPlayerController())
-		{
-			// HERE
-		}
-
+		
 		HealthChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetHealthAttribute()).AddUObject(this, &AP4MobCharacterBase::HealthChanged);
 
 		BindDelegates();
 
+		// TODO: (but not really) Create floating status bars to clients here
+		//APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+		//if (PC && PC->IsLocalPlayerController())
+		//{
+		//	// HERE
+		//}
 		InitFloatingStatusBarWidget();
 		InitFloatingTextWidgetComponent();
 

@@ -80,7 +80,7 @@ void UAsyncTaskCooldownChanged::OnActiveGameplayEffectAddedCallback(UAbilitySyst
 			FGameplayTagContainer CooldownTagContainer(GrantedTags.GetByIndex(0));
 			GetCooldownRemainingForTag(CooldownTagContainer, TimeRemaining, Duration);
 
-			ASC->OnGameplayEffectRemovedDelegate(ActiveHandle)->AddUObject(this, &UAsyncTaskCooldownChanged::OnActiveGameplayEffectRemoved);
+			ASC->OnGameplayEffectRemoved_InfoDelegate(ActiveHandle)->AddUObject(this, &UAsyncTaskCooldownChanged::OnActiveGameplayEffectRemoved);
 
 			//print(CooldownTag.ToString());
 			
@@ -123,7 +123,7 @@ void UAsyncTaskCooldownChanged::CooldownTagChanged(const FGameplayTag CooldownTa
 	}
 }
 
-void UAsyncTaskCooldownChanged::OnActiveGameplayEffectRemoved()
+void UAsyncTaskCooldownChanged::OnActiveGameplayEffectRemoved(const FGameplayEffectRemovalInfo& Info)
 {
 	OnCooldownEnd.Broadcast(FGameplayTag(), 0.f, -1.0f);
 }

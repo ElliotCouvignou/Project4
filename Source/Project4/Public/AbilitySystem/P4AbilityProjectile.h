@@ -9,6 +9,7 @@
 #include "NiagaraSystem.h"
 #include "GameplayEffect.h"
 #include "Components/CapsuleComponent.h"
+#include "AbilitySystem/P4ProjectileMovementComponent.h"
 #include "P4AbilityProjectile.generated.h"
 
 class AProject4Character;
@@ -36,6 +37,8 @@ public:
 	// Sets default values for this actor's properties
 	AP4AbilityProjectile();
 
+	virtual void PreInitializeComponents();
+
 	/************************/
 	/*   Expose on Spawn    */
 	/************************/
@@ -54,7 +57,7 @@ public:
 		UStaticMeshComponent* Mesh;
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
-		class UProjectileMovementComponent* ProjectileMovement;
+		class UP4ProjectileMovementComponent* ProjectileMovement;
 
 
 	/* This niagara component is created and assigned dynamically on StartNiagaraEffect via SpawnEmitterAttatched return value */
@@ -92,6 +95,8 @@ protected:
 		FVector StartWorldPos;
 
 public:	
+
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 

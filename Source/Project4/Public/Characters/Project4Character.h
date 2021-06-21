@@ -120,6 +120,7 @@ public:
 	UPROPERTY(BlueprintReadWrite, Replicated, EditDefaultsOnly, Category = "Weapons")
 		EWeaponType OffHandWeaponType;
 
+
 	/***************************/
 	/*          Death          */
 	/***************************/
@@ -136,6 +137,17 @@ public:
 	// blueprintcallable for anim notify
 	UFUNCTION(BlueprintCallable, Category = Death)
 		virtual	void FinishDying();
+
+
+	UFUNCTION(BlueprintCallable, NetMulticast, Reliable, WithValidation, Category = "Utility | Multicast")
+		void MulticastDeath();
+	void MulticastDeath_Implementation();
+	bool MulticastDeath_Validate() { return true; }
+
+	UFUNCTION(BlueprintCallable, NetMulticast, Reliable, WithValidation, Category = "Utility | Multicast")
+		void MulticastRespawn();
+	void MulticastRespawn_Implementation();
+	bool MulticastRespawn_Validate() { return true; }
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = Death)
 		void ActivateRagdoll();

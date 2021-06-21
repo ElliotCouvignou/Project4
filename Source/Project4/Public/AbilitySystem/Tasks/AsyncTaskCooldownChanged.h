@@ -58,7 +58,7 @@ protected:
 	virtual void OnActiveGameplayEffectAddedCallback(UAbilitySystemComponent* Target, const FGameplayEffectSpec& SpecApplied, FActiveGameplayEffectHandle ActiveHandle);
 	virtual void CooldownTagChanged(const FGameplayTag CooldownTag, int32 NewCount);
 	
-	void OnActiveGameplayEffectRemoved();
+	void OnActiveGameplayEffectRemoved(const FGameplayEffectRemovalInfo&);
 	void OnActiveGameplayEffectTimeChanged(FActiveGameplayEffectHandle ActiveGEHandle, float NewStartTime, float NewDuration);
 
 	bool GetCooldownRemainingForTag(FGameplayTagContainer CooldownTags, float& TimeRemaining, float& CooldownDuration);

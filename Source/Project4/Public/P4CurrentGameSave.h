@@ -180,6 +180,9 @@ public:
 
 	UP4CurrentGameSave();
 
+	// TODO include save for current game difficulty (easy, med, hard) and for current overall progression (e.g # levels cleared)
+
+	/* Info of all players */
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Essential")
 		TMap<AProject4Controller*, FP4CharacterSaveStruct> PlayerCharacterSave;
 
@@ -198,7 +201,6 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		void LoadHotbarBlockSave(const EHotbarType HotbarType, const UAbilityHotbarBlock* BlockWidget, FP4HotbarBlockSaveStruct& Result);
-
 
 	UFUNCTION(BlueprintCallable)
 		void SaveHotbarBlockInfo(const EHotbarType HotbarType, const UAbilityHotbarBlock* BlockWidget);
