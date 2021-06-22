@@ -60,7 +60,7 @@ void UP4GameplayAbility::SendErrorMessageToUI(EAbilityErrorText ErrorType)
 }
 
 
-void UP4GameplayAbility::TryGetTarget(float Range, AProject4Character*& Result)
+void UP4GameplayAbility::TryGetTarget(float Range, bool AllowEnemies, bool AllowAllies, AProject4Character*& Result)
 {
 	Result = nullptr;
 
@@ -68,7 +68,7 @@ void UP4GameplayAbility::TryGetTarget(float Range, AProject4Character*& Result)
 	if (!Owner)
 		return;
 
-	Owner->TryGetTarget(Range, Result);
+	Owner->TryGetTarget(Range, AllowEnemies, AllowAllies, Result);
 	// made it here then no target
 }
 

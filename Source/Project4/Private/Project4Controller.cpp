@@ -360,16 +360,15 @@ void AProject4Controller::BeginDestroy()
 {
 	Super::BeginDestroy();
 
-	print(FString("AProject4Controller::BeginDestroy()"));
 
 	// remove pregamelobby widget if visible 
 	if (PreGameLobbyWidget)
 	{
-		print(FString("\n\nRemove PregameLobyy\n\n "));
 		PreGameLobbyWidget->SetVisibility(ESlateVisibility::Collapsed);
 		PreGameLobbyWidget->RemoveFromViewport();
 	}
 }
+
 
 void AProject4Controller::SetupInputComponent()
 {

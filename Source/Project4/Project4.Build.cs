@@ -29,7 +29,8 @@ public class Project4 : ModuleRules
 			"Json",
 			"JsonUtilities",
 			"WebBrowserWidget",
-			"OnlineSubsystem", "﻿OnlineSubsystemSteam﻿"
+			"OnlineSubsystem", "﻿OnlineSubsystemSteam﻿",
+			"AIModule"
 			}
 		);
 

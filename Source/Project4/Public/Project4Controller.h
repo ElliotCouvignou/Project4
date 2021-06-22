@@ -8,6 +8,7 @@
 #include "GameplayEffect.h"
 #include "Project4.h"
 #include "AbilitySystem/P4AbilityModifier.h"
+#include "GenericTeamAgentInterface.h"
 #include "Project4Controller.generated.h"
 
 /* UNUSED ATM */
@@ -59,7 +60,7 @@ enum class EAbilityErrorText : uint8
  * 
  */
 UCLASS()
-class PROJECT4_API AProject4Controller : public APlayerController
+class PROJECT4_API AProject4Controller : public APlayerController, public IGenericTeamAgentInterface
 {
 	GENERATED_BODY()
 
@@ -279,6 +280,10 @@ public:
 	virtual void BeginDestroy() override;
 
 protected:
+
+	FGenericTeamId TeamId;
+	FGenericTeamId GetGenericTeamId() const { return TeamId; }
+
 
 	// Which character class does player want (i.e Berserker, ranger, etc.)
 	// TODO make this class on spawn not from GM

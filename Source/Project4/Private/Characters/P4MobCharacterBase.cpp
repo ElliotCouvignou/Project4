@@ -59,6 +59,19 @@ AP4MobCharacterBase::AP4MobCharacterBase(const class FObjectInitializer& ObjectI
 	//}
 }
 
+bool AP4MobCharacterBase::IsEnemiesWith(AProject4Character* Other)
+{
+	return Cast<AP4MobCharacterBase>(Other) == nullptr;
+}
+
+bool AP4MobCharacterBase::IsAlliesWith(AProject4Character* Other)
+{
+
+	return Cast<AP4MobCharacterBase>(Other) != nullptr;
+}
+
+
+
 // Default to getting random abilitty unweighted
 void AP4MobCharacterBase::GetNextAbility_Implementation(TSubclassOf<UP4GameplayAbility>& Result)
 {
@@ -98,8 +111,7 @@ void AP4MobCharacterBase::GetNextAbility_Implementation(TSubclassOf<UP4GameplayA
 
 void AP4MobCharacterBase::Die()
 {
-	// hide floating hp bar
-	UIFloatingStatusBarComponent->SetVisibility(false, true);
+
 
 	// disable current behavior
 	AP4AIControllerBase* AIC = Cast<AP4AIControllerBase>(GetController());
@@ -344,6 +356,7 @@ void AP4MobCharacterBase::BeginPlay()
 			SetDynamicBehaviorSubtrees();
 		}
 		
+
 		HealthChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetHealthAttribute()).AddUObject(this, &AP4MobCharacterBase::HealthChanged);
 
 		BindDelegates();

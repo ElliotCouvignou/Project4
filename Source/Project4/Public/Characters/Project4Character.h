@@ -8,6 +8,7 @@
 #include "AbilitySystemInterface.h"
 #include "Interactables/P4ItemWeaponObject.h"
 #include "NiagaraComponent.h"
+#include "GenericTeamAgentInterface.h"
 #include "Project4Character.generated.h"
 
 
@@ -24,6 +25,7 @@ enum class EWeaponStanceType : uint8
 	RangedMainHandOnly		UMETA(DisplayName = "Ranged Main Hand Only")
 
 };
+
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FCharacterDiedDelegate, AProject4Character*, Character);
 
@@ -80,6 +82,12 @@ public:
 	UPROPERTY(BlueprintAssignable)
 		FCharacterDiedDelegate OnCharacterDied;
 
+
+	/* Object pointer to the group that this player belongs to 
+		Players and summoned mobs will have this filled out which is why it exists in base class */
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		class UP4PlayerGroupObject* CurrentGroup;
+
 	/***************************/
 	/*    Public Animations    */
 	/***************************/
@@ -102,8 +110,18 @@ public:
 
 	// TODO: move this somewhere nice, gameplayabilitites need easy access though
 	UFUNCTION(BlueprintCallable)
-		void TryGetTarget(float Range, AProject4Character*& Result);
+		void TryGetTarget(float Range, bool AllowEnemies, bool AllowAllies, AProject4Character*& Result);
 
+	UFUNCTION(BlueprintCallable)
+		void TryGetTargetInFront(float Range, bool AllowEnemies, bool AllowAllies, AProject4Character*& Result);
+
+
+	/* Helper and general utility function to determine if actor is enemy/friendly with this caracter */
+	UFUNCTION(BlueprintCallable)
+		virtual bool IsEnemiesWith(AProject4Character* Other);
+
+	UFUNCTION(BlueprintCallable)
+		virtual bool IsAlliesWith(AProject4Character* Other);
 
 	virtual class UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
@@ -246,6 +264,9 @@ protected:
 
 	FActiveGameplayEffectHandle WeaponMainActiveGE;
 	FActiveGameplayEffectHandle WeaponOffActiveGE;
+
+	/* helper function of trygettarget, returns true if found viable target in array*/
+	bool GetClosestTargetActor(TArray<FHitResult>& Hits, float Range,  bool AllowEnemies, bool AllowFriendlies, AProject4Character*& Result);
 
 	// Called on actorspawn ONLY servers need to call this and startupeffects
 	virtual	void GiveEssentialAbilities();

@@ -14,6 +14,8 @@ AP4AIControllerBase::AP4AIControllerBase(const class FObjectInitializer& ObjectI
 	AIPerceptionComponent = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("AIPerceptionComponent"));
 
 	BehaviorTreeComponent = CreateDefaultSubobject<UBehaviorTreeComponent>(TEXT("BehaviorTreeComponent"));
+
+	SetGenericTeamId(FGenericTeamId(1));
 }
 
 void AP4AIControllerBase::OnCombatStarted(AProject4Character * Actor)
@@ -64,6 +66,19 @@ void AP4AIControllerBase::NotifyNearbyFirendsOfNewThreat(AProject4Character * Ac
 	}
 }
 
+
+ETeamAttitude::Type AP4AIControllerBase::GetTeamAttitudeTowards(const AActor& Other) const
+{
+	if (const APawn* OtherPawn = Cast<APawn>(&Other)) {
+
+		if (const IGenericTeamAgentInterface* TeamAgent = Cast<IGenericTeamAgentInterface>(OtherPawn->GetController()))
+		{
+			return Super::GetTeamAttitudeTowards(*OtherPawn->GetController());
+		}
+	}
+
+	return ETeamAttitude::Neutral;
+}
 
 AProject4Character* AP4AIControllerBase::GetHighestThreatTarget()
 {

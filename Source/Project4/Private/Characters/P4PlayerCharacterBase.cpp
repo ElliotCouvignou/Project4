@@ -63,6 +63,17 @@ AP4PlayerCharacterBase::AP4PlayerCharacterBase(const class FObjectInitializer& O
 
 }
 
+bool AP4PlayerCharacterBase::IsEnemiesWith(AProject4Character* Other)
+{
+	return Cast<AP4PlayerCharacterBase>(Other) == nullptr;
+}
+
+bool AP4PlayerCharacterBase::IsAlliesWith(AProject4Character* Other)
+{
+
+	return Cast<AP4PlayerCharacterBase>(Other) != nullptr;
+}
+
 void AP4PlayerCharacterBase::OnCharacterSelected_Implementation()
 {
 	print(FString("OnCharacterSelected_Implementation"));

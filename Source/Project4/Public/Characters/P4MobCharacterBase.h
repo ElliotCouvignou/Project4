@@ -139,6 +139,12 @@ public:
 	AP4MobCharacterBase(const class FObjectInitializer& ObjectInitializer);
 	
 	
+
+	/* Helper and general utility function to determine if actor is enemy/friendly with this caracter */
+	virtual bool IsEnemiesWith(AProject4Character* Other) override;
+
+	virtual bool IsAlliesWith(AProject4Character* Other) override;
+
 	/* Use patrol point actor if you want to visually set markers, you can still fill this out
 	   Yourself if needed*/
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "AI | Patrol ")

@@ -9,6 +9,7 @@
 #include "AbilitySystemInterface.h"
 #include "UI/SkillTree/SkillTreeDataAsset.h"
 #include "Characters/P4CharacterInfoDataAsset.h"
+#include "Characters/P4PlayerGroupObject.h"
 #include "P4PlayerCharacterBase.generated.h"
 
 
@@ -39,6 +40,12 @@ public:
 	AP4PlayerCharacterBase(const class FObjectInitializer& ObjectInitializer);
 
 	// TODO: DELETE THIS
+
+
+	/* Helper and general utility function to determine if actor is enemy/friendly with this caracter */
+	virtual bool IsEnemiesWith(AProject4Character* Other) override;
+
+	virtual bool IsAlliesWith(AProject4Character* Other) override;
 
 
 	/* Function to call animation + vfx when player selects this character on pregamelobby */

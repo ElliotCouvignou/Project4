@@ -45,6 +45,7 @@
 AProject4Character::AProject4Character(const class FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer.SetDefaultSubobjectClass<UP4CharacterMovementComponent>(ACharacter::CharacterMovementComponentName))
 {
+
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
@@ -98,17 +99,25 @@ AProject4Character::AProject4Character(const class FObjectInitializer& ObjectIni
 	//Respawn = FGameplayTag::RequestGameplayTag(FName(""));
 }
 
-void AProject4Character::TryGetTarget(float Range, AProject4Character*& Result)
+void AProject4Character::TryGetTarget(float Range, bool AllowEnemies, bool AllowAllies, AProject4Character*& Result)
 {
 	Result = nullptr;
 
 	// Return SelectedTarget if Valid
 	AProject4Character* P4SelectedTarget = Cast<AProject4Character>(SelectedTarget);
-	if (P4SelectedTarget && P4SelectedTarget->GetDistanceTo(this) <= Range)
+	if (P4SelectedTarget)
 	{
-		Result = P4SelectedTarget;
-		return;
+		bool InFront = FVector::DotProduct(GetController()->GetDesiredRotation().Vector(), SelectedTarget->GetActorLocation() - GetActorLocation()) >= 0.f;
+		bool ValidTargetType = (AllowEnemies && IsEnemiesWith(P4SelectedTarget)) || (AllowAllies && IsAlliesWith(P4SelectedTarget));
+		float dist = P4SelectedTarget->GetDistanceTo(this);
+
+		if (InFront && dist <= Range && ValidTargetType)
+		{
+			Result = P4SelectedTarget;
+			return;
+		}
 	}
+
 
 	// if AI return their blackboard stored target, not doing checks cause if we crash here then cmon bruh we got bigger problems
 	AP4AIControllerBase* AIC = Cast<AP4AIControllerBase>(GetController());
@@ -118,7 +127,14 @@ void AProject4Character::TryGetTarget(float Range, AProject4Character*& Result)
 		return;
 	}
 
-	// No selected target, try recursive targeting (WIP TODO: tune this during gameplay)
+
+	TryGetTargetInFront(Range, AllowEnemies, AllowAllies, Result);
+
+	// made it here then no target
+}
+
+void AProject4Character::TryGetTargetInFront(float Range, bool AllowEnemies, bool AllowAllies, AProject4Character*& Result)
+{
 	// to ensure player precision while allowing forgiveness we cycle through multiple passes of cylinder linetraces at increasing radius
 	AProject4Controller* P4C = Cast<AProject4Controller>(GetController());
 	if (!P4C)
@@ -129,64 +145,73 @@ void AProject4Character::TryGetTarget(float Range, AProject4Character*& Result)
 	P4C->GetPlayerViewPoint(Start, OutRot);
 	FVector End = Start + 5250 * OutRot.Vector();
 
-
-	// pre-iteration do simple linetrace raycast
-	FCollisionQueryParams TraceParams(FName(TEXT("Camera")), true, NULL);
-	TraceParams.bTraceComplex = true;
-	TraceParams.bReturnPhysicalMaterial = true;
-	//Re-initialize hit info
-	FHitResult HitDetails = FHitResult(ForceInit);
-	bool bIsHit = GetWorld()->LineTraceSingleByChannel(
-		HitDetails,      // FHitResult object that will be populated with hit info
-		Start,      // starting position
-		End,        // end position
-		ECC_Pawn,  // collision channel - 3rd custom one   // TODO: Determine if we need to use ability channel for this
-		TraceParams      // additional trace settings
-	);
-
-	P4SelectedTarget = Cast<AProject4Character>(HitDetails.Actor);
-	if (bIsHit && P4SelectedTarget && P4SelectedTarget->GetDistanceTo(this) <= Range)
-	{
-		Result = P4SelectedTarget;
-		return;
-	}
-
 	// temp magic numbers as vars to be moved later 
-	int Iterations = 3;
+	int Iterations = 4;
 	float RadiusInc = 52.5;
-	float Radius = RadiusInc;
-	TArray<TEnumAsByte<EObjectTypeQuery>> objectTypesArray; // object types to trace
-	objectTypesArray.Add(UEngineTypes::ConvertToObjectType(ECC_Pawn));
+	float Radius = 0.01f;
 	TArray<AActor*> IgnoreActors;
 	IgnoreActors.Add(this);
 
 	for (int i = 0; i < Iterations; i++)
 	{
 		//Re-initialize hit info
-		FHitResult HitResult = FHitResult(ForceInit);
-		UKismetSystemLibrary::SphereTraceSingleForObjects(
+		TArray<FHitResult> HitResult;
+		bool Hit = UKismetSystemLibrary::SphereTraceMultiByProfile(
 			GetWorld(),
 			Start, End, Radius,
-			objectTypesArray,
+			FName("Targetable"),
 			true,
 			IgnoreActors,
-			EDrawDebugTrace::None,
+			EDrawDebugTrace::ForOneFrame,
 			HitResult,
 			true,
 			FLinearColor::Red, FLinearColor::Green, 0.1f
 		);
 
-		P4SelectedTarget = Cast<AProject4Character>(HitResult.Actor);
-		if (P4SelectedTarget && P4SelectedTarget->GetDistanceTo(this) <= Range)
-		{
-			Result = P4SelectedTarget;
+		if (Hit && GetClosestTargetActor(HitResult, Range, AllowEnemies, AllowAllies, Result))
 			return;
-		}
 
 		Radius += RadiusInc;
 	}
 
-	// made it here then no target
+}
+
+bool AProject4Character::GetClosestTargetActor(TArray<FHitResult>& Hits, float Range, bool AllowEnemies, bool AllowFriendlies, AProject4Character*& Result)
+{
+	float SmallestDist = 9999999999.f;
+	Result = nullptr;
+	bool ret = false;
+
+	for (FHitResult e : Hits)
+	{
+		AProject4Character* P4Target = Cast<AProject4Character>(e.Actor);
+		if (P4Target)
+		{
+			bool InFront = FVector::DotProduct(GetController()->GetDesiredRotation().Vector(), e.Actor->GetActorLocation() - GetActorLocation()) >= 0.f;
+			bool ValidTargetType = (AllowEnemies && IsEnemiesWith(P4Target)) || (AllowFriendlies && IsAlliesWith(P4Target));
+			float dist = P4Target->GetDistanceTo(this);
+			if (InFront && dist <= Range && ValidTargetType && SmallestDist > dist)
+			{
+				Result = P4Target;
+				SmallestDist = dist;
+				ret = true;
+			}
+		}
+	}
+
+	return ret;
+}
+
+
+
+bool AProject4Character::IsEnemiesWith(AProject4Character* Other)
+{
+	return true;
+}
+
+bool AProject4Character::IsAlliesWith(AProject4Character* Other)
+{
+	return false;
 }
 
 UAbilitySystemComponent* AProject4Character::GetAbilitySystemComponent() const
@@ -243,6 +268,11 @@ void AProject4Character::FinishDying()
 
 void AProject4Character::MulticastDeath_Implementation()
 {
+	OnCharacterDied.Broadcast(this);
+
+	// hide floating hp bar
+	UIFloatingStatusBarComponent->SetVisibility(false, true);
+
 	// play death montage if set, else play ALS ragdoll with manual delay
 	if (DeathMontage)
 	{
@@ -523,6 +553,7 @@ void AProject4Character::BeginPlay()
 /***************************/
 /* Gameplay Ability system */
 /***************************/
+
 
 
 void AProject4Character::GiveEssentialAbilities()

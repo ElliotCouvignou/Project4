@@ -251,7 +251,7 @@ public:
 	   This method first returns the AI or player selected actor (via tab). If no current actor selected by player
 	   then do recursive cylinder traces at increasing radius. If this fails then return none/error */
 	UFUNCTION(BlueprintCallable, Category = "Utility")
-		void TryGetTarget(float Range, AProject4Character*& Result);
+		void TryGetTarget(float Range, bool AllowEnemies, bool AllowAllies, AProject4Character*& Result);
 
 	UFUNCTION(BlueprintCallable, Category = "Utility")
 		void GetAbilityMagnitude(FName RowName, const FString& ContextString, float& Result, float DefaultIfNotFound = 0.f) const;

@@ -9,7 +9,7 @@
 #include "Characters/Project4Character.h"
 #include "Containers/SortedMap.h"
 #include "Tasks/AITask_MoveTo.h"
-
+#include "GenericTeamAgentInterface.h"
 #include "P4AIControllerBase.generated.h"
 
 
@@ -70,10 +70,27 @@ protected:
 	//UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Threat")
 	//	TMap<AProject4Character*, int> ThreatMap;
 
+	/***************************/
+	/*    Generic Team Agent   */
+	/***************************/
+
 public:
 
 
 	virtual class UAbilitySystemComponent* GetAbilitySystemComponent() const override { return AbilitySystemComponent.Get(); }
+
+
+
+	/***************************/
+	/*    Generic Team Agent   */
+	/***************************/
+
+	ETeamAttitude::Type GetTeamAttitudeTowards(const AActor& Other) const override;
+
+
+	/***************************/
+	/*       Other Things      */
+	/***************************/
 
 
 	/* Radius around mob to notify and make them also start combat if with in radius and not already in combat */
@@ -82,7 +99,6 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Threat")
 		UAITask_MoveTo* ChaseTask;
-
 
 
 	/* returns highest threat in threatarray, if empty return nullptr */
