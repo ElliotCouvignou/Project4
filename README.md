@@ -34,9 +34,12 @@ As stated before the goal is to create the foundation of each major system and t
     - Armor and Weapons can be equipped, granting bonus attribute stats.
     - Weight system included although no check and penalty for going overweight. (to be determined)
 
+- Procedural Item Attribute generation system
+
 - AI/NPC Behavior
 -- NPC can patrol predetermined points or walk around randomly.
 -- Upon seeing players they will begin to chase the player and attack when in range.
+
 
 - Dedicated Server hosting
     - Uses AWS Gamelift Service for hosting services
